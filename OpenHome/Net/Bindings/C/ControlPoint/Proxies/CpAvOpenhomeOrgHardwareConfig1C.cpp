@@ -31,8 +31,8 @@ public:
     void BeginUpdate(FunctorAsync& aFunctor);
     void EndUpdate(IAsync& aAsync);
 
-    void SyncActive(const Brx& aCountry, const Brx& aRealName, const Brx& aEmail);
-    void BeginActive(const Brx& aCountry, const Brx& aRealName, const Brx& aEmail, FunctorAsync& aFunctor);
+    void SyncActive(TBool aIsSubscribe, const Brx& aRealName, const Brx& aEmail);
+    void BeginActive(TBool aIsSubscribe, const Brx& aRealName, const Brx& aEmail, FunctorAsync& aFunctor);
     void EndActive(IAsync& aAsync);
 
     void SyncGetActiveStatus(Brh& aActiveStatus);
@@ -42,6 +42,10 @@ public:
     void SyncCheckUpdate();
     void BeginCheckUpdate(FunctorAsync& aFunctor);
     void EndCheckUpdate(IAsync& aAsync);
+
+    void SyncResetDisplay();
+    void BeginResetDisplay(FunctorAsync& aFunctor);
+    void EndResetDisplay(IAsync& aAsync);
 
     void SyncGetHardWareInfo(Brh& aHardWareInfo);
     void BeginGetHardWareInfo(FunctorAsync& aFunctor);
@@ -139,6 +143,7 @@ public:
     void SetPropertyIpAddressChanged(Functor& aFunctor);
     void SetPropertyProtectChanged(Functor& aFunctor);
     void SetPropertyProtectPasswordChanged(Functor& aFunctor);
+    void SetPropertyActiveStatusChanged(Functor& aFunctor);
     void SetPropertyTimeChanged(Functor& aFunctor);
     void SetPropertyVolumeControlChanged(Functor& aFunctor);
 
@@ -162,6 +167,7 @@ public:
     void PropertyIpAddress(Brhz& aIpAddress) const;
     void PropertyProtect(Brhz& aProtect) const;
     void PropertyProtectPassword(Brhz& aProtectPassword) const;
+    void PropertyActiveStatus(Brhz& aActiveStatus) const;
     void PropertyTime(Brhz& aTime) const;
     void PropertyVolumeControl(TBool& aVolumeControl) const;
 private:
@@ -185,6 +191,7 @@ private:
     void IpAddressPropertyChanged();
     void ProtectPropertyChanged();
     void ProtectPasswordPropertyChanged();
+    void ActiveStatusPropertyChanged();
     void TimePropertyChanged();
     void VolumeControlPropertyChanged();
 private:
@@ -194,6 +201,7 @@ private:
     Action* iActionActive;
     Action* iActionGetActiveStatus;
     Action* iActionCheckUpdate;
+    Action* iActionResetDisplay;
     Action* iActionGetHardWareInfo;
     Action* iActionSetRoomName;
     Action* iActionGetVolumeControl;
@@ -233,6 +241,7 @@ private:
     PropertyString* iIpAddress;
     PropertyString* iProtect;
     PropertyString* iProtectPassword;
+    PropertyString* iActiveStatus;
     PropertyString* iTime;
     PropertyBool* iVolumeControl;
     Functor iAliveChanged;
@@ -255,6 +264,7 @@ private:
     Functor iIpAddressChanged;
     Functor iProtectChanged;
     Functor iProtectPasswordChanged;
+    Functor iActiveStatusChanged;
     Functor iTimeChanged;
     Functor iVolumeControlChanged;
 };
@@ -366,6 +376,27 @@ SyncCheckUpdateAvOpenhomeOrgHardwareConfig1C::SyncCheckUpdateAvOpenhomeOrgHardwa
 void SyncCheckUpdateAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
 {
     iService.EndCheckUpdate(aAsync);
+}
+
+
+class SyncResetDisplayAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncResetDisplayAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncResetDisplayAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+};
+
+SyncResetDisplayAvOpenhomeOrgHardwareConfig1C::SyncResetDisplayAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncResetDisplayAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndResetDisplay(aAsync);
 }
 
 
@@ -828,7 +859,7 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::CpProxyAvOpenhomeOrgHardwareConfig1C(CpDev
     iActionUpdate = new Action("Update");
 
     iActionActive = new Action("Active");
-    param = new OpenHome::Net::ParameterString("Country");
+    param = new OpenHome::Net::ParameterBool("IsSubscribe");
     iActionActive->AddInputParameter(param);
     param = new OpenHome::Net::ParameterString("RealName");
     iActionActive->AddInputParameter(param);
@@ -840,6 +871,8 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::CpProxyAvOpenhomeOrgHardwareConfig1C(CpDev
     iActionGetActiveStatus->AddOutputParameter(param);
 
     iActionCheckUpdate = new Action("CheckUpdate");
+
+    iActionResetDisplay = new Action("ResetDisplay");
 
     iActionGetHardWareInfo = new Action("GetHardWareInfo");
     param = new OpenHome::Net::ParameterString("HardWareInfo");
@@ -1026,6 +1059,9 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::CpProxyAvOpenhomeOrgHardwareConfig1C(CpDev
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1C::ProtectPasswordPropertyChanged);
     iProtectPassword = new PropertyString(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "ProtectPassword", functor);
     AddProperty(iProtectPassword);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1C::ActiveStatusPropertyChanged);
+    iActiveStatus = new PropertyString(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "ActiveStatus", functor);
+    AddProperty(iActiveStatus);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1C::TimePropertyChanged);
     iTime = new PropertyString(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "Time", functor);
     AddProperty(iTime);
@@ -1042,6 +1078,7 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::~CpProxyAvOpenhomeOrgHardwareConfig1C()
     delete iActionActive;
     delete iActionGetActiveStatus;
     delete iActionCheckUpdate;
+    delete iActionResetDisplay;
     delete iActionGetHardWareInfo;
     delete iActionSetRoomName;
     delete iActionGetVolumeControl;
@@ -1122,19 +1159,19 @@ void CpProxyAvOpenhomeOrgHardwareConfig1C::EndUpdate(IAsync& aAsync)
     }
 }
 
-void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncActive(const Brx& aCountry, const Brx& aRealName, const Brx& aEmail)
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncActive(TBool aIsSubscribe, const Brx& aRealName, const Brx& aEmail)
 {
     SyncActiveAvOpenhomeOrgHardwareConfig1C sync(*this);
-    BeginActive(aCountry, aRealName, aEmail, sync.Functor());
+    BeginActive(aIsSubscribe, aRealName, aEmail, sync.Functor());
     sync.Wait();
 }
 
-void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginActive(const Brx& aCountry, const Brx& aRealName, const Brx& aEmail, FunctorAsync& aFunctor)
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginActive(TBool aIsSubscribe, const Brx& aRealName, const Brx& aEmail, FunctorAsync& aFunctor)
 {
     Invocation* invocation = Service()->Invocation(*iActionActive, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionActive->InputParameters();
-    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aCountry));
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aIsSubscribe));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aRealName));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aEmail));
     Invocable().InvokeAction(*invocation);
@@ -1204,6 +1241,33 @@ void CpProxyAvOpenhomeOrgHardwareConfig1C::EndCheckUpdate(IAsync& aAsync)
     ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
     Invocation& invocation = (Invocation&)aAsync;
     ASSERT(invocation.Action().Name() == Brn("CheckUpdate"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncResetDisplay()
+{
+    SyncResetDisplayAvOpenhomeOrgHardwareConfig1C sync(*this);
+    BeginResetDisplay(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginResetDisplay(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionResetDisplay, aFunctor);
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndResetDisplay(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("ResetDisplay"));
 
     Error::ELevel level;
     TUint code;
@@ -1986,6 +2050,13 @@ void CpProxyAvOpenhomeOrgHardwareConfig1C::SetPropertyProtectPasswordChanged(Fun
     iLock.Signal();
 }
 
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SetPropertyActiveStatusChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iActiveStatusChanged = aFunctor;
+    iLock.Signal();
+}
+
 void CpProxyAvOpenhomeOrgHardwareConfig1C::SetPropertyTimeChanged(Functor& aFunctor)
 {
     iLock.Wait();
@@ -2140,6 +2211,13 @@ void CpProxyAvOpenhomeOrgHardwareConfig1C::PropertyProtectPassword(Brhz& aProtec
     aProtectPassword.Set(iProtectPassword->Value());
 }
 
+void CpProxyAvOpenhomeOrgHardwareConfig1C::PropertyActiveStatus(Brhz& aActiveStatus) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    ASSERT(IsSubscribed());
+    aActiveStatus.Set(iActiveStatus->Value());
+}
+
 void CpProxyAvOpenhomeOrgHardwareConfig1C::PropertyTime(Brhz& aTime) const
 {
     AutoMutex a(GetPropertyReadLock());
@@ -2254,6 +2332,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1C::ProtectPasswordPropertyChanged()
     ReportEvent(iProtectPasswordChanged);
 }
 
+void CpProxyAvOpenhomeOrgHardwareConfig1C::ActiveStatusPropertyChanged()
+{
+    ReportEvent(iActiveStatusChanged);
+}
+
 void CpProxyAvOpenhomeOrgHardwareConfig1C::TimePropertyChanged()
 {
     ReportEvent(iTimeChanged);
@@ -2357,16 +2440,15 @@ int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndUpdate(THandle aHandle, Oh
     return err;
 }
 
-int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncActive(THandle aHandle, const char* aCountry, const char* aRealName, const char* aEmail)
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncActive(THandle aHandle, uint32_t aIsSubscribe, const char* aRealName, const char* aEmail)
 {
     CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    Brh buf_aCountry(aCountry);
     Brh buf_aRealName(aRealName);
     Brh buf_aEmail(aEmail);
     int32_t err = 0;
     try {
-        proxyC->SyncActive(buf_aCountry, buf_aRealName, buf_aEmail);
+        proxyC->SyncActive((aIsSubscribe==0? false : true), buf_aRealName, buf_aEmail);
     }
     catch (ProxyError& ) {
         err = -1;
@@ -2374,15 +2456,14 @@ int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncActive(THandle aHandle, c
     return err;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginActive(THandle aHandle, const char* aCountry, const char* aRealName, const char* aEmail, OhNetCallbackAsync aCallback, void* aPtr)
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginActive(THandle aHandle, uint32_t aIsSubscribe, const char* aRealName, const char* aEmail, OhNetCallbackAsync aCallback, void* aPtr)
 {
     CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    Brh buf_aCountry(aCountry);
     Brh buf_aRealName(aRealName);
     Brh buf_aEmail(aEmail);
     FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
-    proxyC->BeginActive(buf_aCountry, buf_aRealName, buf_aEmail, functor);
+    proxyC->BeginActive((aIsSubscribe==0? false : true), buf_aRealName, buf_aEmail, functor);
 }
 
 int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndActive(THandle aHandle, OhNetHandleAsync aAsync)
@@ -2476,6 +2557,44 @@ int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndCheckUpdate(THandle aHandl
     ASSERT(async != NULL);
     try {
         proxyC->EndCheckUpdate(*async);
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncResetDisplay(THandle aHandle)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    int32_t err = 0;
+    try {
+        proxyC->SyncResetDisplay();
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginResetDisplay(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginResetDisplay(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndResetDisplay(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndResetDisplay(*async);
     }
     catch(...) {
         err = -1;
@@ -3529,6 +3648,14 @@ void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SetPropertyProtectPasswordChange
     proxyC->SetPropertyProtectPasswordChanged(functor);
 }
 
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SetPropertyActiveStatusChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyActiveStatusChanged(functor);
+}
+
 void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SetPropertyTimeChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
 {
     CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
@@ -3719,6 +3846,15 @@ void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyProtectPassword(THandle 
     Brhz buf_aProtectPassword;
     proxyC->PropertyProtectPassword(buf_aProtectPassword);
     *aProtectPassword = buf_aProtectPassword.Transfer();
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyActiveStatus(THandle aHandle, char** aActiveStatus)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brhz buf_aActiveStatus;
+    proxyC->PropertyActiveStatus(buf_aActiveStatus);
+    *aActiveStatus = buf_aActiveStatus.Transfer();
 }
 
 void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyTime(THandle aHandle, char** aTime)

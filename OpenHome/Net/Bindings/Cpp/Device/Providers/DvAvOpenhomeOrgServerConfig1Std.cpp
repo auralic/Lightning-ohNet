@@ -9,9 +9,28 @@
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
+bool DvProviderAvOpenhomeOrgServerConfig1Cpp::SetPropertyAlive(bool aValue)
+{
+    ASSERT(iPropertyAlive != NULL);
+    return SetPropertyBool(*iPropertyAlive, aValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetPropertyAlive(bool& aValue)
+{
+    ASSERT(iPropertyAlive != NULL);
+    aValue = iPropertyAlive->Value();
+}
+
 DvProviderAvOpenhomeOrgServerConfig1Cpp::DvProviderAvOpenhomeOrgServerConfig1Cpp(DvDeviceStd& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "ServerConfig", 1)
 {
+    iPropertyAlive = NULL;
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnablePropertyAlive()
+{
+    iPropertyAlive = new PropertyBool(iDvStack.Env(), new ParameterBool("Alive"));
+    iService->AddProperty(iPropertyAlive); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionSetServerName()

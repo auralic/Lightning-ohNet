@@ -22,9 +22,9 @@
            <name>Active</name>
            <argumentList>
                <argument>
-                   <name>Country</name>
+                   <name>IsSubscribe</name>
                    <direction>in</direction>
-                   <relatedStateVariable>Country</relatedStateVariable>
+                   <relatedStateVariable>IsSubscribe</relatedStateVariable>
                </argument>
                <argument>
                    <name>RealName</name>
@@ -50,6 +50,9 @@
       </action>
        <action>
            <name>CheckUpdate</name>
+      </action>
+       <action>
+           <name>ResetDisplay</name>
       </action>
       <action>
          <name>GetHardWareInfo</name>
@@ -455,13 +458,13 @@
          <name>HardWareInfo</name>
          <dataType>string</dataType>
       </stateVariable>
-      <stateVariable sendEvents="no">
+      <stateVariable sendEvents="yes">
          <name>ActiveStatus</name>
          <dataType>string</dataType>
       </stateVariable>
       <stateVariable sendEvents="no">
-         <name>Country</name>
-         <dataType>string</dataType>
+         <name>IsSubscribe</name>
+         <dataType>boolean</dataType>
       </stateVariable>
       <stateVariable sendEvents="no">
          <name>RealName</name>

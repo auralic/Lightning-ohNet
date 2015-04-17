@@ -55,6 +55,8 @@ interface ICpProxyAvOpenhomeOrgServerConfig1 extends ICpProxy
     public boolean syncGetDriveMountResult();
     public void beginGetDriveMountResult(ICpProxyListener aCallback);
     public boolean endGetDriveMountResult(long aAsyncHandle);
+    public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
+    public boolean getPropertyAlive();
 }
 
 class SyncSetServerNameAvOpenhomeOrgServerConfig1 extends SyncProxyAction
@@ -484,6 +486,9 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     private Action iActionGetSMBConfig;
     private Action iActionSetSMBConfig;
     private Action iActionGetDriveMountResult;
+    private PropertyBool iAlive;
+    private IPropertyChangeListener iAliveChanged;
+    private Object iPropertyLock;
 
     /**
      * Constructor.
@@ -565,6 +570,17 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         iActionGetDriveMountResult = new Action("GetDriveMountResult");
         param = new ParameterBool("DriveMountResult");
         iActionGetDriveMountResult.addOutputParameter(param);
+
+        iAliveChanged = new PropertyChangeListener();
+        iAlive = new PropertyBool("Alive",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    alivePropertyChanged();
+                }
+            }
+        );
+        addProperty(iAlive);
+        iPropertyLock = new Object();
     }
     /**
      * Invoke the action synchronously.
@@ -1364,7 +1380,46 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         return driveMountResult;
     }
         
+    /**
+     * Set a delegate to be run when the Alive state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
+     *
+     * @param aAliveChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iAliveChanged = aAliveChanged;
+        }
+    }
 
+    private void alivePropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iAliveChanged);
+        }
+    }
+
+    /**
+     * Query the value of the Alive property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the Alive property.
+     */
+    public boolean getPropertyAlive()
+    {
+        propertyReadLock();
+        boolean val = iAlive.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
     /**
      * Dispose of this control point proxy.
      * Must be called for each class instance.
@@ -1395,6 +1450,7 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             iActionGetSMBConfig.destroy();
             iActionSetSMBConfig.destroy();
             iActionGetDriveMountResult.destroy();
+            iAlive.destroy();
         }
     }
 }

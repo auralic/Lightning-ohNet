@@ -98,24 +98,24 @@ public:
      * Invoke the action synchronously.  Blocks until the action has been processed
      * on the device and sets any output arguments.
      *
-     * @param[in]  aCountry
+     * @param[in]  aIsSubscribe
      * @param[in]  aRealName
      * @param[in]  aEmail
      */
-    void SyncActive(const std::string& aCountry, const std::string& aRealName, const std::string& aEmail);
+    void SyncActive(bool aIsSubscribe, const std::string& aRealName, const std::string& aEmail);
     /**
      * Invoke the action asynchronously.
      * Returns immediately and will run the client-specified callback when the action
      * later completes.  Any output arguments can then be retrieved by calling
      * EndActive().
      *
-     * @param[in] aCountry
+     * @param[in] aIsSubscribe
      * @param[in] aRealName
      * @param[in] aEmail
      * @param[in] aFunctor   Callback to run when the action completes.
      *                       This is guaranteed to be run but may indicate an error
      */
-    void BeginActive(const std::string& aCountry, const std::string& aRealName, const std::string& aEmail, FunctorAsync& aFunctor);
+    void BeginActive(bool aIsSubscribe, const std::string& aRealName, const std::string& aEmail, FunctorAsync& aFunctor);
     /**
      * Retrieve the output arguments from an asynchronously invoked action.
      * This may only be called from the callback set in the above Begin function.
@@ -172,6 +172,29 @@ public:
      * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
      */
     void EndCheckUpdate(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     */
+    void SyncResetDisplay();
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndResetDisplay().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginResetDisplay(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndResetDisplay(IAsync& aAsync);
 
     /**
      * Invoke the action synchronously.  Blocks until the action has been processed
@@ -896,6 +919,15 @@ public:
      */
     void SetPropertyProtectPasswordChanged(Functor& aFunctor);
     /**
+     * Set a callback to be run when the ActiveStatus state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgHardwareConfig1Cpp instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyActiveStatusChanged(Functor& aFunctor);
+    /**
      * Set a callback to be run when the Time state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -1115,6 +1147,16 @@ public:
      */
     void PropertyProtectPassword(std::string& aProtectPassword) const;
     /**
+     * Query the value of the ActiveStatus property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aActiveStatus
+     */
+    void PropertyActiveStatus(std::string& aActiveStatus) const;
+    /**
      * Query the value of the Time property.
      *
      * This function is threadsafe and can only be called if Subscribe() has been
@@ -1155,6 +1197,7 @@ private:
     void IpAddressPropertyChanged();
     void ProtectPropertyChanged();
     void ProtectPasswordPropertyChanged();
+    void ActiveStatusPropertyChanged();
     void TimePropertyChanged();
     void VolumeControlPropertyChanged();
 private:
@@ -1163,6 +1206,7 @@ private:
     Action* iActionActive;
     Action* iActionGetActiveStatus;
     Action* iActionCheckUpdate;
+    Action* iActionResetDisplay;
     Action* iActionGetHardWareInfo;
     Action* iActionSetRoomName;
     Action* iActionGetVolumeControl;
@@ -1202,6 +1246,7 @@ private:
     PropertyString* iIpAddress;
     PropertyString* iProtect;
     PropertyString* iProtectPassword;
+    PropertyString* iActiveStatus;
     PropertyString* iTime;
     PropertyBool* iVolumeControl;
     Functor iAliveChanged;
@@ -1224,6 +1269,7 @@ private:
     Functor iIpAddressChanged;
     Functor iProtectChanged;
     Functor iProtectPasswordChanged;
+    Functor iActiveStatusChanged;
     Functor iTimeChanged;
     Functor iVolumeControlChanged;
 };

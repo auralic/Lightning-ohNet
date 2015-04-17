@@ -16,8 +16,8 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public void syncUpdate();
     public void beginUpdate(ICpProxyListener aCallback);
     public void endUpdate(long aAsyncHandle);
-    public void syncActive(String aCountry, String aRealName, String aEmail);
-    public void beginActive(String aCountry, String aRealName, String aEmail, ICpProxyListener aCallback);
+    public void syncActive(boolean aIsSubscribe, String aRealName, String aEmail);
+    public void beginActive(boolean aIsSubscribe, String aRealName, String aEmail, ICpProxyListener aCallback);
     public void endActive(long aAsyncHandle);
     public String syncGetActiveStatus();
     public void beginGetActiveStatus(ICpProxyListener aCallback);
@@ -25,6 +25,9 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public void syncCheckUpdate();
     public void beginCheckUpdate(ICpProxyListener aCallback);
     public void endCheckUpdate(long aAsyncHandle);
+    public void syncResetDisplay();
+    public void beginResetDisplay(ICpProxyListener aCallback);
+    public void endResetDisplay(long aAsyncHandle);
     public String syncGetHardWareInfo();
     public void beginGetHardWareInfo(ICpProxyListener aCallback);
     public String endGetHardWareInfo(long aAsyncHandle);
@@ -122,6 +125,8 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public String getPropertyProtect();
     public void setPropertyProtectPasswordChanged(IPropertyChangeListener aProtectPasswordChanged);
     public String getPropertyProtectPassword();
+    public void setPropertyActiveStatusChanged(IPropertyChangeListener aActiveStatusChanged);
+    public String getPropertyActiveStatus();
     public void setPropertyTimeChanged(IPropertyChangeListener aTimeChanged);
     public String getPropertyTime();
     public void setPropertyVolumeControlChanged(IPropertyChangeListener aVolumeControlChanged);
@@ -211,6 +216,21 @@ class SyncCheckUpdateAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
     protected void completeRequest(long aAsyncHandle)
     {
         iService.endCheckUpdate(aAsyncHandle);
+        
+    }
+}
+
+class SyncResetDisplayAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncResetDisplayAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endResetDisplay(aAsyncHandle);
         
     }
 }
@@ -858,6 +878,7 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private Action iActionActive;
     private Action iActionGetActiveStatus;
     private Action iActionCheckUpdate;
+    private Action iActionResetDisplay;
     private Action iActionGetHardWareInfo;
     private Action iActionSetRoomName;
     private Action iActionGetVolumeControl;
@@ -897,6 +918,7 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private PropertyString iIpAddress;
     private PropertyString iProtect;
     private PropertyString iProtectPassword;
+    private PropertyString iActiveStatus;
     private PropertyString iTime;
     private PropertyBool iVolumeControl;
     private IPropertyChangeListener iAliveChanged;
@@ -919,6 +941,7 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private IPropertyChangeListener iIpAddressChanged;
     private IPropertyChangeListener iProtectChanged;
     private IPropertyChangeListener iProtectPasswordChanged;
+    private IPropertyChangeListener iActiveStatusChanged;
     private IPropertyChangeListener iTimeChanged;
     private IPropertyChangeListener iVolumeControlChanged;
     private Object iPropertyLock;
@@ -943,7 +966,7 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         iActionUpdate = new Action("Update");
 
         iActionActive = new Action("Active");
-        param = new ParameterString("Country", allowedValues);
+        param = new ParameterBool("IsSubscribe");
         iActionActive.addInputParameter(param);
         param = new ParameterString("RealName", allowedValues);
         iActionActive.addInputParameter(param);
@@ -955,6 +978,8 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         iActionGetActiveStatus.addOutputParameter(param);
 
         iActionCheckUpdate = new Action("CheckUpdate");
+
+        iActionResetDisplay = new Action("ResetDisplay");
 
         iActionGetHardWareInfo = new Action("GetHardWareInfo");
         param = new ParameterString("HardWareInfo", allowedValues);
@@ -1260,6 +1285,15 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             }
         );
         addProperty(iProtectPassword);
+        iActiveStatusChanged = new PropertyChangeListener();
+        iActiveStatus = new PropertyString("ActiveStatus",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    activeStatusPropertyChanged();
+                }
+            }
+        );
+        addProperty(iActiveStatus);
         iTimeChanged = new PropertyChangeListener();
         iTime = new PropertyString("Time",
             new PropertyChangeListener() {
@@ -1385,10 +1419,10 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
      * Blocks until the action has been processed on the device and sets any
      * output arguments.
      */
-    public void syncActive(String aCountry, String aRealName, String aEmail)
+    public void syncActive(boolean aIsSubscribe, String aRealName, String aEmail)
     {
         SyncActiveAvOpenhomeOrgHardwareConfig1 sync = new SyncActiveAvOpenhomeOrgHardwareConfig1(this);
-        beginActive(aCountry, aRealName, aEmail, sync.getListener());
+        beginActive(aIsSubscribe, aRealName, aEmail, sync.getListener());
         sync.waitToComplete();
         sync.reportError();
     }
@@ -1399,17 +1433,17 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
      * action later completes.  Any output arguments can then be retrieved by
      * calling {@link #endActive}.
      * 
-     * @param aCountry
+     * @param aIsSubscribe
      * @param aRealName
      * @param aEmail
      * @param aCallback listener to call back when action completes.
      *                  This is guaranteed to be run but may indicate an error.
      */
-    public void beginActive(String aCountry, String aRealName, String aEmail, ICpProxyListener aCallback)
+    public void beginActive(boolean aIsSubscribe, String aRealName, String aEmail, ICpProxyListener aCallback)
     {
         Invocation invocation = iService.getInvocation(iActionActive, aCallback);
         int inIndex = 0;
-        invocation.addInput(new ArgumentString((ParameterString)iActionActive.getInputParameter(inIndex++), aCountry));
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionActive.getInputParameter(inIndex++), aIsSubscribe));
         invocation.addInput(new ArgumentString((ParameterString)iActionActive.getInputParameter(inIndex++), aRealName));
         invocation.addInput(new ArgumentString((ParameterString)iActionActive.getInputParameter(inIndex++), aEmail));
         iService.invokeAction(invocation);
@@ -1524,6 +1558,51 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
      *          {@link #beginCheckUpdate} method.
      */
     public void endCheckUpdate(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncResetDisplay()
+    {
+        SyncResetDisplayAvOpenhomeOrgHardwareConfig1 sync = new SyncResetDisplayAvOpenhomeOrgHardwareConfig1(this);
+        beginResetDisplay(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endResetDisplay}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginResetDisplay(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionResetDisplay, aCallback);
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginResetDisplay} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginResetDisplay} method.
+     */
+    public void endResetDisplay(long aAsyncHandle)
     {
         ProxyError errObj = Invocation.error(aAsyncHandle);
         if (errObj != null)
@@ -3086,6 +3165,29 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         }
     }
     /**
+     * Set a delegate to be run when the ActiveStatus state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
+     *
+     * @param aActiveStatusChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyActiveStatusChanged(IPropertyChangeListener aActiveStatusChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iActiveStatusChanged = aActiveStatusChanged;
+        }
+    }
+
+    private void activeStatusPropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iActiveStatusChanged);
+        }
+    }
+    /**
      * Set a delegate to be run when the Time state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
@@ -3453,6 +3555,22 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     }
     
     /**
+     * Query the value of the ActiveStatus property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the ActiveStatus property.
+     */
+    public String getPropertyActiveStatus()
+    {
+        propertyReadLock();
+        String val = iActiveStatus.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
      * Query the value of the Time property.
      * This function is thread-safe and can only be called if {@link 
      * #subscribe} has been called and a first eventing callback received
@@ -3504,6 +3622,7 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             iActionActive.destroy();
             iActionGetActiveStatus.destroy();
             iActionCheckUpdate.destroy();
+            iActionResetDisplay.destroy();
             iActionGetHardWareInfo.destroy();
             iActionSetRoomName.destroy();
             iActionGetVolumeControl.destroy();
@@ -3543,6 +3662,7 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             iIpAddress.destroy();
             iProtect.destroy();
             iProtectPassword.destroy();
+            iActiveStatus.destroy();
             iTime.destroy();
             iVolumeControl.destroy();
         }

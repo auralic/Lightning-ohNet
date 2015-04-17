@@ -38,10 +38,11 @@ var CpProxyAvOpenhomeOrgHardwareConfig1 = function(udn){
     this.serviceProperties["IpAddress"] = new ohnet.serviceproperty("IpAddress","string");
     this.serviceProperties["Protect"] = new ohnet.serviceproperty("Protect","string");
     this.serviceProperties["ProtectPassword"] = new ohnet.serviceproperty("ProtectPassword","string");
+    this.serviceProperties["ActiveStatus"] = new ohnet.serviceproperty("ActiveStatus","string");
     this.serviceProperties["Time"] = new ohnet.serviceproperty("Time","string");
     this.serviceProperties["VolumeControl"] = new ohnet.serviceproperty("VolumeControl","bool");
 
-                                                                                                                                        
+                                                                                                                                              
 }
 
 
@@ -328,6 +329,19 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.ProtectPassword_Changed = function
     
 
 /**
+* Adds a listener to handle "ActiveStatus" property change events
+* @method ActiveStatus_Changed
+* @param {Function} stateChangedFunction The handler for state changes
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.ActiveStatus_Changed = function (stateChangedFunction) {
+    this.serviceProperties.ActiveStatus.addListener(function (state) 
+    { 
+        stateChangedFunction(ohnet.soaprequest.readStringParameter(state)); 
+    });
+}
+    
+
+/**
 * Adds a listener to handle "Time" property change events
 * @method Time_Changed
 * @param {Function} stateChangedFunction The handler for state changes
@@ -395,15 +409,15 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.Update = function(successFunction,
 /**
 * A service action to Active
 * @method Active
-* @param {String} Country An action parameter
+* @param {Boolean} IsSubscribe An action parameter
 * @param {String} RealName An action parameter
 * @param {String} Email An action parameter
 * @param {Function} successFunction The function that is executed when the action has completed successfully
 * @param {Function} errorFunction The function that is executed when the action has cause an error
 */
-CpProxyAvOpenhomeOrgHardwareConfig1.prototype.Active = function(Country, RealName, Email, successFunction, errorFunction){ 
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.Active = function(IsSubscribe, RealName, Email, successFunction, errorFunction){ 
     var request = new ohnet.soaprequest("Active", this.url, this.domain, this.type, this.version);     
-    request.writeStringParameter("Country", Country);
+    request.writeBoolParameter("IsSubscribe", IsSubscribe);
     request.writeStringParameter("RealName", RealName);
     request.writeStringParameter("Email", Email);
     request.send(function(result){
@@ -445,6 +459,25 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetActiveStatus = function(success
 */
 CpProxyAvOpenhomeOrgHardwareConfig1.prototype.CheckUpdate = function(successFunction, errorFunction){ 
     var request = new ohnet.soaprequest("CheckUpdate", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to ResetDisplay
+* @method ResetDisplay
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.ResetDisplay = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("ResetDisplay", this.url, this.domain, this.type, this.version);     
     request.send(function(result){
     
         if (successFunction){

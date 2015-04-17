@@ -248,6 +248,18 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyProtectPassword(Brhz& aV
     aValue.Set(iPropertyProtectPassword->Value());
 }
 
+TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyActiveStatus(const Brx& aValue)
+{
+    ASSERT(iPropertyActiveStatus != NULL);
+    return SetPropertyString(*iPropertyActiveStatus, aValue);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyActiveStatus(Brhz& aValue)
+{
+    ASSERT(iPropertyActiveStatus != NULL);
+    aValue.Set(iPropertyActiveStatus->Value());
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyTime(const Brx& aValue)
 {
     ASSERT(iPropertyTime != NULL);
@@ -306,6 +318,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::Construct()
     iPropertyIpAddress = NULL;
     iPropertyProtect = NULL;
     iPropertyProtectPassword = NULL;
+    iPropertyActiveStatus = NULL;
     iPropertyTime = NULL;
     iPropertyVolumeControl = NULL;
 }
@@ -430,6 +443,12 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyProtectPassword()
     iService->AddProperty(iPropertyProtectPassword); // passes ownership
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyActiveStatus()
+{
+    iPropertyActiveStatus = new PropertyString(iDvStack.Env(), new ParameterString("ActiveStatus"));
+    iService->AddProperty(iPropertyActiveStatus); // passes ownership
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyTime()
 {
     iPropertyTime = new PropertyString(iDvStack.Env(), new ParameterString("Time"));
@@ -460,7 +479,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionUpdate()
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionActive()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("Active");
-    action->AddInputParameter(new ParameterString("Country"));
+    action->AddInputParameter(new ParameterBool("IsSubscribe"));
     action->AddInputParameter(new ParameterString("RealName"));
     action->AddInputParameter(new ParameterString("Email"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoActive);
@@ -470,7 +489,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionActive()
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionGetActiveStatus()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("GetActiveStatus");
-    action->AddOutputParameter(new ParameterString("ActiveStatus"));
+    action->AddOutputParameter(new ParameterRelated("ActiveStatus", *iPropertyActiveStatus));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoGetActiveStatus);
     iService->AddAction(action, functor);
 }
@@ -479,6 +498,13 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionCheckUpdate()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("CheckUpdate");
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoCheckUpdate);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionResetDisplay()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("ResetDisplay");
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoResetDisplay);
     iService->AddAction(action, functor);
 }
 
@@ -678,15 +704,14 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::DoUpdate(IDviInvocation& aInvocatio
 void DvProviderAvOpenhomeOrgHardwareConfig1::DoActive(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
-    Brhz Country;
-    aInvocation.InvocationReadString("Country", Country);
+    TBool IsSubscribe = aInvocation.InvocationReadBool("IsSubscribe");
     Brhz RealName;
     aInvocation.InvocationReadString("RealName", RealName);
     Brhz Email;
     aInvocation.InvocationReadString("Email", Email);
     aInvocation.InvocationReadEnd();
     DviInvocation invocation(aInvocation);
-    Active(invocation, Country, RealName, Email);
+    Active(invocation, IsSubscribe, RealName, Email);
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::DoGetActiveStatus(IDviInvocation& aInvocation)
@@ -704,6 +729,14 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::DoCheckUpdate(IDviInvocation& aInvo
     aInvocation.InvocationReadEnd();
     DviInvocation invocation(aInvocation);
     CheckUpdate(invocation);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoResetDisplay(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ResetDisplay(invocation);
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::DoGetHardWareInfo(IDviInvocation& aInvocation)
@@ -929,7 +962,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::Update(IDvInvocation& /*aResponse*/
     ASSERTS();
 }
 
-void DvProviderAvOpenhomeOrgHardwareConfig1::Active(IDvInvocation& /*aResponse*/, const Brx& /*aCountry*/, const Brx& /*aRealName*/, const Brx& /*aEmail*/)
+void DvProviderAvOpenhomeOrgHardwareConfig1::Active(IDvInvocation& /*aResponse*/, TBool /*aIsSubscribe*/, const Brx& /*aRealName*/, const Brx& /*aEmail*/)
 {
     ASSERTS();
 }
@@ -940,6 +973,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetActiveStatus(IDvInvocation& /*aR
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::CheckUpdate(IDvInvocation& /*aResponse*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::ResetDisplay(IDvInvocation& /*aResponse*/)
 {
     ASSERTS();
 }

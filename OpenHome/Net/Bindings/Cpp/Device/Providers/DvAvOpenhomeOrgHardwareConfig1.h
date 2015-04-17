@@ -308,6 +308,20 @@ public:
      */
     void GetPropertyProtectPassword(std::string& aValue);
     /**
+     * Set the value of the ActiveStatus property
+     *
+     * Can only be called if EnablePropertyActiveStatus has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    bool SetPropertyActiveStatus(const std::string& aValue);
+    /**
+     * Get a copy of the value of the ActiveStatus property
+     *
+     * Can only be called if EnablePropertyActiveStatus has previously been called.
+     */
+    void GetPropertyActiveStatus(std::string& aValue);
+    /**
      * Set the value of the Time property
      *
      * Can only be called if EnablePropertyTime has previously been called.
@@ -423,6 +437,10 @@ protected:
      */
     void EnablePropertyProtectPassword();
     /**
+     * Enable the ActiveStatus property.
+     */
+    void EnablePropertyActiveStatus();
+    /**
      * Enable the Time property.
      */
     void EnablePropertyTime();
@@ -460,6 +478,12 @@ protected:
      * CheckUpdate must be overridden if this is called.
      */
     void EnableActionCheckUpdate();
+    /**
+     * Signal that the action ResetDisplay is supported.
+     * The action's availability will be published in the device's service.xml.
+     * ResetDisplay must be overridden if this is called.
+     */
+    void EnableActionResetDisplay();
     /**
      * Signal that the action GetHardWareInfo is supported.
      * The action's availability will be published in the device's service.xml.
@@ -598,7 +622,7 @@ private:
      * Active action for the owning device.
      * Must be implemented iff EnableActionActive was called.
      */
-    virtual void Active(IDvInvocationStd& aInvocation, const std::string& aCountry, const std::string& aRealName, const std::string& aEmail);
+    virtual void Active(IDvInvocationStd& aInvocation, bool aIsSubscribe, const std::string& aRealName, const std::string& aEmail);
     /**
      * GetActiveStatus action.
      *
@@ -615,6 +639,14 @@ private:
      * Must be implemented iff EnableActionCheckUpdate was called.
      */
     virtual void CheckUpdate(IDvInvocationStd& aInvocation);
+    /**
+     * ResetDisplay action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * ResetDisplay action for the owning device.
+     * Must be implemented iff EnableActionResetDisplay was called.
+     */
+    virtual void ResetDisplay(IDvInvocationStd& aInvocation);
     /**
      * GetHardWareInfo action.
      *
@@ -774,6 +806,7 @@ private:
     void DoActive(IDviInvocation& aInvocation);
     void DoGetActiveStatus(IDviInvocation& aInvocation);
     void DoCheckUpdate(IDviInvocation& aInvocation);
+    void DoResetDisplay(IDviInvocation& aInvocation);
     void DoGetHardWareInfo(IDviInvocation& aInvocation);
     void DoSetRoomName(IDviInvocation& aInvocation);
     void DoGetVolumeControl(IDviInvocation& aInvocation);
@@ -814,6 +847,7 @@ private:
     PropertyString* iPropertyIpAddress;
     PropertyString* iPropertyProtect;
     PropertyString* iPropertyProtectPassword;
+    PropertyString* iPropertyActiveStatus;
     PropertyString* iPropertyTime;
     PropertyBool* iPropertyVolumeControl;
 };

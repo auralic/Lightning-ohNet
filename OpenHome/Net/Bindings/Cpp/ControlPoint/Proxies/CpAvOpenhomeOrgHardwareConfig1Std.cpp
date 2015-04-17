@@ -122,6 +122,27 @@ void SyncCheckUpdateAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAs
 }
 
 
+class SyncResetDisplayAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncResetDisplayAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncResetDisplayAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+};
+
+SyncResetDisplayAvOpenhomeOrgHardwareConfig1Cpp::SyncResetDisplayAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncResetDisplayAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndResetDisplay(aAsync);
+}
+
+
 class SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
 {
 public:
@@ -581,7 +602,7 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::CpProxyAvOpenhomeOrgHardwareConfig1Cpp(C
     iActionUpdate = new Action("Update");
 
     iActionActive = new Action("Active");
-    param = new OpenHome::Net::ParameterString("Country");
+    param = new OpenHome::Net::ParameterBool("IsSubscribe");
     iActionActive->AddInputParameter(param);
     param = new OpenHome::Net::ParameterString("RealName");
     iActionActive->AddInputParameter(param);
@@ -593,6 +614,8 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::CpProxyAvOpenhomeOrgHardwareConfig1Cpp(C
     iActionGetActiveStatus->AddOutputParameter(param);
 
     iActionCheckUpdate = new Action("CheckUpdate");
+
+    iActionResetDisplay = new Action("ResetDisplay");
 
     iActionGetHardWareInfo = new Action("GetHardWareInfo");
     param = new OpenHome::Net::ParameterString("HardWareInfo");
@@ -779,6 +802,9 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::CpProxyAvOpenhomeOrgHardwareConfig1Cpp(C
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1Cpp::ProtectPasswordPropertyChanged);
     iProtectPassword = new PropertyString(aDevice.Device().GetCpStack().Env(), "ProtectPassword", functor);
     AddProperty(iProtectPassword);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1Cpp::ActiveStatusPropertyChanged);
+    iActiveStatus = new PropertyString(aDevice.Device().GetCpStack().Env(), "ActiveStatus", functor);
+    AddProperty(iActiveStatus);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1Cpp::TimePropertyChanged);
     iTime = new PropertyString(aDevice.Device().GetCpStack().Env(), "Time", functor);
     AddProperty(iTime);
@@ -795,6 +821,7 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::~CpProxyAvOpenhomeOrgHardwareConfig1Cpp(
     delete iActionActive;
     delete iActionGetActiveStatus;
     delete iActionCheckUpdate;
+    delete iActionResetDisplay;
     delete iActionGetHardWareInfo;
     delete iActionSetRoomName;
     delete iActionGetVolumeControl;
@@ -875,22 +902,19 @@ void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndUpdate(IAsync& aAsync)
     }
 }
 
-void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncActive(const std::string& aCountry, const std::string& aRealName, const std::string& aEmail)
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncActive(bool aIsSubscribe, const std::string& aRealName, const std::string& aEmail)
 {
     SyncActiveAvOpenhomeOrgHardwareConfig1Cpp sync(*this);
-    BeginActive(aCountry, aRealName, aEmail, sync.Functor());
+    BeginActive(aIsSubscribe, aRealName, aEmail, sync.Functor());
     sync.Wait();
 }
 
-void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginActive(const std::string& aCountry, const std::string& aRealName, const std::string& aEmail, FunctorAsync& aFunctor)
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginActive(bool aIsSubscribe, const std::string& aRealName, const std::string& aEmail, FunctorAsync& aFunctor)
 {
     Invocation* invocation = iService->Invocation(*iActionActive, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionActive->InputParameters();
-    {
-        Brn buf((const TByte*)aCountry.c_str(), (TUint)aCountry.length());
-        invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
-    }
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aIsSubscribe));
     {
         Brn buf((const TByte*)aRealName.c_str(), (TUint)aRealName.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
@@ -969,6 +993,33 @@ void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndCheckUpdate(IAsync& aAsync)
     ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
     Invocation& invocation = (Invocation&)aAsync;
     ASSERT(invocation.Action().Name() == Brn("CheckUpdate"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncResetDisplay()
+{
+    SyncResetDisplayAvOpenhomeOrgHardwareConfig1Cpp sync(*this);
+    BeginResetDisplay(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginResetDisplay(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionResetDisplay, aFunctor);
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndResetDisplay(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("ResetDisplay"));
 
     Error::ELevel level;
     TUint code;
@@ -1865,6 +1916,13 @@ void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SetPropertyProtectPasswordChanged(F
     iLock->Signal();
 }
 
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SetPropertyActiveStatusChanged(Functor& aFunctor)
+{
+    iLock->Wait();
+    iActiveStatusChanged = aFunctor;
+    iLock->Signal();
+}
+
 void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SetPropertyTimeChanged(Functor& aFunctor)
 {
     iLock->Wait();
@@ -2035,6 +2093,14 @@ void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::PropertyProtectPassword(std::string
     aProtectPassword.assign((const char*)val.Ptr(), val.Bytes());
 }
 
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::PropertyActiveStatus(std::string& aActiveStatus) const
+{
+    AutoMutex a(PropertyReadLock());
+    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    const Brx& val = iActiveStatus->Value();
+    aActiveStatus.assign((const char*)val.Ptr(), val.Bytes());
+}
+
 void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::PropertyTime(std::string& aTime) const
 {
     AutoMutex a(PropertyReadLock());
@@ -2148,6 +2214,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::ProtectPropertyChanged()
 void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::ProtectPasswordPropertyChanged()
 {
     ReportEvent(iProtectPasswordChanged);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::ActiveStatusPropertyChanged()
+{
+    ReportEvent(iActiveStatusChanged);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::TimePropertyChanged()

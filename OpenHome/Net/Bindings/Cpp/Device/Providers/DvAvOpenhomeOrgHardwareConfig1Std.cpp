@@ -281,6 +281,20 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetPropertyProtectPassword(std::
     aValue.assign((const char*)val.Ptr(), val.Bytes());
 }
 
+bool DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetPropertyActiveStatus(const std::string& aValue)
+{
+    ASSERT(iPropertyActiveStatus != NULL);
+    Brn buf((const TByte*)aValue.c_str(), (TUint)aValue.length());
+    return SetPropertyString(*iPropertyActiveStatus, buf);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetPropertyActiveStatus(std::string& aValue)
+{
+    ASSERT(iPropertyActiveStatus != NULL);
+    const Brx& val = iPropertyActiveStatus->Value();
+    aValue.assign((const char*)val.Ptr(), val.Bytes());
+}
+
 bool DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetPropertyTime(const std::string& aValue)
 {
     ASSERT(iPropertyTime != NULL);
@@ -330,6 +344,7 @@ DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DvProviderAvOpenhomeOrgHardwareConfig
     iPropertyIpAddress = NULL;
     iPropertyProtect = NULL;
     iPropertyProtectPassword = NULL;
+    iPropertyActiveStatus = NULL;
     iPropertyTime = NULL;
     iPropertyVolumeControl = NULL;
 }
@@ -454,6 +469,12 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnablePropertyProtectPassword()
     iService->AddProperty(iPropertyProtectPassword); // passes ownership
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnablePropertyActiveStatus()
+{
+    iPropertyActiveStatus = new PropertyString(iDvStack.Env(), new ParameterString("ActiveStatus"));
+    iService->AddProperty(iPropertyActiveStatus); // passes ownership
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnablePropertyTime()
 {
     iPropertyTime = new PropertyString(iDvStack.Env(), new ParameterString("Time"));
@@ -484,7 +505,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionUpdate()
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionActive()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("Active");
-    action->AddInputParameter(new ParameterString("Country"));
+    action->AddInputParameter(new ParameterBool("IsSubscribe"));
     action->AddInputParameter(new ParameterString("RealName"));
     action->AddInputParameter(new ParameterString("Email"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoActive);
@@ -494,7 +515,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionActive()
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetActiveStatus()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("GetActiveStatus");
-    action->AddOutputParameter(new ParameterString("ActiveStatus"));
+    action->AddOutputParameter(new ParameterRelated("ActiveStatus", *iPropertyActiveStatus));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetActiveStatus);
     iService->AddAction(action, functor);
 }
@@ -503,6 +524,13 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionCheckUpdate()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("CheckUpdate");
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoCheckUpdate);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionResetDisplay()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("ResetDisplay");
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoResetDisplay);
     iService->AddAction(action, functor);
 }
 
@@ -708,9 +736,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoUpdate(IDviInvocation& aInvoca
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoActive(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
-    Brhz buf_Country;
-    aInvocation.InvocationReadString("Country", buf_Country);
-    std::string Country((const char*)buf_Country.Ptr(), buf_Country.Bytes());
+    bool IsSubscribe = aInvocation.InvocationReadBool("IsSubscribe");
     Brhz buf_RealName;
     aInvocation.InvocationReadString("RealName", buf_RealName);
     std::string RealName((const char*)buf_RealName.Ptr(), buf_RealName.Bytes());
@@ -719,7 +745,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoActive(IDviInvocation& aInvoca
     std::string Email((const char*)buf_Email.Ptr(), buf_Email.Bytes());
     aInvocation.InvocationReadEnd();
     DvInvocationStd invocation(aInvocation);
-    Active(invocation, Country, RealName, Email);
+    Active(invocation, IsSubscribe, RealName, Email);
     aInvocation.InvocationWriteStart();
     aInvocation.InvocationWriteEnd();
 }
@@ -745,6 +771,16 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoCheckUpdate(IDviInvocation& aI
     aInvocation.InvocationReadEnd();
     DvInvocationStd invocation(aInvocation);
     CheckUpdate(invocation);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoResetDisplay(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    ResetDisplay(invocation);
     aInvocation.InvocationWriteStart();
     aInvocation.InvocationWriteEnd();
 }
@@ -1116,7 +1152,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::Update(IDvInvocationStd& /*aInvo
     ASSERTS();
 }
 
-void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::Active(IDvInvocationStd& /*aInvocation*/, const std::string& /*aCountry*/, const std::string& /*aRealName*/, const std::string& /*aEmail*/)
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::Active(IDvInvocationStd& /*aInvocation*/, bool /*aIsSubscribe*/, const std::string& /*aRealName*/, const std::string& /*aEmail*/)
 {
     ASSERTS();
 }
@@ -1127,6 +1163,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetActiveStatus(IDvInvocationStd
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::CheckUpdate(IDvInvocationStd& /*aInvocation*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::ResetDisplay(IDvInvocationStd& /*aInvocation*/)
 {
     ASSERTS();
 }

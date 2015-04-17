@@ -18,8 +18,9 @@ var CpProxyAvOpenhomeOrgServerConfig1 = function(udn){
     
     // Collection of service properties
     this.serviceProperties = {};
+    this.serviceProperties["Alive"] = new ohnet.serviceproperty("Alive","bool");
 
-    
+          
 }
 
 
@@ -43,6 +44,19 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.unsubscribe = function () {
 }
 
 
+    
+
+/**
+* Adds a listener to handle "Alive" property change events
+* @method Alive_Changed
+* @param {Function} stateChangedFunction The handler for state changes
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.Alive_Changed = function (stateChangedFunction) {
+    this.serviceProperties.Alive.addListener(function (state) 
+    { 
+        stateChangedFunction(ohnet.soaprequest.readBoolParameter(state)); 
+    });
+}
 
 
 /**
@@ -136,6 +150,7 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.GetWorkMode = function(successFuncti
     var request = new ohnet.soaprequest("GetWorkMode", this.url, this.domain, this.type, this.version);     
     request.send(function(result){
         result["WorkMode"] = ohnet.soaprequest.readStringParameter(result["WorkMode"]); 
+        result["WorkModeList"] = ohnet.soaprequest.readStringParameter(result["WorkModeList"]); 
     
         if (successFunction){
             successFunction(result);
@@ -175,6 +190,25 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.SetWorkMode = function(WorkMode, suc
 */
 CpProxyAvOpenhomeOrgServerConfig1.prototype.DelAllLocalDB = function(successFunction, errorFunction){ 
     var request = new ohnet.soaprequest("DelAllLocalDB", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to InitHDD
+* @method InitHDD
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.InitHDD = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("InitHDD", this.url, this.domain, this.type, this.version);     
     request.send(function(result){
     
         if (successFunction){
@@ -315,15 +349,15 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.SetSMBConfig = function(SMBAddr, SMB
 
 
 /**
-* A service action to GetSMBConnectResult
-* @method GetSMBConnectResult
+* A service action to GetDriveMountResult
+* @method GetDriveMountResult
 * @param {Function} successFunction The function that is executed when the action has completed successfully
 * @param {Function} errorFunction The function that is executed when the action has cause an error
 */
-CpProxyAvOpenhomeOrgServerConfig1.prototype.GetSMBConnectResult = function(successFunction, errorFunction){ 
-    var request = new ohnet.soaprequest("GetSMBConnectResult", this.url, this.domain, this.type, this.version);     
+CpProxyAvOpenhomeOrgServerConfig1.prototype.GetDriveMountResult = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetDriveMountResult", this.url, this.domain, this.type, this.version);     
     request.send(function(result){
-        result["SMBConnectResult"] = ohnet.soaprequest.readBoolParameter(result["SMBConnectResult"]); 
+        result["DriveMountResult"] = ohnet.soaprequest.readBoolParameter(result["DriveMountResult"]); 
     
         if (successFunction){
             successFunction(result);

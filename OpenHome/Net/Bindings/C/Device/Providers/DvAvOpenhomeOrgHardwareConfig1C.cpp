@@ -58,6 +58,8 @@ public:
     void GetPropertyProtect(Brhz& aValue);
     TBool SetPropertyProtectPassword(const Brx& aValue);
     void GetPropertyProtectPassword(Brhz& aValue);
+    TBool SetPropertyActiveStatus(const Brx& aValue);
+    void GetPropertyActiveStatus(Brhz& aValue);
     TBool SetPropertyTime(const Brx& aValue);
     void GetPropertyTime(Brhz& aValue);
     TBool SetPropertyVolumeControl(TBool aValue);
@@ -82,6 +84,7 @@ public:
     void EnablePropertyIpAddress();
     void EnablePropertyProtect();
     void EnablePropertyProtectPassword();
+    void EnablePropertyActiveStatus();
     void EnablePropertyTime();
     void EnablePropertyVolumeControl();
     void EnableActionIsAlive(CallbackHardwareConfig1IsAlive aCallback, void* aPtr);
@@ -89,6 +92,7 @@ public:
     void EnableActionActive(CallbackHardwareConfig1Active aCallback, void* aPtr);
     void EnableActionGetActiveStatus(CallbackHardwareConfig1GetActiveStatus aCallback, void* aPtr);
     void EnableActionCheckUpdate(CallbackHardwareConfig1CheckUpdate aCallback, void* aPtr);
+    void EnableActionResetDisplay(CallbackHardwareConfig1ResetDisplay aCallback, void* aPtr);
     void EnableActionGetHardWareInfo(CallbackHardwareConfig1GetHardWareInfo aCallback, void* aPtr);
     void EnableActionSetRoomName(CallbackHardwareConfig1SetRoomName aCallback, void* aPtr);
     void EnableActionGetVolumeControl(CallbackHardwareConfig1GetVolumeControl aCallback, void* aPtr);
@@ -114,6 +118,7 @@ private:
     void DoActive(IDviInvocation& aInvocation);
     void DoGetActiveStatus(IDviInvocation& aInvocation);
     void DoCheckUpdate(IDviInvocation& aInvocation);
+    void DoResetDisplay(IDviInvocation& aInvocation);
     void DoGetHardWareInfo(IDviInvocation& aInvocation);
     void DoSetRoomName(IDviInvocation& aInvocation);
     void DoGetVolumeControl(IDviInvocation& aInvocation);
@@ -144,6 +149,8 @@ private:
     void* iPtrGetActiveStatus;
     CallbackHardwareConfig1CheckUpdate iCallbackCheckUpdate;
     void* iPtrCheckUpdate;
+    CallbackHardwareConfig1ResetDisplay iCallbackResetDisplay;
+    void* iPtrResetDisplay;
     CallbackHardwareConfig1GetHardWareInfo iCallbackGetHardWareInfo;
     void* iPtrGetHardWareInfo;
     CallbackHardwareConfig1SetRoomName iCallbackSetRoomName;
@@ -202,6 +209,7 @@ private:
     PropertyString* iPropertyIpAddress;
     PropertyString* iPropertyProtect;
     PropertyString* iPropertyProtectPassword;
+    PropertyString* iPropertyActiveStatus;
     PropertyString* iPropertyTime;
     PropertyBool* iPropertyVolumeControl;
 };
@@ -229,6 +237,7 @@ DvProviderAvOpenhomeOrgHardwareConfig1C::DvProviderAvOpenhomeOrgHardwareConfig1C
     iPropertyIpAddress = NULL;
     iPropertyProtect = NULL;
     iPropertyProtectPassword = NULL;
+    iPropertyActiveStatus = NULL;
     iPropertyTime = NULL;
     iPropertyVolumeControl = NULL;
 }
@@ -473,6 +482,18 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::GetPropertyProtectPassword(Brhz& a
     aValue.Set(iPropertyProtectPassword->Value());
 }
 
+TBool DvProviderAvOpenhomeOrgHardwareConfig1C::SetPropertyActiveStatus(const Brx& aValue)
+{
+    ASSERT(iPropertyActiveStatus != NULL);
+    return SetPropertyString(*iPropertyActiveStatus, aValue);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::GetPropertyActiveStatus(Brhz& aValue)
+{
+    ASSERT(iPropertyActiveStatus != NULL);
+    aValue.Set(iPropertyActiveStatus->Value());
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1C::SetPropertyTime(const Brx& aValue)
 {
     ASSERT(iPropertyTime != NULL);
@@ -617,6 +638,12 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnablePropertyProtectPassword()
     iService->AddProperty(iPropertyProtectPassword); // passes ownership
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnablePropertyActiveStatus()
+{
+    iPropertyActiveStatus = new PropertyString(iDvStack.Env(), new ParameterString("ActiveStatus"));
+    iService->AddProperty(iPropertyActiveStatus); // passes ownership
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1C::EnablePropertyTime()
 {
     iPropertyTime = new PropertyString(iDvStack.Env(), new ParameterString("Time"));
@@ -653,7 +680,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionActive(CallbackHardwar
     iCallbackActive = aCallback;
     iPtrActive = aPtr;
     OpenHome::Net::Action* action = new OpenHome::Net::Action("Active");
-    action->AddInputParameter(new ParameterString("Country"));
+    action->AddInputParameter(new ParameterBool("IsSubscribe"));
     action->AddInputParameter(new ParameterString("RealName"));
     action->AddInputParameter(new ParameterString("Email"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoActive);
@@ -665,7 +692,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetActiveStatus(Callba
     iCallbackGetActiveStatus = aCallback;
     iPtrGetActiveStatus = aPtr;
     OpenHome::Net::Action* action = new OpenHome::Net::Action("GetActiveStatus");
-    action->AddOutputParameter(new ParameterString("ActiveStatus"));
+    action->AddOutputParameter(new ParameterRelated("ActiveStatus", *iPropertyActiveStatus));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetActiveStatus);
     iService->AddAction(action, functor);
 }
@@ -676,6 +703,15 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionCheckUpdate(CallbackHa
     iPtrCheckUpdate = aPtr;
     OpenHome::Net::Action* action = new OpenHome::Net::Action("CheckUpdate");
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoCheckUpdate);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionResetDisplay(CallbackHardwareConfig1ResetDisplay aCallback, void* aPtr)
+{
+    iCallbackResetDisplay = aCallback;
+    iPtrResetDisplay = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("ResetDisplay");
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoResetDisplay);
     iService->AddAction(action, functor);
 }
 
@@ -939,8 +975,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::DoActive(IDviInvocation& aInvocati
     void* invocationCPtr;
     invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
     aInvocation.InvocationReadStart();
-    Brhz Country;
-    aInvocation.InvocationReadString("Country", Country);
+    TBool IsSubscribe = aInvocation.InvocationReadBool("IsSubscribe");
     Brhz RealName;
     aInvocation.InvocationReadString("RealName", RealName);
     Brhz Email;
@@ -948,7 +983,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::DoActive(IDviInvocation& aInvocati
     aInvocation.InvocationReadEnd();
     DviInvocation invocation(aInvocation);
     ASSERT(iCallbackActive != NULL);
-    if (0 != iCallbackActive(iPtrActive, invocationC, invocationCPtr, (const char*)Country.Ptr(), (const char*)RealName.Ptr(), (const char*)Email.Ptr())) {
+    if (0 != iCallbackActive(iPtrActive, invocationC, invocationCPtr, IsSubscribe, (const char*)RealName.Ptr(), (const char*)Email.Ptr())) {
         invocation.Error(502, Brn("Action failed"));
         return;
     }
@@ -991,6 +1026,24 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::DoCheckUpdate(IDviInvocation& aInv
     DviInvocation invocation(aInvocation);
     ASSERT(iCallbackCheckUpdate != NULL);
     if (0 != iCallbackCheckUpdate(iPtrCheckUpdate, invocationC, invocationCPtr)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoResetDisplay(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackResetDisplay != NULL);
+    if (0 != iCallbackResetDisplay(iPtrResetDisplay, invocationC, invocationCPtr)) {
         invocation.Error(502, Brn("Action failed"));
         return;
     }
@@ -1546,6 +1599,11 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionCheckUpdate(THand
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionCheckUpdate(aCallback, aPtr);
 }
 
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionResetDisplay(THandle aProvider, CallbackHardwareConfig1ResetDisplay aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionResetDisplay(aCallback, aPtr);
+}
+
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetHardWareInfo(THandle aProvider, CallbackHardwareConfig1GetHardWareInfo aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetHardWareInfo(aCallback, aPtr);
@@ -1917,6 +1975,20 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1GetPropertyProtectPassword(TH
     *aValue = (char*)buf.Transfer();
 }
 
+int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyActiveStatus(THandle aProvider, const char* aValue, uint32_t* aChanged)
+{
+    Brhz buf(aValue);
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->SetPropertyActiveStatus(buf)? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1GetPropertyActiveStatus(THandle aProvider, char** aValue)
+{
+    Brhz buf;
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->GetPropertyActiveStatus(buf);
+    *aValue = (char*)buf.Transfer();
+}
+
 int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyTime(THandle aProvider, const char* aValue, uint32_t* aChanged)
 {
     Brhz buf(aValue);
@@ -2042,6 +2114,11 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyProtect(THandle
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyProtectPassword(THandle aProvider)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnablePropertyProtectPassword();
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyActiveStatus(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnablePropertyActiveStatus();
 }
 
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyTime(THandle aProvider)

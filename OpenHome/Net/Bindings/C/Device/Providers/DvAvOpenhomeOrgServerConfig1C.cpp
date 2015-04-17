@@ -18,6 +18,9 @@ class DvProviderAvOpenhomeOrgServerConfig1C : public DvProvider
 {
 public:
     DvProviderAvOpenhomeOrgServerConfig1C(DvDeviceC aDevice);
+    TBool SetPropertyAlive(TBool aValue);
+    void GetPropertyAlive(TBool& aValue);
+    void EnablePropertyAlive();
     void EnableActionSetServerName(CallbackServerConfig1SetServerName aCallback, void* aPtr);
     void EnableActionGetServerVersion(CallbackServerConfig1GetServerVersion aCallback, void* aPtr);
     void EnableActionGetProgressInfo(CallbackServerConfig1GetProgressInfo aCallback, void* aPtr);
@@ -80,11 +83,31 @@ private:
     void* iPtrSetSMBConfig;
     CallbackServerConfig1GetDriveMountResult iCallbackGetDriveMountResult;
     void* iPtrGetDriveMountResult;
+    PropertyBool* iPropertyAlive;
 };
 
 DvProviderAvOpenhomeOrgServerConfig1C::DvProviderAvOpenhomeOrgServerConfig1C(DvDeviceC aDevice)
     : DvProvider(DviDeviceC::DeviceFromHandle(aDevice)->Device(), "av.openhome.org", "ServerConfig", 1)
 {
+    iPropertyAlive = NULL;
+}
+
+TBool DvProviderAvOpenhomeOrgServerConfig1C::SetPropertyAlive(TBool aValue)
+{
+    ASSERT(iPropertyAlive != NULL);
+    return SetPropertyBool(*iPropertyAlive, aValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::GetPropertyAlive(TBool& aValue)
+{
+    ASSERT(iPropertyAlive != NULL);
+    aValue = iPropertyAlive->Value();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnablePropertyAlive()
+{
+    iPropertyAlive = new PropertyBool(iDvStack.Env(), new ParameterBool("Alive"));
+    iService->AddProperty(iPropertyAlive); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionSetServerName(CallbackServerConfig1SetServerName aCallback, void* aPtr)
@@ -684,5 +707,23 @@ void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionSetSMBConfig(THandl
 void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetDriveMountResult(THandle aProvider, CallbackServerConfig1GetDriveMountResult aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionGetDriveMountResult(aCallback, aPtr);
+}
+
+int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
+{
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->SetPropertyAlive((aValue!=0))? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1GetPropertyAlive(THandle aProvider, uint32_t* aValue)
+{
+    TBool val;
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->GetPropertyAlive(val);
+    *aValue = (val? 1 : 0);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnablePropertyAlive(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnablePropertyAlive();
 }
 

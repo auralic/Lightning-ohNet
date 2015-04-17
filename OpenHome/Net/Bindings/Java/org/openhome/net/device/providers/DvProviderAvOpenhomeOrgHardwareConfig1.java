@@ -330,6 +330,22 @@ interface IDvProviderAvOpenhomeOrgHardwareConfig1
     public String getPropertyProtectPassword();
 
     /**
+     * Set the value of the ActiveStatus property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyActiveStatus(String aValue);
+
+    /**
+     * Get a copy of the value of the ActiveStatus property
+     *
+     * @return value of the ActiveStatus property.
+     */
+    public String getPropertyActiveStatus();
+
+    /**
      * Set the value of the Time property
      *
      * @param aValue    new value for the property.
@@ -577,6 +593,7 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     private IDvInvocationListener iDelegateActive;
     private IDvInvocationListener iDelegateGetActiveStatus;
     private IDvInvocationListener iDelegateCheckUpdate;
+    private IDvInvocationListener iDelegateResetDisplay;
     private IDvInvocationListener iDelegateGetHardWareInfo;
     private IDvInvocationListener iDelegateSetRoomName;
     private IDvInvocationListener iDelegateGetVolumeControl;
@@ -616,6 +633,7 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     private PropertyString iPropertyIpAddress;
     private PropertyString iPropertyProtect;
     private PropertyString iPropertyProtectPassword;
+    private PropertyString iPropertyActiveStatus;
     private PropertyString iPropertyTime;
     private PropertyBool iPropertyVolumeControl;
 
@@ -823,6 +841,16 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
         List<String> allowedValues = new LinkedList<String>();
         iPropertyProtectPassword = new PropertyString(new ParameterString("ProtectPassword", allowedValues));
         addProperty(iPropertyProtectPassword);
+    }
+
+    /**
+     * Enable the ActiveStatus property.
+     */
+    public void enablePropertyActiveStatus()
+    {
+        List<String> allowedValues = new LinkedList<String>();
+        iPropertyActiveStatus = new PropertyString(new ParameterString("ActiveStatus", allowedValues));
+        addProperty(iPropertyActiveStatus);
     }
 
     /**
@@ -1285,6 +1313,28 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     }
 
     /**
+     * Set the value of the ActiveStatus property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyActiveStatus(String aValue)
+    {
+        return setPropertyString(iPropertyActiveStatus, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the ActiveStatus property
+     *
+     * @return  value of the ActiveStatus property.
+     */
+    public String getPropertyActiveStatus()
+    {
+        return iPropertyActiveStatus.getValue();
+    }
+
+    /**
      * Set the value of the Time property
      *
      * @param aValue    new value for the property.
@@ -1364,7 +1414,7 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     protected void enableActionActive()
     {
         Action action = new Action("Active");        List<String> allowedValues = new LinkedList<String>();
-        action.addInputParameter(new ParameterString("Country", allowedValues));
+        action.addInputParameter(new ParameterBool("IsSubscribe"));
         action.addInputParameter(new ParameterString("RealName", allowedValues));
         action.addInputParameter(new ParameterString("Email", allowedValues));
         iDelegateActive = new DoActive();
@@ -1379,8 +1429,8 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
      */      
     protected void enableActionGetActiveStatus()
     {
-        Action action = new Action("GetActiveStatus");        List<String> allowedValues = new LinkedList<String>();
-        action.addOutputParameter(new ParameterString("ActiveStatus", allowedValues));
+        Action action = new Action("GetActiveStatus");
+        action.addOutputParameter(new ParameterRelated("ActiveStatus", iPropertyActiveStatus));
         iDelegateGetActiveStatus = new DoGetActiveStatus();
         enableAction(action, iDelegateGetActiveStatus);
     }
@@ -1396,6 +1446,19 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
         Action action = new Action("CheckUpdate");
         iDelegateCheckUpdate = new DoCheckUpdate();
         enableAction(action, iDelegateCheckUpdate);
+    }
+
+    /**
+     * Signal that the action ResetDisplay is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * ResetDisplay must be overridden if this is called.
+     */      
+    protected void enableActionResetDisplay()
+    {
+        Action action = new Action("ResetDisplay");
+        iDelegateResetDisplay = new DoResetDisplay();
+        enableAction(action, iDelegateResetDisplay);
     }
 
     /**
@@ -1727,11 +1790,11 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
      * <p>Must be implemented iff {@link #enableActionActive} was called.</remarks>
      *
      * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
-     * @param aCountry
+     * @param aIsSubscribe
      * @param aRealName
      * @param aEmail
      */
-    protected void active(IDvInvocation aInvocation, String aCountry, String aRealName, String aEmail)
+    protected void active(IDvInvocation aInvocation, boolean aIsSubscribe, String aRealName, String aEmail)
     {
         throw (new ActionDisabledError());
     }
@@ -1762,6 +1825,21 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
      * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
      */
     protected void checkUpdate(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * ResetDisplay action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * ResetDisplay action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionResetDisplay} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected void resetDisplay(IDvInvocation aInvocation)
     {
         throw (new ActionDisabledError());
     }
@@ -2186,17 +2264,17 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
         public void actionInvoked(long aInvocation)
         {
             DvInvocation invocation = new DvInvocation(aInvocation);
-            String country;
+            boolean isSubscribe;
             String realName;
             String email;
             try
             {
                 invocation.readStart();
-                country = invocation.readString("Country");
+                isSubscribe = invocation.readBool("IsSubscribe");
                 realName = invocation.readString("RealName");
                 email = invocation.readString("Email");
                 invocation.readEnd();
-                active(invocation, country, realName, email);
+                active(invocation, isSubscribe, realName, email);
             }
             catch (ActionError ae)
             {
@@ -2295,6 +2373,52 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
             catch (ActionError ae)
             {
                 invocation.reportActionError(ae, "CheckUpdate");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoResetDisplay implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                resetDisplay(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "ResetDisplay");
                 return;
             }
             catch (PropertyUpdateError pue)

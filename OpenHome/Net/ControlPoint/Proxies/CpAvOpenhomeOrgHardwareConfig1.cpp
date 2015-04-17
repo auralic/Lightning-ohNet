@@ -120,6 +120,27 @@ void SyncCheckUpdateAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync
 }
 
 
+class SyncResetDisplayAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncResetDisplayAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncResetDisplayAvOpenhomeOrgHardwareConfig1() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+SyncResetDisplayAvOpenhomeOrgHardwareConfig1::SyncResetDisplayAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncResetDisplayAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndResetDisplay(aAsync);
+}
+
+
 class SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
 {
 public:
@@ -579,7 +600,7 @@ CpProxyAvOpenhomeOrgHardwareConfig1::CpProxyAvOpenhomeOrgHardwareConfig1(CpDevic
     iActionUpdate = new Action("Update");
 
     iActionActive = new Action("Active");
-    param = new OpenHome::Net::ParameterString("Country");
+    param = new OpenHome::Net::ParameterBool("IsSubscribe");
     iActionActive->AddInputParameter(param);
     param = new OpenHome::Net::ParameterString("RealName");
     iActionActive->AddInputParameter(param);
@@ -591,6 +612,8 @@ CpProxyAvOpenhomeOrgHardwareConfig1::CpProxyAvOpenhomeOrgHardwareConfig1(CpDevic
     iActionGetActiveStatus->AddOutputParameter(param);
 
     iActionCheckUpdate = new Action("CheckUpdate");
+
+    iActionResetDisplay = new Action("ResetDisplay");
 
     iActionGetHardWareInfo = new Action("GetHardWareInfo");
     param = new OpenHome::Net::ParameterString("HardWareInfo");
@@ -777,6 +800,9 @@ CpProxyAvOpenhomeOrgHardwareConfig1::CpProxyAvOpenhomeOrgHardwareConfig1(CpDevic
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1::ProtectPasswordPropertyChanged);
     iProtectPassword = new PropertyString(aDevice.Device().GetCpStack().Env(), "ProtectPassword", functor);
     AddProperty(iProtectPassword);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1::ActiveStatusPropertyChanged);
+    iActiveStatus = new PropertyString(aDevice.Device().GetCpStack().Env(), "ActiveStatus", functor);
+    AddProperty(iActiveStatus);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1::TimePropertyChanged);
     iTime = new PropertyString(aDevice.Device().GetCpStack().Env(), "Time", functor);
     AddProperty(iTime);
@@ -793,6 +819,7 @@ CpProxyAvOpenhomeOrgHardwareConfig1::~CpProxyAvOpenhomeOrgHardwareConfig1()
     delete iActionActive;
     delete iActionGetActiveStatus;
     delete iActionCheckUpdate;
+    delete iActionResetDisplay;
     delete iActionGetHardWareInfo;
     delete iActionSetRoomName;
     delete iActionGetVolumeControl;
@@ -873,19 +900,19 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::EndUpdate(IAsync& aAsync)
     }
 }
 
-void CpProxyAvOpenhomeOrgHardwareConfig1::SyncActive(const Brx& aCountry, const Brx& aRealName, const Brx& aEmail)
+void CpProxyAvOpenhomeOrgHardwareConfig1::SyncActive(TBool aIsSubscribe, const Brx& aRealName, const Brx& aEmail)
 {
     SyncActiveAvOpenhomeOrgHardwareConfig1 sync(*this);
-    BeginActive(aCountry, aRealName, aEmail, sync.Functor());
+    BeginActive(aIsSubscribe, aRealName, aEmail, sync.Functor());
     sync.Wait();
 }
 
-void CpProxyAvOpenhomeOrgHardwareConfig1::BeginActive(const Brx& aCountry, const Brx& aRealName, const Brx& aEmail, FunctorAsync& aFunctor)
+void CpProxyAvOpenhomeOrgHardwareConfig1::BeginActive(TBool aIsSubscribe, const Brx& aRealName, const Brx& aEmail, FunctorAsync& aFunctor)
 {
     Invocation* invocation = iService->Invocation(*iActionActive, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionActive->InputParameters();
-    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aCountry));
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aIsSubscribe));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aRealName));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aEmail));
     iInvocable.InvokeAction(*invocation);
@@ -955,6 +982,33 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::EndCheckUpdate(IAsync& aAsync)
     ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
     Invocation& invocation = (Invocation&)aAsync;
     ASSERT(invocation.Action().Name() == Brn("CheckUpdate"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SyncResetDisplay()
+{
+    SyncResetDisplayAvOpenhomeOrgHardwareConfig1 sync(*this);
+    BeginResetDisplay(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::BeginResetDisplay(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionResetDisplay, aFunctor);
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::EndResetDisplay(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("ResetDisplay"));
 
     Error::ELevel level;
     TUint code;
@@ -1737,6 +1791,13 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyProtectPasswordChanged(Func
     iLock->Signal();
 }
 
+void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyActiveStatusChanged(Functor& aFunctor)
+{
+    iLock->Wait();
+    iActiveStatusChanged = aFunctor;
+    iLock->Signal();
+}
+
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyTimeChanged(Functor& aFunctor)
 {
     iLock->Wait();
@@ -1891,6 +1952,13 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyProtectPassword(Brhz& aProtect
     aProtectPassword.Set(iProtectPassword->Value());
 }
 
+void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyActiveStatus(Brhz& aActiveStatus) const
+{
+    AutoMutex a(PropertyReadLock());
+    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    aActiveStatus.Set(iActiveStatus->Value());
+}
+
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyTime(Brhz& aTime) const
 {
     AutoMutex a(PropertyReadLock());
@@ -2003,6 +2071,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::ProtectPropertyChanged()
 void CpProxyAvOpenhomeOrgHardwareConfig1::ProtectPasswordPropertyChanged()
 {
     ReportEvent(iProtectPasswordChanged);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::ActiveStatusPropertyChanged()
+{
+    ReportEvent(iActiveStatusChanged);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::TimePropertyChanged()

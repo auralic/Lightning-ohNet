@@ -8,6 +8,19 @@ namespace OpenHome.Net.Device.Providers
 {
     public interface IDvProviderAvOpenhomeOrgServerConfig1 : IDisposable
     {
+
+        /// <summary>
+        /// Set the value of the Alive property
+        /// </summary>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        bool SetPropertyAlive(bool aValue);
+
+        /// <summary>
+        /// Get a copy of the value of the Alive property
+        /// </summary>
+        /// <returns>Value of the Alive property.</param>
+        bool PropertyAlive();
         
     }
     /// <summary>
@@ -31,6 +44,7 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateGetSMBConfig;
         private ActionDelegate iDelegateSetSMBConfig;
         private ActionDelegate iDelegateGetDriveMountResult;
+        private PropertyBool iPropertyAlive;
 
         /// <summary>
         /// Constructor
@@ -40,6 +54,40 @@ namespace OpenHome.Net.Device.Providers
             : base(aDevice, "av.openhome.org", "ServerConfig", 1)
         {
             iGch = GCHandle.Alloc(this);
+        }
+
+        /// <summary>
+        /// Enable the Alive property.
+        /// </summary>
+        public void EnablePropertyAlive()
+        {
+            iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
+            AddProperty(iPropertyAlive);
+        }
+
+        /// <summary>
+        /// Set the value of the Alive property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyAlive has previously been called.</remarks>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        public bool SetPropertyAlive(bool aValue)
+        {
+            if (iPropertyAlive == null)
+                throw new PropertyDisabledError();
+            return SetPropertyBool(iPropertyAlive, aValue);
+        }
+
+        /// <summary>
+        /// Get a copy of the value of the Alive property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyAlive has previously been called.</remarks>
+        /// <returns>Value of the Alive property.</returns>
+        public bool PropertyAlive()
+        {
+            if (iPropertyAlive == null)
+                throw new PropertyDisabledError();
+            return iPropertyAlive.Value();
         }
 
         /// <summary>

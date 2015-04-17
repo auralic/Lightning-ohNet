@@ -270,6 +270,19 @@ namespace OpenHome.Net.Device.Providers
         string PropertyProtectPassword();
 
         /// <summary>
+        /// Set the value of the ActiveStatus property
+        /// </summary>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        bool SetPropertyActiveStatus(string aValue);
+
+        /// <summary>
+        /// Get a copy of the value of the ActiveStatus property
+        /// </summary>
+        /// <returns>Value of the ActiveStatus property.</param>
+        string PropertyActiveStatus();
+
+        /// <summary>
         /// Set the value of the Time property
         /// </summary>
         /// <param name="aValue">New value for the property</param>
@@ -307,6 +320,7 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateActive;
         private ActionDelegate iDelegateGetActiveStatus;
         private ActionDelegate iDelegateCheckUpdate;
+        private ActionDelegate iDelegateResetDisplay;
         private ActionDelegate iDelegateGetHardWareInfo;
         private ActionDelegate iDelegateSetRoomName;
         private ActionDelegate iDelegateGetVolumeControl;
@@ -346,6 +360,7 @@ namespace OpenHome.Net.Device.Providers
         private PropertyString iPropertyIpAddress;
         private PropertyString iPropertyProtect;
         private PropertyString iPropertyProtectPassword;
+        private PropertyString iPropertyActiveStatus;
         private PropertyString iPropertyTime;
         private PropertyBool iPropertyVolumeControl;
 
@@ -553,6 +568,16 @@ namespace OpenHome.Net.Device.Providers
             List<String> allowedValues = new List<String>();
             iPropertyProtectPassword = new PropertyString(new ParameterString("ProtectPassword", allowedValues));
             AddProperty(iPropertyProtectPassword);
+        }
+
+        /// <summary>
+        /// Enable the ActiveStatus property.
+        /// </summary>
+        public void EnablePropertyActiveStatus()
+        {
+            List<String> allowedValues = new List<String>();
+            iPropertyActiveStatus = new PropertyString(new ParameterString("ActiveStatus", allowedValues));
+            AddProperty(iPropertyActiveStatus);
         }
 
         /// <summary>
@@ -1075,6 +1100,31 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Set the value of the ActiveStatus property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyActiveStatus has previously been called.</remarks>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        public bool SetPropertyActiveStatus(string aValue)
+        {
+            if (iPropertyActiveStatus == null)
+                throw new PropertyDisabledError();
+            return SetPropertyString(iPropertyActiveStatus, aValue);
+        }
+
+        /// <summary>
+        /// Get a copy of the value of the ActiveStatus property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyActiveStatus has previously been called.</remarks>
+        /// <returns>Value of the ActiveStatus property.</returns>
+        public string PropertyActiveStatus()
+        {
+            if (iPropertyActiveStatus == null)
+                throw new PropertyDisabledError();
+            return iPropertyActiveStatus.Value();
+        }
+
+        /// <summary>
         /// Set the value of the Time property
         /// </summary>
         /// <remarks>Can only be called if EnablePropertyTime has previously been called.</remarks>
@@ -1158,7 +1208,7 @@ namespace OpenHome.Net.Device.Providers
         {
             OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("Active");
             List<String> allowedValues = new List<String>();
-            action.AddInputParameter(new ParameterString("Country", allowedValues));
+            action.AddInputParameter(new ParameterBool("IsSubscribe"));
             action.AddInputParameter(new ParameterString("RealName", allowedValues));
             action.AddInputParameter(new ParameterString("Email", allowedValues));
             iDelegateActive = new ActionDelegate(DoActive);
@@ -1173,8 +1223,7 @@ namespace OpenHome.Net.Device.Providers
         protected void EnableActionGetActiveStatus()
         {
             OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetActiveStatus");
-            List<String> allowedValues = new List<String>();
-            action.AddOutputParameter(new ParameterString("ActiveStatus", allowedValues));
+            action.AddOutputParameter(new ParameterRelated("ActiveStatus", iPropertyActiveStatus));
             iDelegateGetActiveStatus = new ActionDelegate(DoGetActiveStatus);
             EnableAction(action, iDelegateGetActiveStatus, GCHandle.ToIntPtr(iGch));
         }
@@ -1189,6 +1238,18 @@ namespace OpenHome.Net.Device.Providers
             OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("CheckUpdate");
             iDelegateCheckUpdate = new ActionDelegate(DoCheckUpdate);
             EnableAction(action, iDelegateCheckUpdate, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action ResetDisplay is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// ResetDisplay must be overridden if this is called.</remarks>
+        protected void EnableActionResetDisplay()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("ResetDisplay");
+            iDelegateResetDisplay = new ActionDelegate(DoResetDisplay);
+            EnableAction(action, iDelegateResetDisplay, GCHandle.ToIntPtr(iGch));
         }
 
         /// <summary>
@@ -1499,10 +1560,10 @@ namespace OpenHome.Net.Device.Providers
         ///
         /// Must be implemented iff EnableActionActive was called.</remarks>
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
-        /// <param name="aCountry"></param>
+        /// <param name="aIsSubscribe"></param>
         /// <param name="aRealName"></param>
         /// <param name="aEmail"></param>
-        protected virtual void Active(IDvInvocation aInvocation, string aCountry, string aRealName, string aEmail)
+        protected virtual void Active(IDvInvocation aInvocation, bool aIsSubscribe, string aRealName, string aEmail)
         {
             throw (new ActionDisabledError());
         }
@@ -1530,6 +1591,19 @@ namespace OpenHome.Net.Device.Providers
         /// Must be implemented iff EnableActionCheckUpdate was called.</remarks>
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         protected virtual void CheckUpdate(IDvInvocation aInvocation)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// ResetDisplay action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// ResetDisplay action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionResetDisplay was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        protected virtual void ResetDisplay(IDvInvocation aInvocation)
         {
             throw (new ActionDisabledError());
         }
@@ -1919,17 +1993,17 @@ namespace OpenHome.Net.Device.Providers
             GCHandle gch = GCHandle.FromIntPtr(aPtr);
             DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
             DvInvocation invocation = new DvInvocation(aInvocation);
-            string country;
+            bool isSubscribe;
             string realName;
             string email;
             try
             {
                 invocation.ReadStart();
-                country = invocation.ReadString("Country");
+                isSubscribe = invocation.ReadBool("IsSubscribe");
                 realName = invocation.ReadString("RealName");
                 email = invocation.ReadString("Email");
                 invocation.ReadEnd();
-                self.Active(invocation, country, realName, email);
+                self.Active(invocation, isSubscribe, realName, email);
             }
             catch (ActionError e)
             {
@@ -2049,6 +2123,50 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "CheckUpdate", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoResetDisplay(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.ResetDisplay(invocation);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "ResetDisplay");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "ResetDisplay"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "ResetDisplay", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "ResetDisplay", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

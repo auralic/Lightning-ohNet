@@ -589,7 +589,28 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginGetDriveMountResult
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetDriveMountResult(THandle aHandle, OhNetHandleAsync aAsync, uint32_t* aDriveMountResult);
+/**
+ * Set a callback to be run when the Alive state variable changes.
+ *
+ * Callbacks may be run in different threads but callbacks for a
+ * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aCallback The callback to run when the state variable changes
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgServerConfig1SetPropertyAliveChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
 
+/**
+ * Query the value of the Alive property.
+ *
+ * This function is threadsafe and can only be called after the first callback
+ * following a call to CpProxyCSubscribe() and before CpProxyCUnsubscribe().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[out] aAlive
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
 
 /* @} */
 

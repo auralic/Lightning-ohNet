@@ -8,6 +8,22 @@ import org.openhome.net.device.*;
 
 interface IDvProviderAvOpenhomeOrgServerConfig1
 {
+
+    /**
+     * Set the value of the Alive property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyAlive(boolean aValue);
+
+    /**
+     * Get a copy of the value of the Alive property
+     *
+     * @return value of the Alive property.
+     */
+    public boolean getPropertyAlive();
         
 }
 
@@ -129,6 +145,7 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     private IDvInvocationListener iDelegateGetSMBConfig;
     private IDvInvocationListener iDelegateSetSMBConfig;
     private IDvInvocationListener iDelegateGetDriveMountResult;
+    private PropertyBool iPropertyAlive;
 
     /**
      * Constructor
@@ -138,6 +155,37 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     protected DvProviderAvOpenhomeOrgServerConfig1(DvDevice aDevice)
     {
         super(aDevice, "av.openhome.org", "ServerConfig", 1);
+    }
+
+    /**
+     * Enable the Alive property.
+     */
+    public void enablePropertyAlive()
+    {
+        iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
+        addProperty(iPropertyAlive);
+    }
+
+    /**
+     * Set the value of the Alive property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyAlive(boolean aValue)
+    {
+        return setPropertyBool(iPropertyAlive, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the Alive property
+     *
+     * @return  value of the Alive property.
+     */
+    public boolean getPropertyAlive()
+    {
+        return iPropertyAlive.getValue();
     }
 
     /**

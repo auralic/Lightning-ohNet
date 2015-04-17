@@ -167,6 +167,10 @@
         </action>
     </actionList>
     <serviceStateTable>
+      <stateVariable sendEvents="yes">
+         <name>Alive</name>
+         <dataType>boolean</dataType>
+      </stateVariable>
         <stateVariable sendEvents="no">
             <name>ServerName</name>
             <dataType>string</dataType>

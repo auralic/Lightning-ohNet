@@ -25,6 +25,20 @@ class DvProviderAvOpenhomeOrgServerConfig1 : public DvProvider
 {
 public:
     virtual ~DvProviderAvOpenhomeOrgServerConfig1() {}
+    /**
+     * Set the value of the Alive property
+     *
+     * Can only be called if EnablePropertyAlive has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyAlive(TBool aValue);
+    /**
+     * Get a copy of the value of the Alive property
+     *
+     * Can only be called if EnablePropertyAlive has previously been called.
+     */
+    void GetPropertyAlive(TBool& aValue);
 protected:
     /**
      * Constructor
@@ -38,6 +52,10 @@ protected:
      * @param[in] aDevice  Device which owns this provider
      */
     DvProviderAvOpenhomeOrgServerConfig1(DviDevice& aDevice);
+    /**
+     * Enable the Alive property.
+     */
+    void EnablePropertyAlive();
     /**
      * Signal that the action SetServerName is supported.
      * The action's availability will be published in the device's service.xml.
@@ -268,6 +286,7 @@ private:
     void DoSetSMBConfig(IDviInvocation& aInvocation);
     void DoGetDriveMountResult(IDviInvocation& aInvocation);
 private:
+    PropertyBool* iPropertyAlive;
 };
 
 } // namespace Net

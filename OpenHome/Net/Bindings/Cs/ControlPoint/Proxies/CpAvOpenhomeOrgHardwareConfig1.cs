@@ -16,8 +16,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncUpdate();
         void BeginUpdate(CpProxy.CallbackAsyncComplete aCallback);
         void EndUpdate(IntPtr aAsyncHandle);
-        void SyncActive(String aCountry, String aRealName, String aEmail);
-        void BeginActive(String aCountry, String aRealName, String aEmail, CpProxy.CallbackAsyncComplete aCallback);
+        void SyncActive(bool aIsSubscribe, String aRealName, String aEmail);
+        void BeginActive(bool aIsSubscribe, String aRealName, String aEmail, CpProxy.CallbackAsyncComplete aCallback);
         void EndActive(IntPtr aAsyncHandle);
         void SyncGetActiveStatus(out String aActiveStatus);
         void BeginGetActiveStatus(CpProxy.CallbackAsyncComplete aCallback);
@@ -25,6 +25,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncCheckUpdate();
         void BeginCheckUpdate(CpProxy.CallbackAsyncComplete aCallback);
         void EndCheckUpdate(IntPtr aAsyncHandle);
+        void SyncResetDisplay();
+        void BeginResetDisplay(CpProxy.CallbackAsyncComplete aCallback);
+        void EndResetDisplay(IntPtr aAsyncHandle);
         void SyncGetHardWareInfo(out String aHardWareInfo);
         void BeginGetHardWareInfo(CpProxy.CallbackAsyncComplete aCallback);
         void EndGetHardWareInfo(IntPtr aAsyncHandle, out String aHardWareInfo);
@@ -122,6 +125,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
         String PropertyProtect();
         void SetPropertyProtectPasswordChanged(System.Action aProtectPasswordChanged);
         String PropertyProtectPassword();
+        void SetPropertyActiveStatusChanged(System.Action aActiveStatusChanged);
+        String PropertyActiveStatus();
         void SetPropertyTimeChanged(System.Action aTimeChanged);
         String PropertyTime();
         void SetPropertyVolumeControlChanged(System.Action aVolumeControlChanged);
@@ -205,6 +210,20 @@ namespace OpenHome.Net.ControlPoint.Proxies
         protected override void CompleteRequest(IntPtr aAsyncHandle)
         {
             iService.EndCheckUpdate(aAsyncHandle);
+        }
+    };
+
+    internal class SyncResetDisplayAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncResetDisplayAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndResetDisplay(aAsyncHandle);
         }
     };
 
@@ -604,6 +623,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionActive;
         private OpenHome.Net.Core.Action iActionGetActiveStatus;
         private OpenHome.Net.Core.Action iActionCheckUpdate;
+        private OpenHome.Net.Core.Action iActionResetDisplay;
         private OpenHome.Net.Core.Action iActionGetHardWareInfo;
         private OpenHome.Net.Core.Action iActionSetRoomName;
         private OpenHome.Net.Core.Action iActionGetVolumeControl;
@@ -643,6 +663,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private PropertyString iIpAddress;
         private PropertyString iProtect;
         private PropertyString iProtectPassword;
+        private PropertyString iActiveStatus;
         private PropertyString iTime;
         private PropertyBool iVolumeControl;
         private System.Action iAliveChanged;
@@ -665,6 +686,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private System.Action iIpAddressChanged;
         private System.Action iProtectChanged;
         private System.Action iProtectPasswordChanged;
+        private System.Action iActiveStatusChanged;
         private System.Action iTimeChanged;
         private System.Action iVolumeControlChanged;
         private Mutex iPropertyLock;
@@ -687,7 +709,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionUpdate = new OpenHome.Net.Core.Action("Update");
 
             iActionActive = new OpenHome.Net.Core.Action("Active");
-            param = new ParameterString("Country", allowedValues);
+            param = new ParameterBool("IsSubscribe");
             iActionActive.AddInputParameter(param);
             param = new ParameterString("RealName", allowedValues);
             iActionActive.AddInputParameter(param);
@@ -699,6 +721,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetActiveStatus.AddOutputParameter(param);
 
             iActionCheckUpdate = new OpenHome.Net.Core.Action("CheckUpdate");
+
+            iActionResetDisplay = new OpenHome.Net.Core.Action("ResetDisplay");
 
             iActionGetHardWareInfo = new OpenHome.Net.Core.Action("GetHardWareInfo");
             param = new ParameterString("HardWareInfo", allowedValues);
@@ -864,6 +888,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
             AddProperty(iProtect);
             iProtectPassword = new PropertyString("ProtectPassword", ProtectPasswordPropertyChanged);
             AddProperty(iProtectPassword);
+            iActiveStatus = new PropertyString("ActiveStatus", ActiveStatusPropertyChanged);
+            AddProperty(iActiveStatus);
             iTime = new PropertyString("Time", TimePropertyChanged);
             AddProperty(iTime);
             iVolumeControl = new PropertyBool("VolumeControl", VolumeControlPropertyChanged);
@@ -968,13 +994,13 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// </summary>
         /// <remarks>Blocks until the action has been processed
         /// on the device and sets any output arguments</remarks>
-        /// <param name="aCountry"></param>
+        /// <param name="aIsSubscribe"></param>
         /// <param name="aRealName"></param>
         /// <param name="aEmail"></param>
-        public void SyncActive(String aCountry, String aRealName, String aEmail)
+        public void SyncActive(bool aIsSubscribe, String aRealName, String aEmail)
         {
             SyncActiveAvOpenhomeOrgHardwareConfig1 sync = new SyncActiveAvOpenhomeOrgHardwareConfig1(this);
-            BeginActive(aCountry, aRealName, aEmail, sync.AsyncComplete());
+            BeginActive(aIsSubscribe, aRealName, aEmail, sync.AsyncComplete());
             sync.Wait();
             sync.ReportError();
         }
@@ -985,16 +1011,16 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// <remarks>Returns immediately and will run the client-specified callback when the action
         /// later completes.  Any output arguments can then be retrieved by calling
         /// EndActive().</remarks>
-        /// <param name="aCountry"></param>
+        /// <param name="aIsSubscribe"></param>
         /// <param name="aRealName"></param>
         /// <param name="aEmail"></param>
         /// <param name="aCallback">Delegate to run when the action completes.
         /// This is guaranteed to be run but may indicate an error</param>
-        public void BeginActive(String aCountry, String aRealName, String aEmail, CallbackAsyncComplete aCallback)
+        public void BeginActive(bool aIsSubscribe, String aRealName, String aEmail, CallbackAsyncComplete aCallback)
         {
             Invocation invocation = iService.Invocation(iActionActive, aCallback);
             int inIndex = 0;
-            invocation.AddInput(new ArgumentString((ParameterString)iActionActive.InputParameter(inIndex++), aCountry));
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionActive.InputParameter(inIndex++), aIsSubscribe));
             invocation.AddInput(new ArgumentString((ParameterString)iActionActive.InputParameter(inIndex++), aRealName));
             invocation.AddInput(new ArgumentString((ParameterString)iActionActive.InputParameter(inIndex++), aEmail));
             iService.InvokeAction(invocation);
@@ -1097,6 +1123,48 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
         /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
         public void EndCheckUpdate(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        public void SyncResetDisplay()
+        {
+            SyncResetDisplayAvOpenhomeOrgHardwareConfig1 sync = new SyncResetDisplayAvOpenhomeOrgHardwareConfig1(this);
+            BeginResetDisplay(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndResetDisplay().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginResetDisplay(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionResetDisplay, aCallback);
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndResetDisplay(IntPtr aAsyncHandle)
         {
             uint code;
             string desc;
@@ -2554,6 +2622,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Set a delegate to be run when the ActiveStatus state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.</remarks>
+        /// <param name="aActiveStatusChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyActiveStatusChanged(System.Action aActiveStatusChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iActiveStatusChanged = aActiveStatusChanged;
+            }
+        }
+
+        private void ActiveStatusPropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iActiveStatusChanged);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Time state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -3038,6 +3128,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Query the value of the ActiveStatus property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the ActiveStatus property</returns>
+        public String PropertyActiveStatus()
+        {
+            PropertyReadLock();
+            String val;
+            try
+            {
+                val = iActiveStatus.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
+        }
+
+        /// <summary>
         /// Query the value of the Time property.
         /// </summary>
         /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
@@ -3098,6 +3210,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionActive.Dispose();
             iActionGetActiveStatus.Dispose();
             iActionCheckUpdate.Dispose();
+            iActionResetDisplay.Dispose();
             iActionGetHardWareInfo.Dispose();
             iActionSetRoomName.Dispose();
             iActionGetVolumeControl.Dispose();
@@ -3137,6 +3250,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iIpAddress.Dispose();
             iProtect.Dispose();
             iProtectPassword.Dispose();
+            iActiveStatus.Dispose();
             iTime.Dispose();
             iVolumeControl.Dispose();
         }

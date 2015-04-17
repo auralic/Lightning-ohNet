@@ -49,13 +49,13 @@ typedef int32_t (STDCALL *CallbackHardwareConfig1Update)(void* aPtr, IDvInvocati
  * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
  *                            and other queries.
  * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
- * @param[in]  aCountry
+ * @param[in]  aIsSubscribe
  * @param[in]  aRealName
  * @param[in]  aEmail
  *
  * @return  0 if the action succeeded; non-zero if the action failed
  */
-typedef int32_t (STDCALL *CallbackHardwareConfig1Active)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aCountry, const char* aRealName, const char* aEmail);
+typedef int32_t (STDCALL *CallbackHardwareConfig1Active)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aIsSubscribe, const char* aRealName, const char* aEmail);
 /**
  * Callback which runs when the GetActiveStatus action is invoked
  *
@@ -79,6 +79,17 @@ typedef int32_t (STDCALL *CallbackHardwareConfig1GetActiveStatus)(void* aPtr, ID
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackHardwareConfig1CheckUpdate)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr);
+/**
+ * Callback which runs when the ResetDisplay action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionResetDisplay
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1ResetDisplay)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr);
 /**
  * Callback which runs when the GetHardWareInfo action is invoked
  *
@@ -429,6 +440,10 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyProte
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyProtectPassword(THandle aProvider);
 /**
+ * Enable the ActiveStatus property.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyActiveStatus(THandle aProvider);
+/**
  * Enable the Time property.
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyTime(THandle aProvider);
@@ -492,6 +507,17 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetActi
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionCheckUpdate(THandle aProvider, CallbackHardwareConfig1CheckUpdate aCallback, void* aPtr);
+/**
+ * Register a callback for the action ResetDisplay
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionResetDisplay(THandle aProvider, CallbackHardwareConfig1ResetDisplay aCallback, void* aPtr);
 /**
  * Register a callback for the action GetHardWareInfo
  *
@@ -1142,6 +1168,28 @@ DllExport int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyProte
  * @param[out] aValue     Value for the property.  Caller is responsible for freeing this.
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1GetPropertyProtectPassword(THandle aProvider, char** aValue);
+/**
+ * Set the value of the ActiveStatus property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyActiveStatus has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aValue     New value for the property (will be copied)
+ * @param[out] aChanged   1 if the value has been updated; 0 if it was the same as the previous value
+ *
+ * @return  0 if the property was successfully set; non-zero if there was an error (including
+ *          an attempt to set a property to a value not in its allowed range/set)
+ */
+DllExport int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyActiveStatus(THandle aProvider, const char* aValue, uint32_t* aChanged);
+/**
+ * Get a copy of the value of the ActiveStatus property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyActiveStatus has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[out] aValue     Value for the property.  Caller is responsible for freeing this.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1GetPropertyActiveStatus(THandle aProvider, char** aValue);
 /**
  * Set the value of the Time property
  *

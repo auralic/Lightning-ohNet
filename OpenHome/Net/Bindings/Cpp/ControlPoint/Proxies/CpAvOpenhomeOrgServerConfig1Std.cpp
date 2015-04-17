@@ -428,6 +428,11 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDev
     iActionGetDriveMountResult = new Action("GetDriveMountResult");
     param = new OpenHome::Net::ParameterBool("DriveMountResult");
     iActionGetDriveMountResult->AddOutputParameter(param);
+
+    Functor functor;
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1Cpp::AlivePropertyChanged);
+    iAlive = new PropertyBool(aDevice.Device().GetCpStack().Env(), "Alive", functor);
+    AddProperty(iAlive);
 }
 
 CpProxyAvOpenhomeOrgServerConfig1Cpp::~CpProxyAvOpenhomeOrgServerConfig1Cpp()
@@ -964,5 +969,24 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetDriveMountResult(IAsync& aAsync
     }
     TUint index = 0;
     aDriveMountResult = ((ArgumentBool*)invocation.OutputArguments()[index++])->Value();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SetPropertyAliveChanged(Functor& aFunctor)
+{
+    iLock->Wait();
+    iAliveChanged = aFunctor;
+    iLock->Signal();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::PropertyAlive(bool& aAlive) const
+{
+    AutoMutex a(PropertyReadLock());
+    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    aAlive = iAlive->Value();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::AlivePropertyChanged()
+{
+    ReportEvent(iAliveChanged);
 }
 

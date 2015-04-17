@@ -437,8 +437,28 @@ public:
      */
     void EndGetDriveMountResult(IAsync& aAsync, TBool& aDriveMountResult);
 
+    /**
+     * Set a callback to be run when the Alive state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyAliveChanged(Functor& aFunctor);
 
+    /**
+     * Query the value of the Alive property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aAlive
+     */
+    void PropertyAlive(TBool& aAlive) const;
 private:
+    void AlivePropertyChanged();
 private:
     Action* iActionSetServerName;
     Action* iActionGetServerVersion;
@@ -455,6 +475,8 @@ private:
     Action* iActionGetSMBConfig;
     Action* iActionSetSMBConfig;
     Action* iActionGetDriveMountResult;
+    PropertyBool* iAlive;
+    Functor iAliveChanged;
 };
 
 } // namespace Net

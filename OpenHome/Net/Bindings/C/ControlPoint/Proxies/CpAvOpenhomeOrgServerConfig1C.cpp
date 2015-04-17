@@ -83,8 +83,11 @@ public:
     void BeginGetDriveMountResult(FunctorAsync& aFunctor);
     void EndGetDriveMountResult(IAsync& aAsync, TBool& aDriveMountResult);
 
+    void SetPropertyAliveChanged(Functor& aFunctor);
 
+    void PropertyAlive(TBool& aAlive) const;
 private:
+    void AlivePropertyChanged();
 private:
     Mutex iLock;
     Action* iActionSetServerName;
@@ -102,6 +105,8 @@ private:
     Action* iActionGetSMBConfig;
     Action* iActionSetSMBConfig;
     Action* iActionGetDriveMountResult;
+    PropertyBool* iAlive;
+    Functor iAliveChanged;
 };
 
 
@@ -520,6 +525,11 @@ CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC
     iActionGetDriveMountResult = new Action("GetDriveMountResult");
     param = new OpenHome::Net::ParameterBool("DriveMountResult");
     iActionGetDriveMountResult->AddOutputParameter(param);
+
+    Functor functor;
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1C::AlivePropertyChanged);
+    iAlive = new PropertyBool(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "Alive", functor);
+    AddProperty(iAlive);
 }
 
 CpProxyAvOpenhomeOrgServerConfig1C::~CpProxyAvOpenhomeOrgServerConfig1C()
@@ -1005,6 +1015,25 @@ void CpProxyAvOpenhomeOrgServerConfig1C::EndGetDriveMountResult(IAsync& aAsync, 
     }
     TUint index = 0;
     aDriveMountResult = ((ArgumentBool*)invocation.OutputArguments()[index++])->Value();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::SetPropertyAliveChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iAliveChanged = aFunctor;
+    iLock.Signal();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::PropertyAlive(TBool& aAlive) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    ASSERT(IsSubscribed());
+    aAlive = iAlive->Value();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::AlivePropertyChanged()
+{
+    ReportEvent(iAliveChanged);
 }
 
 
@@ -1679,5 +1708,22 @@ int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetDriveMountResult(THandle 
         err = -1;
     }
     return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1SetPropertyAliveChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyAliveChanged(functor);
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    TBool Alive;
+    proxyC->PropertyAlive(Alive);
+    *aAlive = Alive? 1 : 0;
 }
 

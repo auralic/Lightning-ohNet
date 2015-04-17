@@ -8,6 +8,18 @@
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
+TBool DvProviderAvOpenhomeOrgServerConfig1::SetPropertyAlive(TBool aValue)
+{
+    ASSERT(iPropertyAlive != NULL);
+    return SetPropertyBool(*iPropertyAlive, aValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::GetPropertyAlive(TBool& aValue)
+{
+    ASSERT(iPropertyAlive != NULL);
+    aValue = iPropertyAlive->Value();
+}
+
 DvProviderAvOpenhomeOrgServerConfig1::DvProviderAvOpenhomeOrgServerConfig1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "ServerConfig", 1)
 {
@@ -22,6 +34,13 @@ DvProviderAvOpenhomeOrgServerConfig1::DvProviderAvOpenhomeOrgServerConfig1(DviDe
 
 void DvProviderAvOpenhomeOrgServerConfig1::Construct()
 {
+    iPropertyAlive = NULL;
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnablePropertyAlive()
+{
+    iPropertyAlive = new PropertyBool(iDvStack.Env(), new ParameterBool("Alive"));
+    iService->AddProperty(iPropertyAlive); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::EnableActionSetServerName()

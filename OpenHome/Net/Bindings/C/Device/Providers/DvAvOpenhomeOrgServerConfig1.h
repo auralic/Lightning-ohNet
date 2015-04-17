@@ -220,6 +220,10 @@ DllExport THandle STDCALL DvProviderAvOpenhomeOrgServerConfig1Create(DvDeviceC a
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1Destroy(THandle aProvider);
 
+/**
+ * Enable the Alive property.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnablePropertyAlive(THandle aProvider);
 
 /**
  * Register a callback for the action SetServerName
@@ -387,6 +391,28 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionSetSMBCon
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetDriveMountResult(THandle aProvider, CallbackServerConfig1GetDriveMountResult aCallback, void* aPtr);
 
+/**
+ * Set the value of the Alive property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgServerConfig1EnablePropertyAlive has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aValue     New value for the property
+ * @param[out] aChanged   1 if the value has been updated; 0 if it was the same as the previous value
+ *
+ * @return  0 if the property was successfully set; non-zero if there was an error (including
+ *          an attempt to set a property to a value not in its allowed range/set)
+ */
+DllExport int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged);
+/**
+ * Get a copy of the value of the Alive property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgServerConfig1EnablePropertyAlive has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[out] aValue     Value for the property
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1GetPropertyAlive(THandle aProvider, uint32_t* aValue);
 
 /* @} */
 

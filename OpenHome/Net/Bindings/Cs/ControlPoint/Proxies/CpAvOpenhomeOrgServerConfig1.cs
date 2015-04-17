@@ -55,6 +55,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncGetDriveMountResult(out bool aDriveMountResult);
         void BeginGetDriveMountResult(CpProxy.CallbackAsyncComplete aCallback);
         void EndGetDriveMountResult(IntPtr aAsyncHandle, out bool aDriveMountResult);
+        void SetPropertyAliveChanged(System.Action aAliveChanged);
+        bool PropertyAlive();
     }
 
     internal class SyncSetServerNameAvOpenhomeOrgServerConfig1 : SyncProxyAction
@@ -357,6 +359,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionGetSMBConfig;
         private OpenHome.Net.Core.Action iActionSetSMBConfig;
         private OpenHome.Net.Core.Action iActionGetDriveMountResult;
+        private PropertyBool iAlive;
+        private System.Action iAliveChanged;
+        private Mutex iPropertyLock;
 
         /// <summary>
         /// Constructor
@@ -436,6 +441,11 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetDriveMountResult = new OpenHome.Net.Core.Action("GetDriveMountResult");
             param = new ParameterBool("DriveMountResult");
             iActionGetDriveMountResult.AddOutputParameter(param);
+
+            iAlive = new PropertyBool("Alive", AlivePropertyChanged);
+            AddProperty(iAlive);
+            
+            iPropertyLock = new Mutex();
         }
 
         /// <summary>
@@ -1171,6 +1181,50 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Set a delegate to be run when the Alive state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.</remarks>
+        /// <param name="aAliveChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyAliveChanged(System.Action aAliveChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iAliveChanged = aAliveChanged;
+            }
+        }
+
+        private void AlivePropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iAliveChanged);
+            }
+        }
+
+        /// <summary>
+        /// Query the value of the Alive property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the Alive property</returns>
+        public bool PropertyAlive()
+        {
+            PropertyReadLock();
+            bool val;
+            try
+            {
+                val = iAlive.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
+        }
+
+        /// <summary>
         /// Must be called for each class instance.  Must be called before Core.Library.Close().
         /// </summary>
         public void Dispose()
@@ -1197,6 +1251,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetSMBConfig.Dispose();
             iActionSetSMBConfig.Dispose();
             iActionGetDriveMountResult.Dispose();
+            iAlive.Dispose();
         }
     }
 }
