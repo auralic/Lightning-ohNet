@@ -1,0 +1,1866 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ARCH_IS_BIG_ENDIAN	md5.h	65;"	d
+ARCH_IS_BIG_ENDIAN	md5.h	67;"	d
+ASSERT	Standard.h	9;"	d
+ASSERTS	Standard.h	14;"	d
+ASSERT_DEBUG	Standard.h	17;"	d
+AbsoluteUri	Uri.h	/^    const Brx& AbsoluteUri() const { return iAbsoluteUri; }$/;"	f	class:OpenHome::Uri
+Accept	Network.cpp	/^THandle Socket::Accept(Endpoint& aClientEndpoint)$/;"	f	class:Socket
+Accept	Network.cpp	/^THandle SocketTcpServer::Accept(Endpoint& aClientEndpoint)$/;"	f	class:SocketTcpServer
+Add	Network.cpp	/^void SocketTcpServer::Add(const TChar* aName, SocketTcpSession* aSession, TInt aPriorityOffset)$/;"	f	class:SocketTcpServer
+Add	Network.cpp	/^void SocketTcpSession::Add(SocketTcpServer& aServer, const TChar* aName, TUint aPriority, TUint aStackBytes)$/;"	f	class:SocketTcpSession
+Add	Queue.h	/^    void Add(QueueEntry<T>* aEntry) { DoAdd(aEntry); }$/;"	f	class:OpenHome::Queue
+Add	Queue.h	/^    void Add(T& aEntry) { DoAdd(aEntry); }$/;"	f	class:OpenHome::QueueSorted
+AddBefore	Queue.cpp	/^void QueueSortedEntry::AddBefore(QueueSortedEntry& aEntry)$/;"	f	class:QueueSortedEntry
+AddCurrentChangeListener	NetworkAdapterList.cpp	/^TUint NetworkAdapterList::AddCurrentChangeListener(Functor aFunctor, TBool aInternalClient)$/;"	f	class:NetworkAdapterList
+AddHeader	Http.cpp	/^void ReaderHttpHeader::AddHeader(IHttpHeader& aHeader)$/;"	f	class:ReaderHttpHeader
+AddLevel	Debug.cpp	/^void Debug::AddLevel(TUint aLevel)$/;"	f	class:Debug
+AddListener	NetworkAdapterList.cpp	/^TUint NetworkAdapterList::AddListener(Functor aFunctor, Map& aMap)$/;"	f	class:NetworkAdapterList
+AddMethod	Http.cpp	/^void ReaderHttpRequest::AddMethod(const Brx& aMethod)$/;"	f	class:ReaderHttpRequest
+AddNetworkAdapterChangeListener	NetworkAdapterList.cpp	/^TUint NetworkAdapterList::AddNetworkAdapterChangeListener(FunctorNetworkAdapter aFunctor)$/;"	f	class:NetworkAdapterList
+AddObject	Env.cpp	/^void Environment::AddObject(IStackObject* aObject)$/;"	f	class:Environment
+AddRef	Env.cpp	/^void MListener::AddRef()$/;"	f	class:MListener
+AddResumeObserver	Env.cpp	/^void Environment::AddResumeObserver(IResumeObserver& aObserver)$/;"	f	class:Environment
+AddSubnetAddedListener	NetworkAdapterList.cpp	/^TUint NetworkAdapterList::AddSubnetAddedListener(FunctorNetworkAdapter aFunctor)$/;"	f	class:NetworkAdapterList
+AddSubnetListChangeListener	NetworkAdapterList.cpp	/^TUint NetworkAdapterList::AddSubnetListChangeListener(Functor aFunctor, TBool aInternalClient)$/;"	f	class:NetworkAdapterList
+AddSubnetListener	NetworkAdapterList.cpp	/^TUint NetworkAdapterList::AddSubnetListener(FunctorNetworkAdapter aFunctor, MapNetworkAdapter& aMap)$/;"	f	class:NetworkAdapterList
+AddSubnetRemovedListener	NetworkAdapterList.cpp	/^TUint NetworkAdapterList::AddSubnetRemovedListener(FunctorNetworkAdapter aFunctor)$/;"	f	class:NetworkAdapterList
+AddSuspendObserver	Env.cpp	/^void Environment::AddSuspendObserver(ISuspendObserver& aObserver)$/;"	f	class:Environment
+Address	Network.cpp	/^TIpAddress Endpoint::Address() const$/;"	f	class:Endpoint
+AddressBuf	Network.h	/^    typedef Bws<kMaxAddressBytes> AddressBuf;$/;"	t	class:OpenHome::Endpoint
+Append	Buffer.cpp	/^void Bwx::Append(const Brx& aB)$/;"	f	class:Bwx
+Append	Buffer.cpp	/^void Bwx::Append(const TByte* aPtr, TUint aBytes)$/;"	f	class:Bwx
+Append	Buffer.cpp	/^void Bwx::Append(const TChar* aStr)$/;"	f	class:Bwx
+Append	Printer.cpp	/^TUint RamLogger::Chunk::Append(const char* aMsg)$/;"	f	class:RamLogger::Chunk
+AppendAddress	Network.cpp	/^void Endpoint::AppendAddress(Bwx& aAddress) const$/;"	f	class:Endpoint
+AppendAddress	Network.cpp	/^void Endpoint::AppendAddress(Bwx& aAddressBuffer, TIpAddress aAddress)$/;"	f	class:Endpoint
+AppendDec	Ascii.cpp	/^TUint Ascii::AppendDec(Bwx& aBuffer, TBool aValue)$/;"	f	class:Ascii
+AppendDec	Ascii.cpp	/^TUint Ascii::AppendDec(Bwx& aBuffer, TInt aValue)$/;"	f	class:Ascii
+AppendDec	Ascii.cpp	/^TUint Ascii::AppendDec(Bwx& aBuffer, TInt16 aValue)$/;"	f	class:Ascii
+AppendDec	Ascii.cpp	/^TUint Ascii::AppendDec(Bwx& aBuffer, TInt64 aValue)$/;"	f	class:Ascii
+AppendDec	Ascii.cpp	/^TUint Ascii::AppendDec(Bwx& aBuffer, TInt8 aValue)$/;"	f	class:Ascii
+AppendDec	Ascii.cpp	/^TUint Ascii::AppendDec(Bwx& aBuffer, TUint aValue)$/;"	f	class:Ascii
+AppendDec	Ascii.cpp	/^TUint Ascii::AppendDec(Bwx& aBuffer, TUint16 aValue)$/;"	f	class:Ascii
+AppendDec	Ascii.cpp	/^TUint Ascii::AppendDec(Bwx& aBuffer, TUint64 aValue)$/;"	f	class:Ascii
+AppendDec	Ascii.cpp	/^TUint Ascii::AppendDec(Bwx& aBuffer, TUint8 aValue)$/;"	f	class:Ascii
+AppendEndpoint	Network.cpp	/^void Endpoint::AppendEndpoint(Bwx& aEndpoint) const$/;"	f	class:Endpoint
+AppendHex	Ascii.cpp	/^TUint Ascii::AppendHex(Bwx& aBuffer, TByte aValue)$/;"	f	class:Ascii
+AppendHex	Ascii.cpp	/^TUint Ascii::AppendHex(Bwx& aBuffer, TUint aValue)$/;"	f	class:Ascii
+AppendHexPrefix	Ascii.cpp	/^TUint Ascii::AppendHexPrefix(Bwx& aBuffer)$/;"	f	class:Ascii
+AppendHexTrim	Ascii.cpp	/^TUint Ascii::AppendHexTrim(Bwx& aBuffer, TUint aValue)$/;"	f	class:Ascii
+AppendPrintf	Buffer.cpp	/^void Bwx::AppendPrintf(const TChar* aFormatString, ...)$/;"	f	class:Bwx
+AppendPrintf	Buffer.cpp	/^void Bwx::AppendPrintf(const TChar* aFormatString, va_list aArgs)$/;"	f	class:Bwx
+Arch	Arch.h	/^class Arch$/;"	c	namespace:OpenHome
+Ascii	Ascii.h	/^class Ascii$/;"	c	namespace:OpenHome
+AssertHandlerDefault	Exception.cpp	/^static void AssertHandlerDefault(const TChar* aFile, TUint aLine)$/;"	f	file:
+At	Buffer.cpp	/^TByte& Bwx::At(TUint aByteIndex)$/;"	f	class:Bwx
+At	Buffer.cpp	/^const TByte& Brx::At(TUint aByteIndex) const$/;"	f	class:Brx
+At	Parser.cpp	/^TChar Parser::At(TInt aOffset)$/;"	f	class:Parser
+Authority	Uri.h	/^    const Brx& Authority() const { return iAuthority; }$/;"	f	class:OpenHome::Uri
+AutoLog	Debug.cpp	/^AutoLog::AutoLog(TUint aLevel, const TChar* aString)$/;"	f	class:AutoLog
+AutoLog	Debug.h	/^class AutoLog$/;"	c
+AutoMutex	Thread.cpp	/^AutoMutex::AutoMutex(Mutex& aMutex)$/;"	f	class:AutoMutex
+AutoMutex	Thread.h	/^class DllExportClass AutoMutex : public INonCopyable$/;"	c	namespace:OpenHome
+AutoSemaphore	Thread.cpp	/^AutoSemaphore::AutoSemaphore(Semaphore& aSemaphore)$/;"	f	class:AutoSemaphore
+AutoSemaphore	Thread.h	/^class DllExportClass AutoSemaphore : public INonCopyable$/;"	c	namespace:OpenHome
+AutoSocket	Network.cpp	/^AutoSocket::AutoSocket(Socket& aSocket)$/;"	f	class:AutoSocket
+AutoSocket	Network.h	/^class AutoSocket : public INonCopyable$/;"	c	namespace:OpenHome
+BYTE_ORDER	md5.c	57;"	d	file:
+BYTE_ORDER	md5.c	59;"	d	file:
+BYTE_ORDER	md5.c	61;"	d	file:
+Back	Parser.cpp	/^void Parser::Back(TUint aOffset)$/;"	f	class:Parser
+BeUint16At	Converter.cpp	/^TUint16 Converter::BeUint16At(const Brx& aBuf, TUint aIndex)$/;"	f	class:Converter
+BeUint32At	Converter.cpp	/^TUint32 Converter::BeUint32At(const Brx& aBuf, TUint aIndex)$/;"	f	class:Converter
+BeginsWith	Buffer.cpp	/^TBool Brx::BeginsWith(const Brx& aBrx) const$/;"	f	class:Brx
+BigEndian2	Arch.h	/^    inline static TUint16 BigEndian2(TUint16 x) {return (TUint16)(SwapEndian16(x));}$/;"	f	class:OpenHome::Arch
+BigEndian4	Arch.h	/^    inline static TUint32 BigEndian4(TUint32 x) {return (TUint32)(SwapEndian32(x));}$/;"	f	class:OpenHome::Arch
+BigEndian8	Arch.h	/^    inline static TUint64 BigEndian8(TUint64 x)$/;"	f	class:OpenHome::Arch
+Bind	Network.cpp	/^void Socket::Bind(const Endpoint& aEndpoint)$/;"	f	class:Socket
+Bind	Network.cpp	/^void SocketUdp::Bind(TUint aPort, TIpAddress aInterface)$/;"	f	class:SocketUdp
+BreakBeforeThrow	Debug.cpp	/^TBool Debug::BreakBeforeThrow()$/;"	f	class:Debug
+Brh	Buffer.cpp	/^Brh::Brh(const Brx& aBrx)$/;"	f	class:Brh
+Brh	Buffer.cpp	/^Brh::Brh(const TChar* aPtr)$/;"	f	class:Brh
+Brh	Buffer.h	/^class DllExportClass Brh : public Brv$/;"	c	namespace:OpenHome
+Brhz	Buffer.cpp	/^Brhz::Brhz(const Brx& aBrx)$/;"	f	class:Brhz
+Brhz	Buffer.cpp	/^Brhz::Brhz(const TChar* aPtr)$/;"	f	class:Brhz
+Brhz	Buffer.h	/^class DllExportClass Brhz : public Brv$/;"	c	namespace:OpenHome
+Brn	Buffer.cpp	/^Brn::Brn(const TChar* aPtr) : Brx(OhNetStrlen(aPtr)), iPtr((TByte*)aPtr)$/;"	f	class:Brn
+Brn	Buffer.h	/^class DllExportClass Brn : public Brx$/;"	c	namespace:OpenHome
+Brv	Buffer.h	/^class DllExportClass Brv : public Brx, public INonCopyable$/;"	c	namespace:OpenHome
+Brx	Buffer.h	/^class DllExportClass Brx$/;"	c	namespace:OpenHome
+BufferCmp	Buffer.h	/^class BufferCmp$/;"	c	namespace:OpenHome
+Bwh	Buffer.cpp	/^Bwh::Bwh() : Bwx(0,0), iPtr(0)$/;"	f	class:Bwh
+Bwh	Buffer.cpp	/^Bwh::Bwh(TUint aBytes, TUint aMaxBytes) : Bwx(aBytes, aMaxBytes)$/;"	f	class:Bwh
+Bwh	Buffer.cpp	/^Bwh::Bwh(TUint aMaxBytes) : Bwx(0, aMaxBytes)$/;"	f	class:Bwh
+Bwh	Buffer.cpp	/^Bwh::Bwh(const Brx& aBrx) : Bwx(aBrx.Bytes(), aBrx.Bytes())$/;"	f	class:Bwh
+Bwh	Buffer.cpp	/^Bwh::Bwh(const Bwh& aBuf) : Bwx(aBuf.Bytes(), aBuf.Bytes())$/;"	f	class:Bwh
+Bwh	Buffer.cpp	/^Bwh::Bwh(const TByte* aPtr, TUint aBytes) : Bwx(aBytes, aBytes)$/;"	f	class:Bwh
+Bwh	Buffer.cpp	/^Bwh::Bwh(const TChar* aStr) : Bwx(0, OhNetStrlen(aStr))$/;"	f	class:Bwh
+Bwh	Buffer.h	/^class DllExportClass Bwh : public Bwx$/;"	c	namespace:OpenHome
+Bwn	Buffer.cpp	/^Bwn::Bwn() : Bwx(0,0), iPtr(0)$/;"	f	class:Bwn
+Bwn	Buffer.cpp	/^Bwn::Bwn(const Bwn& aBwn) : Bwx(aBwn.Bytes(), aBwn.MaxBytes()), iPtr(aBwn.Ptr())$/;"	f	class:Bwn
+Bwn	Buffer.cpp	/^Bwn::Bwn(const Bwx& aBwx) : Bwx(aBwx.Bytes(), aBwx.MaxBytes()), iPtr(aBwx.Ptr())$/;"	f	class:Bwn
+Bwn	Buffer.cpp	/^Bwn::Bwn(const TByte* aPtr, TUint aBytes, TUint aMaxBytes) : Bwx(aBytes, aMaxBytes), iPtr(aPtr)$/;"	f	class:Bwn
+Bwn	Buffer.cpp	/^Bwn::Bwn(const TByte* aPtr, TUint aMaxBytes) : Bwx(0, aMaxBytes), iPtr(aPtr)$/;"	f	class:Bwn
+Bwn	Buffer.cpp	/^Bwn::Bwn(const TChar* aPtr, TUint aBytes, TUint aMaxBytes) : Bwx(aBytes, aMaxBytes), iPtr((TByte*)aPtr)$/;"	f	class:Bwn
+Bwn	Buffer.cpp	/^Bwn::Bwn(const TChar* aPtr, TUint aMaxBytes) : Bwx(0, aMaxBytes), iPtr((TByte*)aPtr)$/;"	f	class:Bwn
+Bwn	Buffer.h	/^class DllExportClass Bwn : public Bwx$/;"	c	namespace:OpenHome
+Bws	Buffer.h	/^template <TUint S> class DllExportClass Bws : public Bwx$/;"	c	namespace:OpenHome
+Bwx	Buffer.cpp	/^Bwx::Bwx(TUint aBytes, TUint aMaxBytes) : Brx(aBytes), iMaxBytes(aMaxBytes)$/;"	f	class:Bwx
+Bwx	Buffer.h	/^class DllExportClass Bwx : public Brx, public INonCopyable$/;"	c	namespace:OpenHome
+Bytes	FileAnsii.cpp	/^TUint32 FileAnsii::Bytes() const$/;"	f	class:FileAnsii
+Bytes	FileBrx.cpp	/^TUint32 FileBrx::Bytes() const$/;"	f	class:FileBrx
+Bytes	FileStream.cpp	/^TUint32 FileStream::Bytes() const$/;"	f	class:FileStream
+Bytes	Stream.cpp	/^TUint ReaderBuffer::Bytes() const$/;"	f	class:ReaderBuffer
+BytesRemaining	Printer.cpp	/^TUint RamLogger::Chunk::BytesRemaining() const$/;"	f	class:RamLogger::Chunk
+CallAssertHandler	Exception.cpp	/^void OpenHome::CallAssertHandler(const TChar* aFile, TUint aLine)$/;"	f	class:OpenHome
+CallFatalErrorHandler	Exception.cpp	/^static void CallFatalErrorHandler(const char* aMsg)$/;"	f	file:
+Callback	Functor.h	/^    typedef TAny (*Callback)();$/;"	t	class:OpenHome::Functor
+Callback	FunctorMsg.h	/^    typedef TAny (*Callback)();$/;"	t	class:OpenHome::FunctorMsg
+Callback	FunctorNetworkAdapter.h	/^    typedef TAny (*Callback)();$/;"	t	class:OpenHome::FunctorNetworkAdapter
+CallbackLock	Timer.cpp	/^void TimerManager::CallbackLock()$/;"	f	class:TimerManager
+CallbackUnlock	Timer.cpp	/^void TimerManager::CallbackUnlock()$/;"	f	class:TimerManager
+Cancel	Timer.cpp	/^void Timer::Cancel()$/;"	f	class:Timer
+CaseInsensitiveEquals	Ascii.cpp	/^TBool Ascii::CaseInsensitiveEquals(TChar aValue1, TChar aValue2)$/;"	f	class:Ascii
+CaseInsensitiveEquals	Ascii.cpp	/^TBool Ascii::CaseInsensitiveEquals(const Brx& aBuffer1, const Brx& aBuffer2)$/;"	f	class:Ascii
+CheckCurrentForKill	Thread.cpp	/^void Thread::CheckCurrentForKill()$/;"	f	class:Thread
+CheckForKill	Thread.cpp	/^void Thread::CheckForKill() const$/;"	f	class:Thread
+Chunk	Printer.cpp	/^RamLogger::Chunk::Chunk()$/;"	f	class:RamLogger::Chunk
+Chunk	Printer.h	/^    class Chunk$/;"	c	class:OpenHome::RamLogger
+Clear	Thread.cpp	/^TBool Semaphore::Clear()$/;"	f	class:Semaphore
+Clear	Uri.cpp	/^void Uri::Clear()$/;"	f	class:Uri
+ClearSocket	Network.cpp	/^void UdpReader::ClearSocket()$/;"	f	class:UdpReader
+ClientEndpoint	Network.cpp	/^Endpoint SocketTcpSession::ClientEndpoint() const$/;"	f	class:SocketTcpSession
+Close	Http.cpp	/^TBool HttpHeaderConnection::Close() const$/;"	f	class:HttpHeaderConnection
+Close	Network.cpp	/^void Socket::Close()$/;"	f	class:Socket
+Close	Network.cpp	/^void SocketTcpSession::Close()$/;"	f	class:SocketTcpSession
+CloseFile	FileStream.cpp	/^void FileStream::CloseFile()$/;"	f	class:FileStream
+CloseSocket	Http.cpp	/^void HttpReader::CloseSocket()$/;"	f	class:HttpReader
+Code	Http.cpp	/^TUint HttpStatus::Code() const$/;"	f	class:HttpStatus
+Compare	Timer.cpp	/^TInt TimerManager::Compare(QueueSortedEntry& aEntry1, QueueSortedEntry& aEntry2)$/;"	f	class:TimerManager
+CompareSubnets	NetworkAdapterList.cpp	/^TBool NetworkAdapterList::CompareSubnets(NetworkAdapter* aI, NetworkAdapter* aJ)$/;"	f	class:NetworkAdapterList
+Computed	sha.h	/^    int Computed;                       \/* Is the digest computed? *\/$/;"	m	struct:SHA1Context
+Computed	sha.h	/^    int Computed;                       \/* Is the digest computed? *\/$/;"	m	struct:SHA256Context
+Computed	sha.h	/^    int Computed;                       \/* Is the digest computed?*\/$/;"	m	struct:SHA512Context
+Connect	Http.cpp	/^TBool HttpReader::Connect(Endpoint aEndpoint)$/;"	f	class:HttpReader
+Connect	Http.cpp	/^TBool HttpReader::Connect(const Uri& aUri)$/;"	f	class:HttpReader
+Connect	Network.cpp	/^void SocketTcpClient::Connect(const Endpoint& aEndpoint, TUint aTimeout)$/;"	f	class:SocketTcpClient
+Construct	Env.cpp	/^void Environment::Construct(FunctorMsg& aLogOutput)$/;"	f	class:Environment
+Contains	Ascii.cpp	/^TBool Ascii::Contains(const Brx& aBuffer, TChar aValue)$/;"	f	class:Ascii
+Contains	Ascii.cpp	/^TBool Ascii::Contains(const Brx& aBuffer, const Brx& aValue)$/;"	f	class:Ascii
+ContainsWhitespace	Ascii.cpp	/^TBool Ascii::ContainsWhitespace(const Brx& aBuffer)$/;"	f	class:Ascii
+ContentLength	Http.cpp	/^TUint HttpHeaderContentLength::ContentLength() const$/;"	f	class:HttpHeaderContentLength
+Continue	Http.cpp	/^TBool HttpHeaderExpect::Continue() const$/;"	f	class:HttpHeaderExpect
+Converter	Converter.h	/^class Converter$/;"	c	namespace:OpenHome
+Corrupted	sha.h	/^    int Corrupted;                      \/* Is the digest corrupted? *\/$/;"	m	struct:SHA1Context
+Corrupted	sha.h	/^    int Corrupted;                      \/* Is the digest corrupted? *\/$/;"	m	struct:SHA256Context
+Corrupted	sha.h	/^    int Corrupted;                      \/* Is the digest corrupted? *\/$/;"	m	struct:SHA512Context
+Count	Queue.cpp	/^TUint QueueBase::Count() const$/;"	f	class:QueueBase
+CpiStack	Env.cpp	/^IStack* Environment::CpiStack()$/;"	f	class:Environment
+Create	Network.cpp	/^void SocketUdpBase::Create()$/;"	f	class:SocketUdpBase
+CreateNetworkAdapterList	NetworkAdapterList.cpp	/^std::vector<NetworkAdapter*>* NetworkAdapterList::CreateNetworkAdapterList() const$/;"	f	class:NetworkAdapterList
+CreateSubnetList	NetworkAdapterList.cpp	/^std::vector<NetworkAdapter*>* NetworkAdapterList::CreateSubnetList() const$/;"	f	class:NetworkAdapterList
+CreateSubnetListLocked	NetworkAdapterList.cpp	/^std::vector<NetworkAdapter*>* NetworkAdapterList::CreateSubnetListLocked() const$/;"	f	class:NetworkAdapterList
+Current	Thread.cpp	/^Thread* Thread::Current()$/;"	f	class:Thread
+CurrentAdapter	NetworkAdapterList.cpp	/^NetworkAdapter* NetworkAdapterList::CurrentAdapter(const char* aCookie) const$/;"	f	class:NetworkAdapterList
+CurrentThreadName	Thread.cpp	/^const Brx& Thread::CurrentThreadName()$/;"	f	class:Thread
+Data	Printer.cpp	/^const char* RamLogger::Chunk::Data() const$/;"	f	class:RamLogger::Chunk
+Debug	Debug.h	/^class Debug$/;"	c	namespace:OpenHome
+DecChar	Ascii.cpp	/^TChar Ascii::DecChar(TUint aValue)$/;"	f	class:Ascii
+DecValue	Ascii.cpp	/^TUint Ascii::DecValue(TChar aValue)$/;"	f	class:Ascii
+Dechunk	Http.cpp	/^Brn ReaderHttpChunked::Dechunk(Brn& aBuf)$/;"	f	class:ReaderHttpChunked
+DestroyNetworkAdapterList	NetworkAdapterList.cpp	/^void NetworkAdapterList::DestroyNetworkAdapterList(std::vector<NetworkAdapter*>* aList)$/;"	f	class:NetworkAdapterList
+DestroySubnetList	NetworkAdapterList.cpp	/^void NetworkAdapterList::DestroySubnetList(std::vector<NetworkAdapter*>* aList)$/;"	f	class:NetworkAdapterList
+Disable	Printer.cpp	/^void RamLogger::Disable()$/;"	f	class:RamLogger
+DllExport	Defines.h	15;"	d
+DllExport	Defines.h	6;"	d
+DllExportClass	Defines.h	18;"	d
+DllExportClass	Defines.h	9;"	d
+DoAdd	Queue.cpp	/^void QueueBase::DoAdd(QueueEntryBase* aEntry)$/;"	f	class:QueueBase
+DoAdd	Queue.cpp	/^void QueueSortedBase::DoAdd(QueueSortedEntry& aEntry)$/;"	f	class:QueueSortedBase
+DoMoveAllTo	Queue.cpp	/^void QueueBase::DoMoveAllTo(QueueBase& aQueue)$/;"	f	class:QueueBase
+DoMoveHeadTo	Queue.cpp	/^QueueEntryBase& QueueBase::DoMoveHeadTo(QueueBase& aQueue)$/;"	f	class:QueueBase
+DoMoveTo	Queue.cpp	/^void QueueEntryBase::DoMoveTo(QueueBase& aQueue)$/;"	f	class:QueueEntryBase
+DoPrint	Printer.cpp	/^TInt Log::DoPrint(FunctorMsg& aOutput, const TByte* aMessage)$/;"	f	class:Log
+DoRemove	Queue.cpp	/^void QueueSortedBase::DoRemove(QueueSortedEntry& aEntry)$/;"	f	class:QueueSortedBase
+DoRemoveHead	Queue.cpp	/^QueueSortedEntry& QueueSortedBase::DoRemoveHead()$/;"	f	class:QueueSortedBase
+DoRunCallbacks	NetworkAdapterList.cpp	/^void NetworkAdapterList::DoRunCallbacks(Map& aMap)$/;"	f	class:NetworkAdapterList
+DviStack	Env.cpp	/^IStack* Environment::DviStack()$/;"	f	class:Environment
+ESocketType	Network.h	/^enum ESocketType$/;"	g	namespace:OpenHome
+EVersion	Http.h	/^    enum EVersion$/;"	g	class:OpenHome::Http
+EXCEPTION	Exception.h	16;"	d
+EXCEPTION	Exception.h	27;"	d
+EXCEPTION_LOGGING_LEVEL	Exception.cpp	16;"	d	file:
+Empty	Buffer.cpp	/^const Brn& Brx::Empty()$/;"	f	class:Brx
+Enable	Printer.cpp	/^void RamLogger::Enable(TUint aCapacityBytes)$/;"	f	class:RamLogger
+Endpoint	Http.cpp	/^OpenHome::Endpoint& HttpHeaderHost::Endpoint()$/;"	f	class:HttpHeaderHost
+Endpoint	Network.cpp	/^Endpoint::Endpoint()$/;"	f	class:Endpoint
+Endpoint	Network.cpp	/^Endpoint::Endpoint(TUint aPort, TIpAddress aAddress)$/;"	f	class:Endpoint
+Endpoint	Network.cpp	/^Endpoint::Endpoint(TUint aPort, const Brx& aAddress)$/;"	f	class:Endpoint
+Endpoint	Network.h	/^class Endpoint$/;"	c	namespace:OpenHome
+EndpointBuf	Network.h	/^    typedef Bws<kMaxEndpointBytes> EndpointBuf;$/;"	t	class:OpenHome::Endpoint
+EndpointHttp	Http.cpp	/^EndpointHttp::EndpointHttp(const Uri& aUri)$/;"	f	class:EndpointHttp
+EndpointHttp	Http.h	/^class EndpointHttp : public Endpoint$/;"	c	namespace:OpenHome
+Entry	Queue.h	/^    T& Entry(QueueSortedEntry& aEntry) { return ((T&)aEntry); }$/;"	f	class:OpenHome::QueueSorted
+EntryPoint	Thread.cpp	/^void Thread::EntryPoint(void* aArg)$/;"	f	class:Thread
+Environment	Env.cpp	/^Environment::Environment(FunctorMsg& aLogOutput)$/;"	f	class:Environment
+Environment	Env.cpp	/^Environment::Environment(InitialisationParams* aInitParams)$/;"	f	class:Environment
+Environment	Env.h	/^class Environment$/;"	c	namespace:OpenHome
+Equals	Buffer.cpp	/^TBool Brx::Equals(const Brx& aBrx) const$/;"	f	class:Brx
+Equals	Network.cpp	/^TBool Endpoint::Equals(const Endpoint& aEndpoint) const$/;"	f	class:Endpoint
+Error	Stream.cpp	/^void Swx::Error()$/;"	f	class:Swx
+Escape	Uri.cpp	/^void Uri::Escape(Bwx& aDst, const Brx& aSrc)$/;"	f	class:Uri
+Escape	Uri.cpp	/^void Uri::Escape(IWriter& aDst, const Brx& aSrc)$/;"	f	class:Uri
+EscapedBytes	Uri.cpp	/^TUint Uri::EscapedBytes(const Brx& aBuffer)$/;"	f	class:Uri
+Exception	Exception.cpp	/^Exception::Exception(const Exception& aException)$/;"	f	class:Exception
+Exception	Exception.cpp	/^Exception::Exception(const TChar* aMsg)$/;"	f	class:Exception
+Exception	Exception.cpp	/^Exception::Exception(const TChar* aMsg, const TChar* aFile, TUint aLine)$/;"	f	class:Exception
+Exception	Exception.h	/^class DllExportClass Exception$/;"	c	namespace:OpenHome
+Extract	Buffer.cpp	/^TChar* Brh::Extract()$/;"	f	class:Brh
+F	md5.c	202;"	d	file:
+Fifo	Fifo.h	/^    inline Fifo(TUint aSlots) : FifoBase(aSlots) { iBuf = new T[aSlots]; }$/;"	f	class:OpenHome::Fifo
+Fifo	Fifo.h	/^template <class T> class Fifo : public FifoBase$/;"	c	namespace:OpenHome
+FifoBase	Fifo.cpp	/^FifoBase::FifoBase(TUint aSlots)$/;"	f	class:FifoBase
+FifoBase	Fifo.h	/^class FifoBase : public INonCopyable$/;"	c	namespace:OpenHome
+FifoLite	Fifo.h	/^    inline FifoLite() : FifoLiteBase(S) {}$/;"	f	class:OpenHome::FifoLite
+FifoLite	Fifo.h	/^template <class T, TUint S> class FifoLite : public FifoLiteBase $/;"	c	namespace:OpenHome
+FifoLiteBase	Fifo.cpp	/^FifoLiteBase::FifoLiteBase(TUint aSlots)$/;"	f	class:FifoLiteBase
+FifoLiteBase	Fifo.h	/^class FifoLiteBase : public INonCopyable$/;"	c	namespace:OpenHome
+FifoLiteDynamic	Fifo.h	/^    inline FifoLiteDynamic(TUint aSlots) : FifoLiteBase(aSlots) { iBuf = new T[aSlots]; }$/;"	f	class:OpenHome::FifoLiteDynamic
+FifoLiteDynamic	Fifo.h	/^template <class T> class FifoLiteDynamic : public FifoLiteBase$/;"	c	namespace:OpenHome
+File	Exception.cpp	/^const TChar* Exception::File()$/;"	f	class:Exception
+FileAnsii	File.h	/^class FileAnsii : public IFile$/;"	c	namespace:OpenHome
+FileAnsii	FileAnsii.cpp	/^FileAnsii::FileAnsii(const TChar* aFilename, FileMode aFileMode)$/;"	f	class:FileAnsii
+FileBrx	File.h	/^class FileBrx : public IFile$/;"	c	namespace:OpenHome
+FileBrx	FileBrx.cpp	/^FileBrx::FileBrx(const Brx& aBuffer)$/;"	f	class:FileBrx
+FileBrx	FileBrx.cpp	/^FileBrx::FileBrx(const TChar* aBuffer)$/;"	f	class:FileBrx
+FileMode	File.h	/^} FileMode;$/;"	t	namespace:OpenHome	typeref:enum:OpenHome::__anon2
+FileStream	File.h	/^class FileStream : public IWriter, public IReaderSource$/;"	c	namespace:OpenHome
+FileStream	FileStream.cpp	/^FileStream::FileStream()$/;"	f	class:FileStream
+Fill	Buffer.cpp	/^void Bwx::Fill(TByte aByte)$/;"	f	class:Bwx
+FindSubnet	NetworkAdapterList.cpp	/^TInt NetworkAdapterList::FindSubnet(TIpAddress aSubnet, const std::vector<NetworkAdapter*>& aList)$/;"	f	class:NetworkAdapterList
+Finished	Parser.cpp	/^TBool Parser::Finished() const$/;"	f	class:Parser
+Fire	Timer.cpp	/^void TimerManager::Fire()$/;"	f	class:TimerManager
+FireAt	Timer.cpp	/^void Timer::FireAt(TUint aTime)$/;"	f	class:Timer
+FireIn	Timer.cpp	/^void Timer::FireIn(TUint aTime)$/;"	f	class:Timer
+Flush	Http.cpp	/^void ReaderHttpRequest::Flush()$/;"	f	class:ReaderHttpRequest
+Flush	Http.cpp	/^void ReaderHttpResponse::Flush()$/;"	f	class:ReaderHttpResponse
+Flush	Http.cpp	/^void WriterHttpField::Flush()$/;"	f	class:WriterHttpField
+Flush	Printer.cpp	/^void Log::Flush()$/;"	f	class:Log
+Flush	Stream.cpp	/^void WriterBuffer::Flush()$/;"	f	class:WriterBuffer
+Forward	Parser.cpp	/^void Parser::Forward(TUint aOffset)$/;"	f	class:Parser
+Fragment	Uri.h	/^    const Brx& Fragment() const { return iFragment; }$/;"	f	class:OpenHome::Uri
+FromBase64	Converter.cpp	/^void Converter::FromBase64(Bwx& aValue)$/;"	f	class:Converter
+FromXmlEscaped	Converter.cpp	/^void Converter::FromXmlEscaped(Bwx& aValue)$/;"	f	class:Converter
+FunctionTranslatorMsg	FunctorMsg.h	/^    FunctionTranslatorMsg(void* aPtr, OhNetFunctorMsg aCallback) :$/;"	f	class:OpenHome::FunctionTranslatorMsg
+FunctionTranslatorMsg	FunctorMsg.h	/^class FunctionTranslatorMsg : public FunctorMsg$/;"	c	namespace:OpenHome
+FunctionTranslatorNetworkAdapter	FunctorNetworkAdapter.h	/^    FunctionTranslatorNetworkAdapter(void* aPtr, OhNetFunctorNetworkAdapter aCallback) :$/;"	f	class:OpenHome::FunctionTranslatorNetworkAdapter
+FunctionTranslatorNetworkAdapter	FunctorNetworkAdapter.h	/^class FunctionTranslatorNetworkAdapter : public FunctorNetworkAdapter$/;"	c	namespace:OpenHome
+Functor	Functor.h	/^    Functor() : iCallback(0), iObject(0)$/;"	f	class:OpenHome::Functor
+Functor	Functor.h	/^    Functor(Thunk aT, const TAny* aObject, OhNetFunctor aCallback)$/;"	f	class:OpenHome::Functor
+Functor	Functor.h	/^    Functor(Thunk aT, const TAny* aObject, const TAny* aCallback, TUint aBytes)$/;"	f	class:OpenHome::Functor
+Functor	Functor.h	/^class Functor$/;"	c	namespace:OpenHome
+FunctorMsg	FunctorMsg.h	/^    FunctorMsg() : iCallback(NULL), iObject(NULL) {}$/;"	f	class:OpenHome::FunctorMsg
+FunctorMsg	FunctorMsg.h	/^    FunctorMsg(Thunk aT, const TAny* aObject, OhNetFunctorMsg aCallback)$/;"	f	class:OpenHome::FunctorMsg
+FunctorMsg	FunctorMsg.h	/^    FunctorMsg(Thunk aT, const TAny* aObject, const TAny* aCallback, TUint aBytes)$/;"	f	class:OpenHome::FunctorMsg
+FunctorMsg	FunctorMsg.h	/^class FunctorMsg$/;"	c	namespace:OpenHome
+FunctorNetworkAdapter	FunctorNetworkAdapter.h	/^    FunctorNetworkAdapter() : iCallback(NULL), iObject(NULL) {}$/;"	f	class:OpenHome::FunctorNetworkAdapter
+FunctorNetworkAdapter	FunctorNetworkAdapter.h	/^    FunctorNetworkAdapter(Thunk aT, const TAny* aObject, OhNetFunctorNetworkAdapter aCallback)$/;"	f	class:OpenHome::FunctorNetworkAdapter
+FunctorNetworkAdapter	FunctorNetworkAdapter.h	/^    FunctorNetworkAdapter(Thunk aT, const TAny* aObject, const TAny* aCallback, TUint aBytes)$/;"	f	class:OpenHome::FunctorNetworkAdapter
+FunctorNetworkAdapter	FunctorNetworkAdapter.h	/^class FunctorNetworkAdapter$/;"	c	namespace:OpenHome
+G	md5.c	228;"	d	file:
+GetChar	Terminal.cpp	/^TChar TerminalTcpSession::GetChar()$/;"	f	class:OpenHome::TerminalTcpSession
+GetHostByName	Network.cpp	/^static TUint32 GetHostByName(const Brx& aAddress)$/;"	f	file:
+GetPort	Network.cpp	/^void Socket::GetPort(TUint& aPort)$/;"	f	class:Socket
+GetThreadName	Exception.cpp	/^static void GetThreadName(Bwx& aThName)$/;"	f	file:
+GetVersion	Env.cpp	/^void Environment::GetVersion(TUint& aMajor, TUint& aMinor)$/;"	f	class:Environment
+Grow	Buffer.cpp	/^void Bwh::Grow(TUint aMaxBytes)$/;"	f	class:Bwh
+H	md5.c	254;"	d	file:
+HEADER_ARCH	Arch.h	2;"	d
+HEADER_ASCII_ASCII	Ascii.h	2;"	d
+HEADER_ASCII_PARSER	Parser.h	2;"	d
+HEADER_BUFFER	Buffer.h	2;"	d
+HEADER_CONVERTER	Converter.h	2;"	d
+HEADER_DEBUG	Debug.h	2;"	d
+HEADER_EXCEPTION	Exception.h	2;"	d
+HEADER_FIFO	Fifo.h	2;"	d
+HEADER_FILE	File.h	2;"	d
+HEADER_FUNCTOR	Functor.h	14;"	d
+HEADER_HTTP_HTTP	Http.h	2;"	d
+HEADER_IFACE_MSG	FunctorMsg.h	2;"	d
+HEADER_IFACE_NETWORKADAPTER	FunctorNetworkAdapter.h	2;"	d
+HEADER_NETWORK	Network.h	2;"	d
+HEADER_NETWORKINTERFACELIST	NetworkAdapterList.h	2;"	d
+HEADER_OHNET_DEFINES	OhNetDefines.h	2;"	d
+HEADER_OHNET_MIME_TYPES	MimeTypes.h	2;"	d
+HEADER_OPENHOME_DEFINES	Defines.h	2;"	d
+HEADER_OPENHOME_TYPES	Types.h	2;"	d
+HEADER_OS_TYPES	OsTypes.h	2;"	d
+HEADER_PRINTER	Printer.h	2;"	d
+HEADER_QUEUE	Queue.h	2;"	d
+HEADER_STACK	Env.h	8;"	d
+HEADER_STANDARD	Standard.h	2;"	d
+HEADER_STREAM	Stream.h	2;"	d
+HEADER_TERMINAL	Terminal.h	2;"	d
+HEADER_THREAD	Thread.h	2;"	d
+HEADER_TIMER	Timer.h	2;"	d
+HEADER_TYPES	OhNetTypes.h	2;"	d
+HEADER_URI	Uri.h	2;"	d
+HMACContext	sha.h	/^typedef struct HMACContext {$/;"	s
+HMACContext	sha.h	/^} HMACContext;$/;"	t	typeref:struct:HMACContext
+HandleInterfaceListChanged	NetworkAdapterList.cpp	/^void NetworkAdapterList::HandleInterfaceListChanged()$/;"	f	class:NetworkAdapterList
+HeadChanged	Queue.cpp	/^void QueueSortedBase::HeadChanged(QueueSortedEntry& \/*aEntry*\/)$/;"	f	class:QueueSortedBase
+HeadChanged	Timer.cpp	/^void TimerManager::HeadChanged(QueueSortedEntry& aEntry)$/;"	f	class:TimerManager
+Header	Http.cpp	/^IHttpHeader& ReaderHttpHeader::Header() const$/;"	f	class:ReaderHttpHeader
+HexChar	Ascii.cpp	/^TChar Ascii::HexChar(TUint aValue)$/;"	f	class:Ascii
+HexValue	Ascii.cpp	/^TUint Ascii::HexValue(TChar aValue)$/;"	f	class:Ascii
+Host	Http.cpp	/^const Brx& HttpHeaderHost::Host() const$/;"	f	class:HttpHeaderHost
+Host	Uri.h	/^    const Brx& Host() const { return iHost; }$/;"	f	class:OpenHome::Uri
+Http	Http.h	/^class Http$/;"	c	namespace:OpenHome
+HttpHeader	Http.cpp	/^HttpHeader::HttpHeader()$/;"	f	class:HttpHeader
+HttpHeader	Http.h	/^class HttpHeader : public IHttpHeader$/;"	c	namespace:OpenHome
+HttpHeaderAccessControlRequestMethod	Http.h	/^class HttpHeaderAccessControlRequestMethod : public HttpHeader$/;"	c	namespace:OpenHome
+HttpHeaderConnection	Http.h	/^class HttpHeaderConnection : public HttpHeader$/;"	c	namespace:OpenHome
+HttpHeaderContentLength	Http.h	/^class HttpHeaderContentLength : public HttpHeader$/;"	c	namespace:OpenHome
+HttpHeaderContentType	Http.h	/^class HttpHeaderContentType : public HttpHeader$/;"	c	namespace:OpenHome
+HttpHeaderExpect	Http.h	/^class HttpHeaderExpect : public HttpHeader$/;"	c	namespace:OpenHome
+HttpHeaderHost	Http.h	/^class HttpHeaderHost : public HttpHeader$/;"	c	namespace:OpenHome
+HttpHeaderLocation	Http.h	/^class HttpHeaderLocation : public HttpHeader$/;"	c	namespace:OpenHome
+HttpHeaderTransferEncoding	Http.h	/^class HttpHeaderTransferEncoding : public HttpHeader$/;"	c	namespace:OpenHome
+HttpReader	Http.cpp	/^HttpReader::HttpReader(Environment& aEnv)$/;"	f	class:HttpReader
+HttpReader	Http.h	/^class HttpReader : public IReader$/;"	c	namespace:OpenHome
+HttpStatus	Http.cpp	/^HttpStatus::HttpStatus(TUint aCode, const Brn aReason) : iCode(aCode), iReason(aReason)$/;"	f	class:HttpStatus
+HttpStatus	Http.h	/^class HttpStatus$/;"	c	namespace:OpenHome
+HttpStatusMaker	Http.cpp	/^    HttpStatusMaker(TUint aCode, const Brn aReason) : HttpStatus(aCode, aReason) {}$/;"	f	class:HttpStatusMaker
+HttpStatusMaker	Http.cpp	/^class HttpStatusMaker : public HttpStatus$/;"	c	file:
+I	md5.c	280;"	d	file:
+IExitHandler	Exception.h	/^class IExitHandler$/;"	c	namespace:OpenHome
+IFile	File.h	/^class IFile $/;"	c	namespace:OpenHome
+IHttpHeader	Http.h	/^class IHttpHeader$/;"	c	namespace:OpenHome
+INLINE	Defines.h	12;"	d
+INLINE	Defines.h	21;"	d
+INetworkAdapterChangeNotifier	NetworkAdapterList.h	/^class INetworkAdapterChangeNotifier$/;"	c	namespace:OpenHome
+INonCopyable	Standard.h	/^    INonCopyable() {}$/;"	f	class:OpenHome::INonCopyable
+INonCopyable	Standard.h	/^class INonCopyable$/;"	c	namespace:OpenHome
+IReader	Stream.h	/^class IReader$/;"	c	namespace:OpenHome
+IReaderSource	Stream.h	/^class IReaderSource$/;"	c	namespace:OpenHome
+IResumeObserver	Env.h	/^class IResumeObserver$/;"	c	namespace:OpenHome
+IStack	Env.h	/^class IStack$/;"	c	namespace:OpenHome
+ISuspendObserver	Env.h	/^class ISuspendObserver$/;"	c	namespace:OpenHome
+IWriter	Stream.h	/^class IWriter$/;"	c	namespace:OpenHome
+IWriterAscii	Ascii.h	/^class IWriterAscii : public IWriter$/;"	c	namespace:OpenHome
+IWriterField	Http.h	/^class IWriterField : public IWriterAscii$/;"	c	namespace:OpenHome
+IWriterHttpHeader	Http.h	/^class IWriterHttpHeader : public IWriter$/;"	c	namespace:OpenHome
+IWriterHttpMethod	Http.h	/^class IWriterHttpMethod$/;"	c	namespace:OpenHome
+IWriterHttpStatus	Http.h	/^class IWriterHttpStatus$/;"	c	namespace:OpenHome
+Index	Parser.h	/^    TUint Index() const { return iIndex; }$/;"	f	class:OpenHome::Parser
+IndexOf	Ascii.cpp	/^TUint Ascii::IndexOf(const Brx& aBuffer, TChar aValue)$/;"	f	class:Ascii
+InitParams	Env.cpp	/^InitialisationParams* Environment::InitParams()$/;"	f	class:Environment
+Int	Ascii.cpp	/^TInt Ascii::Int(const Brx& aBuffer)$/;"	f	class:Ascii
+Int64	Ascii.cpp	/^TInt64 Ascii::Int64(const Brx& aBuffer)$/;"	f	class:Ascii
+Interface	Env.cpp	/^TIpAddress MListener::Interface() const$/;"	f	class:MListener
+Interface	Network.h	/^    TIpAddress Interface() const { return iInterface; }$/;"	f	class:OpenHome::SocketTcpServer
+InterfaceListChanged	NetworkAdapterList.cpp	/^void NetworkAdapterList::InterfaceListChanged(void* aPtr)$/;"	f	class:NetworkAdapterList
+Intermediate_Hash	sha.h	/^    uint32_t Intermediate_Hash[SHA1HashSize\/4]; \/* Message Digest *\/$/;"	m	struct:SHA1Context
+Intermediate_Hash	sha.h	/^    uint32_t Intermediate_Hash[SHA256HashSize\/4]; \/* Message Digest *\/$/;"	m	struct:SHA256Context
+Intermediate_Hash	sha.h	/^    uint32_t Intermediate_Hash[SHA512HashSize\/4]; \/* Message Digest  *\/$/;"	m	struct:SHA512Context
+Interrupt	FileStream.cpp	/^void FileStream::Interrupt(TBool aInterrupt)$/;"	f	class:FileStream
+Interrupt	Http.cpp	/^void ReaderHttpRequest::Interrupt()$/;"	f	class:ReaderHttpRequest
+Interrupt	Http.cpp	/^void ReaderHttpResponse::Interrupt()$/;"	f	class:ReaderHttpResponse
+Interrupt	Network.cpp	/^void Socket::Interrupt(TBool aInterrupt)$/;"	f	class:Socket
+IsAfter	Timer.cpp	/^TBool Time::IsAfter(TUint aQuestionableTime, TUint aTime)$/;"	f	class:Time
+IsAlphabetic	Ascii.cpp	/^TBool Ascii::IsAlphabetic(TChar aValue)$/;"	f	class:Ascii
+IsBeforeOrAt	Timer.cpp	/^TBool Time::IsBeforeOrAt(TUint aQuestionableTime, TUint aTime)$/;"	f	class:Time
+IsChunked	Http.cpp	/^TBool HttpHeaderTransferEncoding::IsChunked() const$/;"	f	class:HttpHeaderTransferEncoding
+IsDigit	Ascii.cpp	/^TBool Ascii::IsDigit(TChar aValue)$/;"	f	class:Ascii
+IsEmpty	Queue.cpp	/^TBool QueueSortedBase::IsEmpty()$/;"	f	class:QueueSortedBase
+IsEscaped	Uri.cpp	/^TBool Uri::IsEscaped(const Brx& aBuffer, TUint aIndex)$/;"	f	class:Uri
+IsExcluded	Uri.cpp	/^TBool Uri::IsExcluded(TChar aValue)$/;"	f	class:Uri
+IsHex	Ascii.cpp	/^TBool Ascii::IsHex(TChar aValue)$/;"	f	class:Ascii
+IsInFuture	Timer.cpp	/^TBool Time::IsInFuture(Environment& aEnv, TUint aTime)$/;"	f	class:Time
+IsInManagerThread	Timer.cpp	/^TBool Timer::IsInManagerThread(OpenHome::Environment& aEnv)$/;"	f	class:Timer
+IsInManagerThread	Timer.cpp	/^TBool Timer::IsInManagerThread(TimerManager& aMgr)$/;"	f	class:Timer
+IsInPastOrNow	Timer.cpp	/^TBool Time::IsInPastOrNow(Environment& aEnv, TUint aTime)$/;"	f	class:Time
+IsLineEnding	Ascii.cpp	/^TBool Ascii::IsLineEnding(TChar aValue)$/;"	f	class:Ascii
+IsLowerCase	Ascii.cpp	/^TBool Ascii::IsLowerCase(TChar aValue)$/;"	f	class:Ascii
+IsMultiByteChar	Converter.cpp	/^TBool Converter::IsMultiByteChar(TByte aChar, TUint& aBytes)$/;"	f	class:Converter
+IsTail	Queue.cpp	/^TBool QueueSortedBase::IsTail(QueueSortedEntry& aEntry) const$/;"	f	class:QueueSortedBase
+IsUnreserved	Uri.cpp	/^TBool Uri::IsUnreserved(TChar aValue)$/;"	f	class:Uri
+IsUpperCase	Ascii.cpp	/^TBool Ascii::IsUpperCase(TChar aValue)$/;"	f	class:Ascii
+IsWhitespace	Ascii.cpp	/^TBool Ascii::IsWhitespace(TChar aValue)$/;"	f	class:Ascii
+Join	Thread.cpp	/^void Thread::Join()$/;"	f	class:Thread
+Kill	Thread.cpp	/^void Thread::Kill()$/;"	f	class:Thread
+LOG	Debug.h	20;"	d
+LOG	Debug.h	81;"	d
+LOG2	Debug.h	26;"	d
+LOG2	Debug.h	84;"	d
+LOG2F	Debug.h	38;"	d
+LOG2F	Debug.h	85;"	d
+LOG3	Debug.h	32;"	d
+LOGF	Debug.h	45;"	d
+LOGF	Debug.h	82;"	d
+LOGFUNC	Debug.h	74;"	d
+LOGFUNC	Debug.h	77;"	d
+LOGFUNC	Debug.h	88;"	d
+LOGF_HEX	Debug.h	66;"	d
+LOGF_HEX	Debug.h	87;"	d
+LOGT	Debug.h	52;"	d
+LOGT	Debug.h	83;"	d
+LOG_HEX	Debug.h	60;"	d
+LOG_HEX	Debug.h	86;"	d
+LeUint16At	Converter.cpp	/^TUint16 Converter::LeUint16At(const Brx& aBuf, TUint aIndex)$/;"	f	class:Converter
+LeUint32At	Converter.cpp	/^TUint32 Converter::LeUint32At(const Brx& aBuf, TUint aIndex)$/;"	f	class:Converter
+Length	sha.h	/^    uint32_t Length[4];                 \/* Message length in bits *\/$/;"	m	struct:SHA512Context
+Length_High	sha.h	/^    uint32_t Length_High;               \/* Message length in bits *\/$/;"	m	struct:SHA1Context
+Length_High	sha.h	/^    uint32_t Length_High;               \/* Message length in bits *\/$/;"	m	struct:SHA256Context
+Length_Low	sha.h	/^    uint32_t Length_Low;                \/* Message length in bits *\/$/;"	m	struct:SHA1Context
+Length_Low	sha.h	/^    uint32_t Length_Low;                \/* Message length in bits *\/$/;"	m	struct:SHA256Context
+Level	Debug.cpp	/^TUint Debug::Level()$/;"	f	class:Debug
+Line	Exception.cpp	/^TUint Exception::Line()$/;"	f	class:Exception
+List	NetworkAdapterList.cpp	/^const std::vector<NetworkAdapter*>& NetworkAdapterList::List() const$/;"	f	class:NetworkAdapterList
+ListObjectDetails	NetworkAdapterList.cpp	/^void NetworkAdapterList::ListObjectDetails() const$/;"	f	class:NetworkAdapterList
+ListObjects	Env.cpp	/^void Environment::ListObjects()$/;"	f	class:Environment
+Listen	Network.cpp	/^void Socket::Listen(TUint aSlots)$/;"	f	class:Socket
+Listener	Env.cpp	/^Net::SsdpListenerMulticast& MListener::Listener()$/;"	f	class:MListener
+LittleEndian2	Arch.h	/^    inline static TUint16 LittleEndian2(TUint16 x) {return x;}$/;"	f	class:OpenHome::Arch
+LittleEndian4	Arch.h	/^    inline static TUint32 LittleEndian4(TUint32 x) {return x;}$/;"	f	class:OpenHome::Arch
+LittleEndian8	Arch.h	/^    inline static TUint64 LittleEndian8(TUint64 x) {return x;}$/;"	f	class:OpenHome::Arch
+Location	Http.cpp	/^const Brx& HttpHeaderLocation::Location() const$/;"	f	class:HttpHeaderLocation
+Log	Network.cpp	/^void Socket::Log(const char* aPrefix, const Brx& aBuffer) const$/;"	f	class:Socket
+Log	Printer.cpp	/^Log::Log(FunctorMsg& aLogOutput)$/;"	f	class:Log
+Log	Printer.cpp	/^void RamLogger::Log(const char* aMsg)$/;"	f	class:RamLogger
+Log	Printer.h	/^class Log$/;"	c	namespace:OpenHome
+LogOutput	Printer.cpp	/^inline FunctorMsg& Log::LogOutput()$/;"	f	class:Log
+LogStackTrace	Exception.cpp	/^void Exception::LogStackTrace()$/;"	f	class:Exception
+LogVerbose	Network.cpp	/^void Socket::LogVerbose(TBool aLog, TBool aHex)$/;"	f	class:Socket
+Logger	Env.cpp	/^Log& Environment::Logger()$/;"	f	class:Environment
+MListener	Env.cpp	/^MListener::MListener(Environment& aEnv, TIpAddress aInterface)$/;"	f	class:MListener
+MListener	Env.cpp	/^class MListener$/;"	c	namespace:OpenHome	file:
+MakeFunctor	Functor.h	/^MakeFunctor(Object& aC, TRT(CallType::* const &aF)())$/;"	f	namespace:OpenHome
+MakeFunctor	Functor.h	/^MakeFunctor(const Object& aC, TRT(CallType::* const &aF)() const)$/;"	f	namespace:OpenHome
+MakeFunctor	Functor.h	/^MakeFunctor(void* aPtr, OhNetFunctor aCallback)$/;"	f	namespace:OpenHome
+MakeFunctorMsg	FunctorMsg.h	/^MakeFunctorMsg(Object& aC, void(CallType::* const &aF)(const char*))$/;"	f	namespace:OpenHome
+MakeFunctorMsgC	FunctorMsg.h	/^MakeFunctorMsgC(void* aPtr, OhNetFunctorMsg aCallback)$/;"	f	namespace:OpenHome
+MakeFunctorNetworkAdapter	FunctorNetworkAdapter.h	/^MakeFunctorNetworkAdapter(Object& aC, void(CallType::* const &aF)(NetworkAdapter&))$/;"	f	namespace:OpenHome
+MakeFunctorNetworkAdapter	FunctorNetworkAdapter.h	/^MakeFunctorNetworkAdapter(void* aPtr, OhNetFunctorNetworkAdapter aCallback)$/;"	f	namespace:OpenHome
+Map	NetworkAdapterList.h	/^    typedef std::map<TUint,Functor> Map;$/;"	t	class:OpenHome::NetworkAdapterList
+MapNetworkAdapter	NetworkAdapterList.h	/^    typedef std::map<TUint,FunctorNetworkAdapter> MapNetworkAdapter;$/;"	t	class:OpenHome::NetworkAdapterList
+MemberFunction	Functor.h	/^    typedef TAny (Functor::*MemberFunction)();$/;"	t	class:OpenHome::Functor
+MemberFunction	FunctorMsg.h	/^    typedef TAny (FunctorMsg::*MemberFunction)();$/;"	t	class:OpenHome::FunctorMsg
+MemberFunction	FunctorNetworkAdapter.h	/^    typedef TAny (FunctorNetworkAdapter::*MemberFunction)();$/;"	t	class:OpenHome::FunctorNetworkAdapter
+MemberTranslator	Functor.h	/^    MemberTranslator(Object& aC, const MemFunc& aM) :$/;"	f	class:OpenHome::MemberTranslator
+MemberTranslator	Functor.h	/^class MemberTranslator : public Functor$/;"	c	namespace:OpenHome
+MemberTranslatorC	Functor.h	/^    MemberTranslatorC(void* aPtr, OhNetFunctor aCallback) :$/;"	f	class:OpenHome::MemberTranslatorC
+MemberTranslatorC	Functor.h	/^class MemberTranslatorC : public Functor$/;"	c	namespace:OpenHome
+MemberTranslatorMsg	FunctorMsg.h	/^    MemberTranslatorMsg(Object& aC, const MemFunc& aM) :$/;"	f	class:OpenHome::MemberTranslatorMsg
+MemberTranslatorMsg	FunctorMsg.h	/^class MemberTranslatorMsg : public FunctorMsg$/;"	c	namespace:OpenHome
+MemberTranslatorNetworkAdapter	FunctorNetworkAdapter.h	/^    MemberTranslatorNetworkAdapter(Object& aC, const MemFunc& aM) :$/;"	f	class:OpenHome::MemberTranslatorNetworkAdapter
+MemberTranslatorNetworkAdapter	FunctorNetworkAdapter.h	/^class MemberTranslatorNetworkAdapter : public FunctorNetworkAdapter$/;"	c	namespace:OpenHome
+Message	Exception.cpp	/^const TChar* Exception::Message()$/;"	f	class:Exception
+Message_Block	sha.h	/^    uint8_t Message_Block[SHA1_Message_Block_Size];$/;"	m	struct:SHA1Context
+Message_Block	sha.h	/^    uint8_t Message_Block[SHA256_Message_Block_Size];$/;"	m	struct:SHA256Context
+Message_Block	sha.h	/^    uint8_t Message_Block[SHA512_Message_Block_Size];$/;"	m	struct:SHA512Context
+Message_Block_Index	sha.h	/^    int_least16_t Message_Block_Index;  \/* Message_Block array index *\/$/;"	m	struct:SHA1Context
+Message_Block_Index	sha.h	/^    int_least16_t Message_Block_Index;  \/* Message_Block array index *\/$/;"	m	struct:SHA256Context
+Message_Block_Index	sha.h	/^    int_least16_t Message_Block_Index;  \/* Message_Block array index *\/$/;"	m	struct:SHA512Context
+Method	Http.cpp	/^const Brx& HttpHeaderAccessControlRequestMethod::Method() const$/;"	f	class:HttpHeaderAccessControlRequestMethod
+Method	Http.cpp	/^const Brx& ReaderHttpRequest::Method() const$/;"	f	class:ReaderHttpRequest
+MethodNotAllowed	Http.cpp	/^TBool ReaderHttpRequest::MethodNotAllowed() const$/;"	f	class:ReaderHttpRequest
+MgrThread	Timer.cpp	/^Thread* TimerManager::MgrThread() const$/;"	f	class:TimerManager
+Min	Printer.cpp	41;"	d	file:
+MoveAllTo	Queue.h	/^    void MoveAllTo(Queue<T>& aQueue) { DoMoveAllTo(aQueue); }$/;"	f	class:OpenHome::Queue
+MoveHeadTo	Queue.h	/^    T& MoveHeadTo(Queue<T>& aQueue) { return ((T&)DoMoveHeadTo(aQueue)); }$/;"	f	class:OpenHome::Queue
+MoveTo	Queue.h	/^    void MoveTo(Queue<T>& aQueue) { DoMoveTo(aQueue); }$/;"	f	class:OpenHome::QueueEntry
+MulticastListenerClaim	Env.cpp	/^Net::SsdpListenerMulticast& Environment::MulticastListenerClaim(TIpAddress aInterface)$/;"	f	class:Environment
+MulticastListenerRelease	Env.cpp	/^void Environment::MulticastListenerRelease(TIpAddress aInterface)$/;"	f	class:Environment
+Mutex	Env.cpp	/^OpenHome::Mutex& Environment::Mutex()$/;"	f	class:Environment
+Mutex	Thread.cpp	/^Mutex::Mutex(const TChar* aName)$/;"	f	class:Mutex
+Mutex	Thread.h	/^class DllExportClass Mutex : public INonCopyable$/;"	c	namespace:OpenHome
+Name	Thread.cpp	/^const Brx& Thread::Name() const$/;"	f	class:Thread
+Net	Env.h	/^namespace Net {$/;"	n	namespace:OpenHome
+NetworkAdapterChangeNotifier	NetworkAdapterList.cpp	/^NetworkAdapterChangeNotifier::NetworkAdapterChangeNotifier(INetworkAdapterChangeNotifier& aAdapterList)$/;"	f	class:NetworkAdapterChangeNotifier
+NetworkAdapterChangeNotifier	NetworkAdapterList.h	/^class NetworkAdapterChangeNotifier : public Thread$/;"	c	namespace:OpenHome
+NetworkAdapterList	Env.cpp	/^NetworkAdapterList& Environment::NetworkAdapterList()$/;"	f	class:Environment
+NetworkAdapterList	NetworkAdapterList.cpp	/^NetworkAdapterList::NetworkAdapterList(Environment& aEnv, TIpAddress aDefaultSubnet)$/;"	f	class:NetworkAdapterList
+NetworkAdapterList	NetworkAdapterList.h	/^class NetworkAdapterList : private IStackObject, private INetworkAdapterChangeNotifier, private IResumeObserver$/;"	c	namespace:OpenHome
+NewChunk	Printer.cpp	/^RamLogger::Chunk* RamLogger::NewChunk()$/;"	f	class:RamLogger
+Next	Parser.cpp	/^Brn Parser::Next()$/;"	f	class:Parser
+Next	Parser.cpp	/^Brn Parser::Next(TByte aDelimiter)$/;"	f	class:Parser
+Next	Queue.cpp	/^QueueSortedEntry& QueueSortedEntry::Next()$/;"	f	class:QueueSortedEntry
+NextLine	Parser.cpp	/^Brn Parser::NextLine()$/;"	f	class:Parser
+NextNoTrim	Parser.cpp	/^Brn Parser::NextNoTrim(TByte aDelimiter)$/;"	f	class:Parser
+NextNth	Parser.cpp	/^Brn Parser::NextNth(TUint aNth, TByte aDelimiter)\/\/ find the Nth token using the given delimiter$/;"	f	class:Parser
+NextToEnd	Parser.cpp	/^Brn Parser::NextToEnd()$/;"	f	class:Parser
+NextWhiteSpace	Parser.cpp	/^Brn Parser::NextWhiteSpace()$/;"	f	class:Parser
+NotifyAdapterAdded	NetworkAdapterList.cpp	/^void NetworkAdapterList::NotifyAdapterAdded(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterList
+NotifyAdapterChanged	NetworkAdapterList.cpp	/^void NetworkAdapterList::NotifyAdapterChanged(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterList
+NotifyAdapterRemoved	NetworkAdapterList.cpp	/^void NetworkAdapterList::NotifyAdapterRemoved(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterList
+NotifyCurrentChanged	NetworkAdapterList.cpp	/^void NetworkAdapterList::NotifyCurrentChanged()$/;"	f	class:NetworkAdapterList
+NotifyResumed	Env.cpp	/^void Environment::NotifyResumed()$/;"	f	class:Environment
+NotifyResumed	NetworkAdapterList.cpp	/^void NetworkAdapterList::NotifyResumed()$/;"	f	class:NetworkAdapterList
+NotifySubnetsChanged	NetworkAdapterList.cpp	/^void NetworkAdapterList::NotifySubnetsChanged()$/;"	f	class:NetworkAdapterList
+NotifySuspended	Env.cpp	/^void Environment::NotifySuspended()$/;"	f	class:Environment
+Now	Timer.cpp	/^TUint Time::Now(Environment& aEnv)$/;"	f	class:Time
+ObjectMap	Env.h	/^    typedef std::map<IStackObject*,IStackObject*> ObjectMap;$/;"	t	class:OpenHome::Environment
+OhNetFunctor	Functor.h	/^typedef void (STDCALL *OhNetFunctor)(void* aPtr);$/;"	t	namespace:OpenHome
+OhNetFunctorMsg	FunctorMsg.h	/^typedef void (STDCALL *OhNetFunctorMsg)(void* aPtr, const char* aMsg);$/;"	t	namespace:OpenHome
+OhNetFunctorNetworkAdapter	FunctorNetworkAdapter.h	/^typedef void (STDCALL *OhNetFunctorNetworkAdapter)(void* aPtr, NetworkAdapter* aAdapter);$/;"	t	namespace:OpenHome
+OhNetStrlen	Buffer.cpp	17;"	d	file:
+Open	Network.cpp	/^void SocketTcpClient::Open(Environment& aEnv)$/;"	f	class:SocketTcpClient
+Open	Network.cpp	/^void SocketTcpSession::Open(THandle aHandle)$/;"	f	class:SocketTcpSession
+OpenFile	FileStream.cpp	/^void FileStream::OpenFile(const TChar* aFilename, FileMode aFileMode)$/;"	f	class:FileStream
+OpenHome	Arch.h	/^namespace OpenHome {$/;"	n
+OpenHome	Ascii.h	/^namespace OpenHome {$/;"	n
+OpenHome	Buffer.h	/^namespace OpenHome {$/;"	n
+OpenHome	Converter.h	/^namespace OpenHome {$/;"	n
+OpenHome	Debug.h	/^namespace OpenHome {$/;"	n
+OpenHome	Env.cpp	/^namespace OpenHome {$/;"	n	file:
+OpenHome	Env.h	/^namespace OpenHome {$/;"	n
+OpenHome	Exception.h	/^namespace OpenHome {$/;"	n
+OpenHome	Fifo.h	/^namespace OpenHome {$/;"	n
+OpenHome	File.h	/^namespace OpenHome {$/;"	n
+OpenHome	Functor.h	/^namespace OpenHome {$/;"	n
+OpenHome	FunctorMsg.h	/^namespace OpenHome {$/;"	n
+OpenHome	FunctorNetworkAdapter.h	/^namespace OpenHome {$/;"	n
+OpenHome	Http.h	/^namespace OpenHome {$/;"	n
+OpenHome	Network.h	/^namespace OpenHome {$/;"	n
+OpenHome	NetworkAdapterList.h	/^namespace OpenHome {$/;"	n
+OpenHome	Parser.h	/^namespace OpenHome {$/;"	n
+OpenHome	Printer.h	/^namespace OpenHome {$/;"	n
+OpenHome	Queue.h	/^namespace OpenHome {$/;"	n
+OpenHome	Standard.h	/^namespace OpenHome {$/;"	n
+OpenHome	Stream.h	/^namespace OpenHome {$/;"	n
+OpenHome	Terminal.cpp	/^namespace OpenHome {$/;"	n	file:
+OpenHome	Terminal.h	/^namespace OpenHome {$/;"	n
+OpenHome	Thread.h	/^namespace OpenHome {$/;"	n
+OpenHome	Timer.h	/^namespace OpenHome {$/;"	n
+OpenHome	Types.h	/^namespace OpenHome {$/;"	n
+OpenHome	Uri.h	/^namespace OpenHome {$/;"	n
+OpenSocket	Http.cpp	/^void HttpReader::OpenSocket()$/;"	f	class:HttpReader
+OsContext	OsTypes.h	/^typedef struct OsContext OsContext;$/;"	t	typeref:struct:OsContext
+OsCtx	Env.cpp	/^OsContext* Environment::OsCtx()$/;"	f	class:Environment
+Output	Printer.cpp	/^void RamLogger::Output()$/;"	f	class:RamLogger
+Parse	Uri.cpp	/^void Uri::Parse(const Brx& aUri)$/;"	f	class:Uri
+Parser	Parser.cpp	/^Parser::Parser() : iBuffer(Brx::Empty()), iIndex(0)$/;"	f	class:Parser
+Parser	Parser.cpp	/^Parser::Parser(const Brx& aBuffer) : iBuffer(aBuffer), iIndex(0)$/;"	f	class:Parser
+Parser	Parser.h	/^class Parser$/;"	c	namespace:OpenHome
+Path	Uri.h	/^    const Brx& Path() const { return iPath; }$/;"	f	class:OpenHome::Uri
+PathAndQuery	Uri.h	/^    const Brx& PathAndQuery() const { return iPathAndQuery; }$/;"	f	class:OpenHome::Uri
+Peek	Stream.cpp	/^Brn Srx::Peek(TUint aBytes)$/;"	f	class:Srx
+Port	Network.cpp	/^TUint SocketUdpBase::Port() const$/;"	f	class:SocketUdpBase
+Port	Network.cpp	/^TUint16 Endpoint::Port() const$/;"	f	class:Endpoint
+Port	Network.h	/^    TUint Port() const { return iPort; }$/;"	f	class:OpenHome::SocketTcpServer
+Port	Uri.h	/^    TInt Port() const { return iPort; }$/;"	f	class:OpenHome::Uri
+Prev	Queue.cpp	/^QueueSortedEntry& QueueSortedEntry::Prev()$/;"	f	class:QueueSortedEntry
+Print	Printer.cpp	/^TInt Log::Print(FunctorMsg& aOutput, const Brx& aMessage)$/;"	f	class:Log
+Print	Printer.cpp	/^TInt Log::Print(FunctorMsg& aOutput, const TChar* aFormat, va_list aArgs)$/;"	f	class:Log
+Print	Printer.cpp	/^TInt Log::Print(const Brx& aMessage)$/;"	f	class:Log
+Print	Printer.cpp	/^TInt Log::Print(const TChar* aFormat, ...)$/;"	f	class:Log
+Print	Terminal.cpp	/^void Terminal::Print(const TChar* aFormat, ...)$/;"	f	class:OpenHome::Terminal
+Print	Terminal.cpp	/^void TerminalTcpSession::Print(const Brx& aBuffer)$/;"	f	class:OpenHome::TerminalTcpSession
+PrintHex	Printer.cpp	/^TInt Log::PrintHex(FunctorMsg& aOutput, const Brx& aBrx)$/;"	f	class:Log
+PrintHex	Printer.cpp	/^TInt Log::PrintHex(const Brx& aBrx)$/;"	f	class:Log
+PrintVA	Printer.cpp	/^TInt Log::PrintVA(const TChar* aFormat, va_list aArgs)$/;"	f	class:Log
+Process	Http.cpp	/^void HttpHeaderAccessControlRequestMethod::Process(const Brx& aValue)$/;"	f	class:HttpHeaderAccessControlRequestMethod
+Process	Http.cpp	/^void HttpHeaderConnection::Process(const Brx& aValue)$/;"	f	class:HttpHeaderConnection
+Process	Http.cpp	/^void HttpHeaderContentLength::Process(const Brx& aValue)$/;"	f	class:HttpHeaderContentLength
+Process	Http.cpp	/^void HttpHeaderContentType::Process(const Brx& \/*aKey*\/, const Brx& \/*aValue*\/)$/;"	f	class:HttpHeaderContentType
+Process	Http.cpp	/^void HttpHeaderContentType::Process(const Brx& aValue)$/;"	f	class:HttpHeaderContentType
+Process	Http.cpp	/^void HttpHeaderExpect::Process(const Brx& aValue)$/;"	f	class:HttpHeaderExpect
+Process	Http.cpp	/^void HttpHeaderHost::Process(const Brx& aValue)$/;"	f	class:HttpHeaderHost
+Process	Http.cpp	/^void HttpHeaderLocation::Process(const Brx& aValue)$/;"	f	class:HttpHeaderLocation
+Process	Http.cpp	/^void HttpHeaderTransferEncoding::Process(const Brx& aValue)$/;"	f	class:HttpHeaderTransferEncoding
+ProcessHeader	Http.cpp	/^void ReaderHttpHeader::ProcessHeader(const Brx& aField, const Brx& aValue)$/;"	f	class:ReaderHttpHeader
+ProcessInitialHttpHeader	Http.cpp	/^TBool HttpReader::ProcessInitialHttpHeader(const Uri& aUri, TUint aPort)$/;"	f	class:HttpReader
+ProcessMethod	Http.cpp	/^void ReaderHttpRequest::ProcessMethod(const Brx& aMethod, const Brx& aUri, const Brx& aVersion)$/;"	f	class:ReaderHttpRequest
+ProcessStatus	Http.cpp	/^void ReaderHttpResponse::ProcessStatus(const Brx& aVersion, const Brx& aCode, const Brx& aDescription)$/;"	f	class:ReaderHttpResponse
+Ptr	Buffer.cpp	/^const TByte* Brn::Ptr() const$/;"	f	class:Brn
+Ptr	Buffer.cpp	/^const TByte* Brv::Ptr() const$/;"	f	class:Brv
+Ptr	Buffer.cpp	/^const TByte* Bwh::Ptr() const$/;"	f	class:Bwh
+Ptr	Buffer.cpp	/^const TByte* Bwn::Ptr() const$/;"	f	class:Bwn
+Ptr	Stream.cpp	/^TByte* Srd::Ptr()$/;"	f	class:Srd
+Ptr	Stream.cpp	/^TByte* Swd::Ptr()$/;"	f	class:Swd
+Ptr	Stream.cpp	/^TByte* Swp::Ptr()$/;"	f	class:Swp
+Ptr	Stream.h	/^    virtual TByte* Ptr() { return (iBuf); }$/;"	f	class:OpenHome::Srs
+Ptr	Stream.h	/^    virtual TByte* Ptr() { return (iBuf); }$/;"	f	class:OpenHome::Sws
+PtrZ	Buffer.cpp	/^const TChar* Bwx::PtrZ() const$/;"	f	class:Bwx
+Query	Uri.h	/^    const Brx& Query() const { return iQuery; }$/;"	f	class:OpenHome::Uri
+Queue	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::Queue(UpdateBase* aUpdate)$/;"	f	class:NetworkAdapterChangeNotifier
+Queue	Queue.h	/^template <class T> class Queue : public QueueBase$/;"	c	namespace:OpenHome
+QueueAdapterAdded	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::QueueAdapterAdded(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterChangeNotifier
+QueueAdapterChanged	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::QueueAdapterChanged(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterChangeNotifier
+QueueAdapterRemoved	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::QueueAdapterRemoved(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterChangeNotifier
+QueueBase	Queue.cpp	/^QueueBase::QueueBase()$/;"	f	class:QueueBase
+QueueBase	Queue.h	/^class QueueBase : public QueueEntry<QueueBase>$/;"	c	namespace:OpenHome
+QueueCurrentChanged	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::QueueCurrentChanged()$/;"	f	class:NetworkAdapterChangeNotifier
+QueueEntry	Queue.h	/^template <class T> class QueueEntry : public QueueEntryBase$/;"	c	namespace:OpenHome
+QueueEntryBase	Queue.h	/^class QueueEntryBase : public INonCopyable$/;"	c	namespace:OpenHome
+QueueSorted	Queue.h	/^template <class T> class QueueSorted : public QueueSortedBase$/;"	c	namespace:OpenHome
+QueueSortedBase	Queue.cpp	/^QueueSortedBase::QueueSortedBase() : iMutex("QSBM"), iHead(iTail), iTail(iHead)$/;"	f	class:QueueSortedBase
+QueueSortedBase	Queue.h	/^class QueueSortedBase : public INonCopyable$/;"	c	namespace:OpenHome
+QueueSortedEntry	Queue.cpp	/^QueueSortedEntry::QueueSortedEntry()$/;"	f	class:QueueSortedEntry
+QueueSortedEntry	Queue.h	/^class QueueSortedEntry : public INonCopyable$/;"	c	namespace:OpenHome
+QueueSortedEntryHead	Queue.cpp	/^QueueSortedEntryHead::QueueSortedEntryHead(QueueSortedEntry& aTail)$/;"	f	class:QueueSortedEntryHead
+QueueSortedEntryHead	Queue.h	/^class QueueSortedEntryHead : public QueueSortedEntry$/;"	c	namespace:OpenHome
+QueueSortedEntryTail	Queue.cpp	/^QueueSortedEntryTail::QueueSortedEntryTail(QueueSortedEntry& aHead)$/;"	f	class:QueueSortedEntryTail
+QueueSortedEntryTail	Queue.h	/^class QueueSortedEntryTail : public QueueSortedEntry$/;"	c	namespace:OpenHome
+QueueSortedEntryTimer	Timer.h	/^class QueueSortedEntryTimer : public QueueSortedEntry$/;"	c	namespace:OpenHome
+QueueSubnetsChanged	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::QueueSubnetsChanged()$/;"	f	class:NetworkAdapterChangeNotifier
+ROTATE_LEFT	md5.c	197;"	d	file:
+RamLogger	Printer.h	/^class RamLogger$/;"	c	namespace:OpenHome
+Random	Env.cpp	/^TInt Environment::Random()$/;"	f	class:Environment
+Random	Env.cpp	/^TUint Environment::Random(TUint aMaxValue, TUint aMinValue)$/;"	f	class:Environment
+ReBind	Network.cpp	/^void SocketUdp::ReBind(TUint aPort, TIpAddress aInterface)$/;"	f	class:SocketUdp
+ReCreate	Network.cpp	/^void SocketUdpBase::ReCreate()$/;"	f	class:SocketUdpBase
+ReCreate	Network.cpp	/^void SocketUdpMulticast::ReCreate()$/;"	f	class:SocketUdpMulticast
+Read	Ascii.cpp	/^Brn ReaderAscii::Read(TUint aBytes)$/;"	f	class:ReaderAscii
+Read	Fifo.cpp	/^TUint FifoLiteBase::Read()$/;"	f	class:FifoLiteBase
+Read	Fifo.h	/^    inline T Read() { return (iBuf[FifoLiteBase::Read()]); }$/;"	f	class:OpenHome::FifoLite
+Read	Fifo.h	/^    inline T Read() { return (iBuf[FifoLiteBase::Read()]); }$/;"	f	class:OpenHome::FifoLiteDynamic
+Read	Fifo.h	/^template <class T> T Fifo<T>::Read()$/;"	f	class:OpenHome::Fifo
+Read	FileAnsii.cpp	/^void FileAnsii::Read(Bwx& aBuffer)$/;"	f	class:FileAnsii
+Read	FileAnsii.cpp	/^void FileAnsii::Read(Bwx& aBuffer, TUint32 aBytes)$/;"	f	class:FileAnsii
+Read	FileBrx.cpp	/^void FileBrx::Read(Bwx& aBuffer)$/;"	f	class:FileBrx
+Read	FileBrx.cpp	/^void FileBrx::Read(Bwx& aBuffer, TUint32 aBytes)$/;"	f	class:FileBrx
+Read	FileStream.cpp	/^void FileStream::Read(Bwx& aBuffer)$/;"	f	class:FileStream
+Read	Http.cpp	/^Brn HttpReader::Read(TUint aBytes)$/;"	f	class:HttpReader
+Read	Http.cpp	/^Brn ReaderHttpChunked::Read(TUint aBytes)$/;"	f	class:ReaderHttpChunked
+Read	Http.cpp	/^void ReaderHttpChunkedDynamic::Read()$/;"	f	class:ReaderHttpChunkedDynamic
+Read	Http.cpp	/^void ReaderHttpRequest::Read(TUint aTimeoutMs)$/;"	f	class:ReaderHttpRequest
+Read	Http.cpp	/^void ReaderHttpResponse::Read(TUint aTimeoutMs)$/;"	f	class:ReaderHttpResponse
+Read	Network.cpp	/^void SocketTcp::Read(Bwx& aBuffer)$/;"	f	class:SocketTcp
+Read	Network.cpp	/^void SocketTcp::Read(Bwx& aBuffer, TUint aBytes)$/;"	f	class:SocketTcp
+Read	Network.cpp	/^void UdpReader::Read(Bwx& aBuffer)$/;"	f	class:UdpReader
+Read	Stream.cpp	/^Brn ReaderBuffer::Read(TUint aBytes)$/;"	f	class:ReaderBuffer
+Read	Stream.cpp	/^Brn Srx::Read(TUint aBytes)$/;"	f	class:Srx
+Read	Stream.cpp	/^const Brn ReaderBinary::Read(TUint aBytes)$/;"	f	class:ReaderBinary
+ReadClose	Fifo.cpp	/^void FifoBase::ReadClose()$/;"	f	class:FifoBase
+ReadFlush	FileStream.cpp	/^void FileStream::ReadFlush()$/;"	f	class:FileStream
+ReadFlush	Http.cpp	/^void HttpReader::ReadFlush()$/;"	f	class:HttpReader
+ReadFlush	Http.cpp	/^void ReaderHttpChunked::ReadFlush()$/;"	f	class:ReaderHttpChunked
+ReadFlush	Network.cpp	/^void SocketTcp::ReadFlush()$/;"	f	class:SocketTcp
+ReadFlush	Network.cpp	/^void UdpReader::ReadFlush()$/;"	f	class:UdpReader
+ReadFlush	Stream.cpp	/^void ReaderBuffer::ReadFlush()$/;"	f	class:ReaderBuffer
+ReadFlush	Stream.cpp	/^void Srx::ReadFlush()$/;"	f	class:Srx
+ReadInt	Ascii.cpp	/^TInt ReaderAscii::ReadInt(TByte aSeparator)$/;"	f	class:ReaderAscii
+ReadIntBe	Stream.cpp	/^TInt ReaderBinary::ReadIntBe(TUint aBytes)$/;"	f	class:ReaderBinary
+ReadIntLe	Stream.cpp	/^TInt ReaderBinary::ReadIntLe(TUint aBytes)$/;"	f	class:ReaderBinary
+ReadInterrupt	Fifo.cpp	/^void FifoBase::ReadInterrupt(TBool aInterrupt)$/;"	f	class:FifoBase
+ReadInterrupt	FileStream.cpp	/^void FileStream::ReadInterrupt()$/;"	f	class:FileStream
+ReadInterrupt	Http.cpp	/^void HttpReader::ReadInterrupt()$/;"	f	class:HttpReader
+ReadInterrupt	Http.cpp	/^void ReaderHttpChunked::ReadInterrupt()$/;"	f	class:ReaderHttpChunked
+ReadInterrupt	Network.cpp	/^void SocketTcp::ReadInterrupt()$/;"	f	class:SocketTcp
+ReadInterrupt	Network.cpp	/^void UdpReader::ReadInterrupt()$/;"	f	class:UdpReader
+ReadInterrupt	Stream.cpp	/^void ReaderBuffer::ReadInterrupt()$/;"	f	class:ReaderBuffer
+ReadInterrupt	Stream.cpp	/^void Srx::ReadInterrupt()$/;"	f	class:Srx
+ReadNextChunkSize	Http.cpp	/^void ReaderHttpChunked::ReadNextChunkSize(Brn& aBuf)$/;"	f	class:ReaderHttpChunked
+ReadOpen	Fifo.cpp	/^TUint FifoBase::ReadOpen()$/;"	f	class:FifoBase
+ReadPartial	Stream.cpp	/^Brn ReaderBuffer::ReadPartial(TUint aBytes)$/;"	f	class:ReaderBuffer
+ReadRemaining	Http.cpp	/^Brn ReaderHttpChunked::ReadRemaining()$/;"	f	class:ReaderHttpChunked
+ReadRemaining	Stream.cpp	/^Brn ReaderBuffer::ReadRemaining()$/;"	f	class:ReaderBuffer
+ReadTimeout	Http.cpp	/^void ReaderHttpRequest::ReadTimeout()$/;"	f	class:ReaderHttpRequest
+ReadTimeout	Http.cpp	/^void ReaderHttpResponse::ReadTimeout()$/;"	f	class:ReaderHttpResponse
+ReadUint	Ascii.cpp	/^TUint ReaderAscii::ReadUint(TByte aSeparator)$/;"	f	class:ReaderAscii
+ReadUint64Be	Stream.cpp	/^TUint64 ReaderBinary::ReadUint64Be(TUint aBytes)$/;"	f	class:ReaderBinary
+ReadUint64Le	Stream.cpp	/^TUint64 ReaderBinary::ReadUint64Le(TUint aBytes)$/;"	f	class:ReaderBinary
+ReadUintBe	Stream.cpp	/^TUint ReaderBinary::ReadUintBe(TUint aBytes)$/;"	f	class:ReaderBinary
+ReadUintLe	Stream.cpp	/^TUint ReaderBinary::ReadUintLe(TUint aBytes)$/;"	f	class:ReaderBinary
+ReadUntil	Ascii.cpp	/^Brn ReaderAscii::ReadUntil(TByte aSeparator)$/;"	f	class:ReaderAscii
+ReadUntil	Http.cpp	/^Brn HttpReader::ReadUntil(TByte aSeparator)$/;"	f	class:HttpReader
+ReadUntil	Http.cpp	/^Brn ReaderHttpChunked::ReadUntil(TByte aSeparator)$/;"	f	class:ReaderHttpChunked
+ReadUntil	Stream.cpp	/^Brn ReaderBuffer::ReadUntil(TByte aSeparator)$/;"	f	class:ReaderBuffer
+ReadUntil	Stream.cpp	/^Brn Srx::ReadUntil(TByte aSeparator)$/;"	f	class:Srx
+ReaderAscii	Ascii.cpp	/^ReaderAscii::ReaderAscii(IReader& aReader)$/;"	f	class:ReaderAscii
+ReaderAscii	Ascii.h	/^class ReaderAscii : public IReader, public INonCopyable$/;"	c	namespace:OpenHome
+ReaderBinary	Stream.cpp	/^ReaderBinary::ReaderBinary(IReader& aReader)$/;"	f	class:ReaderBinary
+ReaderBinary	Stream.h	/^class ReaderBinary : private INonCopyable$/;"	c	namespace:OpenHome
+ReaderBuffer	Stream.cpp	/^ReaderBuffer::ReaderBuffer()$/;"	f	class:ReaderBuffer
+ReaderBuffer	Stream.cpp	/^ReaderBuffer::ReaderBuffer(const Brx& aBuffer)$/;"	f	class:ReaderBuffer
+ReaderBuffer	Stream.h	/^class ReaderBuffer : public IReader$/;"	c	namespace:OpenHome
+ReaderHttpChunked	Http.cpp	/^ReaderHttpChunked::ReaderHttpChunked(Srx& aReader)$/;"	f	class:ReaderHttpChunked
+ReaderHttpChunked	Http.h	/^class ReaderHttpChunked : public IReader$/;"	c	namespace:OpenHome
+ReaderHttpChunkedDynamic	Http.cpp	/^ReaderHttpChunkedDynamic::ReaderHttpChunkedDynamic(IReader& aReader)$/;"	f	class:ReaderHttpChunkedDynamic
+ReaderHttpChunkedDynamic	Http.h	/^class ReaderHttpChunkedDynamic \/\/ deprecated$/;"	c	namespace:OpenHome
+ReaderHttpHeader	Http.cpp	/^ReaderHttpHeader::ReaderHttpHeader(Environment& aEnv)$/;"	f	class:ReaderHttpHeader
+ReaderHttpHeader	Http.h	/^class ReaderHttpHeader : protected INonCopyable$/;"	c	namespace:OpenHome
+ReaderHttpRequest	Http.cpp	/^ReaderHttpRequest::ReaderHttpRequest(Environment& aEnv, IReader& aReader)$/;"	f	class:ReaderHttpRequest
+ReaderHttpRequest	Http.h	/^class ReaderHttpRequest : public ReaderHttpHeader$/;"	c	namespace:OpenHome
+ReaderHttpResponse	Http.cpp	/^ReaderHttpResponse::ReaderHttpResponse(Environment& aEnv, IReader& aReader)$/;"	f	class:ReaderHttpResponse
+ReaderHttpResponse	Http.h	/^class ReaderHttpResponse : public ReaderHttpHeader$/;"	c	namespace:OpenHome
+Reason	Http.cpp	/^const Brx& HttpStatus::Reason() const$/;"	f	class:HttpStatus
+Receive	Network.cpp	/^Endpoint SocketUdpBase::Receive(Bwx& aBuffer)$/;"	f	class:SocketUdpBase
+Receive	Network.cpp	/^void Socket::Receive(Bwx& aBuffer)$/;"	f	class:Socket
+Receive	Network.cpp	/^void Socket::Receive(Bwx& aBuffer, TUint aBytes)$/;"	f	class:Socket
+Receive	Network.cpp	/^void SocketTcp::Receive(Bwx& aBuffer, TUint aBytes)$/;"	f	class:SocketTcp
+ReceiveFrom	Network.cpp	/^void Socket::ReceiveFrom(Bwx& aBuffer, Endpoint& aEndpoint)$/;"	f	class:Socket
+Received	Http.cpp	/^TBool HttpHeader::Received() const$/;"	f	class:HttpHeader
+Recognise	Http.cpp	/^TBool HttpHeaderAccessControlRequestMethod::Recognise(const Brx& aHeader)$/;"	f	class:HttpHeaderAccessControlRequestMethod
+Recognise	Http.cpp	/^TBool HttpHeaderConnection::Recognise(const Brx& aHeader)$/;"	f	class:HttpHeaderConnection
+Recognise	Http.cpp	/^TBool HttpHeaderContentLength::Recognise(const Brx& aHeader)$/;"	f	class:HttpHeaderContentLength
+Recognise	Http.cpp	/^TBool HttpHeaderContentType::Recognise(const Brx& aHeader)$/;"	f	class:HttpHeaderContentType
+Recognise	Http.cpp	/^TBool HttpHeaderExpect::Recognise(const Brx& aHeader)$/;"	f	class:HttpHeaderExpect
+Recognise	Http.cpp	/^TBool HttpHeaderHost::Recognise(const Brx& aHeader)$/;"	f	class:HttpHeaderHost
+Recognise	Http.cpp	/^TBool HttpHeaderLocation::Recognise(const Brx& aHeader)$/;"	f	class:HttpHeaderLocation
+Recognise	Http.cpp	/^TBool HttpHeaderTransferEncoding::Recognise(const Brx& aHeader)$/;"	f	class:HttpHeaderTransferEncoding
+Remaining	Parser.cpp	/^Brn Parser::Remaining()$/;"	f	class:Parser
+Remove	Queue.cpp	/^void QueueSortedEntry::Remove()$/;"	f	class:QueueSortedEntry
+Remove	Queue.h	/^    void Remove(T& aEntry) { DoRemove(aEntry); }$/;"	f	class:OpenHome::QueueSorted
+RemoveCurrentChangeListener	NetworkAdapterList.cpp	/^void NetworkAdapterList::RemoveCurrentChangeListener(TUint aId)$/;"	f	class:NetworkAdapterList
+RemoveHead	Queue.h	/^    T& RemoveHead() { return ((T&)DoRemoveHead()); }$/;"	f	class:OpenHome::QueueSorted
+RemoveLevel	Debug.cpp	/^void Debug::RemoveLevel(TUint aLevel)$/;"	f	class:Debug
+RemoveNetworkAdapterChangeListener	NetworkAdapterList.cpp	/^void NetworkAdapterList::RemoveNetworkAdapterChangeListener(TUint aId)$/;"	f	class:NetworkAdapterList
+RemoveObject	Env.cpp	/^void Environment::RemoveObject(IStackObject* aObject)$/;"	f	class:Environment
+RemoveRef	Env.cpp	/^TBool MListener::RemoveRef()$/;"	f	class:MListener
+RemoveResumeObserver	Env.cpp	/^void Environment::RemoveResumeObserver(IResumeObserver& aObserver)$/;"	f	class:Environment
+RemoveSubnetAddedListener	NetworkAdapterList.cpp	/^void NetworkAdapterList::RemoveSubnetAddedListener(TUint aId)$/;"	f	class:NetworkAdapterList
+RemoveSubnetListChangeListener	NetworkAdapterList.cpp	/^TBool NetworkAdapterList::RemoveSubnetListChangeListener(TUint aId, Map& aMap)$/;"	f	class:NetworkAdapterList
+RemoveSubnetListChangeListener	NetworkAdapterList.cpp	/^void NetworkAdapterList::RemoveSubnetListChangeListener(TUint aId)$/;"	f	class:NetworkAdapterList
+RemoveSubnetListener	NetworkAdapterList.cpp	/^void NetworkAdapterList::RemoveSubnetListener(TUint aId, MapNetworkAdapter& aMap)$/;"	f	class:NetworkAdapterList
+RemoveSubnetRemovedListener	NetworkAdapterList.cpp	/^void NetworkAdapterList::RemoveSubnetRemovedListener(TUint aId)$/;"	f	class:NetworkAdapterList
+RemoveSuspendObserver	Env.cpp	/^void Environment::RemoveSuspendObserver(ISuspendObserver& aObserver)$/;"	f	class:Environment
+Replace	Buffer.cpp	/^void Bwx::Replace(const Brx& aBuf)$/;"	f	class:Bwx
+Replace	Buffer.cpp	/^void Bwx::Replace(const TByte* aPtr, TUint aBytes)$/;"	f	class:Bwx
+Replace	Buffer.cpp	/^void Bwx::Replace(const TChar* aStr)$/;"	f	class:Bwx
+Replace	Network.cpp	/^void Endpoint::Replace(const Endpoint& aEndpoint)$/;"	f	class:Endpoint
+Replace	Uri.cpp	/^void Uri::Replace(const Brx& aBaseUri, const Brx& aRelativeUri)$/;"	f	class:Uri
+Replace	Uri.cpp	/^void Uri::Replace(const Brx& aUri)$/;"	f	class:Uri
+ReplaceThrow	Buffer.cpp	/^void Bwx::ReplaceThrow(const Brx& aBuf)$/;"	f	class:Bwx
+Reset	Http.cpp	/^void HttpHeader::Reset()$/;"	f	class:HttpHeader
+ResetHeaders	Http.cpp	/^void ReaderHttpHeader::ResetHeaders()$/;"	f	class:ReaderHttpHeader
+Restart	Parser.cpp	/^void Parser::Restart()$/;"	f	class:Parser
+Run	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::Run()$/;"	f	class:NetworkAdapterChangeNotifier
+Run	Terminal.cpp	/^void TerminalTcpSession::Run()$/;"	f	class:OpenHome::TerminalTcpSession
+Run	Thread.cpp	/^void Thread::Run()$/;"	f	class:Thread
+Run	Thread.cpp	/^void ThreadFunctor::Run()$/;"	f	class:ThreadFunctor
+Run	Timer.cpp	/^void TimerManager::Run()$/;"	f	class:TimerManager
+RunCallbacks	NetworkAdapterList.cpp	/^void NetworkAdapterList::RunCallbacks(Map& aMap)$/;"	f	class:NetworkAdapterList
+RunSubnetCallbacks	NetworkAdapterList.cpp	/^void NetworkAdapterList::RunSubnetCallbacks(MapNetworkAdapter& aMap, NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterList
+SET	md5.c	203;"	d	file:
+SET	md5.c	223;"	d	file:
+SET	md5.c	229;"	d	file:
+SET	md5.c	249;"	d	file:
+SET	md5.c	255;"	d	file:
+SET	md5.c	275;"	d	file:
+SET	md5.c	281;"	d	file:
+SET	md5.c	301;"	d	file:
+SHA1	sha.h	/^    SHA1, SHA224, SHA256, SHA384, SHA512$/;"	e	enum:SHAversion
+SHA1AddLength	sha1.c	51;"	d	file:
+SHA1Context	sha.h	/^typedef struct SHA1Context {$/;"	s
+SHA1Context	sha.h	/^} SHA1Context;$/;"	t	typeref:struct:SHA1Context
+SHA1FinalBits	sha1.c	/^int SHA1FinalBits(SHA1Context *context, const uint8_t message_bits,$/;"	f
+SHA1Finalize	sha1.c	/^static void SHA1Finalize(SHA1Context *context, uint8_t Pad_Byte)$/;"	f	file:
+SHA1HashSize	sha.h	/^    SHA1HashSize = 20, SHA224HashSize = 28, SHA256HashSize = 32,$/;"	e	enum:__anon7
+SHA1HashSizeBits	sha.h	/^    SHA1HashSizeBits = 160, SHA224HashSizeBits = 224,$/;"	e	enum:__anon7
+SHA1Input	sha1.c	/^int SHA1Input(SHA1Context *context,$/;"	f
+SHA1PadMessage	sha1.c	/^static void SHA1PadMessage(SHA1Context *context, uint8_t Pad_Byte)$/;"	f	file:
+SHA1ProcessMessageBlock	sha1.c	/^static void SHA1ProcessMessageBlock(SHA1Context *context)$/;"	f	file:
+SHA1Reset	sha1.c	/^int SHA1Reset(SHA1Context *context)$/;"	f
+SHA1Result	sha1.c	/^int SHA1Result(SHA1Context *context,$/;"	f
+SHA1_Message_Block_Size	sha.h	/^    SHA1_Message_Block_Size = 64, SHA224_Message_Block_Size = 64,$/;"	e	enum:__anon7
+SHA1_ROTL	sha1.c	44;"	d	file:
+SHA224	sha.h	/^    SHA1, SHA224, SHA256, SHA384, SHA512$/;"	e	enum:SHAversion
+SHA224Context	sha.h	/^typedef struct SHA256Context SHA224Context;$/;"	t	typeref:struct:SHA256Context
+SHA224HashSize	sha.h	/^    SHA1HashSize = 20, SHA224HashSize = 28, SHA256HashSize = 32,$/;"	e	enum:__anon7
+SHA224HashSizeBits	sha.h	/^    SHA1HashSizeBits = 160, SHA224HashSizeBits = 224,$/;"	e	enum:__anon7
+SHA224_Message_Block_Size	sha.h	/^    SHA1_Message_Block_Size = 64, SHA224_Message_Block_Size = 64,$/;"	e	enum:__anon7
+SHA256	sha.h	/^    SHA1, SHA224, SHA256, SHA384, SHA512$/;"	e	enum:SHAversion
+SHA256Context	sha.h	/^typedef struct SHA256Context {$/;"	s
+SHA256Context	sha.h	/^} SHA256Context;$/;"	t	typeref:struct:SHA256Context
+SHA256HashSize	sha.h	/^    SHA1HashSize = 20, SHA224HashSize = 28, SHA256HashSize = 32,$/;"	e	enum:__anon7
+SHA256HashSizeBits	sha.h	/^    SHA256HashSizeBits = 256, SHA384HashSizeBits = 384,$/;"	e	enum:__anon7
+SHA256_Message_Block_Size	sha.h	/^    SHA256_Message_Block_Size = 64, SHA384_Message_Block_Size = 128,$/;"	e	enum:__anon7
+SHA384	sha.h	/^    SHA1, SHA224, SHA256, SHA384, SHA512$/;"	e	enum:SHAversion
+SHA384Context	sha.h	/^typedef struct SHA512Context SHA384Context;$/;"	t	typeref:struct:SHA512Context
+SHA384HashSize	sha.h	/^    SHA384HashSize = 48, SHA512HashSize = 64,$/;"	e	enum:__anon7
+SHA384HashSizeBits	sha.h	/^    SHA256HashSizeBits = 256, SHA384HashSizeBits = 384,$/;"	e	enum:__anon7
+SHA384_Message_Block_Size	sha.h	/^    SHA256_Message_Block_Size = 64, SHA384_Message_Block_Size = 128,$/;"	e	enum:__anon7
+SHA512	sha.h	/^    SHA1, SHA224, SHA256, SHA384, SHA512$/;"	e	enum:SHAversion
+SHA512Context	sha.h	/^typedef struct SHA512Context {$/;"	s
+SHA512Context	sha.h	/^} SHA512Context;$/;"	t	typeref:struct:SHA512Context
+SHA512HashSize	sha.h	/^    SHA384HashSize = 48, SHA512HashSize = 64,$/;"	e	enum:__anon7
+SHA512HashSizeBits	sha.h	/^    SHA512HashSizeBits = 512, USHAMaxHashSizeBits = SHA512HashSizeBits$/;"	e	enum:__anon7
+SHA512_Message_Block_Size	sha.h	/^    SHA512_Message_Block_Size = 128,$/;"	e	enum:__anon7
+SHA_Ch	sha-private.h	14;"	d
+SHA_Ch	sha-private.h	22;"	d
+SHA_Maj	sha-private.h	15;"	d
+SHA_Maj	sha-private.h	23;"	d
+SHA_Parity	sha-private.h	35;"	d
+SHAversion	sha.h	/^typedef enum SHAversion {$/;"	g
+SHAversion	sha.h	/^} SHAversion;$/;"	t	typeref:enum:SHAversion
+STDCALL	Defines.h	11;"	d
+STDCALL	Defines.h	20;"	d
+Scheme	Uri.h	/^    const Brx& Scheme() const { return iScheme; }$/;"	f	class:OpenHome::Uri
+Seek	FileAnsii.cpp	/^void FileAnsii::Seek(TInt32 aBytes, SeekWhence aWhence)$/;"	f	class:FileAnsii
+Seek	FileBrx.cpp	/^void FileBrx::Seek(TInt32 aBytes, SeekWhence aWhence)$/;"	f	class:FileBrx
+Seek	FileStream.cpp	/^void FileStream::Seek(TInt32 aBytes, SeekWhence aWhence)$/;"	f	class:FileStream
+SeekWhence	File.h	/^} SeekWhence;$/;"	t	namespace:OpenHome	typeref:enum:OpenHome::__anon1
+Semaphore	Thread.cpp	/^Semaphore::Semaphore(const TChar* aName, TUint aCount)$/;"	f	class:Semaphore
+Semaphore	Thread.h	/^class Semaphore : public INonCopyable$/;"	c	namespace:OpenHome
+Send	Network.cpp	/^void Socket::Send(const Brx& aBuffer)$/;"	f	class:Socket
+Send	Network.cpp	/^void SocketUdpBase::Send(const Brx& aBuffer, const Endpoint& aEndpoint)$/;"	f	class:SocketUdpBase
+SendTo	Network.cpp	/^void Socket::SendTo(const Brx& aBuffer, const Endpoint& aEndpoint)$/;"	f	class:Socket
+Sender	Network.cpp	/^Endpoint UdpReader::Sender() const$/;"	f	class:UdpReader
+SequenceNumber	Env.cpp	/^TUint Environment::SequenceNumber()$/;"	f	class:Environment
+Set	Buffer.cpp	/^void Brh::Set(const TByte* aPtr, TUint aBytes)$/;"	f	class:Brh
+Set	Buffer.cpp	/^void Brh::Set(const TChar* aPtr)$/;"	f	class:Brh
+Set	Buffer.cpp	/^void Brhz::Set(const TByte* aPtr, TUint aBytes)$/;"	f	class:Brhz
+Set	Buffer.cpp	/^void Brhz::Set(const TChar* aPtr)$/;"	f	class:Brhz
+Set	Buffer.cpp	/^void Brn::Set(const TChar* aStr)$/;"	f	class:Brn
+Set	Buffer.cpp	/^void Bwn::Set(const Bwx& aBwx)$/;"	f	class:Bwn
+Set	Buffer.cpp	/^void Bwn::Set(const TByte* aPtr, TUint aBytes, TUint aMaxBytes)$/;"	f	class:Bwn
+Set	Buffer.cpp	/^void Bwn::Set(const TByte* aPtr, TUint aMaxBytes)$/;"	f	class:Bwn
+Set	Http.cpp	/^void ReaderHttpResponse::StatusWritable::Set(TUint aCode, const Brx& aDescription)$/;"	f	class:ReaderHttpResponse::StatusWritable
+Set	Parser.cpp	/^void Parser::Set(const Brx& aBuffer)$/;"	f	class:Parser
+Set	Stream.cpp	/^void ReaderBuffer::Set(const Brx& aBuffer)$/;"	f	class:ReaderBuffer
+SetAddress	Network.cpp	/^void Endpoint::SetAddress(TIpAddress aAddress)$/;"	f	class:Endpoint
+SetAddress	Network.cpp	/^void Endpoint::SetAddress(const Brx& aAddress)$/;"	f	class:Endpoint
+SetAddress	Network.cpp	/^void Endpoint::SetAddress(const Endpoint& aEndpoint)$/;"	f	class:Endpoint
+SetAssertThrows	Exception.cpp	/^void OpenHome::SetAssertThrows(TBool aAssertThrows)$/;"	f	class:OpenHome
+SetBreakBeforeThrow	Debug.cpp	/^void Debug::SetBreakBeforeThrow(TBool aBreak)$/;"	f	class:Debug
+SetBytes	Buffer.cpp	/^void Bwx::SetBytes(TUint aBytes)$/;"	f	class:Bwx
+SetChunked	Http.cpp	/^void ReaderHttpChunked::SetChunked(TBool aChunked)$/;"	f	class:ReaderHttpChunked
+SetChunked	Http.cpp	/^void WriterHttpChunked::SetChunked(TBool aValue)$/;"	f	class:WriterHttpChunked
+SetCpStack	Env.cpp	/^void Environment::SetCpStack(IStack* aStack)$/;"	f	class:Environment
+SetCurrentSubnet	NetworkAdapterList.cpp	/^void NetworkAdapterList::SetCurrentSubnet(TIpAddress aSubnet)$/;"	f	class:NetworkAdapterList
+SetDvStack	Env.cpp	/^void Environment::SetDvStack(IStack* aStack)$/;"	f	class:Environment
+SetExitHandler	Exception.cpp	/^void OpenHome::SetExitHandler(IExitHandler& aExitHandler)$/;"	f	class:OpenHome
+SetFile	FileStream.cpp	/^void FileStream::SetFile(IFile* aFile)$/;"	f	class:FileStream
+SetLevel	Debug.cpp	/^void Debug::SetLevel(TUint aLevel)$/;"	f	class:Debug
+SetPort	Network.cpp	/^void Endpoint::SetPort(TUint aPort)$/;"	f	class:Endpoint
+SetPort	Network.cpp	/^void Endpoint::SetPort(const Endpoint& aEndpoint)$/;"	f	class:Endpoint
+SetRandomSeed	Env.cpp	/^void Environment::SetRandomSeed(TUint aSeed)$/;"	f	class:Environment
+SetReceived	Http.cpp	/^void HttpHeader::SetReceived()$/;"	f	class:HttpHeader
+SetRecvBufBytes	Network.cpp	/^void Socket::SetRecvBufBytes(TUint aBytes)$/;"	f	class:Socket
+SetRecvTimeout	Network.cpp	/^void Socket::SetRecvTimeout(TUint aMs)$/;"	f	class:Socket
+SetSendBufBytes	Network.cpp	/^void Socket::SetSendBufBytes(TUint aBytes)$/;"	f	class:Socket
+SetSocket	Network.cpp	/^void UdpReader::SetSocket(SocketUdpBase& aSocket)$/;"	f	class:UdpReader
+SetTtl	Network.cpp	/^void SocketUdpBase::SetTtl(TUint aTtl)$/;"	f	class:SocketUdpBase
+Shrink	Buffer.cpp	/^void Brhz::Shrink(TUint aBytes)$/;"	f	class:Brhz
+Signal	Thread.cpp	/^void Mutex::Signal()$/;"	f	class:Mutex
+Signal	Thread.cpp	/^void Semaphore::Signal()$/;"	f	class:Semaphore
+Signal	Thread.cpp	/^void Thread::Signal()$/;"	f	class:Thread
+SingleSubnetModeEnabled	NetworkAdapterList.cpp	/^TBool NetworkAdapterList::SingleSubnetModeEnabled() const$/;"	f	class:NetworkAdapterList
+Sleep	Thread.cpp	/^void Thread::Sleep(TUint aMilliSecs)$/;"	f	class:Thread
+Slots	Fifo.cpp	/^TUint FifoBase::Slots() const$/;"	f	class:FifoBase
+Slots	Fifo.cpp	/^TUint FifoLiteBase::Slots() const$/;"	f	class:FifoLiteBase
+SlotsFree	Fifo.cpp	/^TUint FifoBase::SlotsFree() const$/;"	f	class:FifoBase
+SlotsFree	Fifo.cpp	/^TUint FifoLiteBase::SlotsFree() const$/;"	f	class:FifoLiteBase
+SlotsUsed	Fifo.cpp	/^TUint FifoBase::SlotsUsed() const$/;"	f	class:FifoBase
+SlotsUsed	Fifo.cpp	/^TUint FifoLiteBase::SlotsUsed() const$/;"	f	class:FifoLiteBase
+Snaffle	Stream.cpp	/^Brn Srx::Snaffle()$/;"	f	class:Srx
+Socket	Network.cpp	/^Socket::Socket()$/;"	f	class:Socket
+Socket	Network.h	/^class Socket : public INonCopyable$/;"	c	namespace:OpenHome
+SocketCreate	Network.cpp	/^static THandle SocketCreate(Environment& aEnv, ESocketType aSocketType)$/;"	f	file:
+SocketTcp	Network.cpp	/^SocketTcp::SocketTcp()$/;"	f	class:SocketTcp
+SocketTcp	Network.h	/^class SocketTcp : public Socket, public IWriter, public IReaderSource$/;"	c	namespace:OpenHome
+SocketTcpClient	Network.h	/^class SocketTcpClient : public SocketTcp$/;"	c	namespace:OpenHome
+SocketTcpServer	Network.cpp	/^SocketTcpServer::SocketTcpServer(Environment& aEnv, const TChar* aName, TUint aPort, TIpAddress aInterface,$/;"	f	class:SocketTcpServer
+SocketTcpServer	Network.h	/^class SocketTcpServer : public Socket$/;"	c	namespace:OpenHome
+SocketTcpSession	Network.cpp	/^SocketTcpSession::SocketTcpSession()$/;"	f	class:SocketTcpSession
+SocketTcpSession	Network.h	/^class SocketTcpSession : public SocketTcp \/\/\/ Derive from this class to instantiate tcp server behaviour$/;"	c	namespace:OpenHome
+SocketUdp	Network.cpp	/^SocketUdp::SocketUdp(Environment& aEnv)$/;"	f	class:SocketUdp
+SocketUdp	Network.cpp	/^SocketUdp::SocketUdp(Environment& aEnv, TUint aPort)$/;"	f	class:SocketUdp
+SocketUdp	Network.cpp	/^SocketUdp::SocketUdp(Environment& aEnv, TUint aPort, TIpAddress aInterface)$/;"	f	class:SocketUdp
+SocketUdp	Network.h	/^class SocketUdp : public SocketUdpBase$/;"	c	namespace:OpenHome
+SocketUdpBase	Network.cpp	/^SocketUdpBase::SocketUdpBase(Environment& aEnv)$/;"	f	class:SocketUdpBase
+SocketUdpBase	Network.h	/^class SocketUdpBase : public Socket$/;"	c	namespace:OpenHome
+SocketUdpMulticast	Network.cpp	/^SocketUdpMulticast::SocketUdpMulticast(Environment& aEnv, TIpAddress aInterface, const Endpoint& aEndpoint)$/;"	f	class:SocketUdpMulticast
+SocketUdpMulticast	Network.h	/^class SocketUdpMulticast : public SocketUdpBase$/;"	c	namespace:OpenHome
+Split	Buffer.cpp	/^Brn Brx::Split(TUint aByteIndex) const$/;"	f	class:Brx
+Split	Buffer.cpp	/^Brn Brx::Split(TUint aByteIndex, TUint aBytes) const$/;"	f	class:Brx
+Srd	Stream.cpp	/^Srd::Srd(TUint aMaxBytes, IReaderSource& aSource)$/;"	f	class:Srd
+Srd	Stream.h	/^class Srd : public Srx$/;"	c	namespace:OpenHome
+Srs	Stream.h	/^    Srs(IReaderSource& aSource) : Srx(S, aSource) {}$/;"	f	class:OpenHome::Srs
+Srs	Stream.h	/^template <TUint S> class Srs : public Srx$/;"	c	namespace:OpenHome
+Srx	Stream.cpp	/^Srx::Srx(TUint aMaxBytes, IReaderSource& aSource)$/;"	f	class:Srx
+Srx	Stream.h	/^class Srx : public Sxx, public IReader$/;"	c	namespace:OpenHome
+StackTrace	Exception.cpp	/^THandle Exception::StackTrace()$/;"	f	class:Exception
+Start	Network.cpp	/^void SocketTcpSession::Start()$/;"	f	class:SocketTcpSession
+Start	Thread.cpp	/^void Thread::Start()$/;"	f	class:Thread
+Status	Http.cpp	/^const HttpStatus& ReaderHttpResponse::Status() const$/;"	f	class:ReaderHttpResponse
+StatusWritable	Http.cpp	/^ReaderHttpResponse::StatusWritable::StatusWritable()$/;"	f	class:ReaderHttpResponse::StatusWritable
+StatusWritable	Http.h	/^    class StatusWritable : public HttpStatus$/;"	c	class:OpenHome::ReaderHttpResponse
+Stop	Timer.cpp	/^void TimerManager::Stop()$/;"	f	class:TimerManager
+StreamWriteInt	Ascii.cpp	/^void OpenHome::Ascii::StreamWriteInt(IWriter& aStream, TInt aValue)$/;"	f	class:OpenHome::Ascii
+StreamWriteUint	Ascii.cpp	/^void OpenHome::Ascii::StreamWriteUint(IWriter& aStream, TUint aValue)$/;"	f	class:OpenHome::Ascii
+Substitute	Ascii.cpp	/^void Ascii::Substitute(Bwx& aBuffer, TChar aSearch, TChar aReplace)$/;"	f	class:Ascii
+SupportsPriorities	Thread.cpp	/^TBool Thread::SupportsPriorities()$/;"	f	class:Thread
+SwapOutput	Printer.cpp	/^FunctorMsg Log::SwapOutput(FunctorMsg& aLogOutput)$/;"	f	class:Log
+Swd	Stream.cpp	/^Swd::Swd(TUint aMaxBytes, IWriter& aWriter)$/;"	f	class:Swd
+Swd	Stream.h	/^class Swd : public Swx$/;"	c	namespace:OpenHome
+Swp	Stream.cpp	/^Swp::Swp(Srx& aHost, IWriter& aWriter)$/;"	f	class:Swp
+Swp	Stream.h	/^class Swp : public Swx$/;"	c	namespace:OpenHome
+Sws	Stream.h	/^    Sws(IWriter& aWriter) : Swx(S, aWriter) {}$/;"	f	class:OpenHome::Sws
+Sws	Stream.h	/^template <TUint S> class Sws : public Swx$/;"	c	namespace:OpenHome
+Swx	Stream.cpp	/^Swx::Swx(TUint aMaxBytes, IWriter& aWriter)$/;"	f	class:Swx
+Swx	Stream.h	/^class Swx : public Sxx, public IWriter$/;"	c	namespace:OpenHome
+Sxx	Stream.cpp	/^Sxx::Sxx(TUint aMaxBytes)$/;"	f	class:Sxx
+Sxx	Stream.h	/^class Sxx : public INonCopyable$/;"	c	namespace:OpenHome
+T1	md5.c	65;"	d	file:
+T10	md5.c	74;"	d	file:
+T11	md5.c	75;"	d	file:
+T12	md5.c	76;"	d	file:
+T13	md5.c	77;"	d	file:
+T14	md5.c	78;"	d	file:
+T15	md5.c	79;"	d	file:
+T16	md5.c	80;"	d	file:
+T17	md5.c	81;"	d	file:
+T18	md5.c	82;"	d	file:
+T19	md5.c	83;"	d	file:
+T2	md5.c	66;"	d	file:
+T20	md5.c	84;"	d	file:
+T21	md5.c	85;"	d	file:
+T22	md5.c	86;"	d	file:
+T23	md5.c	87;"	d	file:
+T24	md5.c	88;"	d	file:
+T25	md5.c	89;"	d	file:
+T26	md5.c	90;"	d	file:
+T27	md5.c	91;"	d	file:
+T28	md5.c	92;"	d	file:
+T29	md5.c	93;"	d	file:
+T3	md5.c	67;"	d	file:
+T30	md5.c	94;"	d	file:
+T31	md5.c	95;"	d	file:
+T32	md5.c	96;"	d	file:
+T33	md5.c	97;"	d	file:
+T34	md5.c	98;"	d	file:
+T35	md5.c	99;"	d	file:
+T36	md5.c	100;"	d	file:
+T37	md5.c	101;"	d	file:
+T38	md5.c	102;"	d	file:
+T39	md5.c	103;"	d	file:
+T4	md5.c	68;"	d	file:
+T40	md5.c	104;"	d	file:
+T41	md5.c	105;"	d	file:
+T42	md5.c	106;"	d	file:
+T43	md5.c	107;"	d	file:
+T44	md5.c	108;"	d	file:
+T45	md5.c	109;"	d	file:
+T46	md5.c	110;"	d	file:
+T47	md5.c	111;"	d	file:
+T48	md5.c	112;"	d	file:
+T49	md5.c	113;"	d	file:
+T5	md5.c	69;"	d	file:
+T50	md5.c	114;"	d	file:
+T51	md5.c	115;"	d	file:
+T52	md5.c	116;"	d	file:
+T53	md5.c	117;"	d	file:
+T54	md5.c	118;"	d	file:
+T55	md5.c	119;"	d	file:
+T56	md5.c	120;"	d	file:
+T57	md5.c	121;"	d	file:
+T58	md5.c	122;"	d	file:
+T59	md5.c	123;"	d	file:
+T6	md5.c	70;"	d	file:
+T60	md5.c	124;"	d	file:
+T61	md5.c	125;"	d	file:
+T62	md5.c	126;"	d	file:
+T63	md5.c	127;"	d	file:
+T64	md5.c	128;"	d	file:
+T7	md5.c	71;"	d	file:
+T8	md5.c	72;"	d	file:
+T9	md5.c	73;"	d	file:
+TAny	Types.h	/^typedef void TAny;$/;"	t	namespace:OpenHome
+TBool	Types.h	/^typedef bool TBool;$/;"	t	namespace:OpenHome
+TByte	Types.h	/^typedef uint8_t TByte;$/;"	t	namespace:OpenHome
+TChar	Types.h	/^typedef char TChar;$/;"	t	namespace:OpenHome
+THROW	Exception.h	12;"	d
+THROW	Exception.h	9;"	d
+THROW_WITH_FILE_LINE	Exception.h	11;"	d
+THROW_WITH_FILE_LINE	Exception.h	8;"	d
+THandle	OsTypes.h	/^typedef void* THandle;$/;"	t
+TInt	Types.h	/^typedef int32_t TInt;$/;"	t	namespace:OpenHome
+TInt16	Types.h	/^typedef int16_t TInt16;$/;"	t	namespace:OpenHome
+TInt32	Types.h	/^typedef int32_t TInt32;$/;"	t	namespace:OpenHome
+TInt64	Types.h	/^typedef int64_t TInt64;$/;"	t	namespace:OpenHome
+TInt8	Types.h	/^typedef int8_t TInt8;$/;"	t	namespace:OpenHome
+TIpAddress	OsTypes.h	/^typedef uint32_t TIpAddress;$/;"	t
+TKey	Types.h	/^typedef uint32_t TKey;$/;"	t	namespace:OpenHome
+TStatus	Types.h	/^typedef int32_t TStatus;$/;"	t	namespace:OpenHome
+TUint	Types.h	/^typedef uint32_t TUint;$/;"	t	namespace:OpenHome
+TUint16	Types.h	/^typedef uint16_t TUint16;$/;"	t	namespace:OpenHome
+TUint32	Types.h	/^typedef uint32_t TUint32;$/;"	t	namespace:OpenHome
+TUint64	Types.h	/^typedef uint64_t TUint64;$/;"	t	namespace:OpenHome
+TUint8	Types.h	/^typedef uint8_t TUint8;$/;"	t	namespace:OpenHome
+T_MASK	md5.c	64;"	d	file:
+Tell	FileAnsii.cpp	/^TUint32 FileAnsii::Tell() const$/;"	f	class:FileAnsii
+Tell	FileBrx.cpp	/^TUint32 FileBrx::Tell() const$/;"	f	class:FileBrx
+Tell	FileStream.cpp	/^TUint32 FileStream::Tell() const$/;"	f	class:FileStream
+Terminal	Terminal.h	/^class Terminal$/;"	c	namespace:OpenHome
+TerminalOs	Terminal.h	/^class TerminalOs : public Terminal$/;"	c	namespace:OpenHome
+TerminalTcpSession	Terminal.cpp	/^TerminalTcpSession::TerminalTcpSession()$/;"	f	class:OpenHome::TerminalTcpSession
+TerminalTcpSession	Terminal.h	/^class TerminalTcpSession : public SocketTcpSession, public Terminal$/;"	c	namespace:OpenHome
+Terminate	Network.cpp	/^void SocketTcpSession::Terminate()$/;"	f	class:SocketTcpSession
+Terminating	Network.cpp	/^TBool SocketTcpServer::Terminating()$/;"	f	class:SocketTcpServer
+TestLevel	Debug.cpp	/^TBool Debug::TestLevel(TUint aLevel)$/;"	f	class:Debug
+Thread	Thread.cpp	/^Thread::Thread(const TChar* aName, TUint aPriority, TUint aStackBytes)$/;"	f	class:Thread
+Thread	Thread.h	/^class Thread : public INonCopyable$/;"	c	namespace:OpenHome
+ThreadFunctor	Thread.cpp	/^ThreadFunctor::ThreadFunctor(const TChar* aName, Functor aFunctor, TUint aPriority, TUint aStackBytes)$/;"	f	class:ThreadFunctor
+ThreadFunctor	Thread.h	/^class ThreadFunctor : public Thread$/;"	c	namespace:OpenHome
+ThreadPriority	Thread.h	/^enum ThreadPriority {$/;"	g	namespace:OpenHome
+Thunk	Functor.h	/^    static void Thunk(const Functor& aFb)$/;"	f	class:OpenHome::MemberTranslator
+Thunk	Functor.h	/^    static void Thunk(const Functor& aFb)$/;"	f	class:OpenHome::MemberTranslatorC
+Thunk	Functor.h	/^    typedef void (*Thunk)(const Functor&);$/;"	t	class:OpenHome::Functor
+Thunk	FunctorMsg.h	/^    static void Thunk(const FunctorMsg& aFb, const char* aMsg)$/;"	f	class:OpenHome::FunctionTranslatorMsg
+Thunk	FunctorMsg.h	/^    static void Thunk(const FunctorMsg& aFb, const char* aMsg)$/;"	f	class:OpenHome::MemberTranslatorMsg
+Thunk	FunctorMsg.h	/^    typedef void (*Thunk)(const FunctorMsg&, const char*);$/;"	t	class:OpenHome::FunctorMsg
+Thunk	FunctorNetworkAdapter.h	/^    static void Thunk(const FunctorNetworkAdapter& aFb, NetworkAdapter& aAdapter)$/;"	f	class:OpenHome::FunctionTranslatorNetworkAdapter
+Thunk	FunctorNetworkAdapter.h	/^    static void Thunk(const FunctorNetworkAdapter& aFb, NetworkAdapter& aAdapter)$/;"	f	class:OpenHome::MemberTranslatorNetworkAdapter
+Thunk	FunctorNetworkAdapter.h	/^    typedef void (*Thunk)(const FunctorNetworkAdapter&, NetworkAdapter&);$/;"	t	class:OpenHome::FunctorNetworkAdapter
+Time	Timer.h	/^class Time$/;"	c	namespace:OpenHome
+TimeToWaitFor	Timer.cpp	/^TInt Time::TimeToWaitFor(Environment& aEnv, TUint aTime)$/;"	f	class:Time
+Timer	Timer.cpp	/^Timer::Timer(Environment& aEnv, Functor aFunctor)$/;"	f	class:Timer
+Timer	Timer.h	/^class Timer : public QueueSortedEntryTimer$/;"	c	namespace:OpenHome
+TimerManager	Env.cpp	/^OpenHome::TimerManager& Environment::TimerManager()$/;"	f	class:Environment
+TimerManager	Timer.cpp	/^TimerManager::TimerManager(Environment& aEnv)$/;"	f	class:TimerManager
+TimerManager	Timer.h	/^class TimerManager : public QueueSorted<Timer>$/;"	c	namespace:OpenHome
+ToBase64	Converter.cpp	/^void Converter::ToBase64(IWriter& aWriter, const Brx& aValue)$/;"	f	class:Converter
+ToLowerCase	Ascii.cpp	/^TChar Ascii::ToLowerCase(TChar aValue)$/;"	f	class:Ascii
+ToRam	Printer.cpp	/^void Log::ToRam(TUint aCapacityBytes)$/;"	f	class:Log
+ToUpperCase	Ascii.cpp	/^TChar Ascii::ToUpperCase(TChar aValue)$/;"	f	class:Ascii
+ToXmlEscaped	Converter.cpp	/^void Converter::ToXmlEscaped(IWriter& aWriter, TByte aValue)$/;"	f	class:Converter
+ToXmlEscaped	Converter.cpp	/^void Converter::ToXmlEscaped(IWriter& aWriter, const Brx& aValue)$/;"	f	class:Converter
+TraceAdapter	NetworkAdapterList.cpp	/^void NetworkAdapterList::TraceAdapter(const TChar* aPrefix, NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterList
+Transfer	Buffer.cpp	/^TChar* Brhz::Transfer()$/;"	f	class:Brhz
+TransferTo	Buffer.cpp	/^void Brh::TransferTo(Brh& aBrh)$/;"	f	class:Brh
+TransferTo	Buffer.cpp	/^void Brhz::TransferTo(Brh& aBrh)$/;"	f	class:Brhz
+TransferTo	Buffer.cpp	/^void Brhz::TransferTo(Brhz& aBrhz)$/;"	f	class:Brhz
+TransferTo	Buffer.cpp	/^void Bwh::TransferTo(Brh& aBrh)$/;"	f	class:Bwh
+TransferTo	Buffer.cpp	/^void Bwh::TransferTo(Brhz& aBrhz)$/;"	f	class:Bwh
+TransferTo	Buffer.cpp	/^void Bwh::TransferTo(Bwh& aBwh)$/;"	f	class:Bwh
+TransferTo	Http.cpp	/^void ReaderHttpChunkedDynamic::TransferTo(Bwh& aBuf)$/;"	f	class:ReaderHttpChunkedDynamic
+TransferTo	Stream.cpp	/^void WriterBwh::TransferTo(Brh& aDest)$/;"	f	class:WriterBwh
+TransferTo	Stream.cpp	/^void WriterBwh::TransferTo(Bwh& aDest)$/;"	f	class:WriterBwh
+Trim	Ascii.cpp	/^Brn Ascii::Trim(const Brx& aBuffer)$/;"	f	class:Ascii
+TryAppend	Buffer.cpp	/^TBool Bwx::TryAppend(const Brx& aB)$/;"	f	class:Bwx
+TryAppend	Buffer.cpp	/^TBool Bwx::TryAppend(const TByte* aPtr, TUint aBytes)$/;"	f	class:Bwx
+TryAppend	Buffer.cpp	/^TBool Bwx::TryAppend(const TChar* aStr)$/;"	f	class:Bwx
+TryAppend	Buffer.cpp	/^TBool OpenHome::Bwx::TryAppend(TByte aByte)$/;"	f	class:OpenHome::Bwx
+TryAppend	Buffer.cpp	/^TBool OpenHome::Bwx::TryAppend(TChar aChar)$/;"	f	class:OpenHome::Bwx
+TryNetworkTcpSetNoDelay	Network.cpp	/^static void TryNetworkTcpSetNoDelay(THandle aHandle)$/;"	f	file:
+TryWait	Thread.cpp	/^TBool Thread::TryWait()$/;"	f	class:Thread
+Type	Http.cpp	/^const Brx& HttpHeaderContentType::Type() const$/;"	f	class:HttpHeaderContentType
+USHAContext	sha.h	/^typedef struct USHAContext {$/;"	s
+USHAContext	sha.h	/^} USHAContext;$/;"	t	typeref:struct:USHAContext
+USHAMaxHashSize	sha.h	/^    USHAMaxHashSize = SHA512HashSize,$/;"	e	enum:__anon7
+USHAMaxHashSizeBits	sha.h	/^    SHA512HashSizeBits = 512, USHAMaxHashSizeBits = SHA512HashSizeBits$/;"	e	enum:__anon7
+USHA_Max_Message_Block_Size	sha.h	/^    USHA_Max_Message_Block_Size = SHA512_Message_Block_Size,$/;"	e	enum:__anon7
+UdpReader	Network.cpp	/^UdpReader::UdpReader()$/;"	f	class:UdpReader
+UdpReader	Network.cpp	/^UdpReader::UdpReader(SocketUdpBase& aSocket)$/;"	f	class:UdpReader
+UdpReader	Network.h	/^class UdpReader : public IReaderSource, public INonCopyable$/;"	c	namespace:OpenHome
+UdpWriter	Network.cpp	/^UdpWriter::UdpWriter(SocketUdpBase& aSocket, const Endpoint& aEndpoint)$/;"	f	class:UdpWriter
+UdpWriter	Network.h	/^class UdpWriter : public IWriter, public INonCopyable$/;"	c	namespace:OpenHome
+Uint	Ascii.cpp	/^TUint Ascii::Uint(const Brx& aBuffer)$/;"	f	class:Ascii
+Uint64	Ascii.cpp	/^TUint64 Ascii::Uint64(const Brx& aBuffer)$/;"	f	class:Ascii
+UintHex	Ascii.cpp	/^TUint Ascii::UintHex(const Brx& aBuffer)$/;"	f	class:Ascii
+Unescape	Uri.cpp	/^void Uri::Unescape(Bwx& aDst, const Brx& aSrc)$/;"	f	class:Uri
+UnescapeUri	Http.cpp	/^void ReaderHttpRequest::UnescapeUri()$/;"	f	class:ReaderHttpRequest
+UnhandledExceptionHandler	Exception.cpp	/^void OpenHome::UnhandledExceptionHandler(Exception& aException)$/;"	f	class:OpenHome
+UnhandledExceptionHandler	Exception.cpp	/^void OpenHome::UnhandledExceptionHandler(const TChar* aExceptionMessage, const TChar* aFile, TUint aLine)$/;"	f	class:OpenHome
+UnhandledExceptionHandler	Exception.cpp	/^void OpenHome::UnhandledExceptionHandler(std::exception& aException)$/;"	f	class:OpenHome
+Update	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::UpdateAdapterAdded::Update(INetworkAdapterChangeNotifier& aAdapterList)$/;"	f	class:NetworkAdapterChangeNotifier::UpdateAdapterAdded
+Update	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::UpdateAdapterChanged::Update(INetworkAdapterChangeNotifier& aAdapterList)$/;"	f	class:NetworkAdapterChangeNotifier::UpdateAdapterChanged
+Update	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::UpdateAdapterRemoved::Update(INetworkAdapterChangeNotifier& aAdapterList)$/;"	f	class:NetworkAdapterChangeNotifier::UpdateAdapterRemoved
+Update	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::UpdateCurrent::Update(INetworkAdapterChangeNotifier& aAdapterList)$/;"	f	class:NetworkAdapterChangeNotifier::UpdateCurrent
+Update	NetworkAdapterList.cpp	/^void NetworkAdapterChangeNotifier::UpdateSubnet::Update(INetworkAdapterChangeNotifier& aAdapterList)$/;"	f	class:NetworkAdapterChangeNotifier::UpdateSubnet
+UpdateAdapter	NetworkAdapterList.cpp	/^NetworkAdapterChangeNotifier::UpdateAdapter::UpdateAdapter(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterChangeNotifier::UpdateAdapter
+UpdateAdapter	NetworkAdapterList.h	/^    class UpdateAdapter : public UpdateBase$/;"	c	class:OpenHome::NetworkAdapterChangeNotifier
+UpdateAdapterAdded	NetworkAdapterList.cpp	/^NetworkAdapterChangeNotifier::UpdateAdapterAdded::UpdateAdapterAdded(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterChangeNotifier::UpdateAdapterAdded
+UpdateAdapterAdded	NetworkAdapterList.h	/^    class UpdateAdapterAdded : public UpdateAdapter$/;"	c	class:OpenHome::NetworkAdapterChangeNotifier
+UpdateAdapterChanged	NetworkAdapterList.cpp	/^NetworkAdapterChangeNotifier::UpdateAdapterChanged::UpdateAdapterChanged(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterChangeNotifier::UpdateAdapterChanged
+UpdateAdapterChanged	NetworkAdapterList.h	/^    class UpdateAdapterChanged : public UpdateAdapter$/;"	c	class:OpenHome::NetworkAdapterChangeNotifier
+UpdateAdapterRemoved	NetworkAdapterList.cpp	/^NetworkAdapterChangeNotifier::UpdateAdapterRemoved::UpdateAdapterRemoved(NetworkAdapter& aAdapter)$/;"	f	class:NetworkAdapterChangeNotifier::UpdateAdapterRemoved
+UpdateAdapterRemoved	NetworkAdapterList.h	/^    class UpdateAdapterRemoved : public UpdateAdapter$/;"	c	class:OpenHome::NetworkAdapterChangeNotifier
+UpdateBase	NetworkAdapterList.cpp	/^NetworkAdapterChangeNotifier::UpdateBase::UpdateBase()$/;"	f	class:NetworkAdapterChangeNotifier::UpdateBase
+UpdateBase	NetworkAdapterList.h	/^    class UpdateBase : private INonCopyable$/;"	c	class:OpenHome::NetworkAdapterChangeNotifier
+UpdateCurrent	NetworkAdapterList.h	/^    class UpdateCurrent : public UpdateBase$/;"	c	class:OpenHome::NetworkAdapterChangeNotifier
+UpdateCurrentAdapter	NetworkAdapterList.cpp	/^void NetworkAdapterList::UpdateCurrentAdapter()$/;"	f	class:NetworkAdapterList
+UpdateSubnet	NetworkAdapterList.h	/^    class UpdateSubnet : public UpdateBase$/;"	c	class:OpenHome::NetworkAdapterChangeNotifier
+Upgrade	Http.cpp	/^TBool HttpHeaderConnection::Upgrade() const$/;"	f	class:HttpHeaderConnection
+Uri	Http.cpp	/^const Brx& ReaderHttpRequest::Uri() const$/;"	f	class:ReaderHttpRequest
+Uri	Uri.cpp	/^Uri::Uri()$/;"	f	class:Uri
+Uri	Uri.cpp	/^Uri::Uri(const Brx& aBaseUri, const Brx& aRelativeUri)$/;"	f	class:Uri
+Uri	Uri.cpp	/^Uri::Uri(const Brx& aUri)$/;"	f	class:Uri
+Uri	Uri.h	/^class Uri$/;"	c	namespace:OpenHome
+ValidateHost	Uri.cpp	/^void Uri::ValidateHost()$/;"	f	class:Uri
+ValidatePath	Uri.cpp	/^void Uri::ValidatePath()$/;"	f	class:Uri
+ValidateScheme	Uri.cpp	/^void Uri::ValidateScheme()$/;"	f	class:Uri
+Version	Http.cpp	/^Http::EVersion Http::Version(const Brx& aBuffer)$/;"	f	class:Http
+Version	Http.cpp	/^Http::EVersion ReaderHttpRequest::Version() const$/;"	f	class:ReaderHttpRequest
+Version	Http.cpp	/^Http::EVersion ReaderHttpResponse::Version() const$/;"	f	class:ReaderHttpResponse
+Version	Http.cpp	/^const Brx& Http::Version(Http::EVersion aVersion)$/;"	f	class:Http
+Wait	Terminal.cpp	/^void TerminalTcpSession::Wait()$/;"	f	class:OpenHome::TerminalTcpSession
+Wait	Thread.cpp	/^void Mutex::Wait()$/;"	f	class:Mutex
+Wait	Thread.cpp	/^void Semaphore::Wait()$/;"	f	class:Semaphore
+Wait	Thread.cpp	/^void Semaphore::Wait(TUint aTimeoutMs)$/;"	f	class:Semaphore
+Wait	Thread.cpp	/^void Thread::Wait()$/;"	f	class:Thread
+Write	Ascii.cpp	/^void WriterAscii::Write(TByte aValue)$/;"	f	class:WriterAscii
+Write	Ascii.cpp	/^void WriterAscii::Write(const Brx& aBuffer)$/;"	f	class:WriterAscii
+Write	Fifo.cpp	/^TUint FifoLiteBase::Write()$/;"	f	class:FifoLiteBase
+Write	Fifo.h	/^    inline void Write(T aEntry) { iBuf[FifoLiteBase::Write()] = aEntry; }$/;"	f	class:OpenHome::FifoLite
+Write	Fifo.h	/^    inline void Write(T aEntry) { iBuf[FifoLiteBase::Write()] = aEntry; }$/;"	f	class:OpenHome::FifoLiteDynamic
+Write	Fifo.h	/^template <class T> void Fifo<T>::Write(T aEntry)$/;"	f	class:OpenHome::Fifo
+Write	FileAnsii.cpp	/^void FileAnsii::Write(const Brx& \/*aBuffer*\/, TUint32 \/*aBytes*\/)$/;"	f	class:FileAnsii
+Write	FileAnsii.cpp	/^void FileAnsii::Write(const Brx& aBuffer)$/;"	f	class:FileAnsii
+Write	FileBrx.cpp	/^void FileBrx::Write(const Brx& \/*aBuffer*\/, TUint32 \/*aBytes*\/)$/;"	f	class:FileBrx
+Write	FileBrx.cpp	/^void FileBrx::Write(const Brx& aBuffer)$/;"	f	class:FileBrx
+Write	FileStream.cpp	/^void FileStream::Write(TByte aValue)$/;"	f	class:FileStream
+Write	FileStream.cpp	/^void FileStream::Write(const Brx& aBuffer)$/;"	f	class:FileStream
+Write	Http.cpp	/^void WriterHttpChunked::Write(TByte aValue)$/;"	f	class:WriterHttpChunked
+Write	Http.cpp	/^void WriterHttpChunked::Write(const Brx& aBuffer)$/;"	f	class:WriterHttpChunked
+Write	Http.cpp	/^void WriterHttpField::Write(TByte aValue)$/;"	f	class:WriterHttpField
+Write	Http.cpp	/^void WriterHttpField::Write(const Brx& aBuffer)$/;"	f	class:WriterHttpField
+Write	Http.cpp	/^void WriterHttpHeader::Write(TByte \/*aValue*\/)$/;"	f	class:WriterHttpHeader
+Write	Http.cpp	/^void WriterHttpHeader::Write(const Brx& \/*aBuffer*\/)$/;"	f	class:WriterHttpHeader
+Write	Http.cpp	/^void WriterHttpResponse::Write(const Brx& aBuffer)$/;"	f	class:WriterHttpResponse
+Write	Network.cpp	/^void SocketTcp::Write(TByte aValue)$/;"	f	class:SocketTcp
+Write	Network.cpp	/^void SocketTcp::Write(const Brx& aBuffer)$/;"	f	class:SocketTcp
+Write	Network.cpp	/^void UdpWriter::Write(TByte \/*aValue*\/)$/;"	f	class:UdpWriter
+Write	Network.cpp	/^void UdpWriter::Write(const Brx& aBuffer)$/;"	f	class:UdpWriter
+Write	Stream.cpp	/^void Swx::Write(TByte aValue)$/;"	f	class:Swx
+Write	Stream.cpp	/^void Swx::Write(const Brx& aBuffer)$/;"	f	class:Swx
+Write	Stream.cpp	/^void WriterBinary::Write(const Brx& aBuf)$/;"	f	class:WriterBinary
+Write	Stream.cpp	/^void WriterBuffer::Write(TByte aValue)$/;"	f	class:WriterBuffer
+Write	Stream.cpp	/^void WriterBuffer::Write(const Brx& aBuffer)$/;"	f	class:WriterBuffer
+Write	Stream.cpp	/^void WriterBwh::Write(TByte aValue)$/;"	f	class:WriterBwh
+Write	Stream.cpp	/^void WriterBwh::Write(const Brx& aBuffer)$/;"	f	class:WriterBwh
+Write	Stream.cpp	/^void WriterBwh::Write(const TChar* aBuffer)$/;"	f	class:WriterBwh
+WriteClose	Fifo.cpp	/^void FifoBase::WriteClose()$/;"	f	class:FifoBase
+WriteDrain	Stream.cpp	/^void Swx::WriteDrain()$/;"	f	class:Swx
+WriteFlush	Ascii.cpp	/^void WriterAscii::WriteFlush()$/;"	f	class:WriterAscii
+WriteFlush	FileStream.cpp	/^void FileStream::WriteFlush()$/;"	f	class:FileStream
+WriteFlush	Http.cpp	/^void WriterHttpChunked::WriteFlush()$/;"	f	class:WriterHttpChunked
+WriteFlush	Http.cpp	/^void WriterHttpField::WriteFlush()$/;"	f	class:WriterHttpField
+WriteFlush	Http.cpp	/^void WriterHttpHeader::WriteFlush()$/;"	f	class:WriterHttpHeader
+WriteFlush	Network.cpp	/^void SocketTcp::WriteFlush()$/;"	f	class:SocketTcp
+WriteFlush	Network.cpp	/^void UdpWriter::WriteFlush()$/;"	f	class:UdpWriter
+WriteFlush	Stream.cpp	/^void Swx::WriteFlush()$/;"	f	class:Swx
+WriteFlush	Stream.cpp	/^void WriterBuffer::WriteFlush()$/;"	f	class:WriterBuffer
+WriteFlush	Stream.cpp	/^void WriterBwh::WriteFlush()$/;"	f	class:WriterBwh
+WriteHeader	Http.cpp	/^void WriterHttpHeader::WriteHeader(const Brx& aField, const Brx& aValue)$/;"	f	class:WriterHttpHeader
+WriteHeaderBase64	Http.cpp	/^void WriterHttpHeader::WriteHeaderBase64(const Brx& aField, const Brx& aValue)$/;"	f	class:WriterHttpHeader
+WriteHeaderConnectionClose	Http.cpp	/^void Http::WriteHeaderConnectionClose(WriterHttpHeader& aWriter)$/;"	f	class:Http
+WriteHeaderContentLength	Http.cpp	/^void Http::WriteHeaderContentLength(WriterHttpHeader& aWriter, TUint aLength)$/;"	f	class:Http
+WriteHeaderContentType	Http.cpp	/^void Http::WriteHeaderContentType(WriterHttpHeader& aWriter, const Brx& aType)$/;"	f	class:Http
+WriteHeaderField	Http.cpp	/^IWriterAscii& WriterHttpHeader::WriteHeaderField(const Brx& aField)$/;"	f	class:WriterHttpHeader
+WriteHeaderHostAndPort	Http.cpp	/^void Http::WriteHeaderHostAndPort(WriterHttpHeader& aWriter, const Brx& aHost, TUint aPort)$/;"	f	class:Http
+WriteHeaderRange	Http.cpp	/^void Http::WriteHeaderRange(WriterHttpHeader& aWriter, TUint64 aFirst, TUint64 aLast)$/;"	f	class:Http
+WriteHeaderRangeFirstOnly	Http.cpp	/^void Http::WriteHeaderRangeFirstOnly(WriterHttpHeader& aWriter, TUint64 aFirst)$/;"	f	class:Http
+WriteHex	Ascii.cpp	/^void WriterAscii::WriteHex(TByte aValue)$/;"	f	class:WriterAscii
+WriteHex	Ascii.cpp	/^void WriterAscii::WriteHex(TUint aValue)$/;"	f	class:WriterAscii
+WriteHexPrefix	Ascii.cpp	/^void WriterAscii::WriteHexPrefix()$/;"	f	class:WriterAscii
+WriteInt	Ascii.cpp	/^void WriterAscii::WriteInt(TInt aValue)$/;"	f	class:WriterAscii
+WriteInt16Be	Stream.cpp	/^void WriterBinary::WriteInt16Be(TInt aValue)$/;"	f	class:WriterBinary
+WriteInt16Le	Stream.cpp	/^void WriterBinary::WriteInt16Le(TInt aValue)$/;"	f	class:WriterBinary
+WriteInt24Be	Stream.cpp	/^void WriterBinary::WriteInt24Be(TInt aValue)$/;"	f	class:WriterBinary
+WriteInt24Le	Stream.cpp	/^void WriterBinary::WriteInt24Le(TInt aValue)$/;"	f	class:WriterBinary
+WriteInt32Be	Stream.cpp	/^void WriterBinary::WriteInt32Be(TInt aValue)$/;"	f	class:WriterBinary
+WriteInt32Le	Stream.cpp	/^void WriterBinary::WriteInt32Le(TInt aValue)$/;"	f	class:WriterBinary
+WriteInt64	Ascii.cpp	/^void WriterAscii::WriteInt64(TInt64 aValue)$/;"	f	class:WriterAscii
+WriteInt64Be	Stream.cpp	/^void WriterBinary::WriteInt64Be(TInt64 aValue)$/;"	f	class:WriterBinary
+WriteInt64Le	Stream.cpp	/^void WriterBinary::WriteInt64Le(TInt64 aValue)$/;"	f	class:WriterBinary
+WriteInt8	Stream.cpp	/^void WriterBinary::WriteInt8(TInt aValue)$/;"	f	class:WriterBinary
+WriteIntPadded	Ascii.cpp	/^void WriterAscii::WriteIntPadded(TInt aValue)$/;"	f	class:WriterAscii
+WriteMethod	Http.cpp	/^void WriterHttpRequest::WriteMethod(const Brx& aMethod, const Brx& aUri, Http::EVersion aVersion)$/;"	f	class:WriterHttpRequest
+WriteNewline	Ascii.cpp	/^void WriterAscii::WriteNewline()$/;"	f	class:WriterAscii
+WriteOpen	Fifo.cpp	/^TUint FifoBase::WriteOpen()$/;"	f	class:FifoBase
+WriteRequest	Http.cpp	/^TUint HttpReader::WriteRequest(const Uri& aUri, TUint aPort)$/;"	f	class:HttpReader
+WriteSpace	Ascii.cpp	/^void WriterAscii::WriteSpace()$/;"	f	class:WriterAscii
+WriteStatus	Http.cpp	/^void WriterHttpResponse::WriteStatus(const HttpStatus& aStatus, Http::EVersion aVersion)$/;"	f	class:WriterHttpResponse
+WriteTab	Ascii.cpp	/^void WriterAscii::WriteTab()$/;"	f	class:WriterAscii
+WriteUint	Ascii.cpp	/^void WriterAscii::WriteUint(TUint aValue)$/;"	f	class:WriterAscii
+WriteUint16Be	Stream.cpp	/^void WriterBinary::WriteUint16Be(TUint aValue)$/;"	f	class:WriterBinary
+WriteUint16Le	Stream.cpp	/^void WriterBinary::WriteUint16Le(TUint aValue)$/;"	f	class:WriterBinary
+WriteUint24Be	Stream.cpp	/^void WriterBinary::WriteUint24Be(TUint aValue)$/;"	f	class:WriterBinary
+WriteUint24Le	Stream.cpp	/^void WriterBinary::WriteUint24Le(TUint aValue)$/;"	f	class:WriterBinary
+WriteUint32Be	Stream.cpp	/^void WriterBinary::WriteUint32Be(TUint aValue)$/;"	f	class:WriterBinary
+WriteUint32Le	Stream.cpp	/^void WriterBinary::WriteUint32Le(TUint aValue)$/;"	f	class:WriterBinary
+WriteUint64	Ascii.cpp	/^void WriterAscii::WriteUint64(TUint64 aValue)$/;"	f	class:WriterAscii
+WriteUint64Be	Stream.cpp	/^void WriterBinary::WriteUint64Be(TUint64 aValue)$/;"	f	class:WriterBinary
+WriteUint64Le	Stream.cpp	/^void WriterBinary::WriteUint64Le(TUint64 aValue)$/;"	f	class:WriterBinary
+WriteUint8	Stream.cpp	/^void WriterBinary::WriteUint8(TUint aValue)$/;"	f	class:WriterBinary
+WriteUintPadded	Ascii.cpp	/^void WriterAscii::WriteUintPadded(TUint aValue)$/;"	f	class:WriterAscii
+WriterAscii	Ascii.cpp	/^WriterAscii::WriterAscii(IWriter& aWriter)$/;"	f	class:WriterAscii
+WriterAscii	Ascii.h	/^class WriterAscii : public IWriterAscii, public INonCopyable$/;"	c	namespace:OpenHome
+WriterBinary	Stream.cpp	/^WriterBinary::WriterBinary(IWriter& aWriter)$/;"	f	class:WriterBinary
+WriterBinary	Stream.h	/^class WriterBinary : private INonCopyable$/;"	c	namespace:OpenHome
+WriterBuffer	Stream.cpp	/^WriterBuffer::WriterBuffer(Bwx& aBuffer) : iBuffer(aBuffer)$/;"	f	class:WriterBuffer
+WriterBuffer	Stream.h	/^class WriterBuffer : public IWriter, public INonCopyable$/;"	c	namespace:OpenHome
+WriterBwh	Stream.cpp	/^WriterBwh::WriterBwh(TInt aGranularity)$/;"	f	class:WriterBwh
+WriterBwh	Stream.h	/^class WriterBwh : public IWriter$/;"	c	namespace:OpenHome
+WriterHttpChunked	Http.cpp	/^WriterHttpChunked::WriterHttpChunked(IWriter& aWriter)$/;"	f	class:WriterHttpChunked
+WriterHttpChunked	Http.h	/^class WriterHttpChunked : public IWriter$/;"	c	namespace:OpenHome
+WriterHttpField	Http.cpp	/^WriterHttpField::WriterHttpField(IWriter& aWriter)$/;"	f	class:WriterHttpField
+WriterHttpField	Http.h	/^class WriterHttpField : public WriterAscii$/;"	c	namespace:OpenHome
+WriterHttpHeader	Http.cpp	/^WriterHttpHeader::WriterHttpHeader(IWriter& aWriter)$/;"	f	class:WriterHttpHeader
+WriterHttpHeader	Http.h	/^class WriterHttpHeader : public IWriterHttpHeader$/;"	c	namespace:OpenHome
+WriterHttpRequest	Http.cpp	/^WriterHttpRequest::WriterHttpRequest(IWriter& aWriter) : WriterHttpHeader(aWriter)$/;"	f	class:WriterHttpRequest
+WriterHttpRequest	Http.h	/^class WriterHttpRequest : public WriterHttpHeader, public IWriterHttpMethod$/;"	c	namespace:OpenHome
+WriterHttpResponse	Http.cpp	/^WriterHttpResponse::WriterHttpResponse(IWriter& aWriter) : WriterHttpHeader(aWriter)$/;"	f	class:WriterHttpResponse
+WriterHttpResponse	Http.h	/^class WriterHttpResponse : public WriterHttpHeader, public IWriterHttpStatus$/;"	c	namespace:OpenHome
+_SHA_H_	sha.h	4;"	d
+_SHA_PRIVATE__H	sha-private.h	4;"	d
+_SHA_enum_	sha.h	44;"	d
+__STDC_LIMIT_MACROS	OsTypes.h	4;"	d
+abcd	md5.h	/^    md5_word_t abcd[4];     \/* digest buffer *\/$/;"	m	struct:md5_state_s
+addTemp	sha1.c	/^static uint32_t addTemp;$/;"	v	file:
+blockSize	sha.h	/^    int blockSize;              \/* block size of SHA being used *\/$/;"	m	struct:HMACContext
+buf	md5.h	/^    md5_byte_t buf[64];     \/* accumulate block *\/$/;"	m	struct:md5_state_s
+count	md5.h	/^    md5_word_t count[2];    \/* message length in bits, lsw first *\/$/;"	m	struct:md5_state_s
+ctx	sha.h	/^    } ctx;$/;"	m	struct:USHAContext	typeref:union:USHAContext::__anon8
+defaultPrinter	Printer.cpp	/^static void STDCALL defaultPrinter(void* \/*aPtr*\/, const char* aMsg)$/;"	f	file:
+eFileReadOnly	File.h	/^    eFileReadOnly,$/;"	e	enum:OpenHome::__anon2
+eFileReadWrite	File.h	/^    eFileReadWrite,$/;"	e	enum:OpenHome::__anon2
+eHttp09	Http.h	/^        eHttp09 = 9,    \/\/ HTTP\/0.9$/;"	e	enum:OpenHome::Http::EVersion
+eHttp10	Http.h	/^        eHttp10 = 10,   \/\/ HTTP\/1.0$/;"	e	enum:OpenHome::Http::EVersion
+eHttp11	Http.h	/^        eHttp11 = 11,   \/\/ HTTP\/1.1$/;"	e	enum:OpenHome::Http::EVersion
+eRtsp10	Http.h	/^        eRtsp10 = 12,   \/\/ RTSP\/1.0$/;"	e	enum:OpenHome::Http::EVersion
+eSeekFromCurrent	File.h	/^    eSeekFromCurrent,$/;"	e	enum:OpenHome::__anon1
+eSeekFromEnd	File.h	/^    eSeekFromEnd$/;"	e	enum:OpenHome::__anon1
+eSeekFromStart	File.h	/^    eSeekFromStart,$/;"	e	enum:OpenHome::__anon1
+eSocketTypeDatagram	Network.h	/^    eSocketTypeDatagram = 2,            \/\/\/ Udp$/;"	e	enum:OpenHome::ESocketType
+eSocketTypeStream	Network.h	/^    eSocketTypeStream = 1,              \/\/\/ Tcp stream$/;"	e	enum:OpenHome::ESocketType
+gAssertThrows	Exception.cpp	/^static TBool gAssertThrows = false;$/;"	v	file:
+gDefaultPrinter	Printer.cpp	/^static FunctorMsg gDefaultPrinter = MakeFunctorMsgC(NULL, defaultPrinter);$/;"	v	file:
+gExitHandler	Exception.cpp	/^static IExitHandler* gExitHandler = 0;$/;"	v	file:
+gLogger	Printer.cpp	/^static Log* gLogger;$/;"	v	file:
+hashSize	sha.h	/^    int hashSize;               \/* hash size of SHA being used *\/$/;"	m	struct:HMACContext
+hexChar	Printer.cpp	/^TChar hexChar(TUint8 aNum)$/;"	f
+iAbsoluteUri	Uri.h	/^    Bws<kMaxUriBytes> iAbsoluteUri;$/;"	m	class:OpenHome::Uri
+iAdapter	NetworkAdapterList.h	/^        NetworkAdapter& iAdapter;$/;"	m	class:OpenHome::NetworkAdapterChangeNotifier::UpdateAdapter
+iAdapterList	NetworkAdapterList.h	/^    INetworkAdapterChangeNotifier& iAdapterList;$/;"	m	class:OpenHome::NetworkAdapterChangeNotifier
+iAddress	Network.h	/^    TIpAddress iAddress;$/;"	m	class:OpenHome::Endpoint
+iAddress	Network.h	/^    TIpAddress iAddress;$/;"	m	class:OpenHome::SocketUdpMulticast
+iAuthority	Uri.h	/^    Brn iAuthority;$/;"	m	class:OpenHome::Uri
+iBase	Uri.h	/^    Bws<kMaxUriBytes> iBase;$/;"	m	class:OpenHome::Uri
+iBreak	Debug.cpp	/^TBool Debug::iBreak = false;$/;"	m	class:Debug	file:
+iBreak	Debug.h	/^    static TBool iBreak;$/;"	m	class:OpenHome::Debug
+iBuf	Buffer.h	/^    TByte iBuf[S];$/;"	m	class:OpenHome::Bws
+iBuf	Fifo.h	/^    T iBuf[S];$/;"	m	class:OpenHome::FifoLite
+iBuf	Fifo.h	/^    T* iBuf;$/;"	m	class:OpenHome::Fifo
+iBuf	Fifo.h	/^    T* iBuf;$/;"	m	class:OpenHome::FifoLiteDynamic
+iBuf	Stream.h	/^    Bwh iBuf;$/;"	m	class:OpenHome::WriterBwh
+iBuf	Stream.h	/^    TByte iBuf[S];$/;"	m	class:OpenHome::Srs
+iBuf	Stream.h	/^    TByte iBuf[S];$/;"	m	class:OpenHome::Sws
+iBuffer	File.h	/^    Brn     iBuffer;$/;"	m	class:OpenHome::FileBrx
+iBuffer	Http.h	/^    Sws<kMaxBufferBytes> iBuffer;$/;"	m	class:OpenHome::WriterHttpChunked
+iBuffer	Parser.h	/^    Brn iBuffer;$/;"	m	class:OpenHome::Parser
+iBuffer	Stream.h	/^    Brn iBuffer;$/;"	m	class:OpenHome::ReaderBuffer
+iBuffer	Stream.h	/^    Bwx& iBuffer;$/;"	m	class:OpenHome::WriterBuffer
+iBytes	Buffer.h	/^    TUint iBytes;$/;"	m	class:OpenHome::Brx
+iBytes	Stream.h	/^    TUint iBytes;$/;"	m	class:OpenHome::Sxx
+iCallback	Functor.h	/^        OhNetFunctor iCallback;$/;"	m	union:OpenHome::Functor::__anon3
+iCallback	FunctorMsg.h	/^        OhNetFunctorMsg iCallback;$/;"	m	union:OpenHome::FunctorMsg::__anon4
+iCallback	FunctorNetworkAdapter.h	/^        OhNetFunctorNetworkAdapter iCallback;$/;"	m	union:OpenHome::FunctorNetworkAdapter::__anon5
+iCallbackMember	Functor.h	/^        TByte iCallbackMember[kFudgeFactor * sizeof(MemberFunction)];$/;"	m	union:OpenHome::Functor::__anon3
+iCallbackMember	FunctorMsg.h	/^        TByte iCallbackMember[kFudgeFactor * sizeof(MemberFunction)];$/;"	m	union:OpenHome::FunctorMsg::__anon4
+iCallbackMember	FunctorNetworkAdapter.h	/^        TByte iCallbackMember[kFudgeFactor * sizeof(MemberFunction)];$/;"	m	union:OpenHome::FunctorNetworkAdapter::__anon5
+iCallbackMutex	Timer.h	/^    Mutex iCallbackMutex;$/;"	m	class:OpenHome::TimerManager
+iChunkBytesRemaining	Http.h	/^    TUint iChunkBytesRemaining;$/;"	m	class:OpenHome::ReaderHttpChunked
+iChunked	Http.h	/^    TBool iChunked;$/;"	m	class:OpenHome::HttpHeaderTransferEncoding
+iChunked	Http.h	/^    TBool iChunked;$/;"	m	class:OpenHome::ReaderHttpChunked
+iChunked	Http.h	/^    TBool iChunked;$/;"	m	class:OpenHome::WriterHttpChunked
+iChunks	Printer.h	/^    std::vector<Chunk*> iChunks;$/;"	m	class:OpenHome::RamLogger
+iClientEndpoint	Network.h	/^    Endpoint iClientEndpoint;$/;"	m	class:OpenHome::SocketTcpSession
+iClose	Http.h	/^    TBool iClose;$/;"	m	class:OpenHome::HttpHeaderConnection
+iCode	Http.h	/^    TUint iCode;$/;"	m	class:OpenHome::HttpStatus
+iConnected	Http.h	/^    TBool iConnected;$/;"	m	class:OpenHome::HttpReader
+iContentLength	Http.h	/^    TUint iContentLength;$/;"	m	class:OpenHome::HttpHeaderContentLength
+iContinue	Http.h	/^    TBool iContinue;$/;"	m	class:OpenHome::HttpHeaderExpect
+iCount	Queue.h	/^    TUint iCount;$/;"	m	class:OpenHome::QueueBase
+iCpStack	Env.h	/^    IStack* iCpStack;$/;"	m	class:OpenHome::Environment
+iCurrent	NetworkAdapterList.h	/^    mutable NetworkAdapter* iCurrent;$/;"	m	class:OpenHome::NetworkAdapterList
+iCursor	File.h	/^    TUint32 iCursor;$/;"	m	class:OpenHome::FileBrx
+iData	Printer.h	/^        char iData[kDataBytes+1];$/;"	m	class:OpenHome::RamLogger::Chunk
+iDechunkBuf	Http.h	/^    Bws<kBufSizeBytes> iDechunkBuf;$/;"	m	class:OpenHome::ReaderHttpChunked
+iDefaultSubnet	NetworkAdapterList.h	/^    TIpAddress iDefaultSubnet;$/;"	m	class:OpenHome::NetworkAdapterList
+iDescription	Http.h	/^    Bws<kMaxDescriptionBytes> iDescription;$/;"	m	class:OpenHome::ReaderHttpResponse
+iDvStack	Env.h	/^    IStack* iDvStack;$/;"	m	class:OpenHome::Environment
+iEndpoint	Http.h	/^    OpenHome::Endpoint iEndpoint;$/;"	m	class:OpenHome::HttpHeaderHost
+iEndpoint	Network.h	/^    Endpoint iEndpoint;$/;"	m	class:OpenHome::UdpWriter
+iEntity	Http.h	/^    Bwh iEntity;$/;"	m	class:OpenHome::ReaderHttpChunkedDynamic
+iEnv	Http.h	/^    Environment& iEnv;$/;"	m	class:OpenHome::HttpReader
+iEnv	Http.h	/^    Environment& iEnv;$/;"	m	class:OpenHome::ReaderHttpHeader
+iEnv	Network.h	/^    Environment& iEnv;$/;"	m	class:OpenHome::SocketUdpBase
+iEnv	NetworkAdapterList.h	/^    Environment& iEnv;$/;"	m	class:OpenHome::NetworkAdapterList
+iEnv	Timer.h	/^    Environment& iEnv;$/;"	m	class:OpenHome::TimerManager
+iFifo	Terminal.h	/^    Fifo<TChar> iFifo;$/;"	m	class:OpenHome::TerminalTcpSession
+iFile	Exception.h	/^    const TChar* iFile;$/;"	m	class:OpenHome::Exception
+iFile	File.h	/^    IFile* iFile;$/;"	m	class:OpenHome::FileStream
+iFilePtr	File.h	/^    FILE* iFilePtr;$/;"	m	class:OpenHome::FileAnsii
+iFragment	Uri.h	/^    Brn iFragment;$/;"	m	class:OpenHome::Uri
+iFunctor	Thread.h	/^    Functor iFunctor;$/;"	m	class:OpenHome::ThreadFunctor
+iFunctor	Timer.h	/^    Functor iFunctor;$/;"	m	class:OpenHome::Timer
+iGranularity	Stream.h	/^    TInt iGranularity;$/;"	m	class:OpenHome::WriterBwh
+iHandle	Network.h	/^    THandle iHandle;$/;"	m	class:OpenHome::Socket
+iHandle	Terminal.h	/^    THandle iHandle;$/;"	m	class:OpenHome::TerminalOs
+iHandle	Thread.h	/^    THandle iHandle;$/;"	m	class:OpenHome::Mutex
+iHandle	Thread.h	/^    THandle iHandle;$/;"	m	class:OpenHome::Semaphore
+iHandle	Thread.h	/^    THandle iHandle;$/;"	m	class:OpenHome::Thread
+iHead	Queue.h	/^    QueueEntryBase* iHead;$/;"	m	class:OpenHome::QueueBase
+iHead	Queue.h	/^    QueueSortedEntryHead iHead;$/;"	m	class:OpenHome::QueueSortedBase
+iHeader	Http.h	/^    IHttpHeader* iHeader;$/;"	m	class:OpenHome::ReaderHttpHeader
+iHeaderContentLength	Http.h	/^    HttpHeaderContentLength iHeaderContentLength;$/;"	m	class:OpenHome::HttpReader
+iHeaderLocation	Http.h	/^    HttpHeaderLocation iHeaderLocation;$/;"	m	class:OpenHome::HttpReader
+iHeaderTransferEncoding	Http.h	/^    HttpHeaderTransferEncoding iHeaderTransferEncoding;$/;"	m	class:OpenHome::HttpReader
+iHeaders	Http.h	/^    std::vector<IHttpHeader*> iHeaders;$/;"	m	class:OpenHome::ReaderHttpHeader
+iHost	Http.h	/^    Brh iHost;$/;"	m	class:OpenHome::HttpHeaderHost
+iHost	Stream.h	/^    Srx& iHost;$/;"	m	class:OpenHome::Swp
+iHost	Uri.h	/^    Brn iHost;$/;"	m	class:OpenHome::Uri
+iIndex	Parser.h	/^    TUint iIndex;$/;"	m	class:OpenHome::Parser
+iInitParams	Env.h	/^    Net::InitialisationParams* iInitParams;$/;"	m	class:OpenHome::Environment
+iInterface	Network.h	/^    TIpAddress iInterface;$/;"	m	class:OpenHome::SocketTcpServer
+iInterface	Network.h	/^    TIpAddress iInterface;$/;"	m	class:OpenHome::SocketUdpMulticast
+iInterrupt	File.h	/^    TBool iInterrupt;$/;"	m	class:OpenHome::FileStream
+iInterruptEnabled	Fifo.h	/^    TBool iInterruptEnabled;$/;"	m	class:OpenHome::FifoBase
+iInterrupted	Fifo.h	/^    TBool iInterrupted;$/;"	m	class:OpenHome::FifoBase
+iInterrupted	Terminal.h	/^    TBool       iInterrupted;$/;"	m	class:OpenHome::TerminalTcpSession
+iKill	Thread.h	/^    TBool     iKill;$/;"	m	class:OpenHome::Thread
+iKillMutex	Thread.h	/^    mutable Mutex iKillMutex;$/;"	m	class:OpenHome::Thread
+iLevel	Debug.h	/^    OpenHome::TUint  iLevel;$/;"	m	class:AutoLog
+iLevel	Debug.h	/^    static TUint iLevel;$/;"	m	class:OpenHome::Debug
+iLine	Exception.h	/^    TUint iLine;$/;"	m	class:OpenHome::Exception
+iList	NetworkAdapterList.h	/^    std::list<UpdateBase*> iList;$/;"	m	class:OpenHome::NetworkAdapterChangeNotifier
+iListLock	NetworkAdapterList.h	/^    mutable Mutex iListLock;$/;"	m	class:OpenHome::NetworkAdapterList
+iListener	Env.cpp	/^    Net::SsdpListenerMulticast iListener;$/;"	m	class:OpenHome::MListener	file:
+iListenerLock	NetworkAdapterList.h	/^    Mutex iListenerLock;$/;"	m	class:OpenHome::NetworkAdapterList
+iListenersAdapterChanged	NetworkAdapterList.h	/^    MapNetworkAdapter iListenersAdapterChanged;$/;"	m	class:OpenHome::NetworkAdapterList
+iListenersAdded	NetworkAdapterList.h	/^    MapNetworkAdapter iListenersAdded;$/;"	m	class:OpenHome::NetworkAdapterList
+iListenersCurrentExternal	NetworkAdapterList.h	/^    Map iListenersCurrentExternal;$/;"	m	class:OpenHome::NetworkAdapterList
+iListenersCurrentInternal	NetworkAdapterList.h	/^    Map iListenersCurrentInternal;$/;"	m	class:OpenHome::NetworkAdapterList
+iListenersRemoved	NetworkAdapterList.h	/^    MapNetworkAdapter iListenersRemoved;$/;"	m	class:OpenHome::NetworkAdapterList
+iListenersSubnetExternal	NetworkAdapterList.h	/^    Map iListenersSubnetExternal;$/;"	m	class:OpenHome::NetworkAdapterList
+iListenersSubnetInternal	NetworkAdapterList.h	/^    Map iListenersSubnetInternal;$/;"	m	class:OpenHome::NetworkAdapterList
+iLocation	Http.h	/^    Bws<kMaxLocationBytes> iLocation;$/;"	m	class:OpenHome::HttpHeaderLocation
+iLock	File.h	/^    Mutex iLock;$/;"	m	class:OpenHome::FileStream
+iLock	Network.h	/^    mutable Mutex iLock;$/;"	m	class:OpenHome::Socket
+iLock	NetworkAdapterList.h	/^    OpenHome::Mutex iLock;$/;"	m	class:OpenHome::NetworkAdapterChangeNotifier
+iLockFunctor	Printer.h	/^    Mutex iLockFunctor;$/;"	m	class:OpenHome::Log
+iLockStdio	Printer.h	/^    Mutex iLockStdio;$/;"	m	class:OpenHome::Log
+iLog	Network.h	/^    uint32_t iLog;$/;"	m	class:OpenHome::Socket
+iLogOutput	Printer.h	/^    FunctorMsg iLogOutput;$/;"	m	class:OpenHome::Log
+iLogOutput	Printer.h	/^    FunctorMsg iLogOutput;$/;"	m	class:OpenHome::RamLogger
+iLogger	Env.h	/^    Log* iLogger;$/;"	m	class:OpenHome::Environment
+iMaxBytes	Buffer.h	/^    TUint iMaxBytes;$/;"	m	class:OpenHome::Bwx
+iMaxBytes	Stream.h	/^    TUint iMaxBytes;$/;"	m	class:OpenHome::Sxx
+iMethod	Http.h	/^    Bws<kMaxMethodBytes> iMethod;$/;"	m	class:OpenHome::HttpHeaderAccessControlRequestMethod
+iMethod	Http.h	/^    const Brx* iMethod;$/;"	m	class:OpenHome::ReaderHttpRequest
+iMethods	Http.h	/^    std::vector<const Brx*> iMethods;$/;"	m	class:OpenHome::ReaderHttpRequest
+iMgr	Timer.h	/^    TimerManager& iMgr;$/;"	m	class:OpenHome::Timer
+iMsg	Exception.h	/^    const TChar* iMsg;$/;"	m	class:OpenHome::Exception
+iMulticastListeners	Env.h	/^    std::vector<MListener*> iMulticastListeners;$/;"	m	class:OpenHome::Environment
+iMutex	Network.h	/^    Mutex iMutex;                   \/\/ allows one thread to accept at a time$/;"	m	class:OpenHome::SocketTcpServer
+iMutex	Network.h	/^    Mutex iMutex;$/;"	m	class:OpenHome::SocketTcpSession
+iMutex	Queue.h	/^    Mutex iMutex;$/;"	m	class:OpenHome::QueueSortedBase
+iMutex	Thread.h	/^    Mutex& iMutex;$/;"	m	class:OpenHome::AutoMutex
+iMutex	Timer.h	/^    Mutex iMutex;$/;"	m	class:OpenHome::TimerManager
+iMutexInterrupt	Fifo.h	/^    Mutex iMutexInterrupt;$/;"	m	class:OpenHome::FifoBase
+iMutexNow	Timer.h	/^    Mutex iMutexNow;$/;"	m	class:OpenHome::TimerManager
+iMutexRead	Fifo.h	/^    Mutex iMutexRead;$/;"	m	class:OpenHome::FifoBase
+iMutexWrite	Fifo.h	/^    mutable Mutex iMutexWrite;$/;"	m	class:OpenHome::FifoBase
+iName	Thread.h	/^    Bws<kMaxNameBytes+1> iName;$/;"	m	class:OpenHome::Thread
+iName	Thread.h	/^    TChar iName[5];$/;"	m	class:OpenHome::Mutex
+iNetworkAdapterList	Env.h	/^    OpenHome::NetworkAdapterList* iNetworkAdapterList;$/;"	m	class:OpenHome::Environment
+iNetworkAdapters	NetworkAdapterList.h	/^    std::vector<NetworkAdapter*>* iNetworkAdapters;$/;"	m	class:OpenHome::NetworkAdapterList
+iNext	Queue.h	/^    QueueEntryBase* iNext;$/;"	m	class:OpenHome::QueueEntryBase
+iNext	Queue.h	/^    QueueSortedEntry* iNext;$/;"	m	class:OpenHome::QueueSortedEntry
+iNextListenerId	NetworkAdapterList.h	/^    TUint iNextListenerId;$/;"	m	class:OpenHome::NetworkAdapterList
+iNextTimer	Timer.h	/^    TUint iNextTimer;$/;"	m	class:OpenHome::TimerManager
+iNotifierThread	NetworkAdapterList.h	/^    NetworkAdapterChangeNotifier* iNotifierThread;$/;"	m	class:OpenHome::NetworkAdapterList
+iNow	Timer.h	/^    QueueSortedEntryTimer iNow;$/;"	m	class:OpenHome::TimerManager
+iObject	Functor.h	/^    TAny* iObject;$/;"	m	class:OpenHome::Functor
+iObject	FunctorMsg.h	/^    TAny* iObject;$/;"	m	class:OpenHome::FunctorMsg
+iObject	FunctorNetworkAdapter.h	/^    TAny* iObject;$/;"	m	class:OpenHome::FunctorNetworkAdapter
+iObjectMap	Env.h	/^    ObjectMap iObjectMap;$/;"	m	class:OpenHome::Environment
+iOffset	Stream.h	/^    TUint iOffset;$/;"	m	class:OpenHome::ReaderBuffer
+iOffset	Stream.h	/^    TUint iOffset;$/;"	m	class:OpenHome::Srx
+iOpen	Network.h	/^    TBool iOpen;$/;"	m	class:OpenHome::SocketTcpSession
+iOpen	Network.h	/^    TBool iOpen;$/;"	m	class:OpenHome::UdpReader
+iOpen	Network.h	/^    TBool iOpen;$/;"	m	class:OpenHome::UdpWriter
+iOsContext	Env.h	/^    OsContext* iOsContext;$/;"	m	class:OpenHome::Environment
+iOutputBuf	Http.h	/^    Bws<kBufSizeBytes> iOutputBuf;$/;"	m	class:OpenHome::ReaderHttpChunked
+iPath	Uri.h	/^    Brn iPath;$/;"	m	class:OpenHome::Uri
+iPathAndQuery	Uri.h	/^    Brn iPathAndQuery;$/;"	m	class:OpenHome::Uri
+iPort	Network.h	/^    TUint iPort;$/;"	m	class:OpenHome::SocketTcpServer
+iPort	Network.h	/^    TUint iPort;$/;"	m	class:OpenHome::SocketUdpBase
+iPort	Network.h	/^    TUint16 iPort;$/;"	m	class:OpenHome::Endpoint
+iPort	Uri.h	/^    TInt iPort;$/;"	m	class:OpenHome::Uri
+iPos	File.h	/^    TUint iPos;$/;"	m	class:OpenHome::FileStream
+iPrev	Queue.h	/^    QueueEntryBase* iPrev;$/;"	m	class:OpenHome::QueueEntryBase
+iPrev	Queue.h	/^    QueueSortedEntry* iPrev;$/;"	m	class:OpenHome::QueueSortedEntry
+iPriority	Thread.h	/^    TUint     iPriority;$/;"	m	class:OpenHome::Thread
+iPrivateLock	Env.h	/^    OpenHome::Mutex* iPrivateLock;$/;"	m	class:OpenHome::Environment
+iPtr	Buffer.h	/^    const TByte* iPtr;$/;"	m	class:OpenHome::Brn
+iPtr	Buffer.h	/^    const TByte* iPtr;$/;"	m	class:OpenHome::Brv
+iPtr	Buffer.h	/^    const TByte* iPtr;$/;"	m	class:OpenHome::Bwh
+iPtr	Buffer.h	/^    const TByte* iPtr;$/;"	m	class:OpenHome::Bwn
+iPtr	Stream.h	/^    TByte* iPtr;$/;"	m	class:OpenHome::Srd
+iPtr	Stream.h	/^    TByte* iPtr;$/;"	m	class:OpenHome::Swd
+iPublicLock	Env.h	/^    OpenHome::Mutex* iPublicLock;$/;"	m	class:OpenHome::Environment
+iQuery	Uri.h	/^    Brn iQuery;$/;"	m	class:OpenHome::Uri
+iQueue	Queue.h	/^    QueueBase* iQueue;$/;"	m	class:OpenHome::QueueEntryBase
+iRamLog	Printer.h	/^    RamLogger iRamLog;$/;"	m	class:OpenHome::Log
+iReadBuffer	Http.h	/^    Srs<kReadBufferBytes> iReadBuffer;$/;"	m	class:OpenHome::HttpReader
+iReadIndex	Fifo.h	/^    TUint iReadIndex; $/;"	m	class:OpenHome::FifoLiteBase
+iReadIndex	Fifo.h	/^    TUint iReadIndex;$/;"	m	class:OpenHome::FifoBase
+iReader	Ascii.h	/^    IReader& iReader;$/;"	m	class:OpenHome::ReaderAscii
+iReader	Http.h	/^    IReader& iReader;$/;"	m	class:OpenHome::ReaderHttpChunkedDynamic
+iReader	Http.h	/^    IReader& iReader;$/;"	m	class:OpenHome::ReaderHttpRequest
+iReader	Http.h	/^    IReader& iReader;$/;"	m	class:OpenHome::ReaderHttpResponse
+iReader	Http.h	/^    ReaderHttpChunked iReader;$/;"	m	class:OpenHome::HttpReader
+iReader	Http.h	/^    Srx& iReader;$/;"	m	class:OpenHome::ReaderHttpChunked
+iReader	Stream.h	/^    IReader& iReader;$/;"	m	class:OpenHome::ReaderBinary
+iReaderResponse	Http.h	/^    ReaderHttpResponse iReaderResponse;$/;"	m	class:OpenHome::HttpReader
+iReadySema	Terminal.h	/^    Semaphore   iReadySema;$/;"	m	class:OpenHome::TerminalTcpSession
+iReason	Http.h	/^    Brn iReason;$/;"	m	class:OpenHome::HttpStatus
+iReceived	Http.h	/^    TBool iReceived;$/;"	m	class:OpenHome::HttpHeader
+iReceived	Http.h	/^    TBool iReceived;$/;"	m	class:OpenHome::HttpHeaderContentType
+iRefCount	Env.cpp	/^    TInt iRefCount;$/;"	m	class:OpenHome::MListener	file:
+iRelative	Uri.h	/^    Bws<kMaxUriBytes> iRelative;$/;"	m	class:OpenHome::Uri
+iRemoving	Timer.h	/^    TBool iRemoving;$/;"	m	class:OpenHome::TimerManager
+iResumeObservers	Env.h	/^    std::vector<IResumeObserver*> iResumeObservers;$/;"	m	class:OpenHome::Environment
+iScheme	Uri.h	/^    Brn iScheme;$/;"	m	class:OpenHome::Uri
+iSem	Thread.h	/^    Semaphore& iSem;$/;"	m	class:OpenHome::AutoSemaphore
+iSema	Thread.h	/^    Semaphore iSema;$/;"	m	class:OpenHome::Thread
+iSemaRead	Fifo.h	/^    Semaphore iSemaRead;$/;"	m	class:OpenHome::FifoBase
+iSemaWrite	Fifo.h	/^    Semaphore iSemaWrite;$/;"	m	class:OpenHome::FifoBase
+iSemaphore	Timer.h	/^    Semaphore iSemaphore;$/;"	m	class:OpenHome::TimerManager
+iSender	Network.h	/^    Endpoint iSender;$/;"	m	class:OpenHome::UdpReader
+iSequenceNumber	Env.h	/^    TUint iSequenceNumber;$/;"	m	class:OpenHome::Environment
+iServer	Network.h	/^    SocketTcpServer* iServer;$/;"	m	class:OpenHome::SocketTcpSession
+iSessionPriority	Network.h	/^    TUint iSessionPriority;         \/\/ priority given to all session threads$/;"	m	class:OpenHome::SocketTcpServer
+iSessionStackBytes	Network.h	/^    TUint iSessionStackBytes;       \/\/ stack bytes given to all session threads$/;"	m	class:OpenHome::SocketTcpServer
+iSessions	Network.h	/^    std::vector<SocketTcpSession*> iSessions;$/;"	m	class:OpenHome::SocketTcpServer
+iSingleSubnetMode	NetworkAdapterList.h	/^    TBool iSingleSubnetMode;$/;"	m	class:OpenHome::NetworkAdapterList
+iSize	File.h	/^    TUint iSize;$/;"	m	class:OpenHome::FileStream
+iSlots	Fifo.h	/^    TUint iSlots;$/;"	m	class:OpenHome::FifoLiteBase
+iSlots	Fifo.h	/^    const TUint iSlots;$/;"	m	class:OpenHome::FifoBase
+iSlotsUsed	Fifo.h	/^    TUint iSlotsUsed;  \/\/ protected by iMutexWrite$/;"	m	class:OpenHome::FifoBase
+iSlotsUsed	Fifo.h	/^    TUint iSlotsUsed;$/;"	m	class:OpenHome::FifoLiteBase
+iSocket	Network.h	/^    Socket& iSocket;$/;"	m	class:OpenHome::AutoSocket
+iSocket	Network.h	/^    SocketUdpBase& iSocket;$/;"	m	class:OpenHome::UdpWriter
+iSocket	Network.h	/^    SocketUdpBase* iSocket;$/;"	m	class:OpenHome::UdpReader
+iSocketIsOpen	Http.h	/^    TBool iSocketIsOpen;$/;"	m	class:OpenHome::HttpReader
+iSource	Stream.h	/^    IReaderSource& iSource;$/;"	m	class:OpenHome::Srx
+iStackBytes	Thread.h	/^    TUint     iStackBytes;$/;"	m	class:OpenHome::Thread
+iStackTrace	Exception.h	/^    THandle iStackTrace;$/;"	m	class:OpenHome::Exception
+iStatus	Http.h	/^    StatusWritable iStatus;$/;"	m	class:OpenHome::ReaderHttpResponse
+iStop	Timer.h	/^    TBool iStop;$/;"	m	class:OpenHome::TimerManager
+iStopped	Timer.h	/^    Semaphore iStopped;$/;"	m	class:OpenHome::TimerManager
+iString	Debug.h	/^    const OpenHome::TChar* iString;$/;"	m	class:AutoLog
+iSubnets	NetworkAdapterList.h	/^    std::vector<NetworkAdapter*>* iSubnets;$/;"	m	class:OpenHome::NetworkAdapterList
+iSuspendObservers	Env.h	/^    std::vector<ISuspendObserver*> iSuspendObservers;$/;"	m	class:OpenHome::Environment
+iSuspendResumeObserverLock	Env.h	/^    OpenHome::Mutex* iSuspendResumeObserverLock;$/;"	m	class:OpenHome::Environment
+iTail	Queue.h	/^    QueueSortedEntryTail iTail;$/;"	m	class:OpenHome::QueueSortedBase
+iTcpClient	Http.h	/^    SocketTcpClient iTcpClient;$/;"	m	class:OpenHome::HttpReader
+iTerminated	Thread.h	/^    Semaphore iTerminated;$/;"	m	class:OpenHome::Thread
+iTerminating	Network.h	/^    TBool iTerminating;$/;"	m	class:OpenHome::SocketTcpServer
+iThread	Network.h	/^    ThreadFunctor* iThread;$/;"	m	class:OpenHome::SocketTcpSession
+iThread	Timer.h	/^    ThreadFunctor* iThread;$/;"	m	class:OpenHome::TimerManager
+iThreadHandle	Timer.h	/^    Thread* iThreadHandle;$/;"	m	class:OpenHome::TimerManager
+iThunk	Functor.h	/^    Thunk iThunk;$/;"	m	class:OpenHome::Functor
+iThunk	FunctorMsg.h	/^    Thunk iThunk;$/;"	m	class:OpenHome::FunctorMsg
+iThunk	FunctorNetworkAdapter.h	/^    Thunk iThunk;$/;"	m	class:OpenHome::FunctorNetworkAdapter
+iTime	Timer.h	/^    TUint iTime;  \/\/ Absolute (milliseconds from startup)$/;"	m	class:OpenHome::QueueSortedEntryTimer
+iTimer	Http.h	/^    Timer* iTimer;$/;"	m	class:OpenHome::ReaderHttpRequest
+iTimer	Http.h	/^    Timer* iTimer;$/;"	m	class:OpenHome::ReaderHttpResponse
+iTimerManager	Env.h	/^    OpenHome::TimerManager* iTimerManager;$/;"	m	class:OpenHome::Environment
+iType	Http.h	/^    Bws<kMaxTypeBytes> iType;$/;"	m	class:OpenHome::HttpHeaderContentType
+iUpgrade	Http.h	/^    TBool iUpgrade;$/;"	m	class:OpenHome::HttpHeaderConnection
+iUri	Http.h	/^    Bws<kMaxUriBytes> iUri;$/;"	m	class:OpenHome::ReaderHttpRequest
+iUsed	Printer.h	/^        TUint iUsed;$/;"	m	class:OpenHome::RamLogger::Chunk
+iVersion	Http.h	/^    Http::EVersion iVersion;$/;"	m	class:OpenHome::ReaderHttpRequest
+iVersion	Http.h	/^    Http::EVersion iVersion;$/;"	m	class:OpenHome::ReaderHttpResponse
+iWriteBuffer	Http.h	/^    Sws<kWriteBufferBytes> iWriteBuffer;$/;"	m	class:OpenHome::HttpReader
+iWriteIndex	Fifo.h	/^    TUint iWriteIndex;$/;"	m	class:OpenHome::FifoBase
+iWriteIndex	Fifo.h	/^    TUint iWriteIndex;$/;"	m	class:OpenHome::FifoLiteBase
+iWriter	Ascii.h	/^    IWriter& iWriter;$/;"	m	class:OpenHome::WriterAscii
+iWriter	Http.h	/^    WriterHttpField iWriter;$/;"	m	class:OpenHome::WriterHttpHeader
+iWriter	Stream.h	/^    IWriter& iWriter;$/;"	m	class:OpenHome::Swx
+iWriter	Stream.h	/^    IWriter& iWriter;$/;"	m	class:OpenHome::WriterBinary
+iWriterRequest	Http.h	/^    WriterHttpRequest iWriterRequest;$/;"	m	class:OpenHome::HttpReader
+kAccepted	Http.cpp	/^const HttpStatus HttpStatus::kAccepted = HttpStatusMaker(202, Brn("Accepted"));$/;"	m	class:HttpStatus	file:
+kAccepted	Http.h	/^    static const HttpStatus kAccepted;$/;"	m	class:OpenHome::HttpStatus
+kAck	Ascii.h	/^    static const TByte kAck = 0x06;$/;"	m	class:OpenHome::Ascii
+kAll	Debug.h	/^    static const TUint kAll            = 0x7FFFFFFF;$/;"	m	class:OpenHome::Debug
+kApplication0	Debug.h	/^    static const TUint kApplication0   = 1<<20;$/;"	m	class:OpenHome::Debug
+kApplication1	Debug.h	/^    static const TUint kApplication1   = 1<<21;$/;"	m	class:OpenHome::Debug
+kApplication2	Debug.h	/^    static const TUint kApplication2   = 1<<22;$/;"	m	class:OpenHome::Debug
+kApplication3	Debug.h	/^    static const TUint kApplication3   = 1<<23;$/;"	m	class:OpenHome::Debug
+kApplication4	Debug.h	/^    static const TUint kApplication4   = 1<<24;$/;"	m	class:OpenHome::Debug
+kApplication5	Debug.h	/^    static const TUint kApplication5   = 1<<25;$/;"	m	class:OpenHome::Debug
+kApplication6	Debug.h	/^    static const TUint kApplication6   = 1<<26;$/;"	m	class:OpenHome::Debug
+kApplication7	Debug.h	/^    static const TUint kApplication7   = 1<<27;$/;"	m	class:OpenHome::Debug
+kApplication8	Debug.h	/^    static const TUint kApplication8   = 1<<28;$/;"	m	class:OpenHome::Debug
+kApplication9	Debug.h	/^    static const TUint kApplication9   = 1<<29;$/;"	m	class:OpenHome::Debug
+kBadGateway	Http.cpp	/^const HttpStatus HttpStatus::kBadGateway = HttpStatusMaker(502, Brn("Bad Gateway"));$/;"	m	class:HttpStatus	file:
+kBadGateway	Http.h	/^    static const HttpStatus kBadGateway;$/;"	m	class:OpenHome::HttpStatus
+kBadRequest	Http.cpp	/^const HttpStatus HttpStatus::kBadRequest = HttpStatusMaker(400, Brn("Bad Request"));$/;"	m	class:HttpStatus	file:
+kBadRequest	Http.h	/^    static const HttpStatus kBadRequest;$/;"	m	class:OpenHome::HttpStatus
+kBase64	Converter.cpp	/^static const TByte kBase64[64] = {$/;"	v	file:
+kBel	Ascii.h	/^    static const TByte kBel = 0x07;$/;"	m	class:OpenHome::Ascii
+kBonjour	Debug.h	/^    static const TUint kBonjour        = 1<<17;$/;"	m	class:OpenHome::Debug
+kBs	Ascii.h	/^    static const TByte kBs  = 0x08;$/;"	m	class:OpenHome::Ascii
+kBufSizeBytes	Http.h	/^    static const TUint kBufSizeBytes = (10 * 1024) + kChunkSizeBufBytes; \/\/ FIXME - allow user-definable size$/;"	m	class:OpenHome::ReaderHttpChunked
+kCan	Ascii.h	/^    static const TByte kCan = 0x18;$/;"	m	class:OpenHome::Ascii
+kChunkSizeBufBytes	Http.h	/^    static const TUint kChunkSizeBufBytes = 10;$/;"	m	class:OpenHome::ReaderHttpChunked
+kChunkedCountSeparator	Http.h	/^    static const Brn kChunkedCountSeparator;$/;"	m	class:OpenHome::Http
+kClientErrorCodes	Http.h	/^    static const TUint kClientErrorCodes = 400;$/;"	m	class:OpenHome::HttpStatus
+kConflict	Http.cpp	/^const HttpStatus HttpStatus::kConflict = HttpStatusMaker(409, Brn("Conflict"));$/;"	m	class:HttpStatus	file:
+kConflict	Http.h	/^    static const HttpStatus kConflict;$/;"	m	class:OpenHome::HttpStatus
+kConnectTimeoutMs	Http.h	/^    static const TUint kConnectTimeoutMs = 3000;$/;"	m	class:OpenHome::HttpReader
+kConnectionClose	Http.h	/^    static const Brn kConnectionClose;$/;"	m	class:OpenHome::Http
+kConnectionUpgrade	Http.h	/^    static const Brn kConnectionUpgrade;$/;"	m	class:OpenHome::Http
+kContentLanguageEnglish	Http.h	/^    static const Brn kContentLanguageEnglish;$/;"	m	class:OpenHome::Http
+kContinue	Http.cpp	/^const HttpStatus HttpStatus::kContinue = HttpStatusMaker(100, Brn("Continue"));$/;"	m	class:HttpStatus	file:
+kContinue	Http.h	/^    static const HttpStatus kContinue;$/;"	m	class:OpenHome::HttpStatus
+kCr	Ascii.h	/^    static const TByte kCr  = 0x0d;$/;"	m	class:OpenHome::Ascii
+kCreated	Http.cpp	/^const HttpStatus HttpStatus::kCreated = HttpStatusMaker(201, Brn("Created"));$/;"	m	class:HttpStatus	file:
+kCreated	Http.h	/^    static const HttpStatus kCreated;$/;"	m	class:OpenHome::HttpStatus
+kDataBytes	Printer.h	/^        static const TUint kDataBytes = 1024;$/;"	m	class:OpenHome::RamLogger::Chunk
+kDc1	Ascii.h	/^    static const TByte kDc1 = 0x11;$/;"	m	class:OpenHome::Ascii
+kDc2	Ascii.h	/^    static const TByte kDc2 = 0x12;$/;"	m	class:OpenHome::Ascii
+kDc3	Ascii.h	/^    static const TByte kDc3 = 0x13;$/;"	m	class:OpenHome::Ascii
+kDc4	Ascii.h	/^    static const TByte kDc4 = 0x14;$/;"	m	class:OpenHome::Ascii
+kDecode64	Converter.cpp	/^static const TByte kDecode64[256] = {$/;"	v	file:
+kDefaultStackBytes	Thread.cpp	/^const TUint OpenHome::Thread::kDefaultStackBytes = 32 * 1024;$/;"	m	class:OpenHome::Thread	file:
+kDefaultStackBytes	Thread.h	/^    static const TUint kDefaultStackBytes;$/;"	m	class:OpenHome::Thread
+kDel	Ascii.h	/^    static const TByte kDel = 0x7f;$/;"	m	class:OpenHome::Ascii
+kDevice	Debug.h	/^    static const TUint kDevice         = 1<<8;$/;"	m	class:OpenHome::Debug
+kDle	Ascii.h	/^    static const TByte kDle = 0x10;$/;"	m	class:OpenHome::Ascii
+kDvDevice	Debug.h	/^    static const TUint kDvDevice       = 1<<18;$/;"	m	class:OpenHome::Debug
+kDvEvent	Debug.h	/^    static const TUint kDvEvent        = 1<<14;$/;"	m	class:OpenHome::Debug
+kDvInvocation	Debug.h	/^    static const TUint kDvInvocation   = 1<<13;$/;"	m	class:OpenHome::Debug
+kDvWebSocket	Debug.h	/^    static const TUint kDvWebSocket    = 1<<15;$/;"	m	class:OpenHome::Debug
+kEm	Ascii.h	/^    static const TByte kEm  = 0x19;$/;"	m	class:OpenHome::Ascii
+kEnq	Ascii.h	/^    static const TByte kEnq = 0x05;$/;"	m	class:OpenHome::Ascii
+kEot	Ascii.h	/^    static const TByte kEot = 0x04;$/;"	m	class:OpenHome::Ascii
+kError	Debug.h	/^    static const TUint kError          = 1<<30;$/;"	m	class:OpenHome::Debug
+kEsc	Ascii.h	/^    static const TByte kEsc = 0x1b;$/;"	m	class:OpenHome::Ascii
+kEtb	Ascii.h	/^    static const TByte kEtb = 0x17;$/;"	m	class:OpenHome::Ascii
+kEtx	Ascii.h	/^    static const TByte kEtx = 0x03;$/;"	m	class:OpenHome::Ascii
+kEvent	Debug.h	/^    static const TUint kEvent          = 1<<11;$/;"	m	class:OpenHome::Debug
+kExpect100Continue	Http.h	/^    static const Brn kExpect100Continue;$/;"	m	class:OpenHome::Http
+kExpectationFailure	Http.cpp	/^const HttpStatus HttpStatus::kExpectationFailure = HttpStatusMaker(417, Brn("Expectation Failure"));$/;"	m	class:HttpStatus	file:
+kExpectationFailure	Http.h	/^    static const HttpStatus kExpectationFailure;$/;"	m	class:OpenHome::HttpStatus
+kFf	Ascii.h	/^    static const TByte kFf  = 0x0c;$/;"	m	class:OpenHome::Ascii
+kForbidden	Http.cpp	/^const HttpStatus HttpStatus::kForbidden = HttpStatusMaker(403, Brn("Forbidden"));$/;"	m	class:HttpStatus	file:
+kForbidden	Http.h	/^    static const HttpStatus kForbidden;$/;"	m	class:OpenHome::HttpStatus
+kFound	Http.cpp	/^const HttpStatus HttpStatus::kFound = HttpStatusMaker(302, Brn("Found"));$/;"	m	class:HttpStatus	file:
+kFound	Http.h	/^    static const HttpStatus kFound;$/;"	m	class:OpenHome::HttpStatus
+kFs	Ascii.h	/^    static const TByte kFs  = 0x1c;$/;"	m	class:OpenHome::Ascii
+kFudgeFactor	Functor.h	/^    static const TUint kFudgeFactor = 2;$/;"	m	class:OpenHome::Functor
+kFudgeFactor	FunctorMsg.h	/^    static const TUint kFudgeFactor = 2;$/;"	m	class:OpenHome::FunctorMsg
+kFudgeFactor	FunctorNetworkAdapter.h	/^    static const TUint kFudgeFactor = 2;$/;"	m	class:OpenHome::FunctorNetworkAdapter
+kGatewayTimeout	Http.cpp	/^const HttpStatus HttpStatus::kGatewayTimeout = HttpStatusMaker(504, Brn("Gateway Timeout"));$/;"	m	class:HttpStatus	file:
+kGatewayTimeout	Http.h	/^    static const HttpStatus kGatewayTimeout;$/;"	m	class:OpenHome::HttpStatus
+kGone	Http.cpp	/^const HttpStatus HttpStatus::kGone = HttpStatusMaker(410, Brn("Gone"));$/;"	m	class:HttpStatus	file:
+kGone	Http.h	/^    static const HttpStatus kGone;$/;"	m	class:OpenHome::HttpStatus
+kGs	Ascii.h	/^    static const TByte kGs  = 0x1d;$/;"	m	class:OpenHome::Ascii
+kHeaderAccept	Http.h	/^    static const Brn kHeaderAccept;$/;"	m	class:OpenHome::Http
+kHeaderAcceptCharset	Http.h	/^    static const Brn kHeaderAcceptCharset;$/;"	m	class:OpenHome::Http
+kHeaderAcceptEncoding	Http.h	/^    static const Brn kHeaderAcceptEncoding;$/;"	m	class:OpenHome::Http
+kHeaderAcceptLanguage	Http.h	/^    static const Brn kHeaderAcceptLanguage;$/;"	m	class:OpenHome::Http
+kHeaderAcceptRanges	Http.h	/^    static const Brn kHeaderAcceptRanges;$/;"	m	class:OpenHome::Http
+kHeaderAccessControlRequestMethod	Http.h	/^    static const Brn kHeaderAccessControlRequestMethod;$/;"	m	class:OpenHome::Http
+kHeaderAge	Http.h	/^    static const Brn kHeaderAge;$/;"	m	class:OpenHome::Http
+kHeaderAllow	Http.h	/^    static const Brn kHeaderAllow;$/;"	m	class:OpenHome::Http
+kHeaderAllowOrigin	Http.h	/^    static const Brn kHeaderAllowOrigin;$/;"	m	class:OpenHome::Http
+kHeaderAuthorization	Http.h	/^    static const Brn kHeaderAuthorization;$/;"	m	class:OpenHome::Http
+kHeaderCacheControl	Http.h	/^    static const Brn kHeaderCacheControl;$/;"	m	class:OpenHome::Http
+kHeaderConnection	Http.h	/^    static const Brn kHeaderConnection;$/;"	m	class:OpenHome::Http
+kHeaderContentEncoding	Http.h	/^    static const Brn kHeaderContentEncoding;$/;"	m	class:OpenHome::Http
+kHeaderContentLanguage	Http.h	/^    static const Brn kHeaderContentLanguage;$/;"	m	class:OpenHome::Http
+kHeaderContentLength	Http.h	/^    static const Brn kHeaderContentLength;$/;"	m	class:OpenHome::Http
+kHeaderContentLocation	Http.h	/^    static const Brn kHeaderContentLocation;$/;"	m	class:OpenHome::Http
+kHeaderContentMd5	Http.h	/^    static const Brn kHeaderContentMd5;$/;"	m	class:OpenHome::Http
+kHeaderContentRange	Http.h	/^    static const Brn kHeaderContentRange;$/;"	m	class:OpenHome::Http
+kHeaderContentType	Http.h	/^    static const Brn kHeaderContentType;$/;"	m	class:OpenHome::Http
+kHeaderDate	Http.h	/^    static const Brn kHeaderDate;$/;"	m	class:OpenHome::Http
+kHeaderETag	Http.h	/^    static const Brn kHeaderETag;$/;"	m	class:OpenHome::Http
+kHeaderExpect	Http.h	/^    static const Brn kHeaderExpect;$/;"	m	class:OpenHome::Http
+kHeaderExpires	Http.h	/^    static const Brn kHeaderExpires;$/;"	m	class:OpenHome::Http
+kHeaderFrom	Http.h	/^    static const Brn kHeaderFrom;$/;"	m	class:OpenHome::Http
+kHeaderHost	Http.h	/^    static const Brn kHeaderHost;$/;"	m	class:OpenHome::Http
+kHeaderIfMatch	Http.h	/^    static const Brn kHeaderIfMatch;$/;"	m	class:OpenHome::Http
+kHeaderIfModifiedSince	Http.h	/^    static const Brn kHeaderIfModifiedSince;$/;"	m	class:OpenHome::Http
+kHeaderIfNoneMatch	Http.h	/^    static const Brn kHeaderIfNoneMatch;$/;"	m	class:OpenHome::Http
+kHeaderIfRange	Http.h	/^    static const Brn kHeaderIfRange;$/;"	m	class:OpenHome::Http
+kHeaderIfUnmodifiedSince	Http.h	/^    static const Brn kHeaderIfUnmodifiedSince;$/;"	m	class:OpenHome::Http
+kHeaderLastModified	Http.h	/^    static const Brn kHeaderLastModified;$/;"	m	class:OpenHome::Http
+kHeaderLocation	Http.h	/^    static const Brn kHeaderLocation;$/;"	m	class:OpenHome::Http
+kHeaderMaxForwards	Http.h	/^    static const Brn kHeaderMaxForwards;$/;"	m	class:OpenHome::Http
+kHeaderPragma	Http.h	/^    static const Brn kHeaderPragma;$/;"	m	class:OpenHome::Http
+kHeaderProxyAuthenticate	Http.h	/^    static const Brn kHeaderProxyAuthenticate;$/;"	m	class:OpenHome::Http
+kHeaderProxyAuthorization	Http.h	/^    static const Brn kHeaderProxyAuthorization;$/;"	m	class:OpenHome::Http
+kHeaderRange	Http.h	/^    static const Brn kHeaderRange;$/;"	m	class:OpenHome::Http
+kHeaderReferer	Http.h	/^    static const Brn kHeaderReferer;$/;"	m	class:OpenHome::Http
+kHeaderRetryAfter	Http.h	/^    static const Brn kHeaderRetryAfter;$/;"	m	class:OpenHome::Http
+kHeaderSeparator	Http.h	/^    static const Brn kHeaderSeparator;$/;"	m	class:OpenHome::Http
+kHeaderServer	Http.h	/^    static const Brn kHeaderServer;$/;"	m	class:OpenHome::Http
+kHeaderTe	Http.h	/^    static const Brn kHeaderTe;$/;"	m	class:OpenHome::Http
+kHeaderTerminator	Http.h	/^    static const Brn kHeaderTerminator;$/;"	m	class:OpenHome::Http
+kHeaderTrailer	Http.h	/^    static const Brn kHeaderTrailer;$/;"	m	class:OpenHome::Http
+kHeaderTransferEncoding	Http.h	/^    static const Brn kHeaderTransferEncoding;$/;"	m	class:OpenHome::Http
+kHeaderUpgrade	Http.h	/^    static const Brn kHeaderUpgrade;$/;"	m	class:OpenHome::Http
+kHeaderUserAgent	Http.h	/^    static const Brn kHeaderUserAgent;$/;"	m	class:OpenHome::Http
+kHeaderVary	Http.h	/^    static const Brn kHeaderVary;$/;"	m	class:OpenHome::Http
+kHeaderVia	Http.h	/^    static const Brn kHeaderVia;$/;"	m	class:OpenHome::Http
+kHeaderWarning	Http.h	/^    static const Brn kHeaderWarning;$/;"	m	class:OpenHome::Http
+kHeaderWwwAuthenticate	Http.h	/^    static const Brn kHeaderWwwAuthenticate;$/;"	m	class:OpenHome::Http
+kHt	Ascii.h	/^    static const TByte kHt =  0x09;$/;"	m	class:OpenHome::Ascii
+kHttp	Debug.h	/^    static const TUint kHttp           = 1<<7;$/;"	m	class:OpenHome::Debug
+kHttpPort	Http.h	/^    static const TUint kHttpPort = 80;$/;"	m	class:OpenHome::HttpReader
+kHttpVersionNotSupported	Http.cpp	/^const HttpStatus HttpStatus::kHttpVersionNotSupported = HttpStatusMaker(505, Brn("HTTP Version Not Supported"));$/;"	m	class:HttpStatus	file:
+kHttpVersionNotSupported	Http.h	/^    static const HttpStatus kHttpVersionNotSupported;$/;"	m	class:OpenHome::HttpStatus
+kInformationCodes	Http.h	/^    static const TUint kInformationCodes = 100;$/;"	m	class:OpenHome::HttpStatus
+kInternalServerError	Http.cpp	/^const HttpStatus HttpStatus::kInternalServerError = HttpStatusMaker(500, Brn("Internal Server Error"));$/;"	m	class:HttpStatus	file:
+kInternalServerError	Http.h	/^    static const HttpStatus kInternalServerError;$/;"	m	class:OpenHome::HttpStatus
+kLengthRequired	Http.cpp	/^const HttpStatus HttpStatus::kLengthRequired = HttpStatusMaker(411, Brn("Length Required"));$/;"	m	class:HttpStatus	file:
+kLengthRequired	Http.h	/^    static const HttpStatus kLengthRequired;$/;"	m	class:OpenHome::HttpStatus
+kLf	Ascii.h	/^    static const TByte kLf  = 0x0a;$/;"	m	class:OpenHome::Ascii
+kListenerIdNull	NetworkAdapterList.h	/^    static const TUint kListenerIdNull = 0;$/;"	m	class:OpenHome::NetworkAdapterList
+kLogHex	Network.h	/^    static const uint32_t kLogHex       = 2;$/;"	m	class:OpenHome::Socket
+kLogNone	Network.h	/^    static const uint32_t kLogNone      = 0;$/;"	m	class:OpenHome::Socket
+kLogPlainText	Network.h	/^    static const uint32_t kLogPlainText = 1;$/;"	m	class:OpenHome::Socket
+kLpec	Debug.h	/^    static const TUint kLpec           = 1<<16;$/;"	m	class:OpenHome::Debug
+kMaxAddressBytes	Network.h	/^    static const TUint kMaxAddressBytes = 16;$/;"	m	class:OpenHome::Endpoint
+kMaxBufferBytes	Http.h	/^    static const TUint kMaxBufferBytes = 6000;$/;"	m	class:OpenHome::WriterHttpChunked
+kMaxByteHexStringBytes	Ascii.h	/^    static const TUint kMaxByteHexStringBytes = 2;$/;"	m	class:OpenHome::Ascii
+kMaxDebugPrintBytes	Debug.h	/^    static const TUint kMaxDebugPrintBytes = 256;$/;"	m	class:OpenHome::Debug
+kMaxDescriptionBytes	Http.h	/^    static const TUint kMaxDescriptionBytes = 100;$/;"	m	class:OpenHome::ReaderHttpResponse
+kMaxDirLevels	Uri.h	/^    static const TUint kMaxDirLevels = 50;$/;"	m	class:OpenHome::Uri
+kMaxEndpointBytes	Network.h	/^    static const TUint kMaxEndpointBytes = 22;$/;"	m	class:OpenHome::Endpoint
+kMaxInt64StringBytes	Ascii.h	/^    static const TUint kMaxInt64StringBytes = 20;$/;"	m	class:OpenHome::Ascii
+kMaxIntStringBytes	Ascii.h	/^    static const TUint kMaxIntStringBytes = 11;$/;"	m	class:OpenHome::Ascii
+kMaxLocationBytes	Http.h	/^    static const TUint kMaxLocationBytes = 1000;$/;"	m	class:OpenHome::HttpHeaderLocation
+kMaxMethodBytes	Http.h	/^    static const TUint kMaxMethodBytes = 20;$/;"	m	class:OpenHome::ReaderHttpRequest
+kMaxMethodBytes	Http.h	/^    static const TUint kMaxMethodBytes = 32;$/;"	m	class:OpenHome::HttpHeaderAccessControlRequestMethod
+kMaxNameBytes	Thread.h	/^    static const TUint kMaxNameBytes = 18;$/;"	m	class:OpenHome::Thread
+kMaxPrintBytes	Printer.h	/^    static const TUint kMaxPrintBytes = 1024;$/;"	m	class:OpenHome::Log
+kMaxTypeBytes	Http.h	/^    static const TUint kMaxTypeBytes = 100;$/;"	m	class:OpenHome::HttpHeaderContentType
+kMaxUint64StringBytes	Ascii.h	/^    static const TUint kMaxUint64StringBytes = 20;$/;"	m	class:OpenHome::Ascii
+kMaxUintHexStringBytes	Ascii.h	/^    static const TUint kMaxUintHexStringBytes = 8;$/;"	m	class:OpenHome::Ascii
+kMaxUintStringBytes	Ascii.h	/^    static const TUint kMaxUintStringBytes = 10;$/;"	m	class:OpenHome::Ascii
+kMaxUriBytes	Http.h	/^    static const TUint kMaxUriBytes = 200;$/;"	m	class:OpenHome::ReaderHttpRequest
+kMaxUriBytes	Http.h	/^    static const TUint kMaxUriBytes = 200;$/;"	m	class:OpenHome::ReaderHttpResponse
+kMaxUriBytes	Uri.h	/^    static const TUint kMaxUriBytes = 1024;$/;"	m	class:OpenHome::Uri
+kMethodConnect	Http.h	/^    static const Brn kMethodConnect;$/;"	m	class:OpenHome::Http
+kMethodDelete	Http.h	/^    static const Brn kMethodDelete;$/;"	m	class:OpenHome::Http
+kMethodExtension	Http.h	/^    static const Brn kMethodExtension;$/;"	m	class:OpenHome::Http
+kMethodGet	Http.h	/^    static const Brn kMethodGet;$/;"	m	class:OpenHome::Http
+kMethodHead	Http.h	/^    static const Brn kMethodHead;$/;"	m	class:OpenHome::Http
+kMethodNotAllowed	Http.cpp	/^const HttpStatus HttpStatus::kMethodNotAllowed = HttpStatusMaker(405, Brn("Method Not Allowed"));$/;"	m	class:HttpStatus	file:
+kMethodNotAllowed	Http.h	/^    static const HttpStatus kMethodNotAllowed;$/;"	m	class:OpenHome::HttpStatus
+kMethodOptions	Http.h	/^    static const Brn kMethodOptions;$/;"	m	class:OpenHome::Http
+kMethodPost	Http.h	/^    static const Brn kMethodPost;$/;"	m	class:OpenHome::Http
+kMethodPut	Http.h	/^    static const Brn kMethodPut;$/;"	m	class:OpenHome::Http
+kMethodTrace	Http.h	/^    static const Brn kMethodTrace;$/;"	m	class:OpenHome::Http
+kMinBwdMaxBytes	Buffer.cpp	/^const TUint kMinBwdMaxBytes = 4;$/;"	v
+kMovedPermanently	Http.cpp	/^const HttpStatus HttpStatus::kMovedPermanently = HttpStatusMaker(301, Brn("Moved Permanently"));$/;"	m	class:HttpStatus	file:
+kMovedPermanently	Http.h	/^    static const HttpStatus kMovedPermanently;$/;"	m	class:OpenHome::HttpStatus
+kMultipleChoices	Http.cpp	/^const HttpStatus HttpStatus::kMultipleChoices = HttpStatusMaker(300, Brn("Multiple Choices"));$/;"	m	class:HttpStatus	file:
+kMultipleChoices	Http.h	/^    static const HttpStatus kMultipleChoices;$/;"	m	class:OpenHome::HttpStatus
+kNak	Ascii.h	/^    static const TByte kNak = 0x15;$/;"	m	class:OpenHome::Ascii
+kNetwork	Debug.h	/^    static const TUint kNetwork        = 1<<3;$/;"	m	class:OpenHome::Debug
+kNoContent	Http.cpp	/^const HttpStatus HttpStatus::kNoContent = HttpStatusMaker(204, Brn("No Content"));$/;"	m	class:HttpStatus	file:
+kNoContent	Http.h	/^    static const HttpStatus kNoContent;$/;"	m	class:OpenHome::HttpStatus
+kNonAuthoritativeInformation	Http.cpp	/^const HttpStatus HttpStatus::kNonAuthoritativeInformation = HttpStatusMaker(203, Brn("Non-Authoritative Information"));$/;"	m	class:HttpStatus	file:
+kNonAuthoritativeInformation	Http.h	/^    static const HttpStatus kNonAuthoritativeInformation;$/;"	m	class:OpenHome::HttpStatus
+kNone	Debug.h	/^    static const TUint kNone           = 0;$/;"	m	class:OpenHome::Debug
+kNotAcceptable	Http.cpp	/^const HttpStatus HttpStatus::kNotAcceptable = HttpStatusMaker(406, Brn("Not Acceptable"));$/;"	m	class:HttpStatus	file:
+kNotAcceptable	Http.h	/^    static const HttpStatus kNotAcceptable;$/;"	m	class:OpenHome::HttpStatus
+kNotFound	Http.cpp	/^const HttpStatus HttpStatus::kNotFound = HttpStatusMaker(404, Brn("Not Found"));$/;"	m	class:HttpStatus	file:
+kNotFound	Http.h	/^    static const HttpStatus kNotFound;$/;"	m	class:OpenHome::HttpStatus
+kNotImplemented	Http.cpp	/^const HttpStatus HttpStatus::kNotImplemented = HttpStatusMaker(501, Brn("Not Implemented"));$/;"	m	class:HttpStatus	file:
+kNotImplemented	Http.h	/^    static const HttpStatus kNotImplemented;$/;"	m	class:OpenHome::HttpStatus
+kNotModified	Http.cpp	/^const HttpStatus HttpStatus::kNotModified = HttpStatusMaker(304, Brn("Not Modified"));$/;"	m	class:HttpStatus	file:
+kNotModified	Http.h	/^    static const HttpStatus kNotModified;$/;"	m	class:OpenHome::HttpStatus
+kNul	Ascii.h	/^    static const TByte kNul = 0x00;$/;"	m	class:OpenHome::Ascii
+kOhNetMimeTypeBmp	Env.cpp	/^const char kOhNetMimeTypeBmp[]  = "image\/bmp";$/;"	v
+kOhNetMimeTypeCss	Env.cpp	/^const char kOhNetMimeTypeCss[]  = "text\/css";$/;"	v
+kOhNetMimeTypeGif	Env.cpp	/^const char kOhNetMimeTypeGif[]  = "image\/gif";$/;"	v
+kOhNetMimeTypeHtml	Env.cpp	/^const char kOhNetMimeTypeHtml[] = "text\/html";$/;"	v
+kOhNetMimeTypeJpeg	Env.cpp	/^const char kOhNetMimeTypeJpeg[] = "image\/jpeg";$/;"	v
+kOhNetMimeTypeJs	Env.cpp	/^const char kOhNetMimeTypeJs[]   = "application\/javascript";$/;"	v
+kOhNetMimeTypePng	Env.cpp	/^const char kOhNetMimeTypePng[]  = "image\/png";$/;"	v
+kOhNetMimeTypeXml	Env.cpp	/^const char kOhNetMimeTypeXml[]  = "text\/xml";$/;"	v
+kOk	Http.cpp	/^const HttpStatus HttpStatus::kOk = HttpStatusMaker(200, Brn("OK"));$/;"	m	class:HttpStatus	file:
+kOk	Http.h	/^    static const HttpStatus kOk;$/;"	m	class:OpenHome::HttpStatus
+kPartialContent	Http.cpp	/^const HttpStatus HttpStatus::kPartialContent = HttpStatusMaker(206, Brn("Partial Content"));$/;"	m	class:HttpStatus	file:
+kPartialContent	Http.h	/^    static const HttpStatus kPartialContent;$/;"	m	class:OpenHome::HttpStatus
+kPaymentRequired	Http.cpp	/^const HttpStatus HttpStatus::kPaymentRequired = HttpStatusMaker(402, Brn("Payment Required"));$/;"	m	class:HttpStatus	file:
+kPaymentRequired	Http.h	/^    static const HttpStatus kPaymentRequired;$/;"	m	class:OpenHome::HttpStatus
+kPortNotSpecified	Uri.h	/^    static const TInt kPortNotSpecified = -1;$/;"	m	class:OpenHome::Uri
+kPreconditionFailed	Http.cpp	/^const HttpStatus HttpStatus::kPreconditionFailed = HttpStatusMaker(412, Brn("Precondition Failed"));$/;"	m	class:HttpStatus	file:
+kPreconditionFailed	Http.h	/^    static const HttpStatus kPreconditionFailed;$/;"	m	class:OpenHome::HttpStatus
+kPriorityHigh	Thread.h	/^   ,kPriorityHigh = 110$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityHigher	Thread.h	/^   ,kPriorityHigher = 120$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityHighest	Thread.h	/^   ,kPriorityHighest = 140$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityLess	Thread.h	/^   ,kPriorityLess = -2$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityLow	Thread.h	/^   ,kPriorityLow = 90$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityLower	Thread.h	/^   ,kPriorityLower = 80$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityLowest	Thread.h	/^   ,kPriorityLowest = 60$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityMore	Thread.h	/^   ,kPriorityMore = 2$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityMuchLess	Thread.h	/^   ,kPriorityMuchLess = -4$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityMuchMore	Thread.h	/^    kPriorityMuchMore = 4$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityNormal	Thread.h	/^   ,kPriorityNormal = 100$/;"	e	enum:OpenHome::ThreadPriority
+kPrioritySystemHighest	Thread.h	/^   ,kPrioritySystemHighest = 150$/;"	e	enum:OpenHome::ThreadPriority
+kPrioritySystemLowest	Thread.h	/^   ,kPrioritySystemLowest = 51$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityVeryHigh	Thread.h	/^   ,kPriorityVeryHigh = 130$/;"	e	enum:OpenHome::ThreadPriority
+kPriorityVeryLow	Thread.h	/^   ,kPriorityVeryLow = 70$/;"	e	enum:OpenHome::ThreadPriority
+kProxyAuthenticationRequired	Http.cpp	/^const HttpStatus HttpStatus::kProxyAuthenticationRequired = HttpStatusMaker(407, Brn("Proxy Authentication Required"));$/;"	m	class:HttpStatus	file:
+kProxyAuthenticationRequired	Http.h	/^    static const HttpStatus kProxyAuthenticationRequired;$/;"	m	class:OpenHome::HttpStatus
+kRangeBytes	Http.h	/^    static const Brn kRangeBytes;$/;"	m	class:OpenHome::Http
+kRangeSeparator	Http.h	/^    static const Brn kRangeSeparator;$/;"	m	class:OpenHome::Http
+kReadBufferBytes	Http.h	/^    static const TUint kReadBufferBytes = 4 * 1024;$/;"	m	class:OpenHome::HttpReader
+kRedirectionCodes	Http.h	/^    static const TUint kRedirectionCodes = 300;$/;"	m	class:OpenHome::HttpStatus
+kRequestEntityTooLarge	Http.cpp	/^const HttpStatus HttpStatus::kRequestEntityTooLarge = HttpStatusMaker(413, Brn("Request Entity Too Large"));$/;"	m	class:HttpStatus	file:
+kRequestEntityTooLarge	Http.h	/^    static const HttpStatus kRequestEntityTooLarge;$/;"	m	class:OpenHome::HttpStatus
+kRequestTimeout	Http.cpp	/^const HttpStatus HttpStatus::kRequestTimeout = HttpStatusMaker(408, Brn("Request Timeout"));$/;"	m	class:HttpStatus	file:
+kRequestTimeout	Http.h	/^    static const HttpStatus kRequestTimeout;$/;"	m	class:OpenHome::HttpStatus
+kRequestUriTooLarge	Http.cpp	/^const HttpStatus HttpStatus::kRequestUriTooLarge = HttpStatusMaker(414, Brn("Request URI Too Large"));$/;"	m	class:HttpStatus	file:
+kRequestUriTooLarge	Http.h	/^    static const HttpStatus kRequestUriTooLarge;$/;"	m	class:OpenHome::HttpStatus
+kRequestedRangeNotSatisfiable	Http.cpp	/^const HttpStatus HttpStatus::kRequestedRangeNotSatisfiable = HttpStatusMaker(416, Brn("Request Range Not Satisfiable"));$/;"	m	class:HttpStatus	file:
+kRequestedRangeNotSatisfiable	Http.h	/^    static const HttpStatus kRequestedRangeNotSatisfiable;$/;"	m	class:OpenHome::HttpStatus
+kResetContent	Http.cpp	/^const HttpStatus HttpStatus::kResetContent = HttpStatusMaker(205, Brn("Reset Content"));$/;"	m	class:HttpStatus	file:
+kResetContent	Http.h	/^    static const HttpStatus kResetContent;$/;"	m	class:OpenHome::HttpStatus
+kResponseTimeoutMs	Http.h	/^    static const TUint kResponseTimeoutMs = 60 * 1000;$/;"	m	class:OpenHome::HttpReader
+kRs	Ascii.h	/^    static const TByte kRs  = 0x1e;$/;"	m	class:OpenHome::Ascii
+kSchemeHttp	Http.h	/^    static const Brn kSchemeHttp;$/;"	m	class:OpenHome::Http
+kSeeOther	Http.cpp	/^const HttpStatus HttpStatus::kSeeOther = HttpStatusMaker(303, Brn("See Other"));$/;"	m	class:HttpStatus	file:
+kSeeOther	Http.h	/^    static const HttpStatus kSeeOther;$/;"	m	class:OpenHome::HttpStatus
+kServerErrorCodes	Http.h	/^    static const TUint kServerErrorCodes = 500;$/;"	m	class:OpenHome::HttpStatus
+kService	Debug.h	/^    static const TUint kService        = 1<<10;$/;"	m	class:OpenHome::Debug
+kServiceUnavailable	Http.cpp	/^const HttpStatus HttpStatus::kServiceUnavailable = HttpStatusMaker(503, Brn("Service Unavailable"));$/;"	m	class:HttpStatus	file:
+kServiceUnavailable	Http.h	/^    static const HttpStatus kServiceUnavailable;$/;"	m	class:OpenHome::HttpStatus
+kSi	Ascii.h	/^    static const TByte kSi  = 0x0f;$/;"	m	class:OpenHome::Ascii
+kSo	Ascii.h	/^    static const TByte kSo  = 0x0e;$/;"	m	class:OpenHome::Ascii
+kSoh	Ascii.h	/^    static const TByte kSoh = 0x01;$/;"	m	class:OpenHome::Ascii
+kSp	Ascii.h	/^    static const TByte kSp  = 0x20;$/;"	m	class:OpenHome::Ascii
+kSsdpMulticast	Debug.h	/^    static const TUint kSsdpMulticast  = 1<<5;$/;"	m	class:OpenHome::Debug
+kSsdpUnicast	Debug.h	/^    static const TUint kSsdpUnicast    = 1<<6;$/;"	m	class:OpenHome::Debug
+kStx	Ascii.h	/^    static const TByte kStx = 0x02;$/;"	m	class:OpenHome::Ascii
+kSub	Ascii.h	/^    static const TByte kSub = 0x1a;$/;"	m	class:OpenHome::Ascii
+kSuccessCodes	Http.h	/^    static const TUint kSuccessCodes = 200;$/;"	m	class:OpenHome::HttpStatus
+kSwitchingProtocols	Http.cpp	/^const HttpStatus HttpStatus::kSwitchingProtocols = HttpStatusMaker(101, Brn("Switching Protocols"));$/;"	m	class:HttpStatus	file:
+kSwitchingProtocols	Http.h	/^    static const HttpStatus kSwitchingProtocols;$/;"	m	class:OpenHome::HttpStatus
+kSyn	Ascii.h	/^    static const TByte kSyn = 0x16;$/;"	m	class:OpenHome::Ascii
+kTemporaryRedirect	Http.cpp	/^const HttpStatus HttpStatus::kTemporaryRedirect = HttpStatusMaker(307, Brn("Temporary Redirect"));$/;"	m	class:HttpStatus	file:
+kTemporaryRedirect	Http.h	/^    static const HttpStatus kTemporaryRedirect;$/;"	m	class:OpenHome::HttpStatus
+kThread	Debug.h	/^    static const TUint kThread         = 1<<2;$/;"	m	class:OpenHome::Debug
+kTimer	Debug.h	/^    static const TUint kTimer          = 1<<4;$/;"	m	class:OpenHome::Debug
+kTrace	Debug.h	/^    static const TUint kTrace          = 1<<1;$/;"	m	class:OpenHome::Debug
+kTransferEncodingChunked	Http.h	/^    static const Brn kTransferEncodingChunked;$/;"	m	class:OpenHome::Http
+kTransferEncodingIdentity	Http.h	/^    static const Brn kTransferEncodingIdentity;$/;"	m	class:OpenHome::Http
+kUnauthorized	Http.cpp	/^const HttpStatus HttpStatus::kUnauthorized = HttpStatusMaker(401, Brn("Unauthorized"));$/;"	m	class:HttpStatus	file:
+kUnauthorized	Http.h	/^    static const HttpStatus kUnauthorized;$/;"	m	class:OpenHome::HttpStatus
+kUnknown	Exception.cpp	/^const TChar* kUnknown = "Release mode. File\/line information unavailable";$/;"	v
+kUnsupportedMediaType	Http.cpp	/^const HttpStatus HttpStatus::kUnsupportedMediaType = HttpStatusMaker(415, Brn("Unsupported Media Type"));$/;"	m	class:HttpStatus	file:
+kUnsupportedMediaType	Http.h	/^    static const HttpStatus kUnsupportedMediaType;$/;"	m	class:OpenHome::HttpStatus
+kUs	Ascii.h	/^    static const TByte kUs  = 0x1f;$/;"	m	class:OpenHome::Ascii
+kUseProxy	Http.cpp	/^const HttpStatus HttpStatus::kUseProxy = HttpStatusMaker(305, Brn("Use Proxy"));$/;"	m	class:HttpStatus	file:
+kUseProxy	Http.h	/^    static const HttpStatus kUseProxy;$/;"	m	class:OpenHome::HttpStatus
+kValueZero	Http.h	/^    static const Brn kValueZero;$/;"	m	class:OpenHome::Http
+kVerbose	Debug.h	/^    static const TUint kVerbose        = 0x80000000;$/;"	m	class:OpenHome::Debug
+kVersionMajor	Env.cpp	/^static const TUint kVersionMajor = 1;$/;"	v	file:
+kVersionMinor	Env.cpp	/^static const TUint kVersionMinor = 0;$/;"	v	file:
+kVt	Ascii.h	/^    static const TByte kVt  = 0x0b;$/;"	m	class:OpenHome::Ascii
+kWaitForever	Thread.h	/^    static const TUint kWaitForever = 0;$/;"	m	class:OpenHome::Semaphore
+kWriteBufferBytes	Http.h	/^    static const TUint kWriteBufferBytes = 1024;$/;"	m	class:OpenHome::HttpReader
+kXmlFetch	Debug.h	/^    static const TUint kXmlFetch       = 1<<9;$/;"	m	class:OpenHome::Debug
+k_opad	sha.h	/^    unsigned char k_opad[USHA_Max_Message_Block_Size];$/;"	m	struct:HMACContext
+md5_INCLUDED	md5.h	51;"	d
+md5_append	md5.c	/^md5_append(md5_state_t *pms, const md5_byte_t *data, int nbytes)$/;"	f
+md5_byte_t	md5.h	/^typedef unsigned char md5_byte_t; \/* 8-bit byte *\/$/;"	t
+md5_finish	md5.c	/^md5_finish(md5_state_t *pms, md5_byte_t digest[16])$/;"	f
+md5_init	md5.c	/^md5_init(md5_state_t *pms)$/;"	f
+md5_process	md5.c	/^md5_process(md5_state_t *pms, const md5_byte_t *data \/*[64]*\/)$/;"	f	file:
+md5_state_s	md5.h	/^typedef struct md5_state_s {$/;"	s
+md5_state_t	md5.h	/^} md5_state_t;$/;"	t	typeref:struct:md5_state_s
+md5_word_t	md5.h	/^typedef unsigned int md5_word_t; \/* 32-bit word *\/$/;"	t
+operator !=	Functor.h	/^    bool operator!=(const Functor& aOther) const$/;"	f	class:OpenHome::Functor
+operator !=	Http.cpp	/^TBool HttpStatus::operator!=(const HttpStatus& aStatus) const$/;"	f	class:HttpStatus
+operator !=	Thread.cpp	/^bool Thread::operator!= (const Thread& other) const {$/;"	f	class:Thread
+operator ()	Buffer.cpp	/^TBool BufferCmp::operator()(const Brx& aStr1, const Brx& aStr2) const$/;"	f	class:BufferCmp
+operator ()	Functor.h	/^    void operator()() const { iThunk(*this); }$/;"	f	class:OpenHome::Functor
+operator ()	FunctorMsg.h	/^    void operator()(const char* aMsg) const { iThunk(*this, aMsg); }$/;"	f	class:OpenHome::FunctorMsg
+operator ()	FunctorNetworkAdapter.h	/^    void operator()(NetworkAdapter& aAdapter) const { iThunk(*this, aAdapter); }$/;"	f	class:OpenHome::FunctorNetworkAdapter
+operator =	Exception.cpp	/^Exception& Exception::operator= (const Exception& aException)$/;"	f	class:Exception
+operator ==	Functor.h	/^    bool operator==(const Functor& aOther) const$/;"	f	class:OpenHome::Functor
+operator ==	Http.cpp	/^TBool HttpStatus::operator==(const HttpStatus& aStatus) const$/;"	f	class:HttpStatus
+operator ==	Thread.cpp	/^bool Thread::operator== (const Thread& other) const {$/;"	f	class:Thread
+operator TBool	Functor.h	/^    operator TBool() const { return (iCallback || iObject); }$/;"	f	class:OpenHome::Functor
+operator TBool	FunctorMsg.h	/^    operator TBool() const { return (iObject!=NULL || iCallback!=NULL); }$/;"	f	class:OpenHome::FunctorMsg
+operator TBool	FunctorNetworkAdapter.h	/^    operator TBool() const { return (iObject!=NULL || iCallback!=NULL); }$/;"	f	class:OpenHome::FunctorNetworkAdapter
+sha1Context	sha.h	/^      SHA1Context sha1Context;$/;"	m	union:USHAContext::__anon8
+sha224Context	sha.h	/^      SHA224Context sha224Context; SHA256Context sha256Context;$/;"	m	union:USHAContext::__anon8
+sha256Context	sha.h	/^      SHA224Context sha224Context; SHA256Context sha256Context;$/;"	m	union:USHAContext::__anon8
+sha384Context	sha.h	/^      SHA384Context sha384Context; SHA512Context sha512Context;$/;"	m	union:USHAContext::__anon8
+sha512Context	sha.h	/^      SHA384Context sha384Context; SHA512Context sha512Context;$/;"	m	union:USHAContext::__anon8
+shaBadParam	sha.h	/^    shaBadParam         \/* passed a bad parameter *\/$/;"	e	enum:__anon6
+shaContext	sha.h	/^    USHAContext shaContext;     \/* SHA context *\/$/;"	m	struct:HMACContext
+shaInputTooLong	sha.h	/^    shaInputTooLong,    \/* input data too long *\/$/;"	e	enum:__anon6
+shaNull	sha.h	/^    shaNull,            \/* Null pointer parameter *\/$/;"	e	enum:__anon6
+shaStateError	sha.h	/^    shaStateError,      \/* called Input after FinalBits or Result *\/$/;"	e	enum:__anon6
+shaSuccess	sha.h	/^    shaSuccess = 0,$/;"	e	enum:__anon6
+snprintf	Exception.cpp	13;"	d	file:
+whichSha	sha.h	/^    int whichSha;               \/* which SHA is being used *\/$/;"	m	struct:HMACContext
+whichSha	sha.h	/^    int whichSha;               \/* which SHA is being used *\/$/;"	m	struct:USHAContext
+~AutoLog	Debug.cpp	/^AutoLog::~AutoLog()$/;"	f	class:AutoLog
+~AutoMutex	Thread.cpp	/^AutoMutex::~AutoMutex()$/;"	f	class:AutoMutex
+~AutoSemaphore	Thread.cpp	/^AutoSemaphore::~AutoSemaphore()$/;"	f	class:AutoSemaphore
+~AutoSocket	Network.cpp	/^AutoSocket::~AutoSocket()$/;"	f	class:AutoSocket
+~Brv	Buffer.cpp	/^Brv::~Brv()$/;"	f	class:Brv
+~Brx	Buffer.h	/^    virtual ~Brx() {};$/;"	f	class:OpenHome::Brx
+~Bwh	Buffer.cpp	/^Bwh::~Bwh()$/;"	f	class:Bwh
+~Bwx	Buffer.h	/^    virtual ~Bwx() {};$/;"	f	class:OpenHome::Bwx
+~Environment	Env.cpp	/^Environment::~Environment()$/;"	f	class:Environment
+~Exception	Exception.cpp	/^Exception::~Exception()$/;"	f	class:Exception
+~Fifo	Fifo.h	/^    inline ~Fifo() { delete [] iBuf; }$/;"	f	class:OpenHome::Fifo
+~FifoLiteDynamic	Fifo.h	/^    inline ~FifoLiteDynamic() { delete [] iBuf; }$/;"	f	class:OpenHome::FifoLiteDynamic
+~FileAnsii	FileAnsii.cpp	/^FileAnsii::~FileAnsii()$/;"	f	class:FileAnsii
+~HttpReader	Http.cpp	/^HttpReader::~HttpReader()$/;"	f	class:HttpReader
+~IExitHandler	Exception.h	/^    ~IExitHandler() {}$/;"	f	class:OpenHome::IExitHandler
+~IFile	File.h	/^    virtual ~IFile() {}$/;"	f	class:OpenHome::IFile
+~IHttpHeader	Http.h	/^    virtual ~IHttpHeader() {}$/;"	f	class:OpenHome::IHttpHeader
+~IReader	Stream.h	/^    virtual ~IReader() {};$/;"	f	class:OpenHome::IReader
+~IReaderSource	Stream.h	/^    virtual ~IReaderSource() {};$/;"	f	class:OpenHome::IReaderSource
+~IStack	Env.h	/^    virtual ~IStack() {}$/;"	f	class:OpenHome::IStack
+~IWriter	Stream.h	/^    virtual ~IWriter() {};$/;"	f	class:OpenHome::IWriter
+~IWriterAscii	Ascii.h	/^    virtual ~IWriterAscii() {}$/;"	f	class:OpenHome::IWriterAscii
+~IWriterHttpHeader	Http.h	/^    virtual ~IWriterHttpHeader() {}$/;"	f	class:OpenHome::IWriterHttpHeader
+~IWriterHttpMethod	Http.h	/^    virtual ~IWriterHttpMethod() {}$/;"	f	class:OpenHome::IWriterHttpMethod
+~IWriterHttpStatus	Http.h	/^    virtual ~IWriterHttpStatus() {}$/;"	f	class:OpenHome::IWriterHttpStatus
+~MListener	Env.cpp	/^MListener::~MListener()$/;"	f	class:MListener
+~Mutex	Thread.cpp	/^Mutex::~Mutex()$/;"	f	class:Mutex
+~NetworkAdapterChangeNotifier	NetworkAdapterList.cpp	/^NetworkAdapterChangeNotifier::~NetworkAdapterChangeNotifier()$/;"	f	class:NetworkAdapterChangeNotifier
+~NetworkAdapterList	NetworkAdapterList.cpp	/^NetworkAdapterList::~NetworkAdapterList()$/;"	f	class:NetworkAdapterList
+~QueueBase	Queue.cpp	/^QueueBase::~QueueBase()$/;"	f	class:QueueBase
+~QueueSortedBase	Queue.cpp	/^QueueSortedBase::~QueueSortedBase()$/;"	f	class:QueueSortedBase
+~RamLogger	Printer.cpp	/^RamLogger::~RamLogger()$/;"	f	class:RamLogger
+~ReaderHttpRequest	Http.cpp	/^ReaderHttpRequest::~ReaderHttpRequest()$/;"	f	class:ReaderHttpRequest
+~ReaderHttpResponse	Http.cpp	/^ReaderHttpResponse::~ReaderHttpResponse()$/;"	f	class:ReaderHttpResponse
+~Semaphore	Thread.cpp	/^Semaphore::~Semaphore()$/;"	f	class:Semaphore
+~Socket	Network.h	/^    virtual ~Socket() {}$/;"	f	class:OpenHome::Socket
+~SocketTcpServer	Network.cpp	/^SocketTcpServer::~SocketTcpServer()$/;"	f	class:SocketTcpServer
+~SocketTcpSession	Network.cpp	/^SocketTcpSession::~SocketTcpSession()$/;"	f	class:SocketTcpSession
+~SocketUdpBase	Network.cpp	/^SocketUdpBase::~SocketUdpBase()$/;"	f	class:SocketUdpBase
+~SocketUdpMulticast	Network.cpp	/^SocketUdpMulticast::~SocketUdpMulticast()$/;"	f	class:SocketUdpMulticast
+~Srd	Stream.cpp	/^Srd::~Srd()$/;"	f	class:Srd
+~Swd	Stream.cpp	/^Swd::~Swd()$/;"	f	class:Swd
+~Swp	Stream.cpp	/^Swp::~Swp()$/;"	f	class:Swp
+~Sxx	Stream.cpp	/^Sxx::~Sxx()$/;"	f	class:Sxx
+~Terminal	Terminal.h	/^    virtual ~Terminal() {}$/;"	f	class:OpenHome::Terminal
+~TerminalTcpSession	Terminal.cpp	/^TerminalTcpSession::~TerminalTcpSession()$/;"	f	class:OpenHome::TerminalTcpSession
+~Thread	Thread.cpp	/^Thread::~Thread()$/;"	f	class:Thread
+~ThreadFunctor	Thread.cpp	/^ThreadFunctor::~ThreadFunctor()$/;"	f	class:ThreadFunctor
+~Timer	Timer.cpp	/^Timer::~Timer()$/;"	f	class:Timer
+~TimerManager	Timer.cpp	/^TimerManager::~TimerManager()$/;"	f	class:TimerManager
+~UpdateAdapter	NetworkAdapterList.cpp	/^NetworkAdapterChangeNotifier::UpdateAdapter::~UpdateAdapter()$/;"	f	class:NetworkAdapterChangeNotifier::UpdateAdapter
+~UpdateBase	NetworkAdapterList.cpp	/^NetworkAdapterChangeNotifier::UpdateBase::~UpdateBase()$/;"	f	class:NetworkAdapterChangeNotifier::UpdateBase

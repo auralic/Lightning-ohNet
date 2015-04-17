@@ -1,0 +1,77 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AddRef	CpDeviceStd.cpp	/^void CpDeviceCpp::AddRef()$/;"	f	class:CpDeviceCpp
+Added	CpDeviceStd.cpp	/^void CpDeviceListCpp::Added(CpiDevice& aDevice)$/;"	f	class:CpDeviceListCpp
+Callback	FunctorCpDevice.h	/^    typedef TAny (*Callback)();$/;"	t	class:OpenHome::Net::FunctorCpDeviceCpp
+CpDeviceCpp	CpDevice.h	/^class CpDeviceCpp$/;"	c	namespace:OpenHome::Net
+CpDeviceCpp	CpDeviceStd.cpp	/^CpDeviceCpp::CpDeviceCpp(CpiDevice& aDevice)$/;"	f	class:CpDeviceCpp
+CpDeviceDvCpp	CpDeviceDv.h	/^class CpDeviceDvCpp : public CpDeviceCpp$/;"	c	namespace:OpenHome::Net
+CpDeviceDvCpp	CpDeviceDvStd.cpp	/^CpDeviceDvCpp::CpDeviceDvCpp(CpiDeviceDv& aDevice)$/;"	f	class:CpDeviceDvCpp
+CpDeviceListCpp	CpDevice.h	/^class CpDeviceListCpp$/;"	c	namespace:OpenHome::Net
+CpDeviceListCpp	CpDeviceStd.cpp	/^CpDeviceListCpp::CpDeviceListCpp(FunctorCpDeviceCpp aAdded, FunctorCpDeviceCpp aRemoved)$/;"	f	class:CpDeviceListCpp
+CpDeviceListCppUpnpAll	CpDeviceUpnp.h	/^class CpDeviceListCppUpnpAll : public CpDeviceListCpp$/;"	c	namespace:OpenHome::Net
+CpDeviceListCppUpnpAll	CpDeviceUpnpStd.cpp	/^CpDeviceListCppUpnpAll::CpDeviceListCppUpnpAll(FunctorCpDeviceCpp aAdded, FunctorCpDeviceCpp aRemoved)$/;"	f	class:CpDeviceListCppUpnpAll
+CpDeviceListCppUpnpDeviceType	CpDeviceUpnp.h	/^class CpDeviceListCppUpnpDeviceType : public CpDeviceListCpp$/;"	c	namespace:OpenHome::Net
+CpDeviceListCppUpnpDeviceType	CpDeviceUpnpStd.cpp	/^CpDeviceListCppUpnpDeviceType::CpDeviceListCppUpnpDeviceType(const std::string& aDomainName, const std::string& aDeviceType, uint32_t aVersion,$/;"	f	class:CpDeviceListCppUpnpDeviceType
+CpDeviceListCppUpnpRoot	CpDeviceUpnp.h	/^class CpDeviceListCppUpnpRoot : public CpDeviceListCpp$/;"	c	namespace:OpenHome::Net
+CpDeviceListCppUpnpRoot	CpDeviceUpnpStd.cpp	/^CpDeviceListCppUpnpRoot::CpDeviceListCppUpnpRoot(FunctorCpDeviceCpp aAdded, FunctorCpDeviceCpp aRemoved)$/;"	f	class:CpDeviceListCppUpnpRoot
+CpDeviceListCppUpnpServiceType	CpDeviceUpnp.h	/^class CpDeviceListCppUpnpServiceType : public CpDeviceListCpp$/;"	c	namespace:OpenHome::Net
+CpDeviceListCppUpnpServiceType	CpDeviceUpnpStd.cpp	/^CpDeviceListCppUpnpServiceType::CpDeviceListCppUpnpServiceType(const std::string& aDomainName, const std::string& aServiceType, uint32_t aVersion,$/;"	f	class:CpDeviceListCppUpnpServiceType
+CpDeviceListCppUpnpUuid	CpDeviceUpnp.h	/^class CpDeviceListCppUpnpUuid : public CpDeviceListCpp$/;"	c	namespace:OpenHome::Net
+CpDeviceListCppUpnpUuid	CpDeviceUpnpStd.cpp	/^CpDeviceListCppUpnpUuid::CpDeviceListCppUpnpUuid(const std::string& aUuid, FunctorCpDeviceCpp aAdded, FunctorCpDeviceCpp aRemoved)$/;"	f	class:CpDeviceListCppUpnpUuid
+Device	CpDeviceStd.cpp	/^CpiDevice& CpDeviceCpp::Device()$/;"	f	class:CpDeviceCpp
+FunctorCpDeviceCpp	FunctorCpDevice.h	/^    FunctorCpDeviceCpp() : iObject(0) {}$/;"	f	class:OpenHome::Net::FunctorCpDeviceCpp
+FunctorCpDeviceCpp	FunctorCpDevice.h	/^    FunctorCpDeviceCpp(Thunk aT, const TAny* aObject, const TAny* aCallback, TUint aBytes)$/;"	f	class:OpenHome::Net::FunctorCpDeviceCpp
+FunctorCpDeviceCpp	FunctorCpDevice.h	/^class FunctorCpDeviceCpp$/;"	c	namespace:OpenHome::Net
+GetAddedFunctor	CpDeviceStd.cpp	/^void CpDeviceListCpp::GetAddedFunctor(FunctorCpiDevice& aFunctor)$/;"	f	class:CpDeviceListCpp
+GetAttribute	CpDeviceStd.cpp	/^TBool CpDeviceCpp::GetAttribute(const char* aKey, std::string& aValue) const$/;"	f	class:CpDeviceCpp
+GetRemovedFunctor	CpDeviceStd.cpp	/^void CpDeviceListCpp::GetRemovedFunctor(FunctorCpiDevice& aFunctor)$/;"	f	class:CpDeviceListCpp
+HEADER_CPDEVICECPP	CpDevice.h	2;"	d
+HEADER_CPDEVICECPPUPNP	CpDeviceUpnp.h	2;"	d
+HEADER_CPDEVICEDVCPP	CpDeviceDv.h	2;"	d
+HEADER_IFACE_DEVICECPP	FunctorCpDevice.h	2;"	d
+HEADER_OHNET_CONTROLPOINT_CPP	CpStack.h	2;"	d
+LockIfActive	CpDeviceStd.cpp	/^TBool CpDeviceListCpp::LockIfActive()$/;"	f	class:CpDeviceListCpp
+MakeFunctorCpDeviceCpp	FunctorCpDevice.h	/^MakeFunctorCpDeviceCpp(Object& aC, void(CallType::* const &aF)(CpDeviceCpp&))$/;"	f	namespace:OpenHome::Net
+Map	CpDevice.h	/^    typedef std::map<Brn,CpDeviceCpp*,BufferCmp> Map;$/;"	t	class:OpenHome::Net::CpDeviceListCpp
+MemberFunction	FunctorCpDevice.h	/^    typedef TAny (FunctorCpDeviceCpp::*MemberFunction)();$/;"	t	class:OpenHome::Net::FunctorCpDeviceCpp
+MemberTranslatorCpDeviceCpp	FunctorCpDevice.h	/^    MemberTranslatorCpDeviceCpp(Object& aC, const MemFunc& aM) :$/;"	f	class:OpenHome::Net::MemberTranslatorCpDeviceCpp
+MemberTranslatorCpDeviceCpp	FunctorCpDevice.h	/^class MemberTranslatorCpDeviceCpp : public FunctorCpDeviceCpp$/;"	c	namespace:OpenHome::Net
+Net	CpDevice.h	/^namespace Net {$/;"	n	namespace:OpenHome
+Net	CpDeviceDv.h	/^namespace Net {$/;"	n	namespace:OpenHome
+Net	CpDeviceUpnp.h	/^namespace Net {$/;"	n	namespace:OpenHome
+Net	FunctorCpDevice.h	/^namespace Net {$/;"	n	namespace:OpenHome
+New	CpDeviceDvStd.cpp	/^CpDeviceDvCpp* CpDeviceDvCpp::New(DvDeviceStd& aDevice)$/;"	f	class:CpDeviceDvCpp
+OpenHome	CpDevice.h	/^namespace OpenHome {$/;"	n
+OpenHome	CpDeviceDv.h	/^namespace OpenHome {$/;"	n
+OpenHome	CpDeviceUpnp.h	/^namespace OpenHome {$/;"	n
+OpenHome	FunctorCpDevice.h	/^namespace OpenHome {$/;"	n
+Refresh	CpDeviceStd.cpp	/^void CpDeviceListCpp::Refresh()$/;"	f	class:CpDeviceListCpp
+RemoveRef	CpDeviceStd.cpp	/^void CpDeviceCpp::RemoveRef()$/;"	f	class:CpDeviceCpp
+Removed	CpDeviceStd.cpp	/^void CpDeviceListCpp::Removed(CpiDevice& aDevice)$/;"	f	class:CpDeviceListCpp
+Thunk	FunctorCpDevice.h	/^    static void Thunk(const FunctorCpDeviceCpp& aFb, CpDeviceCpp& aDevice)$/;"	f	class:OpenHome::Net::MemberTranslatorCpDeviceCpp
+Thunk	FunctorCpDevice.h	/^    typedef void (*Thunk)(const FunctorCpDeviceCpp&, CpDeviceCpp&);$/;"	t	class:OpenHome::Net::FunctorCpDeviceCpp
+Udn	CpDeviceStd.cpp	/^const std::string& CpDeviceCpp::Udn() const$/;"	f	class:CpDeviceCpp
+iActive	CpDevice.h	/^    TBool iActive;$/;"	m	class:OpenHome::Net::CpDeviceListCpp
+iAdded	CpDevice.h	/^    FunctorCpDeviceCpp iAdded;$/;"	m	class:OpenHome::Net::CpDeviceListCpp
+iCallbackMember	FunctorCpDevice.h	/^    TByte iCallbackMember[sizeof(MemberFunction)];$/;"	m	class:OpenHome::Net::FunctorCpDeviceCpp
+iDevice	CpDevice.h	/^    CpiDevice& iDevice;$/;"	m	class:OpenHome::Net::CpDeviceCpp
+iList	CpDevice.h	/^    CpiDeviceList* iList;$/;"	m	class:OpenHome::Net::CpDeviceListCpp
+iLock	CpDevice.h	/^    Mutex* iLock;$/;"	m	class:OpenHome::Net::CpDeviceListCpp
+iMap	CpDevice.h	/^    Map iMap;$/;"	m	class:OpenHome::Net::CpDeviceListCpp
+iObject	FunctorCpDevice.h	/^    TAny* iObject;$/;"	m	class:OpenHome::Net::FunctorCpDeviceCpp
+iRefCount	CpDevice.h	/^    uint32_t iRefCount;$/;"	m	class:OpenHome::Net::CpDeviceCpp
+iRemoved	CpDevice.h	/^    FunctorCpDeviceCpp iRemoved;$/;"	m	class:OpenHome::Net::CpDeviceListCpp
+iThunk	FunctorCpDevice.h	/^    Thunk iThunk;$/;"	m	class:OpenHome::Net::FunctorCpDeviceCpp
+iUdn	CpDevice.h	/^    std::string iUdn;$/;"	m	class:OpenHome::Net::CpDeviceCpp
+operator !=	CpDeviceStd.cpp	/^TBool CpDeviceCpp::operator!=(const CpDeviceCpp& aDevice) const$/;"	f	class:CpDeviceCpp
+operator ()	FunctorCpDevice.h	/^    void operator()(CpDeviceCpp& aDevice) const { iThunk(*this, aDevice); }$/;"	f	class:OpenHome::Net::FunctorCpDeviceCpp
+operator ==	CpDeviceStd.cpp	/^TBool CpDeviceCpp::operator==(const CpDeviceCpp& aDevice) const$/;"	f	class:CpDeviceCpp
+operator TBool	FunctorCpDevice.h	/^    operator TBool() const { return (iObject!=NULL); }$/;"	f	class:OpenHome::Net::FunctorCpDeviceCpp
+~CpDeviceCpp	CpDeviceStd.cpp	/^CpDeviceCpp::~CpDeviceCpp()$/;"	f	class:CpDeviceCpp
+~CpDeviceDvCpp	CpDeviceDvStd.cpp	/^CpDeviceDvCpp::~CpDeviceDvCpp()$/;"	f	class:CpDeviceDvCpp
+~CpDeviceListCpp	CpDeviceStd.cpp	/^CpDeviceListCpp::~CpDeviceListCpp()$/;"	f	class:CpDeviceListCpp

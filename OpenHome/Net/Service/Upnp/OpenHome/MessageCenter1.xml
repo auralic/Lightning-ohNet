@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+   <specVersion>
+      <major>1</major>
+      <minor>0</minor>
+   </specVersion>
+   <actionList>
+       <action>
+           <name>GetMessage</name>
+         <argumentList>
+                <argument>
+                    <name>Message</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>Message</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>MessageID</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>MessageID</relatedStateVariable>
+                </argument>
+         </argumentList>
+        </action>
+     </actionList>
+      <serviceStateTable>
+      <stateVariable sendEvents="yes">
+         <name>Message</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="yes">
+         <name>MessageID</name>
+         <dataType>ui4</dataType>
+      </stateVariable>
+   </serviceStateTable>
+</scpd>
+

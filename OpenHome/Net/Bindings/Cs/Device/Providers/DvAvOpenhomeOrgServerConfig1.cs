@@ -1,0 +1,1175 @@
+using System;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Collections.Generic;
+using OpenHome.Net.Core;
+
+namespace OpenHome.Net.Device.Providers
+{
+    public interface IDvProviderAvOpenhomeOrgServerConfig1 : IDisposable
+    {
+        
+    }
+    /// <summary>
+    /// Provider for the av.openhome.org:ServerConfig:1 UPnP service
+    /// </summary>
+    public class DvProviderAvOpenhomeOrgServerConfig1 : DvProvider, IDisposable, IDvProviderAvOpenhomeOrgServerConfig1
+    {
+        private GCHandle iGch;
+        private ActionDelegate iDelegateSetServerName;
+        private ActionDelegate iDelegateGetServerVersion;
+        private ActionDelegate iDelegateGetProgressInfo;
+        private ActionDelegate iDelegateGetScanVersion;
+        private ActionDelegate iDelegateGetWorkMode;
+        private ActionDelegate iDelegateSetWorkMode;
+        private ActionDelegate iDelegateDelAllLocalDB;
+        private ActionDelegate iDelegateInitHDD;
+        private ActionDelegate iDelegateRescan;
+        private ActionDelegate iDelegateHandMount;
+        private ActionDelegate iDelegateHandUMount;
+        private ActionDelegate iDelegateGetDiskInfo;
+        private ActionDelegate iDelegateGetSMBConfig;
+        private ActionDelegate iDelegateSetSMBConfig;
+        private ActionDelegate iDelegateGetDriveMountResult;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="aDevice">Device which owns this provider</param>
+        protected DvProviderAvOpenhomeOrgServerConfig1(DvDevice aDevice)
+            : base(aDevice, "av.openhome.org", "ServerConfig", 1)
+        {
+            iGch = GCHandle.Alloc(this);
+        }
+
+        /// <summary>
+        /// Signal that the action SetServerName is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetServerName must be overridden if this is called.</remarks>
+        protected void EnableActionSetServerName()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetServerName");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("ServerName", allowedValues));
+            iDelegateSetServerName = new ActionDelegate(DoSetServerName);
+            EnableAction(action, iDelegateSetServerName, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetServerVersion is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetServerVersion must be overridden if this is called.</remarks>
+        protected void EnableActionGetServerVersion()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetServerVersion");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("ServerVersion", allowedValues));
+            iDelegateGetServerVersion = new ActionDelegate(DoGetServerVersion);
+            EnableAction(action, iDelegateGetServerVersion, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetProgressInfo is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetProgressInfo must be overridden if this is called.</remarks>
+        protected void EnableActionGetProgressInfo()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetProgressInfo");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("Progress", allowedValues));
+            iDelegateGetProgressInfo = new ActionDelegate(DoGetProgressInfo);
+            EnableAction(action, iDelegateGetProgressInfo, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetScanVersion is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetScanVersion must be overridden if this is called.</remarks>
+        protected void EnableActionGetScanVersion()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetScanVersion");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("ScanVersion", allowedValues));
+            iDelegateGetScanVersion = new ActionDelegate(DoGetScanVersion);
+            EnableAction(action, iDelegateGetScanVersion, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetWorkMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetWorkMode must be overridden if this is called.</remarks>
+        protected void EnableActionGetWorkMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetWorkMode");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("WorkMode", allowedValues));
+            action.AddOutputParameter(new ParameterString("WorkModeList", allowedValues));
+            iDelegateGetWorkMode = new ActionDelegate(DoGetWorkMode);
+            EnableAction(action, iDelegateGetWorkMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetWorkMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetWorkMode must be overridden if this is called.</remarks>
+        protected void EnableActionSetWorkMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetWorkMode");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("WorkMode", allowedValues));
+            iDelegateSetWorkMode = new ActionDelegate(DoSetWorkMode);
+            EnableAction(action, iDelegateSetWorkMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action DelAllLocalDB is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// DelAllLocalDB must be overridden if this is called.</remarks>
+        protected void EnableActionDelAllLocalDB()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("DelAllLocalDB");
+            iDelegateDelAllLocalDB = new ActionDelegate(DoDelAllLocalDB);
+            EnableAction(action, iDelegateDelAllLocalDB, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action InitHDD is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// InitHDD must be overridden if this is called.</remarks>
+        protected void EnableActionInitHDD()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("InitHDD");
+            iDelegateInitHDD = new ActionDelegate(DoInitHDD);
+            EnableAction(action, iDelegateInitHDD, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action Rescan is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// Rescan must be overridden if this is called.</remarks>
+        protected void EnableActionRescan()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("Rescan");
+            iDelegateRescan = new ActionDelegate(DoRescan);
+            EnableAction(action, iDelegateRescan, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action HandMount is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// HandMount must be overridden if this is called.</remarks>
+        protected void EnableActionHandMount()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("HandMount");
+            iDelegateHandMount = new ActionDelegate(DoHandMount);
+            EnableAction(action, iDelegateHandMount, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action HandUMount is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// HandUMount must be overridden if this is called.</remarks>
+        protected void EnableActionHandUMount()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("HandUMount");
+            iDelegateHandUMount = new ActionDelegate(DoHandUMount);
+            EnableAction(action, iDelegateHandUMount, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetDiskInfo is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetDiskInfo must be overridden if this is called.</remarks>
+        protected void EnableActionGetDiskInfo()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetDiskInfo");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterBool("IsConnected"));
+            action.AddOutputParameter(new ParameterString("StatusCode", allowedValues));
+            action.AddOutputParameter(new ParameterString("StatusInfo", allowedValues));
+            action.AddOutputParameter(new ParameterString("Capacity", allowedValues));
+            action.AddOutputParameter(new ParameterString("FileCount", allowedValues));
+            iDelegateGetDiskInfo = new ActionDelegate(DoGetDiskInfo);
+            EnableAction(action, iDelegateGetDiskInfo, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetSMBConfig is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetSMBConfig must be overridden if this is called.</remarks>
+        protected void EnableActionGetSMBConfig()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetSMBConfig");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("SMBAddr", allowedValues));
+            action.AddOutputParameter(new ParameterString("SMBUserName", allowedValues));
+            action.AddOutputParameter(new ParameterString("SMBPassWord", allowedValues));
+            iDelegateGetSMBConfig = new ActionDelegate(DoGetSMBConfig);
+            EnableAction(action, iDelegateGetSMBConfig, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetSMBConfig is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetSMBConfig must be overridden if this is called.</remarks>
+        protected void EnableActionSetSMBConfig()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetSMBConfig");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("SMBAddr", allowedValues));
+            action.AddInputParameter(new ParameterString("SMBUserName", allowedValues));
+            action.AddInputParameter(new ParameterString("SMBPassWord", allowedValues));
+            iDelegateSetSMBConfig = new ActionDelegate(DoSetSMBConfig);
+            EnableAction(action, iDelegateSetSMBConfig, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetDriveMountResult is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetDriveMountResult must be overridden if this is called.</remarks>
+        protected void EnableActionGetDriveMountResult()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetDriveMountResult");
+            action.AddOutputParameter(new ParameterBool("DriveMountResult"));
+            iDelegateGetDriveMountResult = new ActionDelegate(DoGetDriveMountResult);
+            EnableAction(action, iDelegateGetDriveMountResult, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// SetServerName action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetServerName action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetServerName was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aServerName"></param>
+        protected virtual void SetServerName(IDvInvocation aInvocation, string aServerName)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetServerVersion action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetServerVersion action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetServerVersion was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aServerVersion"></param>
+        protected virtual void GetServerVersion(IDvInvocation aInvocation, out string aServerVersion)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetProgressInfo action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetProgressInfo action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetProgressInfo was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aProgress"></param>
+        protected virtual void GetProgressInfo(IDvInvocation aInvocation, out string aProgress)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetScanVersion action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetScanVersion action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetScanVersion was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aScanVersion"></param>
+        protected virtual void GetScanVersion(IDvInvocation aInvocation, out string aScanVersion)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetWorkMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetWorkMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetWorkMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aWorkMode"></param>
+        /// <param name="aWorkModeList"></param>
+        protected virtual void GetWorkMode(IDvInvocation aInvocation, out string aWorkMode, out string aWorkModeList)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetWorkMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetWorkMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetWorkMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aWorkMode"></param>
+        protected virtual void SetWorkMode(IDvInvocation aInvocation, string aWorkMode)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// DelAllLocalDB action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// DelAllLocalDB action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionDelAllLocalDB was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        protected virtual void DelAllLocalDB(IDvInvocation aInvocation)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// InitHDD action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// InitHDD action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionInitHDD was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        protected virtual void InitHDD(IDvInvocation aInvocation)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// Rescan action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// Rescan action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionRescan was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        protected virtual void Rescan(IDvInvocation aInvocation)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// HandMount action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// HandMount action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionHandMount was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        protected virtual void HandMount(IDvInvocation aInvocation)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// HandUMount action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// HandUMount action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionHandUMount was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        protected virtual void HandUMount(IDvInvocation aInvocation)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetDiskInfo action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetDiskInfo action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetDiskInfo was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aIsConnected"></param>
+        /// <param name="aStatusCode"></param>
+        /// <param name="aStatusInfo"></param>
+        /// <param name="aCapacity"></param>
+        /// <param name="aFileCount"></param>
+        protected virtual void GetDiskInfo(IDvInvocation aInvocation, out bool aIsConnected, out string aStatusCode, out string aStatusInfo, out string aCapacity, out string aFileCount)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetSMBConfig action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetSMBConfig action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetSMBConfig was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aSMBAddr"></param>
+        /// <param name="aSMBUserName"></param>
+        /// <param name="aSMBPassWord"></param>
+        protected virtual void GetSMBConfig(IDvInvocation aInvocation, out string aSMBAddr, out string aSMBUserName, out string aSMBPassWord)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetSMBConfig action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetSMBConfig action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetSMBConfig was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aSMBAddr"></param>
+        /// <param name="aSMBUserName"></param>
+        /// <param name="aSMBPassWord"></param>
+        protected virtual void SetSMBConfig(IDvInvocation aInvocation, string aSMBAddr, string aSMBUserName, string aSMBPassWord)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetDriveMountResult action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetDriveMountResult action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetDriveMountResult was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aDriveMountResult"></param>
+        protected virtual void GetDriveMountResult(IDvInvocation aInvocation, out bool aDriveMountResult)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        private static int DoSetServerName(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string serverName;
+            try
+            {
+                invocation.ReadStart();
+                serverName = invocation.ReadString("ServerName");
+                invocation.ReadEnd();
+                self.SetServerName(invocation, serverName);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetServerName");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetServerName"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetServerName", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetServerName", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetServerVersion(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string serverVersion;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetServerVersion(invocation, out serverVersion);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetServerVersion");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetServerVersion"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetServerVersion", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("ServerVersion", serverVersion);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetServerVersion", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetProgressInfo(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string progress;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetProgressInfo(invocation, out progress);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetProgressInfo");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetProgressInfo"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetProgressInfo", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("Progress", progress);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetProgressInfo", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetScanVersion(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string scanVersion;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetScanVersion(invocation, out scanVersion);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetScanVersion");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetScanVersion"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetScanVersion", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("ScanVersion", scanVersion);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetScanVersion", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetWorkMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string workMode;
+            string workModeList;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetWorkMode(invocation, out workMode, out workModeList);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetWorkMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetWorkMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetWorkMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("WorkMode", workMode);
+                invocation.WriteString("WorkModeList", workModeList);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetWorkMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetWorkMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string workMode;
+            try
+            {
+                invocation.ReadStart();
+                workMode = invocation.ReadString("WorkMode");
+                invocation.ReadEnd();
+                self.SetWorkMode(invocation, workMode);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetWorkMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetWorkMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetWorkMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetWorkMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoDelAllLocalDB(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.DelAllLocalDB(invocation);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "DelAllLocalDB");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "DelAllLocalDB"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "DelAllLocalDB", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "DelAllLocalDB", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoInitHDD(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.InitHDD(invocation);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "InitHDD");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "InitHDD"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "InitHDD", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "InitHDD", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoRescan(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.Rescan(invocation);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "Rescan");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "Rescan"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "Rescan", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "Rescan", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoHandMount(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.HandMount(invocation);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "HandMount");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "HandMount"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "HandMount", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "HandMount", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoHandUMount(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.HandUMount(invocation);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "HandUMount");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "HandUMount"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "HandUMount", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "HandUMount", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetDiskInfo(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool isConnected;
+            string statusCode;
+            string statusInfo;
+            string capacity;
+            string fileCount;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetDiskInfo(invocation, out isConnected, out statusCode, out statusInfo, out capacity, out fileCount);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetDiskInfo");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetDiskInfo"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDiskInfo", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteBool("IsConnected", isConnected);
+                invocation.WriteString("StatusCode", statusCode);
+                invocation.WriteString("StatusInfo", statusInfo);
+                invocation.WriteString("Capacity", capacity);
+                invocation.WriteString("FileCount", fileCount);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDiskInfo", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetSMBConfig(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string sMBAddr;
+            string sMBUserName;
+            string sMBPassWord;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetSMBConfig(invocation, out sMBAddr, out sMBUserName, out sMBPassWord);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetSMBConfig");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetSMBConfig"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetSMBConfig", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("SMBAddr", sMBAddr);
+                invocation.WriteString("SMBUserName", sMBUserName);
+                invocation.WriteString("SMBPassWord", sMBPassWord);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetSMBConfig", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetSMBConfig(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string sMBAddr;
+            string sMBUserName;
+            string sMBPassWord;
+            try
+            {
+                invocation.ReadStart();
+                sMBAddr = invocation.ReadString("SMBAddr");
+                sMBUserName = invocation.ReadString("SMBUserName");
+                sMBPassWord = invocation.ReadString("SMBPassWord");
+                invocation.ReadEnd();
+                self.SetSMBConfig(invocation, sMBAddr, sMBUserName, sMBPassWord);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetSMBConfig");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetSMBConfig"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetSMBConfig", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetSMBConfig", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetDriveMountResult(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool driveMountResult;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetDriveMountResult(invocation, out driveMountResult);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetDriveMountResult");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetDriveMountResult"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDriveMountResult", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteBool("DriveMountResult", driveMountResult);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDriveMountResult", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Must be called for each class instance.  Must be called before Core.Library.Close().
+        /// </summary>
+        public virtual void Dispose()
+        {
+            if (DisposeProvider())
+                iGch.Free();
+        }
+    }
+}
+
