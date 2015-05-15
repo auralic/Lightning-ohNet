@@ -55,6 +55,18 @@ interface ICpProxyAvOpenhomeOrgServerConfig1 extends ICpProxy
     public boolean syncGetDriveMountResult();
     public void beginGetDriveMountResult(ICpProxyListener aCallback);
     public boolean endGetDriveMountResult(long aAsyncHandle);
+    public void syncEditTrack(String aEditValue);
+    public void beginEditTrack(String aEditValue, ICpProxyListener aCallback);
+    public void endEditTrack(long aAsyncHandle);
+    public String syncScanVersionDiff();
+    public void beginScanVersionDiff(ICpProxyListener aCallback);
+    public String endScanVersionDiff(long aAsyncHandle);
+    public boolean syncGetInitHDDResult();
+    public void beginGetInitHDDResult(ICpProxyListener aCallback);
+    public boolean endGetInitHDDResult(long aAsyncHandle);
+    public boolean syncGetHDDHasInited();
+    public void beginGetHDDHasInited(ICpProxyListener aCallback);
+    public boolean endGetHDDHasInited(long aAsyncHandle);
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
 }
@@ -368,6 +380,84 @@ class SyncGetDriveMountResultAvOpenhomeOrgServerConfig1 extends SyncProxyAction
     }
 }
 
+class SyncEditTrackAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+    public SyncEditTrackAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endEditTrack(aAsyncHandle);
+        
+    }
+}
+
+class SyncScanVersionDiffAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+    private String iScanVersionDiffValue;
+
+    public SyncScanVersionDiffAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getScanVersionDiffValue()
+    {
+        return iScanVersionDiffValue;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        String result = iService.endScanVersionDiff(aAsyncHandle);
+        
+        iScanVersionDiffValue = result;
+    }
+}
+
+class SyncGetInitHDDResultAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+    private boolean iInitHDDResult;
+
+    public SyncGetInitHDDResultAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public boolean getInitHDDResult()
+    {
+        return iInitHDDResult;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        boolean result = iService.endGetInitHDDResult(aAsyncHandle);
+        
+        iInitHDDResult = result;
+    }
+}
+
+class SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+    private boolean iHDDHasInited;
+
+    public SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public boolean getHDDHasInited()
+    {
+        return iHDDHasInited;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        boolean result = iService.endGetHDDHasInited(aAsyncHandle);
+        
+        iHDDHasInited = result;
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:ServerConfig:1 UPnP service
  */
@@ -486,6 +576,10 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     private Action iActionGetSMBConfig;
     private Action iActionSetSMBConfig;
     private Action iActionGetDriveMountResult;
+    private Action iActionEditTrack;
+    private Action iActionScanVersionDiff;
+    private Action iActionGetInitHDDResult;
+    private Action iActionGetHDDHasInited;
     private PropertyBool iAlive;
     private IPropertyChangeListener iAliveChanged;
     private Object iPropertyLock;
@@ -570,6 +664,22 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         iActionGetDriveMountResult = new Action("GetDriveMountResult");
         param = new ParameterBool("DriveMountResult");
         iActionGetDriveMountResult.addOutputParameter(param);
+
+        iActionEditTrack = new Action("EditTrack");
+        param = new ParameterString("EditValue", allowedValues);
+        iActionEditTrack.addInputParameter(param);
+
+        iActionScanVersionDiff = new Action("ScanVersionDiff");
+        param = new ParameterString("ScanVersionDiffValue", allowedValues);
+        iActionScanVersionDiff.addOutputParameter(param);
+
+        iActionGetInitHDDResult = new Action("GetInitHDDResult");
+        param = new ParameterBool("InitHDDResult");
+        iActionGetInitHDDResult.addOutputParameter(param);
+
+        iActionGetHDDHasInited = new Action("GetHDDHasInited");
+        param = new ParameterBool("HDDHasInited");
+        iActionGetHDDHasInited.addOutputParameter(param);
 
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
@@ -1381,6 +1491,219 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncEditTrack(String aEditValue)
+    {
+        SyncEditTrackAvOpenhomeOrgServerConfig1 sync = new SyncEditTrackAvOpenhomeOrgServerConfig1(this);
+        beginEditTrack(aEditValue, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endEditTrack}.
+     * 
+     * @param aEditValue
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginEditTrack(String aEditValue, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionEditTrack, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionEditTrack.getInputParameter(inIndex++), aEditValue));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginEditTrack} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginEditTrack} method.
+     */
+    public void endEditTrack(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public String syncScanVersionDiff()
+    {
+        SyncScanVersionDiffAvOpenhomeOrgServerConfig1 sync = new SyncScanVersionDiffAvOpenhomeOrgServerConfig1(this);
+        beginScanVersionDiff(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getScanVersionDiffValue();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endScanVersionDiff}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginScanVersionDiff(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionScanVersionDiff, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionScanVersionDiff.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginScanVersionDiff} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginScanVersionDiff} method.
+     * @return the result of the previously invoked action.
+     */
+    public String endScanVersionDiff(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String scanVersionDiffValue = Invocation.getOutputString(aAsyncHandle, index++);
+        return scanVersionDiffValue;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public boolean syncGetInitHDDResult()
+    {
+        SyncGetInitHDDResultAvOpenhomeOrgServerConfig1 sync = new SyncGetInitHDDResultAvOpenhomeOrgServerConfig1(this);
+        beginGetInitHDDResult(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getInitHDDResult();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetInitHDDResult}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetInitHDDResult(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetInitHDDResult, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentBool((ParameterBool)iActionGetInitHDDResult.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetInitHDDResult} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetInitHDDResult} method.
+     * @return the result of the previously invoked action.
+     */
+    public boolean endGetInitHDDResult(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        boolean initHDDResult = Invocation.getOutputBool(aAsyncHandle, index++);
+        return initHDDResult;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public boolean syncGetHDDHasInited()
+    {
+        SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1 sync = new SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1(this);
+        beginGetHDDHasInited(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getHDDHasInited();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetHDDHasInited}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetHDDHasInited(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetHDDHasInited, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentBool((ParameterBool)iActionGetHDDHasInited.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetHDDHasInited} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetHDDHasInited} method.
+     * @return the result of the previously invoked action.
+     */
+    public boolean endGetHDDHasInited(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        boolean hDDHasInited = Invocation.getOutputBool(aAsyncHandle, index++);
+        return hDDHasInited;
+    }
+        
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
@@ -1450,6 +1773,10 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             iActionGetSMBConfig.destroy();
             iActionSetSMBConfig.destroy();
             iActionGetDriveMountResult.destroy();
+            iActionEditTrack.destroy();
+            iActionScanVersionDiff.destroy();
+            iActionGetInitHDDResult.destroy();
+            iActionGetHDDHasInited.destroy();
             iAlive.destroy();
         }
     }

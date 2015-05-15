@@ -44,6 +44,10 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateGetSMBConfig;
         private ActionDelegate iDelegateSetSMBConfig;
         private ActionDelegate iDelegateGetDriveMountResult;
+        private ActionDelegate iDelegateEditTrack;
+        private ActionDelegate iDelegateScanVersionDiff;
+        private ActionDelegate iDelegateGetInitHDDResult;
+        private ActionDelegate iDelegateGetHDDHasInited;
         private PropertyBool iPropertyAlive;
 
         /// <summary>
@@ -299,6 +303,60 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action EditTrack is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// EditTrack must be overridden if this is called.</remarks>
+        protected void EnableActionEditTrack()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("EditTrack");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("EditValue", allowedValues));
+            iDelegateEditTrack = new ActionDelegate(DoEditTrack);
+            EnableAction(action, iDelegateEditTrack, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action ScanVersionDiff is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// ScanVersionDiff must be overridden if this is called.</remarks>
+        protected void EnableActionScanVersionDiff()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("ScanVersionDiff");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("ScanVersionDiffValue", allowedValues));
+            iDelegateScanVersionDiff = new ActionDelegate(DoScanVersionDiff);
+            EnableAction(action, iDelegateScanVersionDiff, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetInitHDDResult is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetInitHDDResult must be overridden if this is called.</remarks>
+        protected void EnableActionGetInitHDDResult()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetInitHDDResult");
+            action.AddOutputParameter(new ParameterBool("InitHDDResult"));
+            iDelegateGetInitHDDResult = new ActionDelegate(DoGetInitHDDResult);
+            EnableAction(action, iDelegateGetInitHDDResult, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetHDDHasInited is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetHDDHasInited must be overridden if this is called.</remarks>
+        protected void EnableActionGetHDDHasInited()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetHDDHasInited");
+            action.AddOutputParameter(new ParameterBool("HDDHasInited"));
+            iDelegateGetHDDHasInited = new ActionDelegate(DoGetHDDHasInited);
+            EnableAction(action, iDelegateGetHDDHasInited, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// SetServerName action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -508,6 +566,62 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         /// <param name="aDriveMountResult"></param>
         protected virtual void GetDriveMountResult(IDvInvocation aInvocation, out bool aDriveMountResult)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// EditTrack action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// EditTrack action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionEditTrack was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aEditValue"></param>
+        protected virtual void EditTrack(IDvInvocation aInvocation, string aEditValue)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// ScanVersionDiff action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// ScanVersionDiff action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionScanVersionDiff was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aScanVersionDiffValue"></param>
+        protected virtual void ScanVersionDiff(IDvInvocation aInvocation, out string aScanVersionDiffValue)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetInitHDDResult action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetInitHDDResult action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetInitHDDResult was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aInitHDDResult"></param>
+        protected virtual void GetInitHDDResult(IDvInvocation aInvocation, out bool aInitHDDResult)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetHDDHasInited action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetHDDHasInited action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetHDDHasInited was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aHDDHasInited"></param>
+        protected virtual void GetHDDHasInited(IDvInvocation aInvocation, out bool aHDDHasInited)
         {
             throw (new ActionDisabledError());
         }
@@ -1205,6 +1319,190 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDriveMountResult", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoEditTrack(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string editValue;
+            try
+            {
+                invocation.ReadStart();
+                editValue = invocation.ReadString("EditValue");
+                invocation.ReadEnd();
+                self.EditTrack(invocation, editValue);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "EditTrack");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "EditTrack"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "EditTrack", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "EditTrack", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoScanVersionDiff(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string scanVersionDiffValue;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.ScanVersionDiff(invocation, out scanVersionDiffValue);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "ScanVersionDiff");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "ScanVersionDiff"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "ScanVersionDiff", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("ScanVersionDiffValue", scanVersionDiffValue);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "ScanVersionDiff", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetInitHDDResult(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool initHDDResult;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetInitHDDResult(invocation, out initHDDResult);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetInitHDDResult");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetInitHDDResult"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetInitHDDResult", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteBool("InitHDDResult", initHDDResult);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetInitHDDResult", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetHDDHasInited(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool hDDHasInited;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetHDDHasInited(invocation, out hDDHasInited);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetHDDHasInited");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetHDDHasInited"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetHDDHasInited", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteBool("HDDHasInited", hDDHasInited);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetHDDHasInited", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

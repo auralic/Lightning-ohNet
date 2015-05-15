@@ -438,6 +438,110 @@ public:
     void EndGetDriveMountResult(IAsync& aAsync, TBool& aDriveMountResult);
 
     /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aEditValue
+     */
+    void SyncEditTrack(const Brx& aEditValue);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndEditTrack().
+     *
+     * @param[in] aEditValue
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginEditTrack(const Brx& aEditValue, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndEditTrack(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aScanVersionDiffValue
+     */
+    void SyncScanVersionDiff(Brh& aScanVersionDiffValue);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndScanVersionDiff().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginScanVersionDiff(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aScanVersionDiffValue
+     */
+    void EndScanVersionDiff(IAsync& aAsync, Brh& aScanVersionDiffValue);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aInitHDDResult
+     */
+    void SyncGetInitHDDResult(TBool& aInitHDDResult);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetInitHDDResult().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetInitHDDResult(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aInitHDDResult
+     */
+    void EndGetInitHDDResult(IAsync& aAsync, TBool& aInitHDDResult);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aHDDHasInited
+     */
+    void SyncGetHDDHasInited(TBool& aHDDHasInited);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetHDDHasInited().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetHDDHasInited(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aHDDHasInited
+     */
+    void EndGetHDDHasInited(IAsync& aAsync, TBool& aHDDHasInited);
+
+    /**
      * Set a callback to be run when the Alive state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -475,6 +579,10 @@ private:
     Action* iActionGetSMBConfig;
     Action* iActionSetSMBConfig;
     Action* iActionGetDriveMountResult;
+    Action* iActionEditTrack;
+    Action* iActionScanVersionDiff;
+    Action* iActionGetInitHDDResult;
+    Action* iActionGetHDDHasInited;
     PropertyBool* iAlive;
     Functor iAliveChanged;
 };

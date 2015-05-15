@@ -203,6 +203,54 @@ typedef int32_t (STDCALL *CallbackServerConfig1SetSMBConfig)(void* aPtr, IDvInvo
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackServerConfig1GetDriveMountResult)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t* aDriveMountResult);
+/**
+ * Callback which runs when the EditTrack action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionEditTrack
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aEditValue
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1EditTrack)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aEditValue);
+/**
+ * Callback which runs when the ScanVersionDiff action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionScanVersionDiff
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aScanVersionDiffValue
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1ScanVersionDiff)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, char** aScanVersionDiffValue);
+/**
+ * Callback which runs when the GetInitHDDResult action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionGetInitHDDResult
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aInitHDDResult
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1GetInitHDDResult)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t* aInitHDDResult);
+/**
+ * Callback which runs when the GetHDDHasInited action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionGetHDDHasInited
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aHDDHasInited
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1GetHDDHasInited)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t* aHDDHasInited);
 
 /**
  * Provider constructor
@@ -390,6 +438,50 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionSetSMBCon
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetDriveMountResult(THandle aProvider, CallbackServerConfig1GetDriveMountResult aCallback, void* aPtr);
+/**
+ * Register a callback for the action EditTrack
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionEditTrack(THandle aProvider, CallbackServerConfig1EditTrack aCallback, void* aPtr);
+/**
+ * Register a callback for the action ScanVersionDiff
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionScanVersionDiff(THandle aProvider, CallbackServerConfig1ScanVersionDiff aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetInitHDDResult
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetInitHDDResult(THandle aProvider, CallbackServerConfig1GetInitHDDResult aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetHDDHasInited
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetHDDHasInited(THandle aProvider, CallbackServerConfig1GetHDDHasInited aCallback, void* aPtr);
 
 /**
  * Set the value of the Alive property

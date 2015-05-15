@@ -167,6 +167,38 @@ void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetDriveMountResult()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionEditTrack()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("EditTrack");
+    action->AddInputParameter(new ParameterString("EditValue"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoEditTrack);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionScanVersionDiff()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("ScanVersionDiff");
+    action->AddOutputParameter(new ParameterString("ScanVersionDiffValue"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoScanVersionDiff);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetInitHDDResult()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetInitHDDResult");
+    action->AddOutputParameter(new ParameterBool("InitHDDResult"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoGetInitHDDResult);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetHDDHasInited()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetHDDHasInited");
+    action->AddOutputParameter(new ParameterBool("HDDHasInited"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoGetHDDHasInited);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1::DoSetServerName(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -311,6 +343,43 @@ void DvProviderAvOpenhomeOrgServerConfig1::DoGetDriveMountResult(IDviInvocation&
     GetDriveMountResult(invocation, respDriveMountResult);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1::DoEditTrack(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz EditValue;
+    aInvocation.InvocationReadString("EditValue", EditValue);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    EditTrack(invocation, EditValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::DoScanVersionDiff(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respScanVersionDiffValue(aInvocation, "ScanVersionDiffValue");
+    ScanVersionDiff(invocation, respScanVersionDiffValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::DoGetInitHDDResult(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseBool respInitHDDResult(aInvocation, "InitHDDResult");
+    GetInitHDDResult(invocation, respInitHDDResult);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::DoGetHDDHasInited(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseBool respHDDHasInited(aInvocation, "HDDHasInited");
+    GetHDDHasInited(invocation, respHDDHasInited);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1::SetServerName(IDvInvocation& /*aResponse*/, const Brx& /*aServerName*/)
 {
     ASSERTS();
@@ -382,6 +451,26 @@ void DvProviderAvOpenhomeOrgServerConfig1::SetSMBConfig(IDvInvocation& /*aRespon
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::GetDriveMountResult(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aDriveMountResult*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EditTrack(IDvInvocation& /*aResponse*/, const Brx& /*aEditValue*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::ScanVersionDiff(IDvInvocation& /*aResponse*/, IDvInvocationResponseString& /*aScanVersionDiffValue*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::GetInitHDDResult(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aInitHDDResult*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::GetHDDHasInited(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aHDDHasInited*/)
 {
     ASSERTS();
 }

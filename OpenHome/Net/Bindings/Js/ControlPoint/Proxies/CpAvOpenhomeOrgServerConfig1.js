@@ -368,4 +368,85 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.GetDriveMountResult = function(succe
 }
 
 
+/**
+* A service action to EditTrack
+* @method EditTrack
+* @param {String} EditValue An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.EditTrack = function(EditValue, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("EditTrack", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("EditValue", EditValue);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to ScanVersionDiff
+* @method ScanVersionDiff
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.ScanVersionDiff = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("ScanVersionDiff", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["ScanVersionDiffValue"] = ohnet.soaprequest.readStringParameter(result["ScanVersionDiffValue"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetInitHDDResult
+* @method GetInitHDDResult
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.GetInitHDDResult = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetInitHDDResult", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["InitHDDResult"] = ohnet.soaprequest.readBoolParameter(result["InitHDDResult"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetHDDHasInited
+* @method GetHDDHasInited
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.GetHDDHasInited = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetHDDHasInited", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["HDDHasInited"] = ohnet.soaprequest.readBoolParameter(result["HDDHasInited"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
 

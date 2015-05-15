@@ -589,6 +589,150 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginGetDriveMountResult
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetDriveMountResult(THandle aHandle, OhNetHandleAsync aAsync, uint32_t* aDriveMountResult);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aEditValue
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncEditTrack(THandle aHandle, const char* aEditValue);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aEditValue
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginEditTrack(THandle aHandle, const char* aEditValue, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndEditTrack(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[out] aScanVersionDiffValue
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncScanVersionDiff(THandle aHandle, char** aScanVersionDiffValue);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginScanVersionDiff(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ * @param[out] aScanVersionDiffValue
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndScanVersionDiff(THandle aHandle, OhNetHandleAsync aAsync, char** aScanVersionDiffValue);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[out] aInitHDDResult
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncGetInitHDDResult(THandle aHandle, uint32_t* aInitHDDResult);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginGetInitHDDResult(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ * @param[out] aInitHDDResult
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetInitHDDResult(THandle aHandle, OhNetHandleAsync aAsync, uint32_t* aInitHDDResult);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[out] aHDDHasInited
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncGetHDDHasInited(THandle aHandle, uint32_t* aHDDHasInited);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginGetHDDHasInited(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ * @param[out] aHDDHasInited
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetHDDHasInited(THandle aHandle, OhNetHandleAsync aAsync, uint32_t* aHDDHasInited);
 /**
  * Set a callback to be run when the Alive state variable changes.
  *

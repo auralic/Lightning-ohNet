@@ -146,6 +146,30 @@ protected:
      * GetDriveMountResult must be overridden if this is called.
      */
     void EnableActionGetDriveMountResult();
+    /**
+     * Signal that the action EditTrack is supported.
+     * The action's availability will be published in the device's service.xml.
+     * EditTrack must be overridden if this is called.
+     */
+    void EnableActionEditTrack();
+    /**
+     * Signal that the action ScanVersionDiff is supported.
+     * The action's availability will be published in the device's service.xml.
+     * ScanVersionDiff must be overridden if this is called.
+     */
+    void EnableActionScanVersionDiff();
+    /**
+     * Signal that the action GetInitHDDResult is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetInitHDDResult must be overridden if this is called.
+     */
+    void EnableActionGetInitHDDResult();
+    /**
+     * Signal that the action GetHDDHasInited is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetHDDHasInited must be overridden if this is called.
+     */
+    void EnableActionGetHDDHasInited();
 private:
     /**
      * SetServerName action.
@@ -267,6 +291,38 @@ private:
      * Must be implemented iff EnableActionGetDriveMountResult was called.
      */
     virtual void GetDriveMountResult(IDvInvocation& aInvocation, IDvInvocationResponseBool& aDriveMountResult);
+    /**
+     * EditTrack action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * EditTrack action for the owning device.
+     * Must be implemented iff EnableActionEditTrack was called.
+     */
+    virtual void EditTrack(IDvInvocation& aInvocation, const Brx& aEditValue);
+    /**
+     * ScanVersionDiff action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * ScanVersionDiff action for the owning device.
+     * Must be implemented iff EnableActionScanVersionDiff was called.
+     */
+    virtual void ScanVersionDiff(IDvInvocation& aInvocation, IDvInvocationResponseString& aScanVersionDiffValue);
+    /**
+     * GetInitHDDResult action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetInitHDDResult action for the owning device.
+     * Must be implemented iff EnableActionGetInitHDDResult was called.
+     */
+    virtual void GetInitHDDResult(IDvInvocation& aInvocation, IDvInvocationResponseBool& aInitHDDResult);
+    /**
+     * GetHDDHasInited action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetHDDHasInited action for the owning device.
+     * Must be implemented iff EnableActionGetHDDHasInited was called.
+     */
+    virtual void GetHDDHasInited(IDvInvocation& aInvocation, IDvInvocationResponseBool& aHDDHasInited);
 private:
     DvProviderAvOpenhomeOrgServerConfig1();
     void Construct();
@@ -285,6 +341,10 @@ private:
     void DoGetSMBConfig(IDviInvocation& aInvocation);
     void DoSetSMBConfig(IDviInvocation& aInvocation);
     void DoGetDriveMountResult(IDviInvocation& aInvocation);
+    void DoEditTrack(IDviInvocation& aInvocation);
+    void DoScanVersionDiff(IDviInvocation& aInvocation);
+    void DoGetInitHDDResult(IDviInvocation& aInvocation);
+    void DoGetHDDHasInited(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
 };

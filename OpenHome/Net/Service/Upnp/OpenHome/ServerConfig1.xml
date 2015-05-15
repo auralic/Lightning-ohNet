@@ -165,6 +165,46 @@
                 </argument>
             </argumentList>
         </action>
+        <action>
+            <name>EditTrack</name>
+            <argumentList>
+                <argument>
+                    <name>EditValue</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>EditValue</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>ScanVersionDiff</name>
+            <argumentList>
+                <argument>
+                    <name>ScanVersionDiffValue</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>ScanVersionDiffValue</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>GetInitHDDResult</name>
+            <argumentList>
+                <argument>
+                    <name>InitHDDResult</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>InitHDDResult</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>GetHDDHasInited</name>
+            <argumentList>
+                <argument>
+                    <name>HDDHasInited</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>HDDHasInited</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
     </actionList>
     <serviceStateTable>
       <stateVariable sendEvents="yes">
@@ -229,6 +269,22 @@
         </stateVariable>
         <stateVariable sendEvents="no">
             <name>DriveMountResult</name>
+            <dataType>boolean</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>EditValue</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>ScanVersionDiffValue</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>InitHDDResult</name>
+            <dataType>boolean</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>HDDHasInited</name>
             <dataType>boolean</dataType>
         </stateVariable>
     </serviceStateTable>

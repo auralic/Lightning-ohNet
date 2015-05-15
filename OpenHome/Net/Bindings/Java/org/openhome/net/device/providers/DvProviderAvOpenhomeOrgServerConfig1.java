@@ -145,6 +145,10 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     private IDvInvocationListener iDelegateGetSMBConfig;
     private IDvInvocationListener iDelegateSetSMBConfig;
     private IDvInvocationListener iDelegateGetDriveMountResult;
+    private IDvInvocationListener iDelegateEditTrack;
+    private IDvInvocationListener iDelegateScanVersionDiff;
+    private IDvInvocationListener iDelegateGetInitHDDResult;
+    private IDvInvocationListener iDelegateGetHDDHasInited;
     private PropertyBool iPropertyAlive;
 
     /**
@@ -403,6 +407,62 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     }
 
     /**
+     * Signal that the action EditTrack is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * EditTrack must be overridden if this is called.
+     */      
+    protected void enableActionEditTrack()
+    {
+        Action action = new Action("EditTrack");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("EditValue", allowedValues));
+        iDelegateEditTrack = new DoEditTrack();
+        enableAction(action, iDelegateEditTrack);
+    }
+
+    /**
+     * Signal that the action ScanVersionDiff is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * ScanVersionDiff must be overridden if this is called.
+     */      
+    protected void enableActionScanVersionDiff()
+    {
+        Action action = new Action("ScanVersionDiff");        List<String> allowedValues = new LinkedList<String>();
+        action.addOutputParameter(new ParameterString("ScanVersionDiffValue", allowedValues));
+        iDelegateScanVersionDiff = new DoScanVersionDiff();
+        enableAction(action, iDelegateScanVersionDiff);
+    }
+
+    /**
+     * Signal that the action GetInitHDDResult is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetInitHDDResult must be overridden if this is called.
+     */      
+    protected void enableActionGetInitHDDResult()
+    {
+        Action action = new Action("GetInitHDDResult");
+        action.addOutputParameter(new ParameterBool("InitHDDResult"));
+        iDelegateGetInitHDDResult = new DoGetInitHDDResult();
+        enableAction(action, iDelegateGetInitHDDResult);
+    }
+
+    /**
+     * Signal that the action GetHDDHasInited is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetHDDHasInited must be overridden if this is called.
+     */      
+    protected void enableActionGetHDDHasInited()
+    {
+        Action action = new Action("GetHDDHasInited");
+        action.addOutputParameter(new ParameterBool("HDDHasInited"));
+        iDelegateGetHDDHasInited = new DoGetHDDHasInited();
+        enableAction(action, iDelegateGetHDDHasInited);
+    }
+
+    /**
      * SetServerName action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -628,6 +688,67 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
      * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
      */
     protected boolean getDriveMountResult(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * EditTrack action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * EditTrack action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionEditTrack} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aEditValue
+     */
+    protected void editTrack(IDvInvocation aInvocation, String aEditValue)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * ScanVersionDiff action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * ScanVersionDiff action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionScanVersionDiff} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected String scanVersionDiff(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetInitHDDResult action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetInitHDDResult action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetInitHDDResult} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected boolean getInitHDDResult(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetHDDHasInited action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetHDDHasInited action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetHDDHasInited} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected boolean getHDDHasInited(IDvInvocation aInvocation)
     {
         throw (new ActionDisabledError());
     }
@@ -1375,6 +1496,198 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
             {
                 invocation.writeStart();
                 invocation.writeBool("DriveMountResult", driveMountResult);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoEditTrack implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String editValue;
+            try
+            {
+                invocation.readStart();
+                editValue = invocation.readString("EditValue");
+                invocation.readEnd();
+                editTrack(invocation, editValue);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "EditTrack");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoScanVersionDiff implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String scanVersionDiffValue;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                 scanVersionDiffValue = scanVersionDiff(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "ScanVersionDiff");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("ScanVersionDiffValue", scanVersionDiffValue);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetInitHDDResult implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean initHDDResult;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                 initHDDResult = getInitHDDResult(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetInitHDDResult");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeBool("InitHDDResult", initHDDResult);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetHDDHasInited implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean hDDHasInited;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                 hDDHasInited = getHDDHasInited(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetHDDHasInited");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeBool("HDDHasInited", hDDHasInited);
                 invocation.writeEnd();
             }
             catch (ActionError ae)

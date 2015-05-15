@@ -55,6 +55,18 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncGetDriveMountResult(out bool aDriveMountResult);
         void BeginGetDriveMountResult(CpProxy.CallbackAsyncComplete aCallback);
         void EndGetDriveMountResult(IntPtr aAsyncHandle, out bool aDriveMountResult);
+        void SyncEditTrack(String aEditValue);
+        void BeginEditTrack(String aEditValue, CpProxy.CallbackAsyncComplete aCallback);
+        void EndEditTrack(IntPtr aAsyncHandle);
+        void SyncScanVersionDiff(out String aScanVersionDiffValue);
+        void BeginScanVersionDiff(CpProxy.CallbackAsyncComplete aCallback);
+        void EndScanVersionDiff(IntPtr aAsyncHandle, out String aScanVersionDiffValue);
+        void SyncGetInitHDDResult(out bool aInitHDDResult);
+        void BeginGetInitHDDResult(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetInitHDDResult(IntPtr aAsyncHandle, out bool aInitHDDResult);
+        void SyncGetHDDHasInited(out bool aHDDHasInited);
+        void BeginGetHDDHasInited(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetHDDHasInited(IntPtr aAsyncHandle, out bool aHDDHasInited);
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
     }
@@ -339,6 +351,77 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncEditTrackAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+        public SyncEditTrackAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndEditTrack(aAsyncHandle);
+        }
+    };
+
+    internal class SyncScanVersionDiffAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+        private String iScanVersionDiffValue;
+
+        public SyncScanVersionDiffAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String ScanVersionDiffValue()
+        {
+            return iScanVersionDiffValue;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndScanVersionDiff(aAsyncHandle, out iScanVersionDiffValue);
+        }
+    };
+
+    internal class SyncGetInitHDDResultAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+        private bool iInitHDDResult;
+
+        public SyncGetInitHDDResultAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public bool InitHDDResult()
+        {
+            return iInitHDDResult;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetInitHDDResult(aAsyncHandle, out iInitHDDResult);
+        }
+    };
+
+    internal class SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+        private bool iHDDHasInited;
+
+        public SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public bool HDDHasInited()
+        {
+            return iHDDHasInited;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetHDDHasInited(aAsyncHandle, out iHDDHasInited);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:ServerConfig:1 UPnP service
     /// </summary>
@@ -359,6 +442,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionGetSMBConfig;
         private OpenHome.Net.Core.Action iActionSetSMBConfig;
         private OpenHome.Net.Core.Action iActionGetDriveMountResult;
+        private OpenHome.Net.Core.Action iActionEditTrack;
+        private OpenHome.Net.Core.Action iActionScanVersionDiff;
+        private OpenHome.Net.Core.Action iActionGetInitHDDResult;
+        private OpenHome.Net.Core.Action iActionGetHDDHasInited;
         private PropertyBool iAlive;
         private System.Action iAliveChanged;
         private Mutex iPropertyLock;
@@ -441,6 +528,22 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetDriveMountResult = new OpenHome.Net.Core.Action("GetDriveMountResult");
             param = new ParameterBool("DriveMountResult");
             iActionGetDriveMountResult.AddOutputParameter(param);
+
+            iActionEditTrack = new OpenHome.Net.Core.Action("EditTrack");
+            param = new ParameterString("EditValue", allowedValues);
+            iActionEditTrack.AddInputParameter(param);
+
+            iActionScanVersionDiff = new OpenHome.Net.Core.Action("ScanVersionDiff");
+            param = new ParameterString("ScanVersionDiffValue", allowedValues);
+            iActionScanVersionDiff.AddOutputParameter(param);
+
+            iActionGetInitHDDResult = new OpenHome.Net.Core.Action("GetInitHDDResult");
+            param = new ParameterBool("InitHDDResult");
+            iActionGetInitHDDResult.AddOutputParameter(param);
+
+            iActionGetHDDHasInited = new OpenHome.Net.Core.Action("GetHDDHasInited");
+            param = new ParameterBool("HDDHasInited");
+            iActionGetHDDHasInited.AddOutputParameter(param);
 
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
@@ -1181,6 +1284,199 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aEditValue"></param>
+        public void SyncEditTrack(String aEditValue)
+        {
+            SyncEditTrackAvOpenhomeOrgServerConfig1 sync = new SyncEditTrackAvOpenhomeOrgServerConfig1(this);
+            BeginEditTrack(aEditValue, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndEditTrack().</remarks>
+        /// <param name="aEditValue"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginEditTrack(String aEditValue, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionEditTrack, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionEditTrack.InputParameter(inIndex++), aEditValue));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndEditTrack(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aScanVersionDiffValue"></param>
+        public void SyncScanVersionDiff(out String aScanVersionDiffValue)
+        {
+            SyncScanVersionDiffAvOpenhomeOrgServerConfig1 sync = new SyncScanVersionDiffAvOpenhomeOrgServerConfig1(this);
+            BeginScanVersionDiff(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aScanVersionDiffValue = sync.ScanVersionDiffValue();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndScanVersionDiff().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginScanVersionDiff(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionScanVersionDiff, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionScanVersionDiff.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aScanVersionDiffValue"></param>
+        public void EndScanVersionDiff(IntPtr aAsyncHandle, out String aScanVersionDiffValue)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aScanVersionDiffValue = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aInitHDDResult"></param>
+        public void SyncGetInitHDDResult(out bool aInitHDDResult)
+        {
+            SyncGetInitHDDResultAvOpenhomeOrgServerConfig1 sync = new SyncGetInitHDDResultAvOpenhomeOrgServerConfig1(this);
+            BeginGetInitHDDResult(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aInitHDDResult = sync.InitHDDResult();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetInitHDDResult().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetInitHDDResult(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetInitHDDResult, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentBool((ParameterBool)iActionGetInitHDDResult.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aInitHDDResult"></param>
+        public void EndGetInitHDDResult(IntPtr aAsyncHandle, out bool aInitHDDResult)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aInitHDDResult = Invocation.OutputBool(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aHDDHasInited"></param>
+        public void SyncGetHDDHasInited(out bool aHDDHasInited)
+        {
+            SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1 sync = new SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1(this);
+            BeginGetHDDHasInited(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aHDDHasInited = sync.HDDHasInited();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetHDDHasInited().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetHDDHasInited(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetHDDHasInited, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentBool((ParameterBool)iActionGetHDDHasInited.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aHDDHasInited"></param>
+        public void EndGetHDDHasInited(IntPtr aAsyncHandle, out bool aHDDHasInited)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aHDDHasInited = Invocation.OutputBool(aAsyncHandle, index++);
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -1251,6 +1547,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetSMBConfig.Dispose();
             iActionSetSMBConfig.Dispose();
             iActionGetDriveMountResult.Dispose();
+            iActionEditTrack.Dispose();
+            iActionScanVersionDiff.Dispose();
+            iActionGetInitHDDResult.Dispose();
+            iActionGetHDDHasInited.Dispose();
             iAlive.Dispose();
         }
     }
