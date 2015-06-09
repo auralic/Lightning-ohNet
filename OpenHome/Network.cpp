@@ -153,7 +153,6 @@ void Endpoint::Replace(const Endpoint& aEndpoint)
 // Test if this endpoint is equal to the specified endpoint
 TBool Endpoint::Equals(const Endpoint& aEndpoint) const
 {
-//    printf("test equals...\n");
     return (iAddress==aEndpoint.iAddress && iPort==aEndpoint.iPort);
 }
 
@@ -206,7 +205,6 @@ void Socket::SetRecvBufBytes(TUint aBytes)
 
 void Socket::SetRecvTimeout(TUint aMs)
 {
-    printf("set time out %d\n",aMs);
     OpenHome::Os::NetworkSocketSetReceiveTimeout(iHandle, aMs);
 }
 
@@ -316,7 +314,6 @@ void Socket::ReceiveFrom(Bwx& aBuffer, Endpoint& aEndpoint)
 void Socket::Bind(const Endpoint& aEndpoint)
 {
     LOGF(kNetwork, "Socket::Bind H = %d\n", iHandle);
-//printf("total bind on %d.%d.%d.%d\n", aEndpoint.Address()&0xff, (aEndpoint.Address()>>8)&0xff, (aEndpoint.Address()>>16)&0xff, (aEndpoint.Address()>>24)&0xff);
     TInt err = OpenHome::Os::NetworkBind(iHandle, aEndpoint);
     if(err != 0) {
         LOG2F(kNetwork, kError, "Socket::Bind H = %d, RETURN VALUE = %d\n", iHandle, err);
@@ -523,9 +520,7 @@ SocketTcpServer::SocketTcpServer(Environment& aEnv, const TChar* aName, TUint aP
     OpenHome::Os::NetworkSocketSetReuseAddress(iHandle);
     TryNetworkTcpSetNoDelay(iHandle);
     iInterface = aInterface;
-//    printf("new bind...\n");
     Bind(Endpoint(aPort, aInterface));
- //   printf("new bind1...\n");
     GetPort(iPort);
     Listen(aSlots);
 }
@@ -766,12 +761,16 @@ void SocketUdp::ReBind(TUint aPort, TIpAddress aInterface)
     Bind(aPort, aInterface);
 }
 
+void SocketUdp::SetMulticastIf(TIpAddress aInterface)
+{
+    LOGF(kNetwork, "> SocketUdp::SetMulticastIf I = %x\n", aInterface);
+    OpenHome::Os::NetworkSocketSetMulticastIf(iHandle, aInterface);
+    LOGF(kNetwork, "< SocketUdp::SetMulticastIf\n");
+}
+
 void SocketUdp::Bind(TUint aPort, TIpAddress aInterface)
 {
     Socket::Bind(Endpoint(aPort, aInterface));
-//printf("bind on %d.%d.%d.%d\n", aInterface&0xff, (aInterface>>8)&0xff, (aInterface>>16)&0xff, (aInterface>>24)&0xff);
- //   const Brn a("239.255.255.250");
- //   Socket::Bind(Endpoint(aPort, a));
     GetPort(iPort);
 }
 
@@ -785,7 +784,6 @@ SocketUdpMulticast::SocketUdpMulticast(Environment& aEnv, TIpAddress aInterface,
 {
     LOGF(kNetwork, "> SocketUdpMulticast::SocketUdpMulticast I = %x, E = %x:%d\n", iInterface, aEndpoint.Address(), aEndpoint.Port());
     const TUint err = OpenHome::Os::NetworkBindMulticast(iHandle, aInterface, aEndpoint);
-//printf("multi bind on %d.%d.%d.%d\n", iAddress&0xff, (iAddress>>8)&0xff, (iAddress>>16)&0xff, (iAddress>>24)&0xff);
     if (err != 0) {
         LOG2(kError, kNetwork, "NetworkBindMulticast for socket %u\n", iHandle);
         THROW(NetworkError);
@@ -811,8 +809,6 @@ void SocketUdpMulticast::ReCreate()
 {
     SocketUdpBase::ReCreate();
     Endpoint ep(iPort, iAddress);
-//printf("$$$$$%d.%d.%d.%d\n", iInterface&0xff, (iInterface>>8)&0xff, (iInterface>>16)&0xff, (iInterface>>24)&0xff);
-//printf("$$$$$99%d.%d.%d.%d\n", iAddress&0xff, (iAddress>>8)&0xff, (iAddress>>16)&0xff, (iAddress>>24)&0xff);
     const TUint err = OpenHome::Os::NetworkBindMulticast(iHandle, iInterface, ep);
     if (err != 0) {
         LOG2(kError, kNetwork, "NetworkBindMulticast for socket %u\n", iHandle);

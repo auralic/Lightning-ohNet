@@ -131,7 +131,7 @@ void OpenHome::TestFramework::Runner::Main(TInt aArgc, TChar* aArgv[], Initialis
     if (deviceList != NULL) {
         blocker->Wait(aInitParams->MsearchTimeSecs());
     }
-    while (refresh.Value()) {
+    if (refresh.Value()) {
         Print("\nRefreshing...\n\n");
         deviceList->Refresh();
         blocker->Wait(aInitParams->MsearchTimeSecs());

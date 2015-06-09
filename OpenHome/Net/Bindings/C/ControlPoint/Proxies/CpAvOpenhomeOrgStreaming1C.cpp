@@ -831,25 +831,25 @@ CpProxyAvOpenhomeOrgStreaming1C::CpProxyAvOpenhomeOrgStreaming1C(CpDeviceC aDevi
 
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgStreaming1C::TransportStatePropertyChanged);
-    iTransportState = new PropertyString(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "TransportState", functor);
+    iTransportState = new PropertyString("TransportState", functor);
     AddProperty(iTransportState);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgStreaming1C::RepeatPropertyChanged);
-    iRepeat = new PropertyBool(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "Repeat", functor);
+    iRepeat = new PropertyBool("Repeat", functor);
     AddProperty(iRepeat);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgStreaming1C::ShufflePropertyChanged);
-    iShuffle = new PropertyBool(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "Shuffle", functor);
+    iShuffle = new PropertyBool("Shuffle", functor);
     AddProperty(iShuffle);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgStreaming1C::IdPropertyChanged);
-    iId = new PropertyUint(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "Id", functor);
+    iId = new PropertyUint("Id", functor);
     AddProperty(iId);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgStreaming1C::IdArrayPropertyChanged);
-    iIdArray = new PropertyBinary(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "IdArray", functor);
+    iIdArray = new PropertyBinary("IdArray", functor);
     AddProperty(iIdArray);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgStreaming1C::TracksMaxPropertyChanged);
-    iTracksMax = new PropertyUint(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "TracksMax", functor);
+    iTracksMax = new PropertyUint("TracksMax", functor);
     AddProperty(iTracksMax);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgStreaming1C::ProtocolInfoPropertyChanged);
-    iProtocolInfo = new PropertyString(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "ProtocolInfo", functor);
+    iProtocolInfo = new PropertyString("ProtocolInfo", functor);
     AddProperty(iProtocolInfo);
 }
 

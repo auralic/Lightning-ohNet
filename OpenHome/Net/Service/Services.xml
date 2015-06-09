@@ -13,13 +13,13 @@
     <type>AVTransport</type>
     <version>2</version>
   </service>
-  <service>
-    <publisher>Upnp</publisher>
-    <dcpdir>MediaServer_3</dcpdir>
-    <domain>upnp.org</domain>
-    <type>ConnectionManager</type>
-    <version>1</version>
-  </service>
+    <service>
+        <publisher>Upnp</publisher>
+        <dcpdir>MediaServer_3</dcpdir>
+        <domain>upnp.org</domain>
+        <type>ConnectionManager</type>
+        <version>1</version>
+    </service>
   <service>
     <publisher>Upnp</publisher>
     <dcpdir>MediaServer_3</dcpdir>
@@ -153,13 +153,13 @@
     <type>Streaming</type>
     <version>1</version>
   </service>
-  <service>
-    <publisher>OpenHome</publisher>
-    <dcpdir></dcpdir>
-    <domain>av.openhome.org</domain>
-    <type>Product</type>
-    <version>1</version>
-  </service>
+    <service>
+        <publisher>OpenHome</publisher>
+        <dcpdir></dcpdir>
+        <domain>av.openhome.org</domain>
+        <type>Product</type>
+        <version>1</version>
+    </service>
   <service>
     <publisher>OpenHome</publisher>
     <dcpdir></dcpdir>
@@ -174,13 +174,13 @@
     <type>Receiver</type>
     <version>1</version>
   </service>
-  <service>
-    <publisher>OpenHome</publisher>
-    <dcpdir></dcpdir>
-    <domain>av.openhome.org</domain>
-    <type>Sender</type>
-    <version>1</version>
-  </service>
+    <service>
+        <publisher>OpenHome</publisher>
+        <dcpdir></dcpdir>
+        <domain>av.openhome.org</domain>
+        <type>Sender</type>
+        <version>1</version>
+    </service>
   <service>
     <publisher>OpenHome</publisher>
     <dcpdir></dcpdir>
@@ -202,13 +202,13 @@
     <type>NetworkMonitor</type>
     <version>1</version>
   </service>
-  <service>
-    <publisher>OpenHome</publisher>
-    <dcpdir>Test</dcpdir>
-    <domain>openhome.org</domain>
-    <type>TestBasic</type>
-    <version>1</version>
-  </service>
+    <service>
+        <publisher>OpenHome</publisher>
+        <dcpdir>Test</dcpdir>
+        <domain>openhome.org</domain>
+        <type>TestBasic</type>
+        <version>1</version>
+    </service>
   <service>
     <publisher>OpenHome</publisher>
     <dcpdir>Test</dcpdir>
@@ -216,11 +216,11 @@
     <type>TestLights</type>
     <version>1</version>
   </service>
-  <service>
-    <publisher>OpenHome</publisher>
-    <dcpdir></dcpdir>
-    <domain>openhome.org</domain>
-    <type>SubscriptionLongPoll</type>
-    <version>1</version>
-  </service>
+    <service>
+        <publisher>OpenHome</publisher>
+        <dcpdir></dcpdir>
+        <domain>openhome.org</domain>
+        <type>SubscriptionLongPoll</type>
+        <version>1</version>
+    </service>
 </servicelist>

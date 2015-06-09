@@ -195,16 +195,6 @@
                 </argument>
             </argumentList>
         </action>
-        <action>
-            <name>GetHDDHasInited</name>
-            <argumentList>
-                <argument>
-                    <name>HDDHasInited</name>
-                    <direction>out</direction>
-                    <relatedStateVariable>HDDHasInited</relatedStateVariable>
-                </argument>
-            </argumentList>
-        </action>
     </actionList>
     <serviceStateTable>
       <stateVariable sendEvents="yes">
@@ -281,10 +271,6 @@
         </stateVariable>
         <stateVariable sendEvents="no">
             <name>InitHDDResult</name>
-            <dataType>boolean</dataType>
-        </stateVariable>
-        <stateVariable sendEvents="no">
-            <name>HDDHasInited</name>
             <dataType>boolean</dataType>
         </stateVariable>
     </serviceStateTable>

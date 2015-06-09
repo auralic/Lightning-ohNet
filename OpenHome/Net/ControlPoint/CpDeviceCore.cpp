@@ -112,7 +112,6 @@ void CpDeviceList::Added(CpiDevice& aDevice)
     Brn udn(device->Udn());
     iMap.insert(std::pair<Brn,CpDevice*>(udn, device));
     iLock->Signal();
-  //  printf("XXXXXXXXXXXXXXXXXXXX\n");
     iAdded(*device);
 }
 

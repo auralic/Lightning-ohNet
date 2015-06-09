@@ -18,7 +18,7 @@ using namespace OpenHome::Net;
 // CpiService
 
 CpiService::CpiService(const TChar* aDomain, const TChar* aName, TUint aVersion, CpiDevice& aDevice)
-    : Service(aDevice.GetCpStack().Env(), aDomain, aName, aVersion)
+    : Service(aDevice.GetCpStack().Env(), aDomain, aName, aDevice.Version(aDomain, aName, aVersion))
     , iDevice(aDevice)
     , iLock("SRVM")
     , iPendingInvocations(0)
@@ -28,6 +28,13 @@ CpiService::CpiService(const TChar* aDomain, const TChar* aName, TUint aVersion,
 {
     iDevice.AddRef();
     iDevice.GetCpStack().Env().AddObject(this);
+    if (aVersion != iServiceType.Version()) {
+        LOG(kService, "CpiService: addr=%p, serviceType=", this);
+        LOG(kService, iServiceType.FullName());
+        LOG(kService, ", device=");
+        LOG(kService, iDevice.Udn());
+        LOG(kService, ", presenting proxy v%u as v%u\n", aVersion, iServiceType.Version());
+    }
 }
 
 CpiService::~CpiService()
@@ -65,7 +72,6 @@ Invocation* CpiService::Invocation(const Action& aAction, FunctorAsync& aFunctor
 
 TBool CpiService::Subscribe(IEventProcessor& aEventProcessor)
 {
-  //  printf("cpiservice subscribe.......\n");
     ASSERT(iSubscription == NULL);
     if (iDevice.IsRemoved()) {
         return false;
@@ -102,6 +108,11 @@ TBool CpiService::Interrupt() const
 CpiDevice& CpiService::Device()
 {
     return iDevice;
+}
+
+TUint CpiService::Version() const
+{
+    return iServiceType.Version();
 }
 
 void CpiService::ListObjectDetails() const

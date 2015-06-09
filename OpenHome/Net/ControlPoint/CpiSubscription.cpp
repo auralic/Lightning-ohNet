@@ -15,6 +15,7 @@
 #include <OpenHome/Net/Private/XmlParser.h>
 #include <OpenHome/Private/NetworkAdapterList.h>
 #include <OpenHome/Net/Private/Globals.h>
+#include <OpenHome/OsWrapper.h>
 
 #include <list>
 #include <map>
@@ -134,6 +135,9 @@ void CpiSubscription::RunInSubscriber()
         try {
             DoSubscribe();
         }
+        catch (AssertionFailed&) {
+            throw;
+        }
         catch(...) {
             lock.Wait();
             LOG2(kError, kTrace, "Subscribe (%p) for device ", this);
@@ -171,7 +175,7 @@ CpiSubscription::CpiSubscription(CpiDevice& aDevice, IEventProcessor& aEventProc
     , iInterruptHandler(NULL)
     , iSuspended(false)
 {
-    iTimer = new Timer(iEnv, MakeFunctor(*this, &CpiSubscription::Renew));
+    iTimer = new Timer(iEnv, MakeFunctor(*this, &CpiSubscription::Renew), "CpiSubscription");
     iDevice.AddRef();
     iRejectFutureOperations = false;
     iEnv.AddObject(this);
@@ -324,6 +328,7 @@ void CpiSubscription::DoUnsubscribe()
     LOG(kEvent, "\n");
     iEnv.Mutex().Signal();
 
+    const TUint startTime = Os::TimeInMs(iEnv.OsCtx());
     iTimer->Cancel();
     if (iSid.Bytes() == 0) {
         LOG(kEvent, "Skipped unsubscribing since sid is empty (we're not subscribed)\n");
@@ -333,11 +338,24 @@ void CpiSubscription::DoUnsubscribe()
     iEnv.Mutex().Wait();
     iSid.TransferTo(sid);
     iEnv.Mutex().Signal();
-    iDevice.Unsubscribe(*this, sid);
+    try {
+        iDevice.Unsubscribe(*this, sid);
+    }
+    catch (NetworkTimeout&) {
+    }
+    catch (NetworkError&) {
+    }
+    catch (HttpError&) {
+    }
+    catch (WriterError&) {
+    }
+    catch (ReaderError&) {
+    }
     iEnv.Mutex().Wait();
+    const TUint diffTime = Os::TimeInMs(iEnv.OsCtx()) - startTime; // ignore possibility of time wrapping
     LOG(kEvent, "Unsubscribed (%p) sid ", this);
     LOG(kEvent, sid);
-    LOG(kEvent, "\n");
+    LOG(kEvent, " %ums\n", diffTime);
     iEnv.Mutex().Signal();
 }
 
@@ -381,7 +399,7 @@ void CpiSubscription::Suspend()
 {
     iTimer->Cancel();
     iSuspended = true;
-    if (StartSchedule(eSubscribe, false)) {
+    if (StartSchedule(eUnsubscribe, false)) {
         iDevice.GetCpStack().SubscriptionManager().ScheduleLocked(*this);
     }
 }
@@ -550,9 +568,6 @@ CpiSubscriptionManager::CpiSubscriptionManager(CpStack& aCpStack)
         iLock.Signal();
     }
 
-#ifndef _WIN32
-    ASSERT(iCpStack.Env().InitParams()->NumSubscriberThreads() <= 9);
-#endif
     const TUint numThreads = iCpStack.Env().InitParams()->NumSubscriberThreads();
     iSubscribers = (Subscriber**)malloc(sizeof(*iSubscribers) * numThreads);
     for (TUint i=0; i<numThreads; i++) {
@@ -583,7 +598,7 @@ CpiSubscriptionManager::~CpiSubscriptionManager()
         // wait 1 minute then proceed
         // we'll have leaked some subscriptions but this'll be logged later during shutdown
         iCleanShutdown = true;
-        Timer timer(iCpStack.Env(), MakeFunctor(*this, &CpiSubscriptionManager::ShutdownHasHung));
+        Timer timer(iCpStack.Env(), MakeFunctor(*this, &CpiSubscriptionManager::ShutdownHasHung), "SubscriptionManagerShutdown");
         timer.FireIn(60*1000);
         iShutdownSem.Wait();
         if (iCleanShutdown) {

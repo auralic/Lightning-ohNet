@@ -44,13 +44,13 @@ DvProviderAvOpenhomeOrgMessageCenter1Cpp::DvProviderAvOpenhomeOrgMessageCenter1C
 
 void DvProviderAvOpenhomeOrgMessageCenter1Cpp::EnablePropertyMessage()
 {
-    iPropertyMessage = new PropertyString(iDvStack.Env(), new ParameterString("Message"));
+    iPropertyMessage = new PropertyString(new ParameterString("Message"));
     iService->AddProperty(iPropertyMessage); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgMessageCenter1Cpp::EnablePropertyMessageID()
 {
-    iPropertyMessageID = new PropertyUint(iDvStack.Env(), new ParameterUint("MessageID"));
+    iPropertyMessageID = new PropertyUint(new ParameterUint("MessageID"));
     iService->AddProperty(iPropertyMessageID); // passes ownership
 }
 

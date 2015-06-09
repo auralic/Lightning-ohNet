@@ -53,7 +53,6 @@ ProxyError& ProxyError::operator=(const ProxyError& aProxyError)
 
 void CpProxy::Subscribe()
 {
-  //  printf("YYYYYYYYYYYYYYYYYYYYYYYY\n");
     if (iInitialEventLock == NULL) {
         iInitialEventLock = new OpenHome::Mutex("PRX4");
     }
@@ -84,7 +83,6 @@ void CpProxy::Unsubscribe()
 CpProxy::CpProxy(const TChar* aDomain, const TChar* aName, TUint aVersion, CpiDevice& aDevice)
     : iInvocable(aDevice)
 {
-  //  printf("before cpproxy...\n");
     iService = new CpiService(aDomain, aName, aVersion, aDevice);
     iCpSubscriptionStatus = eNotSubscribed;
     iLock = new OpenHome::Mutex("PRX1");
@@ -92,7 +90,6 @@ CpProxy::CpProxy(const TChar* aDomain, const TChar* aName, TUint aVersion, CpiDe
     iPropertyWriteLock = new OpenHome::Mutex("PRX3");
     iInitialEventDelivered = false;
     iInitialEventLock = NULL;
-  //  printf("end cpproxy...\n");
 }
 
 CpProxy::~CpProxy()
@@ -124,11 +121,9 @@ void CpProxy::DestroyService()
 
 void CpProxy::SetPropertyChanged(Functor& aFunctor)
 {
-  //  printf("before set property changed....\n");
     iLock->Wait();
     iPropertyChanged = aFunctor;
     iLock->Signal();
-  //  printf("end set property changed....\n");
 }
 
 void CpProxy::SetPropertyInitialEvent(Functor& aFunctor)
@@ -139,6 +134,11 @@ void CpProxy::SetPropertyInitialEvent(Functor& aFunctor)
         iInitialEvent();
     }
     iLock->Signal();
+}
+
+TUint CpProxy::Version() const
+{
+    return iService->Version();
 }
 
 Mutex& CpProxy::PropertyReadLock() const

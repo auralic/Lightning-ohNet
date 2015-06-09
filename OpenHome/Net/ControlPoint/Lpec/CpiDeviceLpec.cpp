@@ -35,7 +35,8 @@ CpiDeviceLpec::CpiDeviceLpec(CpStack& aCpStack, Endpoint aLocation, const Brx& a
     , iConnected(false)
     , iExiting(false)
 {
-    iReadBuffer = new Srs<kMaxReadBufferBytes>(iSocket);
+    iReadBuffer = new Srs<1024>(iSocket);
+    iReaderUntil = new ReaderUntilS<kMaxReadBufferBytes>(*iReadBuffer);
     iWriteBuffer = new Sws<kMaxWriteBufferBytes>(iSocket);
     iThread = new ThreadFunctor("LpecClient", MakeFunctor(*this, &CpiDeviceLpec::LpecThread));
     iInvocable = new Invocable(*this);
@@ -49,6 +50,7 @@ CpiDeviceLpec::~CpiDeviceLpec()
     delete iThread;
     delete iInvocable;
     delete iWriteBuffer;
+    delete iReaderUntil;
     delete iReadBuffer;
     iSocket.Close();
 }
@@ -78,7 +80,7 @@ void CpiDeviceLpec::LpecThread()
         iSocket.Connect(iLocation, iCpStack.Env().InitParams()->TcpConnectTimeoutMs());
         TBool starting = true;
         for (;;) {
-            Brn line = iReadBuffer->ReadUntil(Ascii::kLf);
+            Brn line = iReaderUntil->ReadUntil(Ascii::kLf);
             if (line.Bytes() > 0 && line[line.Bytes()-1] == Ascii::kCr) {
                 line.Set(line.Ptr(), line.Bytes()-1);
             }
@@ -286,6 +288,11 @@ void CpiDeviceLpec::NotifyRemovedBeforeReady()
 {
 }
 
+TUint CpiDeviceLpec::Version(const TChar* /*aDomain*/, const TChar* /*aName*/, TUint aProxyVersion) const
+{
+    return aProxyVersion; // FIXME - could store list of remote services and lookup on that
+}
+
 void CpiDeviceLpec::Release()
 {
     delete this;
@@ -378,7 +385,6 @@ TBool CpiDeviceLpec::Invocable::HandleLpecResponse(const Brx& aMethod, const Brx
     Brn body = Ascii::Trim(aBody);
     Parser parser(body);
     if (aMethod == Lpec::kMethodError) {
-        AutoSemaphore a(iSem);
         TUint code = 0;
         try {
             Brn codeBuf = parser.Next(' ');
@@ -389,13 +395,13 @@ TBool CpiDeviceLpec::Invocable::HandleLpecResponse(const Brx& aMethod, const Brx
         parser.Next(Lpec::kArgumentDelimiter);
         Brn description = parser.Next(Lpec::kArgumentDelimiter);
         iInvocation->SetError(Error::eUpnp/*nearest alternative to eProtocol*/, code, description);
+        iSem.Signal();
         return true;
     }
     else if (aMethod != Lpec::kMethodResponse) {
         return false;
     }
 
-    AutoSemaphore a(iSem);
     const std::vector<Argument*>& outArgs = iInvocation->OutputArguments();
     try {
         OutputProcessor outputProcessor;
@@ -406,8 +412,10 @@ TBool CpiDeviceLpec::Invocable::HandleLpecResponse(const Brx& aMethod, const Brx
         }
     }
     catch (Exception&) {
+        iSem.Signal();
         THROW(ReaderError);
     }
+    iSem.Signal();
 
     return true;
 }

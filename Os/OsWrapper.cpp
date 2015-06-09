@@ -90,7 +90,11 @@ void OpenHome::Os::NetworkConnect(THandle aHandle, const Endpoint& aEndpoint, TU
     int32_t err = OsNetworkConnect(aHandle, aEndpoint.Address(), aEndpoint.Port(), aTimeoutMs);
     if (err != 0) {
         LOG2F(kNetwork, kError, "Os::NetworkConnect H = %d, RETURN VALUE = %d\n", aHandle, err);
-        THROW(NetworkTimeout);
+        if (err == -1)  // Timeout
+            THROW(NetworkTimeout);
+        if (err == -2)  // Connection refused
+            THROW(NetworkError);
+        ASSERTS(); // invalid error
     }
 }
 
@@ -174,6 +178,15 @@ void OpenHome::Os::NetworkSocketMulticastDropMembership(THandle aHandle, TIpAddr
     int32_t err = OsNetworkSocketMulticastDropMembership(aHandle, aInterface, aAddress);
     if(err != 0) {
         LOG2F(kNetwork, kError, "Os::OsNetworkSocketMulticastDropMembership H = %d, RETURN VALUE = %d\n", aHandle, err);
+        THROW(NetworkError);
+    }
+}
+
+void OpenHome::Os::NetworkSocketSetMulticastIf(THandle aHandle, TIpAddress aInterface)
+{
+    int32_t err = OsNetworkSocketSetMulticastIf(aHandle, aInterface);
+    if(err != 0) {
+        LOG2F(kNetwork, kError, "Os::OsNetworkSocketSetMulticastIf H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }

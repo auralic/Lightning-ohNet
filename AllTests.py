@@ -15,6 +15,8 @@ def objPath():
             plat = 'Mac-x64'
         elif giOsArmv7 == 1:
             plat = 'iOs-armv7'
+        elif giOsArm64 == 1:
+            plat = 'iOs-arm64'
         elif giOsx86 == 1:
             plat = 'iOs-x86'
         else:
@@ -34,6 +36,8 @@ def buildArgs():
         buildArgs += ' mac-64=1'
     if giOsArmv7 == 1:
         buildArgs += ' iOs-armv7=1'
+    if giOsArm64 == 1:
+        buildArgs += ' iOs-arm64=1'
     if giOsx86 == 1:
         buildArgs += ' iOs-x86=1'
     if gAndroid == 1:
@@ -42,6 +46,8 @@ def buildArgs():
         buildArgs += ' Qnap-anycpu=1'
     if gCore == 1:
         buildArgs += ' platform=' + gPlatform
+    if gNativeTestsOnly == 1:
+        buildArgs += ' native_only=yes'
     return buildArgs
 
 def build(aTarget, aParallel=False):
@@ -197,6 +203,7 @@ gJsTests = 0
 gDebugBuild = 0
 gMac64 = 0
 giOsArmv7 = 0
+giOsArm64 = 0
 giOsx86 = 0
 gAndroid = 0
 gQnap = 0
@@ -245,6 +252,11 @@ for arg in sys.argv[1:]:
         if platform.system() != 'Darwin':
             print 'ERROR - --iOs-armv7 only applicable on Darwin'
             sys.exit(1)
+    elif arg == '--iOs-arm64':
+        giOsArm64 = 1
+        if platform.system() != 'Darwin':
+            print 'ERROR - --iOs-arm64 only applicable on Darwin'
+            sys.exit(1)
     elif arg == '--iOs-x86':
         giOsx86 = 1
         if platform.system() != 'Darwin':
@@ -285,6 +297,7 @@ class TestCase(object):
 gAllTests = [ TestCase('TestBuffer', [], True)
              ,TestCase('TestStream', [], True)
              ,TestCase('TestThread', [], True)
+             ,TestCase('TestFunctorGeneric', [], True)
              ,TestCase('TestFifo', [], True)
              ,TestCase('TestFile', [], True)
              ,TestCase('TestQueue', [], True)
@@ -293,6 +306,7 @@ gAllTests = [ TestCase('TestBuffer', [], True)
              #,TestCase('TestTimer', [])
              ,TestCase('TestHttpReader', [], True)
              ,TestCase('TestSsdpMListen', ['-d', '10'], True)
+             ,TestCase('TestXmlParser', [], True)
              ,TestCase('TestSsdpUListen', ['-t', 'av.openhome.org:service:Radio:1'], True)
              ,TestCase('TestDeviceList', ['-t', 'av.openhome.org:service:Radio:1', '-f'], True)
              ,TestCase('TestDeviceListStd', ['-t', 'av.openhome.org:service:Radio:1', '-f'], True)

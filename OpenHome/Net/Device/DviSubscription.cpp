@@ -56,7 +56,7 @@ DviSubscription::DviSubscription(DvStack& aDvStack, DviDevice& aDevice, IPropert
     aSid.TransferTo(iSid);
     iWriterFactory.NotifySubscriptionCreated(iSid);
     Functor functor = MakeFunctor(*this, &DviSubscription::Expired);
-    iTimer = new Timer(iDvStack.Env(), functor);
+    iTimer = new Timer(iDvStack.Env(), functor, "DviSubscription");
     iDvStack.Env().AddObject(this);
 }
 
@@ -73,7 +73,14 @@ void DviSubscription::Start(DviService& aService)
     for (TUint i=0; i<properties.size(); i++) {
         // store all seq nums as 0 initially to ensure all are published by the first call to WriteChanges()
         iPropertySequenceNumbers.push_back(0);
-        ASSERT(properties[i]->SequenceNumber() != 0);
+        if (properties[i]->SequenceNumber() == 0) {
+            Log::Print("ERROR: uninitialised property.  Provider: ");
+            Log::Print(iService->ServiceType().Name());
+            Log::Print(", property: ");
+            Log::Print(properties[i]->Parameter().Name());
+            Log::Print("\n");
+            ASSERTS();
+        }
     }
 }
 
@@ -170,7 +177,6 @@ void DviSubscription::WriteChanges()
         writer = CreateWriter();
         if (writer != NULL) {
             writer->PropertyWriteEnd();
-            writer->Release();
         }
     }
     catch(NetworkTimeout&) {
@@ -183,6 +189,9 @@ void DviSubscription::WriteChanges()
     catch(HttpError&) {}
     catch(WriterError&) {}
     catch(ReaderError&) {}
+    if (writer != NULL) {
+        writer->Release();
+    }
 }
 
 IPropertyWriter* DviSubscription::CreateWriter()

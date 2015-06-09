@@ -158,13 +158,13 @@ CpProxyAvOpenhomeOrgInternetRadio1::CpProxyAvOpenhomeOrgInternetRadio1(CpDevice&
 
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgInternetRadio1::UriPropertyChanged);
-    iUri = new PropertyString(aDevice.Device().GetCpStack().Env(), "Uri", functor);
+    iUri = new PropertyString("Uri", functor);
     AddProperty(iUri);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgInternetRadio1::MetadataPropertyChanged);
-    iMetadata = new PropertyString(aDevice.Device().GetCpStack().Env(), "Metadata", functor);
+    iMetadata = new PropertyString("Metadata", functor);
     AddProperty(iMetadata);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgInternetRadio1::TransportStatePropertyChanged);
-    iTransportState = new PropertyString(aDevice.Device().GetCpStack().Env(), "TransportState", functor);
+    iTransportState = new PropertyString("TransportState", functor);
     AddProperty(iTransportState);
 }
 

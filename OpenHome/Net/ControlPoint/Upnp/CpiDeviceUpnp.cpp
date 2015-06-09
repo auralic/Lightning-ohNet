@@ -45,7 +45,7 @@ CpiDeviceUpnp::CpiDeviceUpnp(CpStack& aCpStack, const Brx& aUdn, const Brx& aLoc
     Environment& env = aCpStack.Env();
     iHostUdpIsLowQuality = env.InitParams()->IsHostUdpLowQuality();
     iDevice = new CpiDevice(aCpStack, aUdn, *this, *this, this);
-    iTimer = new Timer(env, MakeFunctor(*this, &CpiDeviceUpnp::TimerExpired));
+    iTimer = new Timer(env, MakeFunctor(*this, &CpiDeviceUpnp::TimerExpired), "CpiDeviceUpnp");
     UpdateMaxAge(aMaxAgeSecs);
     iInvocable = new Invocable(*this);
 }
@@ -106,14 +106,17 @@ void CpiDeviceUpnp::InterruptXmlFetch()
 
 void CpiDeviceUpnp::CheckStillAvailable(CpiDeviceUpnp* aNewLocation)
 {
-    AutoMutex a(iLock);
+    iLock.Wait();
     if (iNewLocation != NULL) {
         if (iNewLocation->Location() == aNewLocation->Location()) {
+            iLock.Signal();
             aNewLocation->iDevice->RemoveRef();
             return;
         }
-        iNewLocation->iDevice->RemoveRef();
+        CpiDevice* d = iNewLocation->iDevice;
         iNewLocation = aNewLocation;
+        iLock.Signal();
+        d->RemoveRef();
         return;
     }
     iNewLocation = aNewLocation;
@@ -125,6 +128,7 @@ void CpiDeviceUpnp::CheckStillAvailable(CpiDeviceUpnp* aNewLocation)
     FunctorAsync functor = MakeFunctorAsync(*this, &CpiDeviceUpnp::XmlCheckCompleted);
     iXmlCheck->CheckContactable(uri, functor);
     xmlFetchManager.Fetch(iXmlCheck);
+    iLock.Signal();
 }
 
 TBool CpiDeviceUpnp::GetAttribute(const char* aKey, Brh& aValue) const
@@ -171,7 +175,7 @@ TBool CpiDeviceUpnp::GetAttribute(const char* aKey, Brh& aValue) const
                 return (true);
             }
         }
-        catch (XmlError) {
+        catch (XmlError&) {
         }
     }
 
@@ -221,6 +225,63 @@ void CpiDeviceUpnp::NotifyRemovedBeforeReady()
     iSemReady.Wait();
 }
 
+TUint CpiDeviceUpnp::Version(const TChar* aDomain, const TChar* aName, TUint /*aProxyVersion*/) const
+{
+    ServiceType serviceType(iDevice->GetCpStack().Env(), aDomain, aName, 0);
+    const Brx& targServiceType = serviceType.FullName();
+    // Must have backwards compatibility. Need to compare service type and version separately.
+    Parser serviceParser = targServiceType;
+    serviceParser.Next(':');    // urn
+    serviceParser.Next(':');    // schema url
+    serviceParser.Next(':');    // service
+    serviceParser.Next(':');    // name
+    Brn targServiceTypeNoVer(targServiceType.Ptr(), serviceParser.Index()); // full name minus ":x" (where x is version)
+
+    try {
+        Brn root = XmlParserBasic::Find("root", iXml);
+        Brn device = XmlParserBasic::Find("device", root);
+        Brn udn = XmlParserBasic::Find("UDN", device);
+        if (!CpiDeviceUpnp::UdnMatches(udn, Udn())) {
+            Brn deviceList = XmlParserBasic::Find("deviceList", device);
+            do {
+                Brn remaining;
+                device.Set(XmlParserBasic::Find("device", deviceList, remaining));
+                udn.Set(XmlParserBasic::Find("UDN", device));
+                deviceList.Set(remaining);
+            } while (!CpiDeviceUpnp::UdnMatches(udn, Udn()));
+        }
+        Brn serviceList = XmlParserBasic::Find("serviceList", device);
+        Brn service;
+        Brn serviceType;
+        Brn devServiceTypeNoVer;
+        for (;;) {
+            Brn remaining;
+            service.Set(XmlParserBasic::Find("service", serviceList, remaining));
+            serviceType.Set(XmlParserBasic::Find("serviceType", service));
+            serviceList.Set(remaining);
+            // Parse service type and version separately.
+            serviceParser.Set(serviceType);
+            serviceParser.Next(':');    // urn
+            serviceParser.Next(':');    // schema url
+            serviceParser.Next(':');    // service
+            serviceParser.Next(':');    // name
+            devServiceTypeNoVer.Set(serviceType.Ptr(), serviceParser.Index()); // full name minus ":x" (where x is version)
+            if (devServiceTypeNoVer == targServiceTypeNoVer) {
+                Brn devVersionBuf = serviceParser.NextToEnd();    // version
+                try {
+                    return Ascii::Uint(devVersionBuf);
+                }
+                catch (AsciiError&) {
+                    THROW(XmlError);
+                }
+            }
+        }
+    }
+    catch (XmlError&) {
+        return 0;
+    }
+}
+
 void CpiDeviceUpnp::Release()
 {
     delete this; // iDevice not deleted here; it'll delete itself when this returns
@@ -264,13 +325,29 @@ void CpiDeviceUpnp::GetServiceUri(Uri& aUri, const TChar* aType, const ServiceTy
     Brn serviceList = XmlParserBasic::Find("serviceList", device);
     Brn service;
     Brn serviceType;
+    Brn devServiceTypeNoVer;
     const Brx& targServiceType = aServiceType.FullName();
+    // Must have backwards compatibility. Need to compare service type and version separately.
+    Parser serviceParser = targServiceType;
+    serviceParser.Next(':');    // urn
+    serviceParser.Next(':');    // schema url
+    serviceParser.Next(':');    // service
+    serviceParser.Next(':');    // name
+    Brn targServiceTypeNoVer(targServiceType.Ptr(), serviceParser.Index()); // full name minus ":x" (where x is version)
     do {
         Brn remaining;
         service.Set(XmlParserBasic::Find("service", serviceList, remaining));
         serviceType.Set(XmlParserBasic::Find("serviceType", service));
         serviceList.Set(remaining);
-    } while (serviceType != targServiceType);
+        // Parse service type and version separately.
+        serviceParser.Set(serviceType);
+        serviceParser.Next(':');    // urn
+        serviceParser.Next(':');    // schema url
+        serviceParser.Next(':');    // service
+        serviceParser.Next(':');    // name
+        devServiceTypeNoVer.Set(serviceType.Ptr(), serviceParser.Index()); // full name minus ":x" (where x is version)
+        // MUST allow use of device with version >= target version
+    } while (devServiceTypeNoVer != targServiceTypeNoVer);
     Brn path = XmlParserBasic::Find(aType, service);
     if (path.Bytes() == 0) {
         // no event url => service doesn't have any evented state variables
@@ -343,7 +420,6 @@ void CpiDeviceUpnp::XmlFetchCompleted(IAsync& aAsync)
     if (iList != NULL) {
         iList->XmlFetchCompleted(*this, err);
     }
-  //  printf("kkkkkkkkkkkkkkkkkk\n");
     iLock.Signal();
     iSemReady.Signal();
     iDevice->RemoveRef();
@@ -413,8 +489,8 @@ CpiDeviceListUpnp::CpiDeviceListUpnp(CpStack& aCpStack, FunctorCpiDevice aAdded,
     NetworkAdapterList& ifList = aCpStack.Env().NetworkAdapterList();
     AutoNetworkAdapterRef ref(iEnv, "CpiDeviceListUpnp ctor");
     const NetworkAdapter* current = ref.Adapter();
-    iRefreshTimer = new Timer(iEnv, MakeFunctor(*this, &CpiDeviceListUpnp::RefreshTimerComplete));
-    iResumedTimer = new Timer(iEnv, MakeFunctor(*this, &CpiDeviceListUpnp::ResumedTimerComplete));
+    iRefreshTimer = new Timer(iEnv, MakeFunctor(*this, &CpiDeviceListUpnp::RefreshTimerComplete), "DeviceListRefresh");
+    iResumedTimer = new Timer(iEnv, MakeFunctor(*this, &CpiDeviceListUpnp::ResumedTimerComplete), "DeviceListResume");
     iRefreshRepeatCount = 0;
     iInterfaceChangeListenerId = ifList.AddCurrentChangeListener(MakeFunctor(*this, &CpiDeviceListUpnp::CurrentNetworkAdapterChanged));
     iSubnetListChangeListenerId = ifList.AddSubnetListChangeListener(MakeFunctor(*this, &CpiDeviceListUpnp::SubnetListChanged));
@@ -493,12 +569,11 @@ TBool CpiDeviceListUpnp::Update(const Brx& aUdn, const Brx& aLocation, TUint aMa
             CpiDeviceUpnp* newDevice = new CpiDeviceUpnp(iCpStack, aUdn, aLocation, aMaxAge, *this, *this);
             deviceUpnp->CheckStillAvailable(newDevice);
             device->RemoveRef();
-          //  printf("list upnp update...............\n");
             return true;
         }
         deviceUpnp->UpdateMaxAge(aMaxAge);
-        device->RemoveRef();
         iLock.Signal();
+        device->RemoveRef();
         return !iRefreshing;
     }
     iLock.Signal();
@@ -559,9 +634,7 @@ void CpiDeviceListUpnp::DoRefresh()
 
 TBool CpiDeviceListUpnp::IsDeviceReady(CpiDevice& aDevice)
 {
-   // printf("is device ready...\n");
     reinterpret_cast<CpiDeviceUpnp*>(aDevice.OwnerData())->FetchXml();
-  //  printf("is device ready 1...\n");
     return false;
 }
 
@@ -689,7 +762,6 @@ void CpiDeviceListUpnp::XmlFetchCompleted(CpiDeviceUpnp& aDevice, TBool aError)
         Remove(aDevice.Udn());
     }
     else {
-      //  printf("set device ready.........\n");
         SetDeviceReady(aDevice.Device());
     }
 }

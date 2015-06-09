@@ -61,7 +61,8 @@ SsdpListenerMulticast::SsdpListenerMulticast(Environment& aEnv, TIpAddress aInte
     , iInterface(aInterface)
     , iSocket(aEnv, aInterface, Endpoint(Ssdp::kMulticastPort, Ssdp::kMulticastAddress))
     , iBuffer(iSocket)
-    , iReaderRequest(aEnv, iBuffer)
+    , iReaderUntil(iBuffer)
+    , iReaderRequest(aEnv, iReaderUntil)
     , iExiting(false)
     , iRecreateSocket(false)
 {
@@ -69,7 +70,8 @@ SsdpListenerMulticast::SsdpListenerMulticast(Environment& aEnv, TIpAddress aInte
     {
         iSocket.SetRecvBufBytes(kRecvBufBytes);
     }
-    catch ( NetworkError ) {}
+    catch (NetworkError&) {
+    }
     aEnv.AddResumeObserver(*this);
 
     iReaderRequest.AddHeader(iHeaderHost);
@@ -113,7 +115,6 @@ void SsdpListenerMulticast::Run()
                         }
                     }
                     else if (method == Ssdp::kMethodMsearch) {
-              //          printf("recieve a msearch message\n");
                         LOG(kSsdpMulticast, "SSDP Multicast      Msearch\n");
                         iLock.Wait();
                         EraseDisabled(iMsearchHandlers);
@@ -130,8 +131,18 @@ void SsdpListenerMulticast::Run()
                 }
             }
         }
-        catch (HttpError&) {
-            LOG2(kSsdpMulticast, kError, "SSDP Multicast      HttpError\n");
+        catch (HttpError& ex) {
+            Endpoint::EndpointBuf epb;
+            iSocket.Sender().AppendEndpoint(epb);
+            epb.PtrZ();
+            try {
+                Brn buf = iReaderUntil.Read(kMaxBufferBytes);
+                LOG2(kSsdpMulticast, kError, "SSDP Multicast      HttpError (sender=%s) from %s:%u.  Received:\n", (const char*)epb.Ptr(), ex.File(), ex.Line());
+                LOG2(kSsdpMulticast, kError, buf);
+                LOG2(kSsdpMulticast, kError, "\n");
+            }
+            catch (ReaderError&) {
+            }
         }
         catch (WriterError&) {
             LOG2(kSsdpMulticast, kError, "SSDP Multicast      WriterError\n");
@@ -444,11 +455,13 @@ SsdpListenerUnicast::SsdpListenerUnicast(Environment& aEnv, ISsdpNotifyHandler& 
     , iWriteBuffer(iSocketWriter)
     , iWriter(iWriteBuffer)
     , iReadBuffer(iSocketReader)
-    , iReaderResponse(aEnv, iReadBuffer)
+    , iReaderUntil(iReadBuffer)
+    , iReaderResponse(aEnv, iReaderUntil)
     , iWriterLock("SSLU")
     , iExiting(false)
     , iRecreateSocket(false)
 {
+    iSocket.SetMulticastIf(aInterface);
     iSocket.SetTtl(aEnv.InitParams()->MsearchTtl());
     try
     {

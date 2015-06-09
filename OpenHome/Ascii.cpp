@@ -244,7 +244,7 @@ TUint Ascii::AppendDec(Bwx& aBuffer, TInt64 aValue)
     }
 
     while(aValue != 0) {
-        reversed.Append((TChar)('0' + labs(aValue % 10)));
+        reversed.Append((TChar)('0' + abs((TInt)(aValue % 10))));
         aValue = aValue / 10;
     }
 
@@ -353,7 +353,7 @@ TBool Ascii::Contains(const Brx& aBuffer, TChar aValue)
 
 TBool Ascii::Contains(const Brx& aBuffer, const Brx& aValue)
 {
-	TInt bytes = aBuffer.Bytes() - aValue.Bytes();
+    TInt bytes = aBuffer.Bytes() - aValue.Bytes();
     for (TInt i=0; i<=bytes; i++) {
         if (strncmp((char*)&aBuffer[i], (char*)&aValue[0], aValue.Bytes()) == 0) {
             return true;
@@ -552,34 +552,6 @@ TUint Ascii::UintHex(const Brx& aBuffer)
 
     return val;
 }
-
-// Stream classes (ReaderAscii)
-
-ReaderAscii::ReaderAscii(IReader& aReader)
-    : iReader(aReader)
-{
-}
-
-TInt ReaderAscii::ReadInt(TByte aSeparator)
-{
-    return (Ascii::Int(iReader.ReadUntil(aSeparator)));
-}
-
-TUint ReaderAscii::ReadUint(TByte aSeparator)
-{
-    return (Ascii::Uint(iReader.ReadUntil(aSeparator)));
-}
-
-Brn ReaderAscii::Read(TUint aBytes)
-{
-    return (iReader.Read(aBytes));
-}
-
-Brn ReaderAscii::ReadUntil(TByte aSeparator)
-{
-    return (iReader.ReadUntil(aSeparator));
-}
-
 // Stream classes (WriterAscii)
 
 WriterAscii::WriterAscii(IWriter& aWriter)

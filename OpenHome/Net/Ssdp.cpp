@@ -695,7 +695,6 @@ void SsdpHeaderHost::Process(const Brx& aValue)
 {
     if (!Ascii::CaseInsensitiveEquals(aValue, Ssdp::kMulticastAddressAndPort)) {
         if (!Ascii::CaseInsensitiveEquals(aValue, Ssdp::kMulticastAddress)) {
-          //  printf("+++++++++++++++\n");
             THROW (HttpError);
         }
     }

@@ -3,6 +3,11 @@
 
 using namespace OpenHome;
 
+IFile* FileSystemAnsii::Open(const TChar* aFilename, FileMode aFileMode)
+{
+    return new FileAnsii(aFilename, aFileMode);
+}
+
 FileAnsii::FileAnsii(const TChar* aFilename, FileMode aFileMode)
     : iFilePtr(NULL)
 {
@@ -10,6 +15,9 @@ FileAnsii::FileAnsii(const TChar* aFilename, FileMode aFileMode)
     {
         case eFileReadOnly:
             iFilePtr = fopen(aFilename, "rb");
+            break;
+        case eFileReadWrite:
+            iFilePtr = fopen(aFilename, "wb");
             break;
         default:
             iFilePtr = NULL;
@@ -27,15 +35,24 @@ FileAnsii::~FileAnsii()
 
 void FileAnsii::Read(Bwx& aBuffer)
 {
-    Read(aBuffer, aBuffer.MaxBytes() - aBuffer.Bytes());
+    Read(aBuffer, aBuffer.BytesRemaining());
 }
 
 void FileAnsii::Read(Bwx& aBuffer, TUint32 aBytes)
 {
-    ASSERT(aBytes <= aBuffer.MaxBytes() - aBuffer.Bytes());
+    // IFile implementations must check read length
+    ASSERT(aBytes);
+    // Check there's enough space in read buffer
+    ASSERT(aBytes <= aBuffer.BytesRemaining());
+    // Find read pointer
     TByte* p = const_cast<TByte*>(aBuffer.Ptr()) + aBuffer.Bytes();
+    // Do the read
     TUint bytesRead = (TUint)fread(p, 1, aBytes, iFilePtr);
+    // Register the new content with the buffer
     aBuffer.SetBytes(aBuffer.Bytes() + bytesRead);
+    // throw if entire read wasn't performed
+    if ( bytesRead == 0 )
+        THROW(FileReadError);
 }
 
 void FileAnsii::Write(const Brx& aBuffer)
@@ -43,9 +60,17 @@ void FileAnsii::Write(const Brx& aBuffer)
     Write(aBuffer, aBuffer.Bytes());
 }
 
-void FileAnsii::Write(const Brx& /*aBuffer*/, TUint32 /*aBytes*/)
+void FileAnsii::Write(const Brx& aBuffer, TUint32 aBytes)
 {
-    THROW(FileWriteError);
+    // IFile implementations must check write length
+    ASSERT(aBytes);
+    // Check we have enough bytes
+    ASSERT(aBuffer.Bytes() >= aBytes);
+    // Do the write
+    TUint bytesWritten = (TUint)fwrite(aBuffer.Ptr(), 1, aBytes, iFilePtr);
+    // throw if entire write was not performed
+    if ( bytesWritten != aBytes )
+        THROW(FileWriteError);
 }
 
 void FileAnsii::Seek(TInt32 aBytes, SeekWhence aWhence)

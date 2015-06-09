@@ -39,7 +39,7 @@ void DvProviderAvOpenhomeOrgServerConfig1::Construct()
 
 void DvProviderAvOpenhomeOrgServerConfig1::EnablePropertyAlive()
 {
-    iPropertyAlive = new PropertyBool(iDvStack.Env(), new ParameterBool("Alive"));
+    iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
     iService->AddProperty(iPropertyAlive); // passes ownership
 }
 
@@ -188,14 +188,6 @@ void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetInitHDDResult()
     OpenHome::Net::Action* action = new OpenHome::Net::Action("GetInitHDDResult");
     action->AddOutputParameter(new ParameterBool("InitHDDResult"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoGetInitHDDResult);
-    iService->AddAction(action, functor);
-}
-
-void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetHDDHasInited()
-{
-    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetHDDHasInited");
-    action->AddOutputParameter(new ParameterBool("HDDHasInited"));
-    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoGetHDDHasInited);
     iService->AddAction(action, functor);
 }
 
@@ -371,15 +363,6 @@ void DvProviderAvOpenhomeOrgServerConfig1::DoGetInitHDDResult(IDviInvocation& aI
     GetInitHDDResult(invocation, respInitHDDResult);
 }
 
-void DvProviderAvOpenhomeOrgServerConfig1::DoGetHDDHasInited(IDviInvocation& aInvocation)
-{
-    aInvocation.InvocationReadStart();
-    aInvocation.InvocationReadEnd();
-    DviInvocation invocation(aInvocation);
-    DviInvocationResponseBool respHDDHasInited(aInvocation, "HDDHasInited");
-    GetHDDHasInited(invocation, respHDDHasInited);
-}
-
 void DvProviderAvOpenhomeOrgServerConfig1::SetServerName(IDvInvocation& /*aResponse*/, const Brx& /*aServerName*/)
 {
     ASSERTS();
@@ -466,11 +449,6 @@ void DvProviderAvOpenhomeOrgServerConfig1::ScanVersionDiff(IDvInvocation& /*aRes
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::GetInitHDDResult(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aInitHDDResult*/)
-{
-    ASSERTS();
-}
-
-void DvProviderAvOpenhomeOrgServerConfig1::GetHDDHasInited(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aHDDHasInited*/)
 {
     ASSERTS();
 }

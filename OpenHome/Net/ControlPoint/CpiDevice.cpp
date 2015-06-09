@@ -88,7 +88,6 @@ void CpiDevice::InvokeAction(Invocation& aInvocation)
 
 TUint CpiDevice::Subscribe(CpiSubscription& aSubscription, const Uri& aSubscriber)
 {
-  //  printf("CpiDevice subscribe........\n");
     return iProtocol.Subscribe(aSubscription, aSubscriber);
 }
 
@@ -105,6 +104,11 @@ void CpiDevice::Unsubscribe(CpiSubscription& aSubscription, const Brx& aSid)
 void CpiDevice::NotifyRemovedBeforeReady()
 {
     iProtocol.NotifyRemovedBeforeReady();
+}
+
+TUint CpiDevice::Version(const TChar* aDomain, const TChar* aName, TUint aProxyVersion) const
+{
+    return iProtocol.Version(aDomain, aName, aProxyVersion);
 }
 
 void CpiDevice::SetReady()
@@ -220,8 +224,8 @@ void CpiDeviceList::Add(CpiDevice* aDevice)
     iLock.Wait();
     if (aDevice->HasExpired() || !iActive) {
         LOG(kDevice, "< CpiDeviceList::Add, device expired or list stopped\n");
-        aDevice->RemoveRef();
         iLock.Signal();
+        aDevice->RemoveRef();
         return;
     }
     iRefreshLock.Wait();
@@ -240,9 +244,9 @@ void CpiDeviceList::Add(CpiDevice* aDevice)
         LOG(kDevice, "< CpiDeviceList::Add, device ");
         LOG(kDevice, aDevice->Udn());
         LOG(kDevice, " already in list\n");
+        iLock.Signal();
         tmp->RemoveRef();
         aDevice->RemoveRef();
-        iLock.Signal();
         return;
     }
     Brn udn(aDevice->Udn());
@@ -269,8 +273,8 @@ void CpiDeviceList::Remove(const Brx& aUdn)
     iMap.erase(it);
     iPendingRemove.push_back(device);
     iCpStack.DeviceListUpdater().QueueRemoved(*this, *device);
-    device->RemoveRef();
     iLock.Signal();
+    device->RemoveRef();
 }
 
 TBool CpiDeviceList::IsDeviceReady(CpiDevice& /*aDevice*/)
@@ -361,19 +365,16 @@ void CpiDeviceList::NotifyAdded(CpiDevice& aDevice)
         return;
     }
     TBool sameDevice = ((void*)device == (void*)&aDevice);
+    iLock.Signal();
     device->RemoveRef();
     if (!sameDevice) {
         // aDevice has been replaced, probably because its location changed
-        iLock.Signal();
         return;
     }
-    iLock.Signal();
     LOG(kTrace, "Device+ {udn{");
     LOG(kTrace, aDevice.Udn());
     LOG(kTrace, "}}\n");
-  //  printf("before added..............\n");
     iAdded(aDevice);
-  //  printf("end added..............\n");
 }
 
 void CpiDeviceList::NotifyRemoved(CpiDevice& aDevice)

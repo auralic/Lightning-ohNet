@@ -40,7 +40,7 @@ android_ndk_debug = 0
 
 # Macros used by Common.mak
 ar = lib /nologo /out:$(objdir)
-cflags_third_party = $(debug_specific_cflags) /W4 /EHsc /FR$(objdir) -DDEFINE_LITTLE_ENDIAN -DDEFINE_TRACE -D_CRT_SECURE_NO_WARNINGS
+cflags_third_party = $(debug_specific_cflags) /W4 /EHa /FR$(objdir) -DDEFINE_LITTLE_ENDIAN -DDEFINE_TRACE -D_CRT_SECURE_NO_WARNINGS
 cflags = $(cflags_third_party) /WX
 cppflags = $(cflags)
 objdirbare = Build\Obj\Windows\$(build_dir)
@@ -50,7 +50,7 @@ includes = -IBuild\Include
 bundle_build = Build\Bundles
 osdir = Windows
 objext = obj
-libprefix = lib
+libprefix =
 libext = lib
 sharedlibprefix = 
 sharedlibext = lib
@@ -62,7 +62,6 @@ dllprefix =
 dllext = dll
 linkopts_ohNet =
 link_dll = link /nologo $(link_flag_debug_dll) /map Ws2_32.lib Iphlpapi.lib Dbghelp.lib /dll
-link_dll_service = link /nologo $(link_flag_debug_dll)  /map $(objdir)ohNet.lib Ws2_32.lib Iphlpapi.lib Dbghelp.lib /dll
 csharp = csc /nologo /platform:$(csplatform)
 csharpdefines = 
 publicjavadir = OpenHome\Net\Bindings\Java^\
@@ -228,3 +227,4 @@ bundle:
 	python bundle_binaries.py --system $(openhome_system) --architecture $(openhome_architecture) --configuration $(openhome_configuration) --managed
 
 ohNet.net.dll :  $(objdir)ohNet.net.dll ohNetDll
+ohNetDll : ohNetDllImpl

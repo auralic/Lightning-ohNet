@@ -23,7 +23,8 @@ openhome_configuration = Release
 android_ndk_debug=0
 endif
 
-#CROSS_COMPILE=arm-poky-linux-gnueabi-
+
+
 # Figure out platform, openhome_system and openhome_architecture
 
 gcc_machine = $(shell ${CROSS_COMPILE}gcc -dumpmachine)
@@ -38,6 +39,10 @@ ifeq ($(MACHINE),Darwin)
     platform = iOS
     detected_openhome_system = iOs
     detected_openhome_architecture = armv7
+  else ifeq ($(iOs-arm64),1)
+    platform = iOS
+    detected_openhome_system = iOs
+    detected_openhome_architecture = arm64
   else ifeq ($(iOs-x86),1)
     platform = iOS
     detected_openhome_system = iOs
@@ -59,6 +64,13 @@ else ifeq ($(Android-anycpu), 1)
     platform = Android
     detected_openhome_system = Android
     detected_openhome_architecture = anycpu
+else ifeq ($(freebsd), 1)
+    platform = FreeBSD
+    detected_openhome_system = FreeBSD
+    detected_openhome_architecture = x86
+    compiler = gcc -o $(objdir)
+    link = ${CROSS_COMPILE}g++ $(platform_linkflags)
+    ar = ${CROSS_COMPILE}ar rc $(objdir)
 else
   # At present, platform == Vanilla is used for Kirkwood, x86 and x64 Posix builds.
   platform ?= Vanilla
@@ -94,12 +106,14 @@ else
     ifneq (,$(findstring x86_64,$(gcc_machine)))
       detected_openhome_architecture = x64
     endif
-
+    ifneq (,$(findstring mipsel,$(gcc_machine)))
+      detected_openhome_architecture = mipsel
+    endif
 
 endif
 
 detected_openhome_system ?= Unknown
-detected_openhome_architecture ?= armhf
+detected_openhome_architecture ?= Unknown
 
 ifneq (${openhome_system},)
   ifneq (${openhome_system},${detected_openhome_system})
@@ -125,6 +139,7 @@ endif
 
 
 ifeq ($(platform),iOS)
+	nocpp11=yes
 	linkopts_ohNet =
 	platform_prefix=iPhoneOS
 	platform_compiler=arm-apple-darwin10
@@ -136,8 +151,8 @@ ifeq ($(platform),iOS)
 	endif
 	devroot=/Applications/Xcode.app/Contents/Developer
 	toolroot=$(devroot)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-	sdkroot=$(devroot)/Platforms/$(platform_prefix).platform/Developer/SDKs/$(platform_prefix)7.1.sdk
-	platform_cflags = -I$(sdkroot)/usr/lib/gcc/$(platform_compiler)/4.2.1/include/ -I$(sdkroot)/usr/include/ -miphoneos-version-min=2.2 -pipe -no-cpp-precomp -isysroot $(sdkroot) -DPLATFORM_MACOSX_GNU -DPLATFORM_IOS
+	sdkroot=$(devroot)/Platforms/$(platform_prefix).platform/Developer/SDKs/$(platform_prefix).sdk
+	platform_cflags = -I$(sdkroot)/usr/include/ -miphoneos-version-min=2.2 -pipe -no-cpp-precomp -isysroot $(sdkroot) -DPLATFORM_MACOSX_GNU -DPLATFORM_IOS
 	# TODO: Support armv6 for old devices
 	osbuilddir = $(platform)-$(detected_openhome_architecture)
 	objdir = Build/Obj/$(osbuilddir)/$(build_dir)/
@@ -146,8 +161,8 @@ ifeq ($(platform),iOS)
 	# No support for linking Shared Objects for ARM MAC
 	# link = $(devroot)/usr/bin/llvm-gcc-4.2  -pthread -Wl $(platform_linkflags)
 	ar = $(toolroot)/ar rc $(objdir)
-    mono_lib_dir=/Developer/MonoTouch/usr/lib/mono/2.1
-	csharpdefines = /define:IOS /r:$(mono_lib_dir)/monotouch.dll /r:$(mono_lib_dir)/System.dll /r:$(mono_lib_dir)/System.Core.dll 
+    mono_lib_dir=/Developer/MonoTouch/usr/lib/mono/Xamarin.iOS
+	csharpdefines = /define:IOS /r:$(mono_lib_dir)/Xamarin.iOS.dll /r:$(mono_lib_dir)/System.dll /r:$(mono_lib_dir)/System.Core.dll
 	no_shared_objects = yes
 endif
 
@@ -156,21 +171,21 @@ ifeq ($(platform),IntelMac)
 	platform ?= IntelMac
 	linkopts_ohNet = -Wl,-install_name,@loader_path/libohNet.dylib
 	ifeq ($(mac-64),1)
-		platform_cflags = -DPLATFORM_MACOSX_GNU -arch x86_64 -mmacosx-version-min=10.4
+		platform_cflags = -DPLATFORM_MACOSX_GNU -arch x86_64 -mmacosx-version-min=10.7
 		platform_linkflags = -arch x86_64 -framework CoreFoundation -framework SystemConfiguration
 		osbuilddir = Mac-x64
 		openhome_architecture = x64
 	else
-		platform_cflags = -DPLATFORM_MACOSX_GNU -m32 -mmacosx-version-min=10.4
+		platform_cflags = -DPLATFORM_MACOSX_GNU -m32 -mmacosx-version-min=10.7
 		platform_linkflags = -m32 -framework CoreFoundation -framework SystemConfiguration		
 		osbuilddir = Mac-x86
 		openhome_architecture = x86
 	endif
 
 	objdir = Build/Obj/$(osbuilddir)/$(build_dir)/
-	compiler = ${CROSS_COMPILE}gcc -fPIC -o $(objdir)
-	link = ${CROSS_COMPILE}g++ -pthread $(platform_linkflags)
-	ar = ${CROSS_COMPILE}ar rc $(objdir)
+	compiler = clang -fPIC -stdlib=libc++ -o $(objdir)
+	link = clang++ -pthread -stdlib=libc++ $(platform_linkflags)
+	ar = ar rc $(objdir)
 	openhome_system = Mac
 endif
 
@@ -259,6 +274,16 @@ ifeq ($(platform), Linux-ppc32)
     osdir = Posix
 endif
 
+ifeq ($(platform), FreeBSD)
+    platform_cflags = $(version_specific_cflags) -fPIC -DPLATFORM_FREEBSD
+    platform_linkflags = $(version_specific_linkflags) -pthread
+    linkopts_ohNet = -Wl,-soname,libohNet.so
+    osbuilddir = Posix
+    objdir = Build/Obj/$(osbuilddir)/$(build_dir)/
+    osdir = Posix
+    endian ?= LITTLE
+endif
+
 ifeq ($(platform), Vanilla)
 	# platform == Vanilla (i.e. Kirkwood, x86 or x64)
 	platform_cflags = $(version_specific_cflags) -fPIC
@@ -269,6 +294,7 @@ ifeq ($(platform), Vanilla)
 	endian ?= LITTLE
 	ifeq ($(Qnap-anycpu), 1)
 	    openhome_system = Qnap
+	    nocpp11=yes
 	else
 	    openhome_system = Linux
 	endif
@@ -285,6 +311,8 @@ cflags_base = -fexceptions -Wall $(version_specific_cflags_third_party) -pipe -D
 cflags_third_party = $(cflags_base) -Wno-int-to-pointer-cast
 ifeq ($(nocpp11), yes)
     cppflags = $(cflags_base) -Werror
+else ifeq ($(platform),IntelMac)
+    cppflags = $(cflags_base) -std=c++11 -Werror
 else
     cppflags = $(cflags_base) -std=c++0x -D__STDC_VERSION__=199901L -Werror
 endif
@@ -307,8 +335,11 @@ endif
 exeext = elf
 linkoutput = -o 
 dllprefix = lib
-link_dll = $(version_specific_library_path) ${CROSS_COMPILE}g++ -pthread  $(platform_linkflags) -shared -shared-libgcc
-link_dll_service = $(version_specific_library_path) ${CROSS_COMPILE}g++ -pthread  $(platform_linkflags) -shared -shared-libgcc -lohNet -L$(objdir)
+ifeq ($(MACHINE), Darwin)
+	link_dll = $(version_specific_library_path) clang++ -pthread  $(platform_linkflags) -shared -stdlib=libc++
+else
+	link_dll = $(version_specific_library_path) ${CROSS_COMPILE}g++ -pthread  $(platform_linkflags) -shared -shared-libgcc
+endif
 ifeq ($(platform), iOS)
 	csharp = /Developer/MonoTouch/usr/bin/smcs /nologo $(debug_csharp)
 else
@@ -318,11 +349,13 @@ csharpdefines ?=
 publicjavadir = OpenHome/Net/Bindings/Java/
 
 ifeq ($(platform), IntelMac)
-	includes_jni = -I/System/Library/Frameworks/JavaVM.framework/Headers -I/usr/include/malloc
-	link_jvm = /System/Library/Frameworks/JavaVM.framework/JavaVM
+	platform_java_cflags = -Wno-self-assign 
+	includes_jni = -I${MACOSX_SDK}/System/Library/Frameworks/JavaVM.framework/Headers -I${MACOSX_SDK}/usr/include/malloc
+	link_jvm = ${MACOSX-SDK}/System/Library/Frameworks/JavaVM.framework/JavaVM
 	javac = /usr/bin/javac
 	jar = /usr/bin/jar
 else
+	platform_java_cflags = 
 	includes_jni = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
         ifeq ($(platform), Linux-ppc32)
             libjvm_dir ?= $(JAVA_HOME)/jre/lib/ppc/server
@@ -338,7 +371,7 @@ else
 	jar = $(JAVA_HOME)/bin/jar
 endif
 
-java_cflags = -fexceptions -Wall $(version_specific_java_cflags) -Werror -pipe -D_GNU_SOURCE -D_REENTRANT -DDEFINE_$(endian)_ENDIAN -DDEFINE_TRACE $(debug_specific_cflags) $(platform_cflags)
+java_cflags = -fexceptions -Wall $(platform_java_cflags) $(version_specific_java_cflags) -Werror -pipe -D_GNU_SOURCE -D_REENTRANT -DDEFINE_$(endian)_ENDIAN -DDEFINE_TRACE $(debug_specific_cflags) $(platform_cflags)
 jarflags = cf
 dirsep = /
 prefix = /usr/local
@@ -363,7 +396,7 @@ endif
 endif
 endif
 ifeq ($(uset4), yes)
-build_targets = $(build_targets_base) 
+build_targets = $(build_targets_base) tt
 else
 build_targets = $(build_targets_base)
 endif
@@ -495,7 +528,7 @@ install : install-pkgconf install-libs install-includes
 
 uninstall : uninstall-pkgconf uninstall-libs uninstall-includes
 
-install-pkgconf : 
+install-pkgconf : tt
 	@echo "ERROR: no support for (un)install-pckconf yet"
 	#@echo "see http://www.mono-project.com/Guidelines:Application_Deployment for an example of how to implement this"
 
@@ -550,8 +583,11 @@ bundle:
 
 ifeq ($(platform),iOS)
 ohNet.net.dll :  $(objdir)ohNet.net.dll
+ohNetDll :
 else ifeq ($(platform),Android)
 ohNet.net.dll : $(objdir)ohNet.net.dll ohNetAndroidNative
+ohNetDll : ohNetDllImpl
 else
 ohNet.net.dll :  $(objdir)ohNet.net.dll ohNetDll
+ohNetDll : ohNetDllImpl
 endif

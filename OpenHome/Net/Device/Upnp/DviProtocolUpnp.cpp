@@ -15,6 +15,7 @@
 #include <OpenHome/Private/Parser.h>
 #include <OpenHome/Private/Debug.h>
 #include <OpenHome/MimeTypes.h>
+
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
@@ -67,7 +68,7 @@ DviProtocolUpnp::DviProtocolUpnp(DviDevice& aDevice)
         }
     }
     NetworkAdapterList::DestroySubnetList(subnetList);
-    iAliveTimer = new Timer(iDvStack.Env(), MakeFunctor(*this, &DviProtocolUpnp::SendAliveNotifications));
+    iAliveTimer = new Timer(iDvStack.Env(), MakeFunctor(*this, &DviProtocolUpnp::SendAliveNotifications), "DviProtocolUpnp");
     iLock.Signal();
 }
 
@@ -177,10 +178,10 @@ void DviProtocolUpnp::HandleInterfaceChange()
         }
         else {
             std::vector<NetworkAdapter*>* subnetList = adapterList.CreateSubnetList();
-            const std::vector<NetworkAdapter*>& adapters = adapterList.List();
+            std::vector<NetworkAdapter*>* adapters = adapterList.CreateNetworkAdapterList();
             // remove listeners whose interface is no longer available
             while (i<iAdapters.size()) {
-                if (FindAdapter(iAdapters[i]->Interface(), adapters) != -1) {
+                if (FindAdapter(iAdapters[i]->Interface(), *adapters) != -1) {
                     i++;
                 }
                 else {
@@ -198,6 +199,7 @@ void DviProtocolUpnp::HandleInterfaceChange()
                     update = iDevice.Enabled();
                 }
             }
+            NetworkAdapterList::DestroyNetworkAdapterList(adapters);
             NetworkAdapterList::DestroySubnetList(subnetList);
             if (update) {
                 // halt any ssdp broadcasts/responses that are currently in progress
@@ -255,7 +257,7 @@ void DviProtocolUpnp::WriteResource(const Brx& aUriTail, TIpAddress aAdapter, st
         iLock.Wait();
         const TInt index = FindListenerForInterface(aAdapter);
         if (index == -1) {
-	        iLock.Signal();
+            iLock.Signal();
             return;
         }
         if (iDevice.IsRoot()) {
@@ -484,7 +486,6 @@ void DviProtocolUpnp::SendAliveNotifications()
         catch (NetworkError&) {}
     }
     QueueAliveTimer();
- //   printf("send alivenotification\n");
 }
 
 void DviProtocolUpnp::QueueAliveTimer()
@@ -509,7 +510,6 @@ void DviProtocolUpnp::SendUpdateNotifications()
         GetUriDeviceXml(uri, iAdapters[i]->UriBase());
         iDvStack.SsdpNotifierManager().AnnouncementUpdate(*this, iAdapters[i]->Interface() , uri, iDevice.ConfigId(), functor);
     }
-   // printf("send updatenotification\n");
 }
 
 void DviProtocolUpnp::SendByeByes(TIpAddress aAdapter, const Brx& aUriBase, Functor aCompleted)
@@ -539,14 +539,12 @@ void DviProtocolUpnp::SendAlives(TIpAddress aAdapter, const Brx& aUriBase)
 
 void DviProtocolUpnp::GetUriDeviceXml(Bwx& aUri, const Brx& aUriBase)
 {
-    //printf("222\n");
     aUri.Replace(aUriBase);
     aUri.Append(kDeviceXmlName);
 }
 
 void DviProtocolUpnp::GetDeviceXml(Brh& aXml, TIpAddress aAdapter)
 {
-   // printf("1111\n");
     LOG(kDvDevice, "> DviProtocolUpnp::GetDeviceXml\n");
     DviProtocolUpnpDeviceXmlWriter writer(*this);
     writer.Write(aAdapter);
@@ -722,13 +720,11 @@ TUint DviProtocolUpnpAdapterSpecificData::ServerPort() const
 
 const Brx& DviProtocolUpnpAdapterSpecificData::DeviceXml() const
 {
-   // printf("88888\n");
     return iDeviceXml;
 }
 
 void DviProtocolUpnpAdapterSpecificData::SetDeviceXml(Brh& aXml)
 {
-   // printf("9999\n");
     aXml.TransferTo(iDeviceXml);
 }
 

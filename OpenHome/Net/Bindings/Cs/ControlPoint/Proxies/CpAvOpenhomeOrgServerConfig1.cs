@@ -64,9 +64,6 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncGetInitHDDResult(out bool aInitHDDResult);
         void BeginGetInitHDDResult(CpProxy.CallbackAsyncComplete aCallback);
         void EndGetInitHDDResult(IntPtr aAsyncHandle, out bool aInitHDDResult);
-        void SyncGetHDDHasInited(out bool aHDDHasInited);
-        void BeginGetHDDHasInited(CpProxy.CallbackAsyncComplete aCallback);
-        void EndGetHDDHasInited(IntPtr aAsyncHandle, out bool aHDDHasInited);
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
     }
@@ -403,25 +400,6 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
-    internal class SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1 : SyncProxyAction
-    {
-        private CpProxyAvOpenhomeOrgServerConfig1 iService;
-        private bool iHDDHasInited;
-
-        public SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
-        {
-            iService = aProxy;
-        }
-        public bool HDDHasInited()
-        {
-            return iHDDHasInited;
-        }
-        protected override void CompleteRequest(IntPtr aAsyncHandle)
-        {
-            iService.EndGetHDDHasInited(aAsyncHandle, out iHDDHasInited);
-        }
-    };
-
     /// <summary>
     /// Proxy for the av.openhome.org:ServerConfig:1 UPnP service
     /// </summary>
@@ -445,7 +423,6 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionEditTrack;
         private OpenHome.Net.Core.Action iActionScanVersionDiff;
         private OpenHome.Net.Core.Action iActionGetInitHDDResult;
-        private OpenHome.Net.Core.Action iActionGetHDDHasInited;
         private PropertyBool iAlive;
         private System.Action iAliveChanged;
         private Mutex iPropertyLock;
@@ -540,10 +517,6 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetInitHDDResult = new OpenHome.Net.Core.Action("GetInitHDDResult");
             param = new ParameterBool("InitHDDResult");
             iActionGetInitHDDResult.AddOutputParameter(param);
-
-            iActionGetHDDHasInited = new OpenHome.Net.Core.Action("GetHDDHasInited");
-            param = new ParameterBool("HDDHasInited");
-            iActionGetHDDHasInited.AddOutputParameter(param);
 
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
@@ -1428,55 +1401,6 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
-        /// Invoke the action synchronously
-        /// </summary>
-        /// <remarks>Blocks until the action has been processed
-        /// on the device and sets any output arguments</remarks>
-        /// <param name="aHDDHasInited"></param>
-        public void SyncGetHDDHasInited(out bool aHDDHasInited)
-        {
-            SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1 sync = new SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1(this);
-            BeginGetHDDHasInited(sync.AsyncComplete());
-            sync.Wait();
-            sync.ReportError();
-            aHDDHasInited = sync.HDDHasInited();
-        }
-
-        /// <summary>
-        /// Invoke the action asynchronously
-        /// </summary>
-        /// <remarks>Returns immediately and will run the client-specified callback when the action
-        /// later completes.  Any output arguments can then be retrieved by calling
-        /// EndGetHDDHasInited().</remarks>
-        /// <param name="aCallback">Delegate to run when the action completes.
-        /// This is guaranteed to be run but may indicate an error</param>
-        public void BeginGetHDDHasInited(CallbackAsyncComplete aCallback)
-        {
-            Invocation invocation = iService.Invocation(iActionGetHDDHasInited, aCallback);
-            int outIndex = 0;
-            invocation.AddOutput(new ArgumentBool((ParameterBool)iActionGetHDDHasInited.OutputParameter(outIndex++)));
-            iService.InvokeAction(invocation);
-        }
-
-        /// <summary>
-        /// Retrieve the output arguments from an asynchronously invoked action.
-        /// </summary>
-        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
-        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
-        /// <param name="aHDDHasInited"></param>
-        public void EndGetHDDHasInited(IntPtr aAsyncHandle, out bool aHDDHasInited)
-        {
-            uint code;
-            string desc;
-            if (Invocation.Error(aAsyncHandle, out code, out desc))
-            {
-                throw new ProxyError(code, desc);
-            }
-            uint index = 0;
-            aHDDHasInited = Invocation.OutputBool(aAsyncHandle, index++);
-        }
-
-        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -1550,7 +1474,6 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionEditTrack.Dispose();
             iActionScanVersionDiff.Dispose();
             iActionGetInitHDDResult.Dispose();
-            iActionGetHDDHasInited.Dispose();
             iAlive.Dispose();
         }
     }

@@ -47,7 +47,6 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateEditTrack;
         private ActionDelegate iDelegateScanVersionDiff;
         private ActionDelegate iDelegateGetInitHDDResult;
-        private ActionDelegate iDelegateGetHDDHasInited;
         private PropertyBool iPropertyAlive;
 
         /// <summary>
@@ -344,19 +343,6 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
-        /// Signal that the action GetHDDHasInited is supported.
-        /// </summary>
-        /// <remarks>The action's availability will be published in the device's service.xml.
-        /// GetHDDHasInited must be overridden if this is called.</remarks>
-        protected void EnableActionGetHDDHasInited()
-        {
-            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetHDDHasInited");
-            action.AddOutputParameter(new ParameterBool("HDDHasInited"));
-            iDelegateGetHDDHasInited = new ActionDelegate(DoGetHDDHasInited);
-            EnableAction(action, iDelegateGetHDDHasInited, GCHandle.ToIntPtr(iGch));
-        }
-
-        /// <summary>
         /// SetServerName action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -608,20 +594,6 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         /// <param name="aInitHDDResult"></param>
         protected virtual void GetInitHDDResult(IDvInvocation aInvocation, out bool aInitHDDResult)
-        {
-            throw (new ActionDisabledError());
-        }
-
-        /// <summary>
-        /// GetHDDHasInited action.
-        /// </summary>
-        /// <remarks>Will be called when the device stack receives an invocation of the
-        /// GetHDDHasInited action for the owning device.
-        ///
-        /// Must be implemented iff EnableActionGetHDDHasInited was called.</remarks>
-        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
-        /// <param name="aHDDHasInited"></param>
-        protected virtual void GetHDDHasInited(IDvInvocation aInvocation, out bool aHDDHasInited)
         {
             throw (new ActionDisabledError());
         }
@@ -1457,52 +1429,6 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetInitHDDResult", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
-            }
-            return 0;
-        }
-
-        private static int DoGetHDDHasInited(IntPtr aPtr, IntPtr aInvocation)
-        {
-            GCHandle gch = GCHandle.FromIntPtr(aPtr);
-            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
-            DvInvocation invocation = new DvInvocation(aInvocation);
-            bool hDDHasInited;
-            try
-            {
-                invocation.ReadStart();
-                invocation.ReadEnd();
-                self.GetHDDHasInited(invocation, out hDDHasInited);
-            }
-            catch (ActionError e)
-            {
-                invocation.ReportActionError(e, "GetHDDHasInited");
-                return -1;
-            }
-            catch (PropertyUpdateError)
-            {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetHDDHasInited"));
-                return -1;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetHDDHasInited", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
-                return -1;
-            }
-            try
-            {
-                invocation.WriteStart();
-                invocation.WriteBool("HDDHasInited", hDDHasInited);
-                invocation.WriteEnd();
-            }
-            catch (ActionError)
-            {
-                return -1;
-            }
-            catch (System.Exception e)
-            {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetHDDHasInited", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

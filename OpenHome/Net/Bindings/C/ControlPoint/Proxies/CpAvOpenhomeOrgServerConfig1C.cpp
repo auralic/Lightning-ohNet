@@ -95,10 +95,6 @@ public:
     void BeginGetInitHDDResult(FunctorAsync& aFunctor);
     void EndGetInitHDDResult(IAsync& aAsync, TBool& aInitHDDResult);
 
-    void SyncGetHDDHasInited(TBool& aHDDHasInited);
-    void BeginGetHDDHasInited(FunctorAsync& aFunctor);
-    void EndGetHDDHasInited(IAsync& aAsync, TBool& aHDDHasInited);
-
     void SetPropertyAliveChanged(Functor& aFunctor);
 
     void PropertyAlive(TBool& aAlive) const;
@@ -124,7 +120,6 @@ private:
     Action* iActionEditTrack;
     Action* iActionScanVersionDiff;
     Action* iActionGetInitHDDResult;
-    Action* iActionGetHDDHasInited;
     PropertyBool* iAlive;
     Functor iAliveChanged;
 };
@@ -539,29 +534,6 @@ void SyncGetInitHDDResultAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& aA
     iService.EndGetInitHDDResult(aAsync, iInitHDDResult);
 }
 
-
-class SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1C : public SyncProxyAction
-{
-public:
-    SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy, TBool& aHDDHasInited);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1C() {};
-private:
-    CpProxyAvOpenhomeOrgServerConfig1C& iService;
-    TBool& iHDDHasInited;
-};
-
-SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1C::SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy, TBool& aHDDHasInited)
-    : iService(aProxy)
-    , iHDDHasInited(aHDDHasInited)
-{
-}
-
-void SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& aAsync)
-{
-    iService.EndGetHDDHasInited(aAsync, iHDDHasInited);
-}
-
 CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC aDevice)
     : CpProxyC("av-openhome-org", "ServerConfig", 1, *reinterpret_cast<CpiDevice*>(aDevice))
     , iLock("MPCS")
@@ -648,13 +620,9 @@ CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC
     param = new OpenHome::Net::ParameterBool("InitHDDResult");
     iActionGetInitHDDResult->AddOutputParameter(param);
 
-    iActionGetHDDHasInited = new Action("GetHDDHasInited");
-    param = new OpenHome::Net::ParameterBool("HDDHasInited");
-    iActionGetHDDHasInited->AddOutputParameter(param);
-
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1C::AlivePropertyChanged);
-    iAlive = new PropertyBool(reinterpret_cast<CpiDevice*>(aDevice)->GetCpStack().Env(), "Alive", functor);
+    iAlive = new PropertyBool("Alive", functor);
     AddProperty(iAlive);
 }
 
@@ -679,7 +647,6 @@ CpProxyAvOpenhomeOrgServerConfig1C::~CpProxyAvOpenhomeOrgServerConfig1C()
     delete iActionEditTrack;
     delete iActionScanVersionDiff;
     delete iActionGetInitHDDResult;
-    delete iActionGetHDDHasInited;
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1C::SyncSetServerName(const Brx& aServerName)
@@ -1239,38 +1206,6 @@ void CpProxyAvOpenhomeOrgServerConfig1C::EndGetInitHDDResult(IAsync& aAsync, TBo
     }
     TUint index = 0;
     aInitHDDResult = ((ArgumentBool*)invocation.OutputArguments()[index++])->Value();
-}
-
-void CpProxyAvOpenhomeOrgServerConfig1C::SyncGetHDDHasInited(TBool& aHDDHasInited)
-{
-    SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1C sync(*this, aHDDHasInited);
-    BeginGetHDDHasInited(sync.Functor());
-    sync.Wait();
-}
-
-void CpProxyAvOpenhomeOrgServerConfig1C::BeginGetHDDHasInited(FunctorAsync& aFunctor)
-{
-    Invocation* invocation = Service()->Invocation(*iActionGetHDDHasInited, aFunctor);
-    TUint outIndex = 0;
-    const Action::VectorParameters& outParams = iActionGetHDDHasInited->OutputParameters();
-    invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    Invocable().InvokeAction(*invocation);
-}
-
-void CpProxyAvOpenhomeOrgServerConfig1C::EndGetHDDHasInited(IAsync& aAsync, TBool& aHDDHasInited)
-{
-    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
-    Invocation& invocation = (Invocation&)aAsync;
-    ASSERT(invocation.Action().Name() == Brn("GetHDDHasInited"));
-
-    Error::ELevel level;
-    TUint code;
-    const TChar* ignore;
-    if (invocation.Error(level, code, ignore)) {
-        THROW_PROXYERROR(level, code);
-    }
-    TUint index = 0;
-    aHDDHasInited = ((ArgumentBool*)invocation.OutputArguments()[index++])->Value();
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1C::SetPropertyAliveChanged(Functor& aFunctor)
@@ -2086,49 +2021,6 @@ int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetInitHDDResult(THandle aHa
     try {
         proxyC->EndGetInitHDDResult(*async, InitHDDResult);
         *aInitHDDResult = InitHDDResult? 1 : 0;
-    }
-    catch(...) {
-        err = -1;
-    }
-    return err;
-}
-
-int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncGetHDDHasInited(THandle aHandle, uint32_t* aHDDHasInited)
-{
-    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
-    ASSERT(proxyC != NULL);
-    TBool HDDHasInited;
-    int32_t err = 0;
-    try {
-        proxyC->SyncGetHDDHasInited(HDDHasInited);
-        *aHDDHasInited = HDDHasInited? 1 : 0;
-    }
-    catch (ProxyError& ) {
-        err = -1;
-        *aHDDHasInited = false;
-    }
-    return err;
-}
-
-void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginGetHDDHasInited(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
-{
-    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
-    ASSERT(proxyC != NULL);
-    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
-    proxyC->BeginGetHDDHasInited(functor);
-}
-
-int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetHDDHasInited(THandle aHandle, OhNetHandleAsync aAsync, uint32_t* aHDDHasInited)
-{
-    int32_t err = 0;
-    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
-    ASSERT(proxyC != NULL);
-    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
-    ASSERT(async != NULL);
-    TBool HDDHasInited;
-    try {
-        proxyC->EndGetHDDHasInited(*async, HDDHasInited);
-        *aHDDHasInited = HDDHasInited? 1 : 0;
     }
     catch(...) {
         err = -1;

@@ -10,6 +10,7 @@
 #include <OpenHome/OsWrapper.h>
 
 #include <climits>
+
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
@@ -28,7 +29,7 @@ SsdpNotifierScheduler::SsdpNotifierScheduler(DvStack& aDvStack, ISsdpNotifyListe
     , iListener(aListener)
 {
     Functor functor = MakeFunctor(*this, &SsdpNotifierScheduler::SendNextMsg);
-    iTimer = new Timer(iDvStack.Env(), functor);
+    iTimer = new Timer(iDvStack.Env(), functor, "SsdpNotifierScheduler");
 }
 
 void SsdpNotifierScheduler::Start(TUint aDuration, TUint aMsgCount)
@@ -116,7 +117,6 @@ MsearchResponse::MsearchResponse(DvStack& aDvStack, ISsdpNotifyListener& aListen
     , iAnnouncementData(NULL)
 {
     iNotifier = new SsdpMsearchResponder(aDvStack);
-  //  printf("ssdp msearch responder\n");
 }
 
 MsearchResponse::~MsearchResponse()
@@ -138,14 +138,12 @@ void MsearchResponse::StartAll(IUpnpAnnouncementData& aAnnouncementData, const E
 
 void MsearchResponse::StartRoot(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)
 {
-  //  printf("start root...\n");
     LogNotifierStart("StartRoot");
     Start(aAnnouncementData, 1, NEXT_MSG_ROOT, aRemote, aMx, aUri, aConfigId, aAdapter);
 }
 
 void MsearchResponse::StartUuid(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)
 {
-   // printf("start uuid\n");
     LogNotifierStart("StartUuid");
     Start(aAnnouncementData, 1, NEXT_MSG_UUID, aRemote, aMx, aUri, aConfigId, aAdapter);
 }
@@ -178,7 +176,6 @@ void MsearchResponse::Start(IUpnpAnnouncementData& aAnnouncementData, TUint aTot
     static_cast<SsdpMsearchResponder*>(iNotifier)->SetRemote(aRemote, aConfigId, aAdapter);
     iUri.Replace(aUri);
     SsdpNotifierScheduler::Start(aMx * 1000, iRemainingMsgs);
- //   printf("msearch respond start \n");
 }
 
 TUint MsearchResponse::NextMsg()
@@ -316,7 +313,6 @@ void DviSsdpNotifierManager::AnnouncementAlive(IUpnpAnnouncementData& aAnnouncem
             throw;
         }
     }
-   // printf("send AnnouncementAlive\n");
 }
 
 void DviSsdpNotifierManager::AnnouncementByeBye(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, Functor& aCompleted)
@@ -365,7 +361,6 @@ void DviSsdpNotifierManager::MsearchResponseRoot(IUpnpAnnouncementData& aAnnounc
 
 void DviSsdpNotifierManager::MsearchResponseUuid(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)
 {
-  //  printf("responds search uuid...\n");
     AutoMutex a(iLock);
     Responder* responder = GetResponder(aAnnouncementData);
     responder->Response().StartUuid(aAnnouncementData, aRemote, aMx, aUri, aConfigId, aAdapter);
@@ -524,7 +519,6 @@ DviSsdpNotifierManager::Responder::Responder(MsearchResponse* aResponder)
 
 MsearchResponse& DviSsdpNotifierManager::Responder::Response()
 {
-  //  printf("receive respons...\n");
     return *static_cast<MsearchResponse*>(iScheduler);
 }
 

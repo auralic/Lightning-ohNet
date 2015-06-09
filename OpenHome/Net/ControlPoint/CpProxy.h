@@ -59,6 +59,7 @@ private:
 class DllExportClass CpProxy : private IEventProcessor
 {
 public:
+    DllExport virtual ~CpProxy();
     /**
      * Subscribe to notification of changes in state variables.
      * Use SetProperty[stateVarName]Changed() to register a callback on change
@@ -85,9 +86,14 @@ public:
      * @param[in]  aFunctor  The callback to be run
      */
     DllExport void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+     * Query which service version the remote device implements.
+     *
+     * @return  Service version
+     */
+    DllExport TUint Version() const;
 protected:
     DllExport CpProxy(const TChar* aDomain, const TChar* aName, TUint aVersion, CpiDevice& aDevice);
-    DllExport virtual ~CpProxy();
 
     /**
      * Lock for properties reading.  Intended for use around reads of a property's value.

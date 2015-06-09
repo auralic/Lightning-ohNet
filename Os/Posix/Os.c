@@ -25,10 +25,10 @@
 #include <net/if.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
-#ifndef PLATFORM_MACOSX_GNU
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD)
 # include <linux/netlink.h>
 # include <linux/rtnetlink.h>
-#endif /* !PLATFORM_MACOSX_GNU */
+#endif /* !PLATFORM_MACOSX_GNU && !PLATFORM_FREEBSD */
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
@@ -55,7 +55,7 @@
     __result; }))
 
 
-#ifdef PLATFORM_MACOSX_GNU
+#if defined(PLATFORM_MACOSX_GNU) || defined(PLATFORM_FREEBSD)
 # define TEMP_FAILURE_RETRY(expression)        \
     (__extension__                             \
     ({ long int __result;                      \
@@ -80,6 +80,7 @@ struct OsContext {
 };
 
 static void DestroyInterfaceChangedObserver(OsContext* aContext);
+
 
 OsContext* OsCreate()
 {
@@ -114,11 +115,6 @@ void OsDestroy(OsContext* aContext)
 void OsQuit(OsContext* aContext)
 {
     abort();
-}
-
-void OsBreakpoint(OsContext* aContext)
-{
-    raise(SIGTRAP);
 }
 
 #if defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_IOS)
@@ -724,8 +720,6 @@ int32_t OsNetworkBind(THandle aHandle, TIpAddress aAddress, uint32_t aPort)
     struct sockaddr_in addr;
     uint16_t port = (uint16_t)aPort;
     sockaddrFromEndpoint(&addr, aAddress, port);
-//    sockaddrFromEndpoint(&addrin, aAddress, 1900);
-   // printf("ip:%s====%d===%d===%d\n",inet_ntoa( addr.sin_addr),port,handle->iSocket,handle->bSocket);
     err = bind(handle->iSocket, (struct sockaddr*)&addr, sizeof(addr));
     if (err == -1 && errno == EADDRINUSE) {
         err = -2;
@@ -822,8 +816,7 @@ int32_t OsNetworkConnect(THandle aHandle, TIpAddress aAddress, uint16_t aPort, u
     sockaddrFromEndpoint(&addr, aAddress, aPort);
     /* ignore err as we expect this to fail due to EINPROGRESS */
     (void)connect(handle->iSocket, (struct sockaddr*)&addr, sizeof(addr));
-  //  printf("connect to %d\n",handle->iSocket);
-    //    printf("connect ip:%s==%d\n",inet_ntoa( addr.sin_addr),ntohs(addr.sin_port));
+
     fd_set read;
     FD_ZERO(&read);
     FD_SET(handle->iPipe[0], &read);
@@ -840,7 +833,12 @@ int32_t OsNetworkConnect(THandle aHandle, TIpAddress aAddress, uint16_t aPort, u
 
     int32_t selectErr = TEMP_FAILURE_RETRY_2(select(nfds(handle), &read, &write, &error, &tv), handle);
     if (selectErr > 0 && FD_ISSET(handle->iSocket, &write)) {
-        err = 0;
+        // Need to check socket status using getsockopt. See man page for connect, EINPROGRESS
+        int sock_error;
+        socklen_t err_len = sizeof(sock_error);
+        if (getsockopt(handle->iSocket, SOL_SOCKET, SO_ERROR, &sock_error, &err_len) == 0) {
+            err = ((err_len == sizeof(sock_error)) && (sock_error == 0)) ? 0 : -2;
+        }
     }
     SetFdBlocking(handle->iSocket);
     return err;
@@ -867,7 +865,6 @@ int32_t OsNetworkSend(THandle aHandle, const uint8_t* aBuffer, uint32_t aBytes)
 int32_t OsNetworkSendTo(THandle aHandle, const uint8_t* aBuffer, uint32_t aBytes, TIpAddress aAddress, uint16_t aPort)
 {
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
-//    printf("PORT %d===%d\n\n\n",aPort,handle->iSocket);
     if (SocketInterrupted(handle)) {
         return -1;
     }
@@ -928,7 +925,6 @@ int32_t OsNetworkReceive(THandle aHandle, uint8_t* aBuffer, uint32_t aBytes)
             received = TEMP_FAILURE_RETRY_2(recv(handle->iSocket, aBuffer, aBytes, MSG_NOSIGNAL), handle);
         }
     }
-//    printf("===%s===%d\n",aBuffer,handle->iSocket);
 
     SetFdBlocking(handle->iSocket);
     return received;
@@ -975,10 +971,6 @@ int32_t OsNetworkReceiveFrom(THandle aHandle, uint8_t* aBuffer, uint32_t aBytes,
         SetFdBlocking(handle->bSocket);
     *aAddress = addr.sin_addr.s_addr;
     *aPort = ntohs(addr.sin_port);
-//    if(!strcmp(inet_ntoa( addr.sin_addr),"192.168.1.126"))
-//    {
-//    printf("*****address is %s===%d===%d \n%s\n",inet_ntoa( addr.sin_addr),handle->iSocket,handle->bSocket,aBuffer);
-//    }
     return received;
 }
 
@@ -1007,7 +999,6 @@ int32_t OsNetworkInterrupt(THandle aHandle, int32_t aInterrupt)
 int32_t OsNetworkClose(THandle aHandle)
 {
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
-//    printf("close socket %d\n",handle->iSocket);
     int32_t err = 0;
     if (handle != NULL) {
         err  = close(handle->iSocket);
@@ -1167,10 +1158,10 @@ int32_t OsNetworkSocketMulticastAddMembership(THandle aHandle, TIpAddress aInter
     struct ip_mreq mreq;
     mreq.imr_multiaddr.s_addr = aAddress;
     mreq.imr_interface.s_addr = aInterface;
- //   mreq.imr_interface.s_addr=htonl(INADDR_ANY);
     err = setsockopt(handle->iSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (const char*)&mreq, sizeof(mreq));
     if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
         err = setsockopt(handle->bSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (const char*)&mreq, sizeof(mreq));
+
     if (err != 0) {
         return err;
     }
@@ -1179,13 +1170,13 @@ int32_t OsNetworkSocketMulticastAddMembership(THandle aHandle, TIpAddress aInter
     err = setsockopt(handle->iSocket, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
     if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
         err = setsockopt(handle->bSocket, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
-
+    
     return err;
 }
 
 int32_t OsNetworkSocketMulticastDropMembership(THandle aHandle, TIpAddress aInterface, TIpAddress aAddress)
 {
-    int32_t err ;
+    int32_t err;
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     struct ip_mreq mreq;
     mreq.imr_multiaddr.s_addr = aAddress;
@@ -1194,6 +1185,19 @@ int32_t OsNetworkSocketMulticastDropMembership(THandle aHandle, TIpAddress aInte
     if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
         err = setsockopt(handle->bSocket, IPPROTO_IP, IP_DROP_MEMBERSHIP, &mreq, sizeof(mreq));
     return err;
+}
+ 
+int32_t OsNetworkSocketSetMulticastIf(THandle aHandle,  TIpAddress aInterface)
+{
+#if defined(PLATFORM_MACOSX_GNU) || defined(PLATFORM_FREEBSD)
+    OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
+    int32_t err = setsockopt(handle->iSocket, IPPROTO_IP, IP_MULTICAST_IF, &aInterface, sizeof(aInterface));
+    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
+        err = setsockopt(handle->bSocket, IPPROTO_IP, IP_MULTICAST_IF, &aInterface, sizeof(aInterface));
+    return err;
+#else
+    return 0;
+#endif
 }
 
 int32_t OsNetworkListAdapters(OsContext* aContext, OsNetworkAdapter** aAdapters, uint32_t aUseLoopback)
@@ -1212,9 +1216,6 @@ int32_t OsNetworkListAdapters(OsContext* aContext, OsNetworkAdapter** aAdapters,
     struct ifaddrs* networkIf;
     struct ifaddrs* iter;
     int32_t includeLoopback = 1;
-#ifdef PLATFORM_MACOSX_GNU
-    aUseLoopback = 0;
-#endif
     *aAdapters = NULL;
     if (TEMP_FAILURE_RETRY(getifaddrs(&networkIf)) == -1) {
         return -1;
@@ -1414,7 +1415,7 @@ static void DestroyInterfaceChangedObserver_MacDesktop(OsContext* aContext)
 
 #endif /* PLATFOTM_MACOSX_GNU && ! PLATFORM_IOS */
 
-#ifndef PLATFORM_MACOSX_GNU
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD)
 
 void adapterChangeObserverThread(void* aPtr)
 {
@@ -1520,7 +1521,7 @@ Error:
     DestroyInterfaceChangedObserver_Linux(aContext);
 }
 
-#endif /* !PLATFORM_MACOSX_GNU */
+#endif /* !PLATFORM_MACOSX_GNU  && !PLATFORM_FREEBSD */
 
 static void DestroyInterfaceChangedObserver(OsContext* aContext)
 {
@@ -1528,6 +1529,7 @@ static void DestroyInterfaceChangedObserver(OsContext* aContext)
 # ifndef PLATFORM_IOS
     DestroyInterfaceChangedObserver_MacDesktop(aContext);
 # endif /* !PLATFORM_IOS */
+#elif defined(PLATFORM_FREEBSD)
 #else /* !PLATFOTM_MACOSX_GNU */
     DestroyInterfaceChangedObserver_Linux(aContext);
 #endif /* PLATFOTM_MACOSX_GNU */
@@ -1540,6 +1542,7 @@ void OsNetworkSetInterfaceChangedObserver(OsContext* aContext, InterfaceListChan
 # ifndef PLATFORM_IOS
     SetInterfaceChangedObserver_MacDesktop(aContext, aCallback, aArg);
 # endif /* !PLATFORM_IOS */
+#elif defined(PLATFORM_FREEBSD)
 #else /* !PLATFOTM_MACOSX_GNU */
     SetInterfaceChangedObserver_Linux(aContext, aCallback, aArg);
 #endif /* PLATFOTM_MACOSX_GNU */

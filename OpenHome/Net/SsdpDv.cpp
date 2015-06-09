@@ -9,6 +9,7 @@
 #include <OpenHome/Private/Stream.h>
 #include <OpenHome/Net/Private/DviStack.h>
 #include <OpenHome/Private/Env.h>
+
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
@@ -44,7 +45,8 @@ SsdpNotifier::SsdpNotifier(DvStack& aDvStack)
 void SsdpNotifier::Start(TIpAddress aInterface, TUint aConfigId)
 {
     iSocket.ReBind(0, aInterface);
-    iSocket.SetTtl(iDvStack.Env().InitParams()->MsearchTtl()); 
+    iSocket.SetMulticastIf(aInterface);
+    iSocket.SetTtl(iDvStack.Env().InitParams()->MsearchTtl());
     iConfigId = aConfigId;
 }
 
@@ -217,7 +219,6 @@ void SsdpMsearchResponder::SsdpNotify(const Brx& aUri)
     Ssdp::WriteBootId(iDvStack, iWriter);
     Ssdp::WriteConfigId(iWriter, iConfigId);
     // !!!! Ssdp::WriteSearchPort(iWriter, ????);
-//    printf("ppppppppppppppppp\n");
 }
 
 void SsdpMsearchResponder::Flush()

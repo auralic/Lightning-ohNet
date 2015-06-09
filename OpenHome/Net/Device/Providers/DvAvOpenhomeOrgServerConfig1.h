@@ -164,12 +164,6 @@ protected:
      * GetInitHDDResult must be overridden if this is called.
      */
     void EnableActionGetInitHDDResult();
-    /**
-     * Signal that the action GetHDDHasInited is supported.
-     * The action's availability will be published in the device's service.xml.
-     * GetHDDHasInited must be overridden if this is called.
-     */
-    void EnableActionGetHDDHasInited();
 private:
     /**
      * SetServerName action.
@@ -315,14 +309,6 @@ private:
      * Must be implemented iff EnableActionGetInitHDDResult was called.
      */
     virtual void GetInitHDDResult(IDvInvocation& aInvocation, IDvInvocationResponseBool& aInitHDDResult);
-    /**
-     * GetHDDHasInited action.
-     *
-     * Will be called when the device stack receives an invocation of the
-     * GetHDDHasInited action for the owning device.
-     * Must be implemented iff EnableActionGetHDDHasInited was called.
-     */
-    virtual void GetHDDHasInited(IDvInvocation& aInvocation, IDvInvocationResponseBool& aHDDHasInited);
 private:
     DvProviderAvOpenhomeOrgServerConfig1();
     void Construct();
@@ -344,7 +330,6 @@ private:
     void DoEditTrack(IDviInvocation& aInvocation);
     void DoScanVersionDiff(IDviInvocation& aInvocation);
     void DoGetInitHDDResult(IDviInvocation& aInvocation);
-    void DoGetHDDHasInited(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
 };

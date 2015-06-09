@@ -619,6 +619,23 @@ void SuiteAutoMutex::Test()
 }
 
 
+class SuiteAutoSemaphore : public Suite
+{
+public:
+    SuiteAutoSemaphore() : Suite("AutoSemaphore functionality") {}
+    void Test();
+};
+
+void SuiteAutoSemaphore::Test()
+{
+    Semaphore sem("asem", 1);
+    {
+        AutoSemaphore _(sem);
+        TEST(!sem.Clear());
+    }
+    TEST(sem.Clear());
+}
+
 class ThreadKillable : public Thread
 {
 public:
@@ -687,6 +704,33 @@ void SuiteThreadNotStarted::Test()
     // without having been Start()ed.
 }
 
+// A saw wave of priorities. For fun, and also to make StartDelete code more readable.
+class PrioSaw
+{
+public:
+    PrioSaw(TUint aPrioMin, TUint aPrioMax)
+    : iPrioMin(aPrioMin)
+    , iPrioMax(aPrioMax)
+    , iPrioCurrent(iPrioMin)
+    , iStep(1)
+    {
+        ASSERT(iPrioMin < iPrioMax);
+    }
+    TUint Next()
+    {
+        TUint prio = iPrioCurrent;
+        iPrioCurrent += iStep;
+        if ( iPrioCurrent == iPrioMin || iPrioCurrent == iPrioMax ) {
+            iStep *= -1;
+        }
+        return prio;
+    }
+private:
+    TUint iPrioMin;
+    TUint iPrioMax;
+    TUint iPrioCurrent;
+    TInt iStep;
+};
 
 class SuiteThreadStartDelete : public Suite
 {
@@ -700,36 +744,16 @@ public:
 
 void SuiteThreadStartDelete::Test()
 {
-    static const TUint kPriorityLowest = kPrioritySystemLowest;
-    static const TUint kPriorityHighest = kPrioritySystemHighest;
-    TBool priorityIncreasing = true;
-    TUint priority = kPriorityLowest;
+    PrioSaw ps(kPrioritySystemLowest, kPrioritySystemHighest);
+
     for (TUint i=0; i< kThreadCount; i++) {
-        Thread* th = new ThreadDummy(priority);
+        Thread* th = new ThreadDummy(ps.Next());
         th->Start();
         delete th;
 
-        if (priorityIncreasing) {
-            if (priority == kPriorityHighest) {
-                priorityIncreasing = false;
-                priority--;
-            }
-            else {
-                priority++;
-            }
-        }
-        else {
-            if (priority == kPriorityLowest) {
-                priorityIncreasing = true;
-                priority++;
-            }
-            else {
-                priority--;
-            }
-        }
-
         if (i % kUpdateInterval == 0) {
             TEST(true); // only to show progress
+            Thread::Sleep(100); // FreeRTOS delegates freeing of thread resources to the idle thread. We allow it to run here.
         }
     }
 }
@@ -809,36 +833,16 @@ private:
 
 void SuiteThreadFunctorStartDelete::Test()
 {
-    static const TUint kPriorityLowest = kPrioritySystemLowest;
-    static const TUint kPriorityHighest = kPrioritySystemHighest;
-    TBool priorityIncreasing = true;
-    TUint priority = kPriorityLowest;
+    PrioSaw ps(kPrioritySystemLowest, kPrioritySystemHighest);
+
     for (TUint i=0; i< kThreadCount; i++) {
-        ThreadFunctor* tf = new ThreadFunctor("TFSD", MakeFunctor(*this, &SuiteThreadFunctorStartDelete::Run), priority);
+        ThreadFunctor* tf = new ThreadFunctor("TFSD", MakeFunctor(*this, &SuiteThreadFunctorStartDelete::Run), ps.Next());
         tf->Start();
         delete tf;
 
-        if (priorityIncreasing) {
-            if (priority == kPriorityHighest) {
-                priorityIncreasing = false;
-                priority--;
-            }
-            else {
-                priority++;
-            }
-        }
-        else {
-            if (priority == kPriorityLowest) {
-                priorityIncreasing = true;
-                priority++;
-            }
-            else {
-                priority--;
-            }
-        }
-
         if (i % kUpdateInterval == 0) {
             TEST(true); // only to show progress
+            Thread::Sleep(100); // FreeRTOS delegates freeing of thread resources to the idle thread. We allow it to run here.
         }
     }
 }
@@ -857,6 +861,7 @@ void MainTestThread::Run()
     runner.Add(new SuiteSemaphore());
     runner.Add(new SuiteMutex());
     runner.Add(new SuiteAutoMutex());
+    runner.Add(new SuiteAutoSemaphore());
     runner.Add(new SuiteStartStop());
     // Performance tests disabled as they cause intermittent failures for automated tests
     // (which run on servers with variable loads)

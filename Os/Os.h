@@ -70,16 +70,6 @@ void OsDestroy(OsContext* aContext);
 void OsQuit(OsContext* aContext);
 
 /**
- * Cause a breakpoint.
- *
- * OS specific way of causing a breakpoint such that an OS specific debugger
- * can catch the breakpoint and allow debugging of the program.
- *
- * @param[in] aContext     Returned from OsCreate().
- */
-void OsBreakpoint(OsContext* aContext);
-
-/**
  * Initialise a stack trace for the current call stack.
  *
  * Non-trivial implementation of this, and every other OsStackTrace function is entirely optional.
@@ -324,6 +314,14 @@ THandle OsThreadCreate(OsContext* aContext, const char* aName, uint32_t aPriorit
                        uint32_t aStackBytes, ThreadEntryPoint aEntryPoint, void* aArg);
 
 /**
+ * Allow platform code to install any per-thread signal handlers or equivalent.
+ *
+ * Called once per call to OsThreadCreate().  Is called in the context of the
+ * newly created thread.
+ */
+void OsThreadInstallSignalHandlers();
+
+/**
  * Return the 'aArg' value passed to the entrypoint for the current thread
  *
  * @param[in] aContext    Returned from OsCreate().
@@ -418,7 +416,9 @@ int32_t OsNetworkPort(THandle aHandle, uint32_t* aPort);
  * @param[in] aTimeoutMs   Number of milliseconds to wait.  An error will be returned
  *                         if the connection did not complete or fail before this.
  *
- * @return  0 on success; -1 on failure
+ * @return  0 on success
+ *          -1 on timeout
+ *          -2 on connection refused
  */
 int32_t OsNetworkConnect(THandle aHandle, TIpAddress aAddress, uint16_t aPort, uint32_t aTimeoutMs);
 
@@ -630,6 +630,18 @@ int32_t OsNetworkSocketMulticastAddMembership(THandle aHandle, TIpAddress aInter
  * @return  0 on success; -1 on failure
  */
 int32_t OsNetworkSocketMulticastDropMembership(THandle aHandle, TIpAddress aInterface, TIpAddress aAddress);
+
+/**
+ * Set the interface for sending multicast requests from this socket
+ *
+ * @param[in] aHandle      Socket handle returned from OsNetworkCreate()
+ * @param[in] aInterface   IpV4 address (in network byte order) specifying the network
+ *                         interface on which the multicast group should be joined.
+ *                         If this is 0, the default multicast interface will be used.
+ *
+ * @return  0 on success; -1 on failure
+ */
+int32_t OsNetworkSocketSetMulticastIf(THandle aHandle, TIpAddress aInterface);
 
 /**
  * Representation of a network interface

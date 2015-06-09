@@ -61,13 +61,13 @@ DvProviderAvOpenhomeOrgInternetRadio1Cpp::DvProviderAvOpenhomeOrgInternetRadio1C
 
 void DvProviderAvOpenhomeOrgInternetRadio1Cpp::EnablePropertyUri()
 {
-    iPropertyUri = new PropertyString(iDvStack.Env(), new ParameterString("Uri"));
+    iPropertyUri = new PropertyString(new ParameterString("Uri"));
     iService->AddProperty(iPropertyUri); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgInternetRadio1Cpp::EnablePropertyMetadata()
 {
-    iPropertyMetadata = new PropertyString(iDvStack.Env(), new ParameterString("Metadata"));
+    iPropertyMetadata = new PropertyString(new ParameterString("Metadata"));
     iService->AddProperty(iPropertyMetadata); // passes ownership
 }
 
@@ -80,7 +80,7 @@ void DvProviderAvOpenhomeOrgInternetRadio1Cpp::EnablePropertyTransportState()
     allowedValues[index++] = (TChar*)"Playing";
     allowedValues[index++] = (TChar*)"Waiting";
     allowedValues[index++] = (TChar*)"Buffering";
-    iPropertyTransportState = new PropertyString(iDvStack.Env(), new ParameterString("TransportState", allowedValues, 4));
+    iPropertyTransportState = new PropertyString(new ParameterString("TransportState", allowedValues, 4));
     delete[] allowedValues;
     iService->AddProperty(iPropertyTransportState); // passes ownership
 }

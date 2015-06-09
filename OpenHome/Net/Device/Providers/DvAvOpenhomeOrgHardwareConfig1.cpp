@@ -325,139 +325,139 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::Construct()
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyAlive()
 {
-    iPropertyAlive = new PropertyBool(iDvStack.Env(), new ParameterBool("Alive"));
+    iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
     iService->AddProperty(iPropertyAlive); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyCurrentAction()
 {
-    iPropertyCurrentAction = new PropertyUint(iDvStack.Env(), new ParameterUint("CurrentAction"));
+    iPropertyCurrentAction = new PropertyUint(new ParameterUint("CurrentAction"));
     iService->AddProperty(iPropertyCurrentAction); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyRestart()
 {
-    iPropertyRestart = new PropertyBool(iDvStack.Env(), new ParameterBool("Restart"));
+    iPropertyRestart = new PropertyBool(new ParameterBool("Restart"));
     iService->AddProperty(iPropertyRestart); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyNumber()
 {
-    iPropertyNumber = new PropertyUint(iDvStack.Env(), new ParameterUint("Number"));
+    iPropertyNumber = new PropertyUint(new ParameterUint("Number"));
     iService->AddProperty(iPropertyNumber); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyRoomName()
 {
-    iPropertyRoomName = new PropertyString(iDvStack.Env(), new ParameterString("RoomName"));
+    iPropertyRoomName = new PropertyString(new ParameterString("RoomName"));
     iService->AddProperty(iPropertyRoomName); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyInterFace()
 {
-    iPropertyInterFace = new PropertyString(iDvStack.Env(), new ParameterString("InterFace"));
+    iPropertyInterFace = new PropertyString(new ParameterString("InterFace"));
     iService->AddProperty(iPropertyInterFace); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyNetMask()
 {
-    iPropertyNetMask = new PropertyString(iDvStack.Env(), new ParameterString("NetMask"));
+    iPropertyNetMask = new PropertyString(new ParameterString("NetMask"));
     iService->AddProperty(iPropertyNetMask); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyGateWay()
 {
-    iPropertyGateWay = new PropertyString(iDvStack.Env(), new ParameterString("GateWay"));
+    iPropertyGateWay = new PropertyString(new ParameterString("GateWay"));
     iService->AddProperty(iPropertyGateWay); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyDNS()
 {
-    iPropertyDNS = new PropertyString(iDvStack.Env(), new ParameterString("DNS"));
+    iPropertyDNS = new PropertyString(new ParameterString("DNS"));
     iService->AddProperty(iPropertyDNS); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyDHCP()
 {
-    iPropertyDHCP = new PropertyString(iDvStack.Env(), new ParameterString("DHCP"));
+    iPropertyDHCP = new PropertyString(new ParameterString("DHCP"));
     iService->AddProperty(iPropertyDHCP); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertySsid()
 {
-    iPropertySsid = new PropertyString(iDvStack.Env(), new ParameterString("Ssid"));
+    iPropertySsid = new PropertyString(new ParameterString("Ssid"));
     iService->AddProperty(iPropertySsid); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyPassWord()
 {
-    iPropertyPassWord = new PropertyString(iDvStack.Env(), new ParameterString("PassWord"));
+    iPropertyPassWord = new PropertyString(new ParameterString("PassWord"));
     iService->AddProperty(iPropertyPassWord); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyEncrypType()
 {
-    iPropertyEncrypType = new PropertyString(iDvStack.Env(), new ParameterString("EncrypType"));
+    iPropertyEncrypType = new PropertyString(new ParameterString("EncrypType"));
     iService->AddProperty(iPropertyEncrypType); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyChannel()
 {
-    iPropertyChannel = new PropertyString(iDvStack.Env(), new ParameterString("Channel"));
+    iPropertyChannel = new PropertyString(new ParameterString("Channel"));
     iService->AddProperty(iPropertyChannel); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyUpnpType()
 {
-    iPropertyUpnpType = new PropertyString(iDvStack.Env(), new ParameterString("UpnpType"));
+    iPropertyUpnpType = new PropertyString(new ParameterString("UpnpType"));
     iService->AddProperty(iPropertyUpnpType); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyStatus()
 {
-    iPropertyStatus = new PropertyString(iDvStack.Env(), new ParameterString("Status"));
+    iPropertyStatus = new PropertyString(new ParameterString("Status"));
     iService->AddProperty(iPropertyStatus); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertySampleFormat()
 {
-    iPropertySampleFormat = new PropertyString(iDvStack.Env(), new ParameterString("SampleFormat"));
+    iPropertySampleFormat = new PropertyString(new ParameterString("SampleFormat"));
     iService->AddProperty(iPropertySampleFormat); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyIpAddress()
 {
-    iPropertyIpAddress = new PropertyString(iDvStack.Env(), new ParameterString("IpAddress"));
+    iPropertyIpAddress = new PropertyString(new ParameterString("IpAddress"));
     iService->AddProperty(iPropertyIpAddress); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyProtect()
 {
-    iPropertyProtect = new PropertyString(iDvStack.Env(), new ParameterString("Protect"));
+    iPropertyProtect = new PropertyString(new ParameterString("Protect"));
     iService->AddProperty(iPropertyProtect); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyProtectPassword()
 {
-    iPropertyProtectPassword = new PropertyString(iDvStack.Env(), new ParameterString("ProtectPassword"));
+    iPropertyProtectPassword = new PropertyString(new ParameterString("ProtectPassword"));
     iService->AddProperty(iPropertyProtectPassword); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyActiveStatus()
 {
-    iPropertyActiveStatus = new PropertyString(iDvStack.Env(), new ParameterString("ActiveStatus"));
+    iPropertyActiveStatus = new PropertyString(new ParameterString("ActiveStatus"));
     iService->AddProperty(iPropertyActiveStatus); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyTime()
 {
-    iPropertyTime = new PropertyString(iDvStack.Env(), new ParameterString("Time"));
+    iPropertyTime = new PropertyString(new ParameterString("Time"));
     iService->AddProperty(iPropertyTime); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyVolumeControl()
 {
-    iPropertyVolumeControl = new PropertyBool(iDvStack.Env(), new ParameterBool("VolumeControl"));
+    iPropertyVolumeControl = new PropertyBool(new ParameterBool("VolumeControl"));
     iService->AddProperty(iPropertyVolumeControl); // passes ownership
 }
 

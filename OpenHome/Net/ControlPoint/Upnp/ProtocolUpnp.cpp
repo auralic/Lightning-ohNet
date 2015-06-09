@@ -18,7 +18,8 @@ InvocationUpnp::InvocationUpnp(CpStack& aCpStack, Invocation& aInvocation)
     : iCpStack(aCpStack)
     , iInvocation(aInvocation)
     , iReadBuffer(iSocket)
-    , iReaderResponse(aCpStack.Env(), iReadBuffer)
+    , iReaderUntil(iReadBuffer)
+    , iReaderResponse(aCpStack.Env(), iReaderUntil)
 {
 }
 
@@ -63,7 +64,11 @@ void InvocationUpnp::WriteRequest(const Uri& aUri)
     }
     catch (NetworkTimeout&) {
         iInvocation.SetError(Error::eSocket, Error::eCodeTimeout, Error::kDescriptionSocketTimeout);
-        THROW(NetworkTimeout);
+        throw;
+    }
+    catch (NetworkError&) {
+        iInvocation.SetError(Error::eSocket, Error::kCodeUnknown, Error::kDescriptionUnknown);
+        throw;
     }
 
     try {
@@ -99,37 +104,39 @@ void InvocationUpnp::ReadResponse()
         }
     }
 
+    WriterBwh writer(1024);
     if (headerTransferEncoding.IsChunked()) {
-        ReaderHttpChunkedDynamic dechunker(iReadBuffer);
-        dechunker.Read();
-        dechunker.TransferTo(entity);
+        ReaderHttpChunked dechunker(iReaderUntil);
+        dechunker.SetChunked(true);
+        for (;;) {
+            Brn buf = dechunker.Read(kMaxReadBytes);
+            writer.Write(buf);
+            if (buf.Bytes() == 0) { // end of stream
+                break;
+            }
+        }
     }
     else {
         TUint length = headerContentLength.ContentLength();
         if (length != 0) {
-            Bwh buf(length);
-            while (length > 0) {
-                TUint readBytes = (length<kMaxReadBytes? length : kMaxReadBytes);
-                buf.Append(iReadBuffer.Read(readBytes));
-                length -= readBytes;
-            }
-            buf.TransferTo(entity);
+            TUint remaining = length;
+            do {
+                Brn buf = iReaderUntil.Read(kMaxReadBytes);
+                remaining -= buf.Bytes();
+                writer.Write(buf);
+            } while (remaining > 0);
         }
         else { // no content length - read until connection closed by server
             try {
                 for (;;) {
-                    Brn buf = iReadBuffer.Read(kMaxReadBytes);
-                    entity.Grow(entity.Bytes() + kMaxReadBytes);
-                    entity.Append(buf);
+                    writer.Write(iReaderUntil.Read(kMaxReadBytes));
                 }
             }
             catch (ReaderError&) {
-                Brn snaffle = iReadBuffer.Snaffle();
-                entity.Grow(entity.Bytes() + snaffle.Bytes());
-                entity.Append(snaffle);
             }
         }
     }
+    writer.TransferTo(entity);
 
     if (status == HttpStatus::kInternalServerError) {
         Brn envelope = XmlParserBasic::Find("Envelope", entity);
@@ -288,6 +295,8 @@ void InvocationBodyWriter::ProcessBinary(const Brx& aVal)
 EventUpnp::EventUpnp(CpStack& aCpStack, CpiSubscription& aSubscription)
     : iCpStack(aCpStack)
     , iSubscription(aSubscription)
+    , iReadBuffer(iSocket)
+    , iReaderUntil(iReadBuffer)
 {
 }
 
@@ -299,7 +308,7 @@ EventUpnp::~EventUpnp()
 
 void EventUpnp::Subscribe(const Uri& aPublisher, const Uri& aSubscriber, TUint& aDurationSecs)
 {
-  //  printf("subscribe....\n");
+    iReaderUntil.ReadFlush();
     iSocket.Open(iCpStack.Env());
     iSubscription.SetInterruptHandler(this);
     Endpoint endpoint(aPublisher.Port(), aPublisher.Host());
@@ -314,6 +323,7 @@ void EventUpnp::Subscribe(const Uri& aPublisher, const Uri& aSubscriber, TUint& 
 
 void EventUpnp::RenewSubscription(const Uri& aPublisher, TUint& aDurationSecs)
 {
+    iReaderUntil.ReadFlush();
     iSocket.Open(iCpStack.Env());
     iSubscription.SetInterruptHandler(this);
     Endpoint endpoint(aPublisher.Port(), aPublisher.Host());
@@ -330,6 +340,7 @@ void EventUpnp::RenewSubscription(const Uri& aPublisher, TUint& aDurationSecs)
 
 void EventUpnp::Unsubscribe(const Uri& aPublisher, const Brx& aSid)
 {
+    iReaderUntil.ReadFlush();
     iSocket.Open(iCpStack.Env());
     Endpoint endpoint(aPublisher.Port(), aPublisher.Host());
     TUint timeout = iCpStack.Env().InitParams()->TcpConnectTimeoutMs();
@@ -378,8 +389,7 @@ void EventUpnp::SubscribeWriteRequest(const Uri& aPublisher, const Uri& aSubscri
 
 void EventUpnp::SubscribeReadResponse(Brh& aSid, TUint& aDurationSecs)
 {
-    Srs<1024> readBuffer(iSocket);
-    ReaderHttpResponse readerResponse(iCpStack.Env(), readBuffer);
+    ReaderHttpResponse readerResponse(iCpStack.Env(), iReaderUntil);
     HeaderSid headerSid;
     HeaderTimeout headerTimeout;
 
@@ -442,8 +452,7 @@ void EventUpnp::UnsubscribeWriteRequest(const Uri& aPublisher, const Brx& aSid)
 
 void EventUpnp::UnsubscribeReadResponse()
 {
-    Srs<1024> readBuffer(iSocket);
-    ReaderHttpResponse readerResponse(iCpStack.Env(), readBuffer);
+    ReaderHttpResponse readerResponse(iCpStack.Env(), iReaderUntil);
     readerResponse.Read(kUnsubscribeTimeoutMs);
     const HttpStatus& status = readerResponse.Status();
     if (status != HttpStatus::kOk) {

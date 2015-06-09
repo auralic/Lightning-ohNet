@@ -129,7 +129,9 @@ Thread::~Thread()
     LOG(kThread, "> Thread::~Thread() called for thread: %p\n", this);
     Kill();
     Join();
-    OpenHome::Os::ThreadDestroy(iHandle);
+    if ( iHandle != kHandleNull ) {
+        OpenHome::Os::ThreadDestroy(iHandle);
+    }
     LOG(kThread, "< Thread::~Thread() called for thread: %p\n", this);
 }
 
@@ -143,6 +145,7 @@ void Thread::Start()
 void Thread::EntryPoint(void* aArg)
 { // static
     Thread* self = (Thread*)aArg;
+    Os::ThreadInstallSignalHandlers();
     try {
         self->Run();
     }
@@ -309,6 +312,7 @@ AutoMutex::~AutoMutex()
 AutoSemaphore::AutoSemaphore(Semaphore& aSemaphore)
     : iSem(aSemaphore)
 {
+    iSem.Wait();
 }
 
 AutoSemaphore::~AutoSemaphore()

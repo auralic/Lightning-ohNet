@@ -51,10 +51,10 @@ CpProxyAvOpenhomeOrgMessageCenter1Cpp::CpProxyAvOpenhomeOrgMessageCenter1Cpp(CpD
 
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgMessageCenter1Cpp::MessagePropertyChanged);
-    iMessage = new PropertyString(aDevice.Device().GetCpStack().Env(), "Message", functor);
+    iMessage = new PropertyString("Message", functor);
     AddProperty(iMessage);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgMessageCenter1Cpp::MessageIDPropertyChanged);
-    iMessageID = new PropertyUint(aDevice.Device().GetCpStack().Env(), "MessageID", functor);
+    iMessageID = new PropertyUint("MessageID", functor);
     AddProperty(iMessageID);
 }
 

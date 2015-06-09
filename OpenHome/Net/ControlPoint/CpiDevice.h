@@ -49,6 +49,7 @@ public:
     virtual TUint Renew(CpiSubscription& aSubscription) = 0;
     virtual void Unsubscribe(CpiSubscription& aSubscription, const Brx& aSid) = 0;
     virtual void NotifyRemovedBeforeReady() = 0;
+    virtual TUint Version(const TChar* aDomain, const TChar* aName, TUint aProxyVersion) const = 0;
 };
 
 class ICpiDeviceObserver
@@ -105,6 +106,7 @@ public:
     virtual TUint Renew(CpiSubscription& aSubscription);
     virtual void Unsubscribe(CpiSubscription& aSubscription, const Brx& aSid);
     virtual void NotifyRemovedBeforeReady();
+    virtual TUint Version(const TChar* aDomain, const TChar* aName, TUint aProxyVersion) const;
 
     /**
      * Mark a device as ready to use.
