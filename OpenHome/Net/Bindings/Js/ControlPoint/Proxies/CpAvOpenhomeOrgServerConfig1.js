@@ -429,4 +429,24 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.GetInitHDDResult = function(successF
 }
 
 
+/**
+* A service action to GetHDDHasInited
+* @method GetHDDHasInited
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.GetHDDHasInited = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetHDDHasInited", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["HDDHasInited"] = ohnet.soaprequest.readBoolParameter(result["HDDHasInited"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
 

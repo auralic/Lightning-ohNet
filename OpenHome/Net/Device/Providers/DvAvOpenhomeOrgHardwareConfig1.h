@@ -602,6 +602,18 @@ protected:
      * GetNetInterface must be overridden if this is called.
      */
     void EnableActionGetNetInterface();
+    /**
+     * Signal that the action GetHaltStatus is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetHaltStatus must be overridden if this is called.
+     */
+    void EnableActionGetHaltStatus();
+    /**
+     * Signal that the action SetHaltStatus is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetHaltStatus must be overridden if this is called.
+     */
+    void EnableActionSetHaltStatus();
 private:
     /**
      * IsAlive action.
@@ -803,6 +815,22 @@ private:
      * Must be implemented iff EnableActionGetNetInterface was called.
      */
     virtual void GetNetInterface(IDvInvocation& aInvocation, IDvInvocationResponseUint& aInterfaceNum, IDvInvocationResponseString& aCurrentUse, IDvInvocationResponseString& aInterfaceList);
+    /**
+     * GetHaltStatus action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetHaltStatus action for the owning device.
+     * Must be implemented iff EnableActionGetHaltStatus was called.
+     */
+    virtual void GetHaltStatus(IDvInvocation& aInvocation, IDvInvocationResponseBool& aHaltStatus);
+    /**
+     * SetHaltStatus action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetHaltStatus action for the owning device.
+     * Must be implemented iff EnableActionSetHaltStatus was called.
+     */
+    virtual void SetHaltStatus(IDvInvocation& aInvocation, TBool aHaltStatus);
 private:
     DvProviderAvOpenhomeOrgHardwareConfig1();
     void Construct();
@@ -831,6 +859,8 @@ private:
     void DoGetIpAddress(IDviInvocation& aInvocation);
     void DoSetNetWork(IDviInvocation& aInvocation);
     void DoGetNetInterface(IDviInvocation& aInvocation);
+    void DoGetHaltStatus(IDviInvocation& aInvocation);
+    void DoSetHaltStatus(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;

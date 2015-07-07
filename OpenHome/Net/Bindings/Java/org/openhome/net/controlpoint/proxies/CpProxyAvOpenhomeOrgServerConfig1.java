@@ -64,6 +64,9 @@ interface ICpProxyAvOpenhomeOrgServerConfig1 extends ICpProxy
     public boolean syncGetInitHDDResult();
     public void beginGetInitHDDResult(ICpProxyListener aCallback);
     public boolean endGetInitHDDResult(long aAsyncHandle);
+    public boolean syncGetHDDHasInited();
+    public void beginGetHDDHasInited(ICpProxyListener aCallback);
+    public boolean endGetHDDHasInited(long aAsyncHandle);
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
 }
@@ -434,6 +437,27 @@ class SyncGetInitHDDResultAvOpenhomeOrgServerConfig1 extends SyncProxyAction
     }
 }
 
+class SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+    private boolean iHDDHasInited;
+
+    public SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public boolean getHDDHasInited()
+    {
+        return iHDDHasInited;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        boolean result = iService.endGetHDDHasInited(aAsyncHandle);
+        
+        iHDDHasInited = result;
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:ServerConfig:1 UPnP service
  */
@@ -555,6 +579,7 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     private Action iActionEditTrack;
     private Action iActionScanVersionDiff;
     private Action iActionGetInitHDDResult;
+    private Action iActionGetHDDHasInited;
     private PropertyBool iAlive;
     private IPropertyChangeListener iAliveChanged;
     private Object iPropertyLock;
@@ -651,6 +676,10 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         iActionGetInitHDDResult = new Action("GetInitHDDResult");
         param = new ParameterBool("InitHDDResult");
         iActionGetInitHDDResult.addOutputParameter(param);
+
+        iActionGetHDDHasInited = new Action("GetHDDHasInited");
+        param = new ParameterBool("HDDHasInited");
+        iActionGetHDDHasInited.addOutputParameter(param);
 
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
@@ -1620,6 +1649,61 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public boolean syncGetHDDHasInited()
+    {
+        SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1 sync = new SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1(this);
+        beginGetHDDHasInited(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getHDDHasInited();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetHDDHasInited}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetHDDHasInited(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetHDDHasInited, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentBool((ParameterBool)iActionGetHDDHasInited.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetHDDHasInited} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetHDDHasInited} method.
+     * @return the result of the previously invoked action.
+     */
+    public boolean endGetHDDHasInited(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        boolean hDDHasInited = Invocation.getOutputBool(aAsyncHandle, index++);
+        return hDDHasInited;
+    }
+        
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
@@ -1692,6 +1776,7 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             iActionEditTrack.destroy();
             iActionScanVersionDiff.destroy();
             iActionGetInitHDDResult.destroy();
+            iActionGetHDDHasInited.destroy();
             iAlive.destroy();
         }
     }

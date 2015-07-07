@@ -423,6 +423,29 @@ void SyncGetInitHDDResultAvOpenhomeOrgServerConfig1Cpp::CompleteRequest(IAsync& 
 }
 
 
+class SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy, bool& aHDDHasInited);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgServerConfig1Cpp& iService;
+    bool& iHDDHasInited;
+};
+
+SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1Cpp::SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy, bool& aHDDHasInited)
+    : iService(aProxy)
+    , iHDDHasInited(aHDDHasInited)
+{
+}
+
+void SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetHDDHasInited(aAsync, iHDDHasInited);
+}
+
+
 CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDeviceCpp& aDevice)
     : CpProxy("av-openhome-org", "ServerConfig", 1, aDevice.Device())
 {
@@ -508,6 +531,10 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDev
     param = new OpenHome::Net::ParameterBool("InitHDDResult");
     iActionGetInitHDDResult->AddOutputParameter(param);
 
+    iActionGetHDDHasInited = new Action("GetHDDHasInited");
+    param = new OpenHome::Net::ParameterBool("HDDHasInited");
+    iActionGetHDDHasInited->AddOutputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1Cpp::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
@@ -535,6 +562,7 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::~CpProxyAvOpenhomeOrgServerConfig1Cpp()
     delete iActionEditTrack;
     delete iActionScanVersionDiff;
     delete iActionGetInitHDDResult;
+    delete iActionGetHDDHasInited;
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetServerName(const std::string& aServerName)
@@ -1151,6 +1179,38 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetInitHDDResult(IAsync& aAsync, b
     }
     TUint index = 0;
     aInitHDDResult = ((ArgumentBool*)invocation.OutputArguments()[index++])->Value();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetHDDHasInited(bool& aHDDHasInited)
+{
+    SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1Cpp sync(*this, aHDDHasInited);
+    BeginGetHDDHasInited(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetHDDHasInited(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetHDDHasInited, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetHDDHasInited->OutputParameters();
+    invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetHDDHasInited(IAsync& aAsync, bool& aHDDHasInited)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetHDDHasInited"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    aHDDHasInited = ((ArgumentBool*)invocation.OutputArguments()[index++])->Value();
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::SetPropertyAliveChanged(Functor& aFunctor)

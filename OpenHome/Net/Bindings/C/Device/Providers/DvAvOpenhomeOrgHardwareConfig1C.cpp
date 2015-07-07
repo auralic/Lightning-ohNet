@@ -112,6 +112,8 @@ public:
     void EnableActionGetIpAddress(CallbackHardwareConfig1GetIpAddress aCallback, void* aPtr);
     void EnableActionSetNetWork(CallbackHardwareConfig1SetNetWork aCallback, void* aPtr);
     void EnableActionGetNetInterface(CallbackHardwareConfig1GetNetInterface aCallback, void* aPtr);
+    void EnableActionGetHaltStatus(CallbackHardwareConfig1GetHaltStatus aCallback, void* aPtr);
+    void EnableActionSetHaltStatus(CallbackHardwareConfig1SetHaltStatus aCallback, void* aPtr);
 private:
     void DoIsAlive(IDviInvocation& aInvocation);
     void DoUpdate(IDviInvocation& aInvocation);
@@ -138,6 +140,8 @@ private:
     void DoGetIpAddress(IDviInvocation& aInvocation);
     void DoSetNetWork(IDviInvocation& aInvocation);
     void DoGetNetInterface(IDviInvocation& aInvocation);
+    void DoGetHaltStatus(IDviInvocation& aInvocation);
+    void DoSetHaltStatus(IDviInvocation& aInvocation);
 private:
     CallbackHardwareConfig1IsAlive iCallbackIsAlive;
     void* iPtrIsAlive;
@@ -189,6 +193,10 @@ private:
     void* iPtrSetNetWork;
     CallbackHardwareConfig1GetNetInterface iCallbackGetNetInterface;
     void* iPtrGetNetInterface;
+    CallbackHardwareConfig1GetHaltStatus iCallbackGetHaltStatus;
+    void* iPtrGetHaltStatus;
+    CallbackHardwareConfig1SetHaltStatus iCallbackSetHaltStatus;
+    void* iPtrSetHaltStatus;
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;
     PropertyBool* iPropertyRestart;
@@ -929,6 +937,26 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetNetInterface(Callba
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetHaltStatus(CallbackHardwareConfig1GetHaltStatus aCallback, void* aPtr)
+{
+    iCallbackGetHaltStatus = aCallback;
+    iPtrGetHaltStatus = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetHaltStatus");
+    action->AddOutputParameter(new ParameterBool("HaltStatus"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetHaltStatus);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetHaltStatus(CallbackHardwareConfig1SetHaltStatus aCallback, void* aPtr)
+{
+    iCallbackSetHaltStatus = aCallback;
+    iPtrSetHaltStatus = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetHaltStatus");
+    action->AddInputParameter(new ParameterBool("HaltStatus"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetHaltStatus);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1C::DoIsAlive(IDviInvocation& aInvocation)
 {
     DvInvocationCPrivate invocationWrapper(aInvocation);
@@ -1562,6 +1590,46 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetNetInterface(IDviInvocation& 
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetHaltStatus(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    uint32_t HaltStatus;
+    ASSERT(iCallbackGetHaltStatus != NULL);
+    if (0 != iCallbackGetHaltStatus(iPtrGetHaltStatus, invocationC, invocationCPtr, &HaltStatus)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseBool respHaltStatus(aInvocation, "HaltStatus");
+    invocation.StartResponse();
+    respHaltStatus.Write((HaltStatus!=0));
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetHaltStatus(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TBool HaltStatus = aInvocation.InvocationReadBool("HaltStatus");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetHaltStatus != NULL);
+    if (0 != iCallbackSetHaltStatus(iPtrSetHaltStatus, invocationC, invocationCPtr, HaltStatus)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Create(DvDeviceC aDevice)
@@ -1697,6 +1765,16 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetNetWork(THandl
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetNetInterface(THandle aProvider, CallbackHardwareConfig1GetNetInterface aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetNetInterface(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetHaltStatus(THandle aProvider, CallbackHardwareConfig1GetHaltStatus aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetHaltStatus(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetHaltStatus(THandle aProvider, CallbackHardwareConfig1SetHaltStatus aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetHaltStatus(aCallback, aPtr);
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)

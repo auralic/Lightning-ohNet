@@ -39,6 +39,7 @@ public:
     void EnableActionEditTrack(CallbackServerConfig1EditTrack aCallback, void* aPtr);
     void EnableActionScanVersionDiff(CallbackServerConfig1ScanVersionDiff aCallback, void* aPtr);
     void EnableActionGetInitHDDResult(CallbackServerConfig1GetInitHDDResult aCallback, void* aPtr);
+    void EnableActionGetHDDHasInited(CallbackServerConfig1GetHDDHasInited aCallback, void* aPtr);
 private:
     void DoSetServerName(IDviInvocation& aInvocation);
     void DoGetServerVersion(IDviInvocation& aInvocation);
@@ -58,6 +59,7 @@ private:
     void DoEditTrack(IDviInvocation& aInvocation);
     void DoScanVersionDiff(IDviInvocation& aInvocation);
     void DoGetInitHDDResult(IDviInvocation& aInvocation);
+    void DoGetHDDHasInited(IDviInvocation& aInvocation);
 private:
     CallbackServerConfig1SetServerName iCallbackSetServerName;
     void* iPtrSetServerName;
@@ -95,6 +97,8 @@ private:
     void* iPtrScanVersionDiff;
     CallbackServerConfig1GetInitHDDResult iCallbackGetInitHDDResult;
     void* iPtrGetInitHDDResult;
+    CallbackServerConfig1GetHDDHasInited iCallbackGetHDDHasInited;
+    void* iPtrGetHDDHasInited;
     PropertyBool* iPropertyAlive;
 };
 
@@ -303,6 +307,16 @@ void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionGetInitHDDResult(Callbac
     OpenHome::Net::Action* action = new OpenHome::Net::Action("GetInitHDDResult");
     action->AddOutputParameter(new ParameterBool("InitHDDResult"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoGetInitHDDResult);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionGetHDDHasInited(CallbackServerConfig1GetHDDHasInited aCallback, void* aPtr)
+{
+    iCallbackGetHDDHasInited = aCallback;
+    iPtrGetHDDHasInited = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetHDDHasInited");
+    action->AddOutputParameter(new ParameterBool("HDDHasInited"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoGetHDDHasInited);
     iService->AddAction(action, functor);
 }
 
@@ -729,6 +743,27 @@ void DvProviderAvOpenhomeOrgServerConfig1C::DoGetInitHDDResult(IDviInvocation& a
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1C::DoGetHDDHasInited(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    uint32_t HDDHasInited;
+    ASSERT(iCallbackGetHDDHasInited != NULL);
+    if (0 != iCallbackGetHDDHasInited(iPtrGetHDDHasInited, invocationC, invocationCPtr, &HDDHasInited)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseBool respHDDHasInited(aInvocation, "HDDHasInited");
+    invocation.StartResponse();
+    respHDDHasInited.Write((HDDHasInited!=0));
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgServerConfig1Create(DvDeviceC aDevice)
@@ -829,6 +864,11 @@ void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionScanVersionDiff(THa
 void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetInitHDDResult(THandle aProvider, CallbackServerConfig1GetInitHDDResult aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionGetInitHDDResult(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetHDDHasInited(THandle aProvider, CallbackServerConfig1GetHDDHasInited aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionGetHDDHasInited(aCallback, aPtr);
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)

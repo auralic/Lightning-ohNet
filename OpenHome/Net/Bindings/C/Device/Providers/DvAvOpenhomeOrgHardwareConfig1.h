@@ -342,6 +342,30 @@ typedef int32_t (STDCALL *CallbackHardwareConfig1SetNetWork)(void* aPtr, IDvInvo
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackHardwareConfig1GetNetInterface)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t* aInterfaceNum, char** aCurrentUse, char** aInterfaceList);
+/**
+ * Callback which runs when the GetHaltStatus action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetHaltStatus
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aHaltStatus
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1GetHaltStatus)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t* aHaltStatus);
+/**
+ * Callback which runs when the SetHaltStatus action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetHaltStatus
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aHaltStatus
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1SetHaltStatus)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aHaltStatus);
 
 /**
  * Provider constructor
@@ -727,6 +751,28 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetNetW
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetNetInterface(THandle aProvider, CallbackHardwareConfig1GetNetInterface aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetHaltStatus
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetHaltStatus(THandle aProvider, CallbackHardwareConfig1GetHaltStatus aCallback, void* aPtr);
+/**
+ * Register a callback for the action SetHaltStatus
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetHaltStatus(THandle aProvider, CallbackHardwareConfig1SetHaltStatus aCallback, void* aPtr);
 
 /**
  * Set the value of the Alive property

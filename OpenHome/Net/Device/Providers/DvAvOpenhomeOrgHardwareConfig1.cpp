@@ -684,6 +684,22 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionGetNetInterface()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionGetHaltStatus()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetHaltStatus");
+    action->AddOutputParameter(new ParameterBool("HaltStatus"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoGetHaltStatus);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetHaltStatus()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetHaltStatus");
+    action->AddInputParameter(new ParameterBool("HaltStatus"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetHaltStatus);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::DoIsAlive(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -952,6 +968,24 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::DoGetNetInterface(IDviInvocation& a
     GetNetInterface(invocation, respInterfaceNum, respCurrentUse, respInterfaceList);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoGetHaltStatus(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseBool respHaltStatus(aInvocation, "HaltStatus");
+    GetHaltStatus(invocation, respHaltStatus);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetHaltStatus(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TBool HaltStatus = aInvocation.InvocationReadBool("HaltStatus");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetHaltStatus(invocation, HaltStatus);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::IsAlive(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aAlive*/)
 {
     ASSERTS();
@@ -1073,6 +1107,16 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::SetNetWork(IDvInvocation& /*aRespon
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::GetNetInterface(IDvInvocation& /*aResponse*/, IDvInvocationResponseUint& /*aInterfaceNum*/, IDvInvocationResponseString& /*aCurrentUse*/, IDvInvocationResponseString& /*aInterfaceList*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::GetHaltStatus(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aHaltStatus*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetHaltStatus(IDvInvocation& /*aResponse*/, TBool /*aHaltStatus*/)
 {
     ASSERTS();
 }

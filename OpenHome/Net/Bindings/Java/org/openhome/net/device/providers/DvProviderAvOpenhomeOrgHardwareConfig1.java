@@ -613,6 +613,8 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     private IDvInvocationListener iDelegateGetIpAddress;
     private IDvInvocationListener iDelegateSetNetWork;
     private IDvInvocationListener iDelegateGetNetInterface;
+    private IDvInvocationListener iDelegateGetHaltStatus;
+    private IDvInvocationListener iDelegateSetHaltStatus;
     private PropertyBool iPropertyAlive;
     private PropertyUint iPropertyCurrentAction;
     private PropertyBool iPropertyRestart;
@@ -1752,6 +1754,34 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     }
 
     /**
+     * Signal that the action GetHaltStatus is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetHaltStatus must be overridden if this is called.
+     */      
+    protected void enableActionGetHaltStatus()
+    {
+        Action action = new Action("GetHaltStatus");
+        action.addOutputParameter(new ParameterBool("HaltStatus"));
+        iDelegateGetHaltStatus = new DoGetHaltStatus();
+        enableAction(action, iDelegateGetHaltStatus);
+    }
+
+    /**
+     * Signal that the action SetHaltStatus is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetHaltStatus must be overridden if this is called.
+     */      
+    protected void enableActionSetHaltStatus()
+    {
+        Action action = new Action("SetHaltStatus");
+        action.addInputParameter(new ParameterBool("HaltStatus"));
+        iDelegateSetHaltStatus = new DoSetHaltStatus();
+        enableAction(action, iDelegateSetHaltStatus);
+    }
+
+    /**
      * IsAlive action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -2144,6 +2174,37 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
      * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
      */
     protected GetNetInterface getNetInterface(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetHaltStatus action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetHaltStatus action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetHaltStatus} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected boolean getHaltStatus(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetHaltStatus action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetHaltStatus action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetHaltStatus} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aHaltStatus
+     */
+    protected void setHaltStatus(IDvInvocation aInvocation, boolean aHaltStatus)
     {
         throw (new ActionDisabledError());
     }
@@ -3423,6 +3484,102 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
                 invocation.writeUint("InterfaceNum", interfaceNum);
                 invocation.writeString("CurrentUse", currentUse);
                 invocation.writeString("InterfaceList", interfaceList);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetHaltStatus implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean haltStatus;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                 haltStatus = getHaltStatus(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetHaltStatus");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeBool("HaltStatus", haltStatus);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetHaltStatus implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean haltStatus;
+            try
+            {
+                invocation.readStart();
+                haltStatus = invocation.readBool("HaltStatus");
+                invocation.readEnd();
+                setHaltStatus(invocation, haltStatus);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetHaltStatus");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
                 invocation.writeEnd();
             }
             catch (ActionError ae)

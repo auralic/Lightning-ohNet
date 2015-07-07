@@ -912,4 +912,45 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetNetInterface = function(success
 }
 
 
+/**
+* A service action to GetHaltStatus
+* @method GetHaltStatus
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetHaltStatus = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetHaltStatus", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["HaltStatus"] = ohnet.soaprequest.readBoolParameter(result["HaltStatus"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetHaltStatus
+* @method SetHaltStatus
+* @param {Boolean} HaltStatus An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetHaltStatus = function(HaltStatus, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetHaltStatus", this.url, this.domain, this.type, this.version);     
+    request.writeBoolParameter("HaltStatus", HaltStatus);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
 

@@ -85,6 +85,12 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public GetNetInterface syncGetNetInterface();
     public void beginGetNetInterface(ICpProxyListener aCallback);
     public GetNetInterface endGetNetInterface(long aAsyncHandle);
+    public boolean syncGetHaltStatus();
+    public void beginGetHaltStatus(ICpProxyListener aCallback);
+    public boolean endGetHaltStatus(long aAsyncHandle);
+    public void syncSetHaltStatus(boolean aHaltStatus);
+    public void beginSetHaltStatus(boolean aHaltStatus, ICpProxyListener aCallback);
+    public void endSetHaltStatus(long aAsyncHandle);
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
     public void setPropertyCurrentActionChanged(IPropertyChangeListener aCurrentActionChanged);
@@ -664,6 +670,42 @@ class SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
     }
 }
 
+class SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private boolean iHaltStatus;
+
+    public SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public boolean getHaltStatus()
+    {
+        return iHaltStatus;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        boolean result = iService.endGetHaltStatus(aAsyncHandle);
+        
+        iHaltStatus = result;
+    }
+}
+
+class SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetHaltStatus(aAsyncHandle);
+        
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
  */
@@ -898,6 +940,8 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private Action iActionGetIpAddress;
     private Action iActionSetNetWork;
     private Action iActionGetNetInterface;
+    private Action iActionGetHaltStatus;
+    private Action iActionSetHaltStatus;
     private PropertyBool iAlive;
     private PropertyUint iCurrentAction;
     private PropertyBool iRestart;
@@ -1104,6 +1148,14 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         iActionGetNetInterface.addOutputParameter(param);
         param = new ParameterString("InterfaceList", allowedValues);
         iActionGetNetInterface.addOutputParameter(param);
+
+        iActionGetHaltStatus = new Action("GetHaltStatus");
+        param = new ParameterBool("HaltStatus");
+        iActionGetHaltStatus.addOutputParameter(param);
+
+        iActionSetHaltStatus = new Action("SetHaltStatus");
+        param = new ParameterBool("HaltStatus");
+        iActionSetHaltStatus.addInputParameter(param);
 
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
@@ -2705,6 +2757,109 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public boolean syncGetHaltStatus()
+    {
+        SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1 sync = new SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1(this);
+        beginGetHaltStatus(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getHaltStatus();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetHaltStatus}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetHaltStatus(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetHaltStatus, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentBool((ParameterBool)iActionGetHaltStatus.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetHaltStatus} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetHaltStatus} method.
+     * @return the result of the previously invoked action.
+     */
+    public boolean endGetHaltStatus(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        boolean haltStatus = Invocation.getOutputBool(aAsyncHandle, index++);
+        return haltStatus;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetHaltStatus(boolean aHaltStatus)
+    {
+        SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1 sync = new SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1(this);
+        beginSetHaltStatus(aHaltStatus, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetHaltStatus}.
+     * 
+     * @param aHaltStatus
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetHaltStatus(boolean aHaltStatus, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetHaltStatus, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionSetHaltStatus.getInputParameter(inIndex++), aHaltStatus));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetHaltStatus} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetHaltStatus} method.
+     */
+    public void endSetHaltStatus(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
@@ -3642,6 +3797,8 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             iActionGetIpAddress.destroy();
             iActionSetNetWork.destroy();
             iActionGetNetInterface.destroy();
+            iActionGetHaltStatus.destroy();
+            iActionSetHaltStatus.destroy();
             iAlive.destroy();
             iCurrentAction.destroy();
             iRestart.destroy();

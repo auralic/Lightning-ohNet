@@ -598,6 +598,18 @@ protected:
      * GetNetInterface must be overridden if this is called.
      */
     void EnableActionGetNetInterface();
+    /**
+     * Signal that the action GetHaltStatus is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetHaltStatus must be overridden if this is called.
+     */
+    void EnableActionGetHaltStatus();
+    /**
+     * Signal that the action SetHaltStatus is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetHaltStatus must be overridden if this is called.
+     */
+    void EnableActionSetHaltStatus();
 private:
     /**
      * IsAlive action.
@@ -799,6 +811,22 @@ private:
      * Must be implemented iff EnableActionGetNetInterface was called.
      */
     virtual void GetNetInterface(IDvInvocationStd& aInvocation, uint32_t& aInterfaceNum, std::string& aCurrentUse, std::string& aInterfaceList);
+    /**
+     * GetHaltStatus action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetHaltStatus action for the owning device.
+     * Must be implemented iff EnableActionGetHaltStatus was called.
+     */
+    virtual void GetHaltStatus(IDvInvocationStd& aInvocation, bool& aHaltStatus);
+    /**
+     * SetHaltStatus action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetHaltStatus action for the owning device.
+     * Must be implemented iff EnableActionSetHaltStatus was called.
+     */
+    virtual void SetHaltStatus(IDvInvocationStd& aInvocation, bool aHaltStatus);
 private:
     DvProviderAvOpenhomeOrgHardwareConfig1Cpp();
     void DoIsAlive(IDviInvocation& aInvocation);
@@ -826,6 +854,8 @@ private:
     void DoGetIpAddress(IDviInvocation& aInvocation);
     void DoSetNetWork(IDviInvocation& aInvocation);
     void DoGetNetInterface(IDviInvocation& aInvocation);
+    void DoGetHaltStatus(IDviInvocation& aInvocation);
+    void DoSetHaltStatus(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;

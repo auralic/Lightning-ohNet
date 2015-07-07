@@ -340,6 +340,8 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateGetIpAddress;
         private ActionDelegate iDelegateSetNetWork;
         private ActionDelegate iDelegateGetNetInterface;
+        private ActionDelegate iDelegateGetHaltStatus;
+        private ActionDelegate iDelegateSetHaltStatus;
         private PropertyBool iPropertyAlive;
         private PropertyUint iPropertyCurrentAction;
         private PropertyBool iPropertyRestart;
@@ -1526,6 +1528,32 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action GetHaltStatus is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetHaltStatus must be overridden if this is called.</remarks>
+        protected void EnableActionGetHaltStatus()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetHaltStatus");
+            action.AddOutputParameter(new ParameterBool("HaltStatus"));
+            iDelegateGetHaltStatus = new ActionDelegate(DoGetHaltStatus);
+            EnableAction(action, iDelegateGetHaltStatus, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetHaltStatus is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetHaltStatus must be overridden if this is called.</remarks>
+        protected void EnableActionSetHaltStatus()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetHaltStatus");
+            action.AddInputParameter(new ParameterBool("HaltStatus"));
+            iDelegateSetHaltStatus = new ActionDelegate(DoSetHaltStatus);
+            EnableAction(action, iDelegateSetHaltStatus, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// IsAlive action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -1894,6 +1922,34 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aCurrentUse"></param>
         /// <param name="aInterfaceList"></param>
         protected virtual void GetNetInterface(IDvInvocation aInvocation, out uint aInterfaceNum, out string aCurrentUse, out string aInterfaceList)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetHaltStatus action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetHaltStatus action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetHaltStatus was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aHaltStatus"></param>
+        protected virtual void GetHaltStatus(IDvInvocation aInvocation, out bool aHaltStatus)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetHaltStatus action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetHaltStatus action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetHaltStatus was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aHaltStatus"></param>
+        protected virtual void SetHaltStatus(IDvInvocation aInvocation, bool aHaltStatus)
         {
             throw (new ActionDisabledError());
         }
@@ -3089,6 +3145,98 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetNetInterface", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetHaltStatus(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool haltStatus;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetHaltStatus(invocation, out haltStatus);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetHaltStatus");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetHaltStatus"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetHaltStatus", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteBool("HaltStatus", haltStatus);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetHaltStatus", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetHaltStatus(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool haltStatus;
+            try
+            {
+                invocation.ReadStart();
+                haltStatus = invocation.ReadBool("HaltStatus");
+                invocation.ReadEnd();
+                self.SetHaltStatus(invocation, haltStatus);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetHaltStatus");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetHaltStatus"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetHaltStatus", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetHaltStatus", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

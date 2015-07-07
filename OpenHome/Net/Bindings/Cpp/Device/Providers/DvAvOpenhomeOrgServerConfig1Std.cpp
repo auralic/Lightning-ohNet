@@ -181,6 +181,14 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionGetInitHDDResult()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionGetHDDHasInited()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetHDDHasInited");
+    action->AddOutputParameter(new ParameterBool("HDDHasInited"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetHDDHasInited);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoSetServerName(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -453,6 +461,19 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetInitHDDResult(IDviInvocation&
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetHDDHasInited(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    bool respHDDHasInited;
+    DvInvocationStd invocation(aInvocation);
+    GetHDDHasInited(invocation, respHDDHasInited);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseBool respWriterHDDHasInited(aInvocation, "HDDHasInited");
+    respWriterHDDHasInited.Write(respHDDHasInited);
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::SetServerName(IDvInvocationStd& /*aInvocation*/, const std::string& /*aServerName*/)
 {
     ASSERTS();
@@ -539,6 +560,11 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::ScanVersionDiff(IDvInvocationStd& 
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetInitHDDResult(IDvInvocationStd& /*aInvocation*/, bool& /*aInitHDDResult*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetHDDHasInited(IDvInvocationStd& /*aInvocation*/, bool& /*aHDDHasInited*/)
 {
     ASSERTS();
 }

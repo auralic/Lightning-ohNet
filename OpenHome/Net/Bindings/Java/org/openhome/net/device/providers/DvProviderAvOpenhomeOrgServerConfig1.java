@@ -148,6 +148,7 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     private IDvInvocationListener iDelegateEditTrack;
     private IDvInvocationListener iDelegateScanVersionDiff;
     private IDvInvocationListener iDelegateGetInitHDDResult;
+    private IDvInvocationListener iDelegateGetHDDHasInited;
     private PropertyBool iPropertyAlive;
 
     /**
@@ -448,6 +449,20 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     }
 
     /**
+     * Signal that the action GetHDDHasInited is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetHDDHasInited must be overridden if this is called.
+     */      
+    protected void enableActionGetHDDHasInited()
+    {
+        Action action = new Action("GetHDDHasInited");
+        action.addOutputParameter(new ParameterBool("HDDHasInited"));
+        iDelegateGetHDDHasInited = new DoGetHDDHasInited();
+        enableAction(action, iDelegateGetHDDHasInited);
+    }
+
+    /**
      * SetServerName action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -719,6 +734,21 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
      * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
      */
     protected boolean getInitHDDResult(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetHDDHasInited action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetHDDHasInited action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetHDDHasInited} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected boolean getHDDHasInited(IDvInvocation aInvocation)
     {
         throw (new ActionDisabledError());
     }
@@ -1610,6 +1640,54 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
             {
                 invocation.writeStart();
                 invocation.writeBool("InitHDDResult", initHDDResult);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetHDDHasInited implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean hDDHasInited;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                 hDDHasInited = getHDDHasInited(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetHDDHasInited");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeBool("HDDHasInited", hDDHasInited);
                 invocation.writeEnd();
             }
             catch (ActionError ae)

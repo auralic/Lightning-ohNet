@@ -123,6 +123,14 @@ public:
     void BeginGetNetInterface(FunctorAsync& aFunctor);
     void EndGetNetInterface(IAsync& aAsync, TUint& aInterfaceNum, Brh& aCurrentUse, Brh& aInterfaceList);
 
+    void SyncGetHaltStatus(TBool& aHaltStatus);
+    void BeginGetHaltStatus(FunctorAsync& aFunctor);
+    void EndGetHaltStatus(IAsync& aAsync, TBool& aHaltStatus);
+
+    void SyncSetHaltStatus(TBool aHaltStatus);
+    void BeginSetHaltStatus(TBool aHaltStatus, FunctorAsync& aFunctor);
+    void EndSetHaltStatus(IAsync& aAsync);
+
     void SetPropertyAliveChanged(Functor& aFunctor);
     void SetPropertyCurrentActionChanged(Functor& aFunctor);
     void SetPropertyRestartChanged(Functor& aFunctor);
@@ -221,6 +229,8 @@ private:
     Action* iActionGetIpAddress;
     Action* iActionSetNetWork;
     Action* iActionGetNetInterface;
+    Action* iActionGetHaltStatus;
+    Action* iActionSetHaltStatus;
     PropertyBool* iAlive;
     PropertyUint* iCurrentAction;
     PropertyBool* iRestart;
@@ -846,6 +856,50 @@ void SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& a
     iService.EndGetNetInterface(aAsync, iInterfaceNum, iCurrentUse, iInterfaceList);
 }
 
+
+class SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, TBool& aHaltStatus);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+    TBool& iHaltStatus;
+};
+
+SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1C::SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, TBool& aHaltStatus)
+    : iService(aProxy)
+    , iHaltStatus(aHaltStatus)
+{
+}
+
+void SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetHaltStatus(aAsync, iHaltStatus);
+}
+
+
+class SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+};
+
+SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1C::SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetHaltStatus(aAsync);
+}
+
 CpProxyAvOpenhomeOrgHardwareConfig1C::CpProxyAvOpenhomeOrgHardwareConfig1C(CpDeviceC aDevice)
     : CpProxyC("av-openhome-org", "HardwareConfig", 1, *reinterpret_cast<CpiDevice*>(aDevice))
     , iLock("MPCS")
@@ -998,6 +1052,14 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::CpProxyAvOpenhomeOrgHardwareConfig1C(CpDev
     param = new OpenHome::Net::ParameterString("InterfaceList");
     iActionGetNetInterface->AddOutputParameter(param);
 
+    iActionGetHaltStatus = new Action("GetHaltStatus");
+    param = new OpenHome::Net::ParameterBool("HaltStatus");
+    iActionGetHaltStatus->AddOutputParameter(param);
+
+    iActionSetHaltStatus = new Action("SetHaltStatus");
+    param = new OpenHome::Net::ParameterBool("HaltStatus");
+    iActionSetHaltStatus->AddInputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1C::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
@@ -1098,6 +1160,8 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::~CpProxyAvOpenhomeOrgHardwareConfig1C()
     delete iActionGetIpAddress;
     delete iActionSetNetWork;
     delete iActionGetNetInterface;
+    delete iActionGetHaltStatus;
+    delete iActionSetHaltStatus;
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncIsAlive(TBool& aAlive)
@@ -1908,6 +1972,68 @@ void CpProxyAvOpenhomeOrgHardwareConfig1C::EndGetNetInterface(IAsync& aAsync, TU
     aInterfaceNum = ((ArgumentUint*)invocation.OutputArguments()[index++])->Value();
     ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aCurrentUse);
     ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aInterfaceList);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncGetHaltStatus(TBool& aHaltStatus)
+{
+    SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1C sync(*this, aHaltStatus);
+    BeginGetHaltStatus(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginGetHaltStatus(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionGetHaltStatus, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetHaltStatus->OutputParameters();
+    invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndGetHaltStatus(IAsync& aAsync, TBool& aHaltStatus)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetHaltStatus"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    aHaltStatus = ((ArgumentBool*)invocation.OutputArguments()[index++])->Value();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncSetHaltStatus(TBool aHaltStatus)
+{
+    SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1C sync(*this);
+    BeginSetHaltStatus(aHaltStatus, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginSetHaltStatus(TBool aHaltStatus, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionSetHaltStatus, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetHaltStatus->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aHaltStatus));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndSetHaltStatus(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetHaltStatus"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1C::SetPropertyAliveChanged(Functor& aFunctor)
@@ -3481,6 +3607,87 @@ int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetNetInterface(THandle aH
         proxyC->EndGetNetInterface(*async, *aInterfaceNum, buf_aCurrentUse, buf_aInterfaceList);
         *aCurrentUse = buf_aCurrentUse.Extract();
         *aInterfaceList = buf_aInterfaceList.Extract();
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetHaltStatus(THandle aHandle, uint32_t* aHaltStatus)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    TBool HaltStatus;
+    int32_t err = 0;
+    try {
+        proxyC->SyncGetHaltStatus(HaltStatus);
+        *aHaltStatus = HaltStatus? 1 : 0;
+    }
+    catch (ProxyError& ) {
+        err = -1;
+        *aHaltStatus = false;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginGetHaltStatus(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginGetHaltStatus(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetHaltStatus(THandle aHandle, OhNetHandleAsync aAsync, uint32_t* aHaltStatus)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    TBool HaltStatus;
+    try {
+        proxyC->EndGetHaltStatus(*async, HaltStatus);
+        *aHaltStatus = HaltStatus? 1 : 0;
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetHaltStatus(THandle aHandle, uint32_t aHaltStatus)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    int32_t err = 0;
+    try {
+        proxyC->SyncSetHaltStatus((aHaltStatus==0? false : true));
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetHaltStatus(THandle aHandle, uint32_t aHaltStatus, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginSetHaltStatus((aHaltStatus==0? false : true), functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetHaltStatus(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndSetHaltStatus(*async);
     }
     catch(...) {
         err = -1;

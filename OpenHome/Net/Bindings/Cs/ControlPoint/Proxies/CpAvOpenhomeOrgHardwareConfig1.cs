@@ -85,6 +85,12 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncGetNetInterface(out uint aInterfaceNum, out String aCurrentUse, out String aInterfaceList);
         void BeginGetNetInterface(CpProxy.CallbackAsyncComplete aCallback);
         void EndGetNetInterface(IntPtr aAsyncHandle, out uint aInterfaceNum, out String aCurrentUse, out String aInterfaceList);
+        void SyncGetHaltStatus(out bool aHaltStatus);
+        void BeginGetHaltStatus(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetHaltStatus(IntPtr aAsyncHandle, out bool aHaltStatus);
+        void SyncSetHaltStatus(bool aHaltStatus);
+        void BeginSetHaltStatus(bool aHaltStatus, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetHaltStatus(IntPtr aAsyncHandle);
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
         void SetPropertyCurrentActionChanged(System.Action aCurrentActionChanged);
@@ -613,6 +619,39 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private bool iHaltStatus;
+
+        public SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public bool HaltStatus()
+        {
+            return iHaltStatus;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetHaltStatus(aAsyncHandle, out iHaltStatus);
+        }
+    };
+
+    internal class SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetHaltStatus(aAsyncHandle);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
     /// </summary>
@@ -643,6 +682,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionGetIpAddress;
         private OpenHome.Net.Core.Action iActionSetNetWork;
         private OpenHome.Net.Core.Action iActionGetNetInterface;
+        private OpenHome.Net.Core.Action iActionGetHaltStatus;
+        private OpenHome.Net.Core.Action iActionSetHaltStatus;
         private PropertyBool iAlive;
         private PropertyUint iCurrentAction;
         private PropertyBool iRestart;
@@ -847,6 +888,14 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetNetInterface.AddOutputParameter(param);
             param = new ParameterString("InterfaceList", allowedValues);
             iActionGetNetInterface.AddOutputParameter(param);
+
+            iActionGetHaltStatus = new OpenHome.Net.Core.Action("GetHaltStatus");
+            param = new ParameterBool("HaltStatus");
+            iActionGetHaltStatus.AddOutputParameter(param);
+
+            iActionSetHaltStatus = new OpenHome.Net.Core.Action("SetHaltStatus");
+            param = new ParameterBool("HaltStatus");
+            iActionSetHaltStatus.AddInputParameter(param);
 
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
@@ -2182,6 +2231,101 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aHaltStatus"></param>
+        public void SyncGetHaltStatus(out bool aHaltStatus)
+        {
+            SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1 sync = new SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1(this);
+            BeginGetHaltStatus(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aHaltStatus = sync.HaltStatus();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetHaltStatus().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetHaltStatus(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetHaltStatus, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentBool((ParameterBool)iActionGetHaltStatus.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aHaltStatus"></param>
+        public void EndGetHaltStatus(IntPtr aAsyncHandle, out bool aHaltStatus)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aHaltStatus = Invocation.OutputBool(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aHaltStatus"></param>
+        public void SyncSetHaltStatus(bool aHaltStatus)
+        {
+            SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1 sync = new SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetHaltStatus(aHaltStatus, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetHaltStatus().</remarks>
+        /// <param name="aHaltStatus"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetHaltStatus(bool aHaltStatus, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetHaltStatus, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionSetHaltStatus.InputParameter(inIndex++), aHaltStatus));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetHaltStatus(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -3230,6 +3374,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetIpAddress.Dispose();
             iActionSetNetWork.Dispose();
             iActionGetNetInterface.Dispose();
+            iActionGetHaltStatus.Dispose();
+            iActionSetHaltStatus.Dispose();
             iAlive.Dispose();
             iCurrentAction.Dispose();
             iRestart.Dispose();
