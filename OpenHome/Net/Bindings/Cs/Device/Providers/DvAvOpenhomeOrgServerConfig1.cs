@@ -48,6 +48,9 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateScanVersionDiff;
         private ActionDelegate iDelegateGetInitHDDResult;
         private ActionDelegate iDelegateGetHDDHasInited;
+        private ActionDelegate iDelegateUSBImport;
+        private ActionDelegate iDelegateGetDISKCapacity;
+        private ActionDelegate iDelegateForceRescan;
         private PropertyBool iPropertyAlive;
 
         /// <summary>
@@ -357,6 +360,46 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action USBImport is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// USBImport must be overridden if this is called.</remarks>
+        protected void EnableActionUSBImport()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("USBImport");
+            iDelegateUSBImport = new ActionDelegate(DoUSBImport);
+            EnableAction(action, iDelegateUSBImport, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetDISKCapacity is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetDISKCapacity must be overridden if this is called.</remarks>
+        protected void EnableActionGetDISKCapacity()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetDISKCapacity");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("DISKTotal", allowedValues));
+            action.AddOutputParameter(new ParameterString("DISKUsed", allowedValues));
+            action.AddOutputParameter(new ParameterString("DISKAvailable", allowedValues));
+            iDelegateGetDISKCapacity = new ActionDelegate(DoGetDISKCapacity);
+            EnableAction(action, iDelegateGetDISKCapacity, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action ForceRescan is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// ForceRescan must be overridden if this is called.</remarks>
+        protected void EnableActionForceRescan()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("ForceRescan");
+            iDelegateForceRescan = new ActionDelegate(DoForceRescan);
+            EnableAction(action, iDelegateForceRescan, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// SetServerName action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -622,6 +665,48 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         /// <param name="aHDDHasInited"></param>
         protected virtual void GetHDDHasInited(IDvInvocation aInvocation, out bool aHDDHasInited)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// USBImport action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// USBImport action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionUSBImport was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        protected virtual void USBImport(IDvInvocation aInvocation)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetDISKCapacity action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetDISKCapacity action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetDISKCapacity was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aDISKTotal"></param>
+        /// <param name="aDISKUsed"></param>
+        /// <param name="aDISKAvailable"></param>
+        protected virtual void GetDISKCapacity(IDvInvocation aInvocation, out string aDISKTotal, out string aDISKUsed, out string aDISKAvailable)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// ForceRescan action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// ForceRescan action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionForceRescan was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        protected virtual void ForceRescan(IDvInvocation aInvocation)
         {
             throw (new ActionDisabledError());
         }
@@ -1503,6 +1588,144 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetHDDHasInited", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoUSBImport(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.USBImport(invocation);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "USBImport");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "USBImport"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "USBImport", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "USBImport", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetDISKCapacity(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string dISKTotal;
+            string dISKUsed;
+            string dISKAvailable;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetDISKCapacity(invocation, out dISKTotal, out dISKUsed, out dISKAvailable);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetDISKCapacity");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetDISKCapacity"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDISKCapacity", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("DISKTotal", dISKTotal);
+                invocation.WriteString("DISKUsed", dISKUsed);
+                invocation.WriteString("DISKAvailable", dISKAvailable);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDISKCapacity", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoForceRescan(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.ForceRescan(invocation);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "ForceRescan");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "ForceRescan"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "ForceRescan", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "ForceRescan", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

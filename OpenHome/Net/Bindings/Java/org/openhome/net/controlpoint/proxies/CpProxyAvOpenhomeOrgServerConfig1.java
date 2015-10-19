@@ -67,6 +67,15 @@ interface ICpProxyAvOpenhomeOrgServerConfig1 extends ICpProxy
     public boolean syncGetHDDHasInited();
     public void beginGetHDDHasInited(ICpProxyListener aCallback);
     public boolean endGetHDDHasInited(long aAsyncHandle);
+    public void syncUSBImport();
+    public void beginUSBImport(ICpProxyListener aCallback);
+    public void endUSBImport(long aAsyncHandle);
+    public GetDISKCapacity syncGetDISKCapacity();
+    public void beginGetDISKCapacity(ICpProxyListener aCallback);
+    public GetDISKCapacity endGetDISKCapacity(long aAsyncHandle);
+    public void syncForceRescan();
+    public void beginForceRescan(ICpProxyListener aCallback);
+    public void endForceRescan(long aAsyncHandle);
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
 }
@@ -458,6 +467,69 @@ class SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1 extends SyncProxyAction
     }
 }
 
+class SyncUSBImportAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+    public SyncUSBImportAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endUSBImport(aAsyncHandle);
+        
+    }
+}
+
+class SyncGetDISKCapacityAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+    private String iDISKTotal;
+    private String iDISKUsed;
+    private String iDISKAvailable;
+
+    public SyncGetDISKCapacityAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getDISKTotal()
+    {
+        return iDISKTotal;
+    }
+    public String getDISKUsed()
+    {
+        return iDISKUsed;
+    }
+    public String getDISKAvailable()
+    {
+        return iDISKAvailable;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        GetDISKCapacity result = iService.endGetDISKCapacity(aAsyncHandle);
+        
+        iDISKTotal = result.getDISKTotal();
+        iDISKUsed = result.getDISKUsed();
+        iDISKAvailable = result.getDISKAvailable();
+    }
+}
+
+class SyncForceRescanAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+    public SyncForceRescanAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endForceRescan(aAsyncHandle);
+        
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:ServerConfig:1 UPnP service
  */
@@ -561,6 +633,36 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         }
     }
 
+    public class GetDISKCapacity
+    {
+        private String iDISKTotal;
+        private String iDISKUsed;
+        private String iDISKAvailable;
+
+        public GetDISKCapacity(
+            String aDISKTotal,
+            String aDISKUsed,
+            String aDISKAvailable
+        )
+        {
+            iDISKTotal = aDISKTotal;
+            iDISKUsed = aDISKUsed;
+            iDISKAvailable = aDISKAvailable;
+        }
+        public String getDISKTotal()
+        {
+            return iDISKTotal;
+        }
+        public String getDISKUsed()
+        {
+            return iDISKUsed;
+        }
+        public String getDISKAvailable()
+        {
+            return iDISKAvailable;
+        }
+    }
+
     private Action iActionSetServerName;
     private Action iActionGetServerVersion;
     private Action iActionGetProgressInfo;
@@ -580,6 +682,9 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     private Action iActionScanVersionDiff;
     private Action iActionGetInitHDDResult;
     private Action iActionGetHDDHasInited;
+    private Action iActionUSBImport;
+    private Action iActionGetDISKCapacity;
+    private Action iActionForceRescan;
     private PropertyBool iAlive;
     private IPropertyChangeListener iAliveChanged;
     private Object iPropertyLock;
@@ -680,6 +785,18 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         iActionGetHDDHasInited = new Action("GetHDDHasInited");
         param = new ParameterBool("HDDHasInited");
         iActionGetHDDHasInited.addOutputParameter(param);
+
+        iActionUSBImport = new Action("USBImport");
+
+        iActionGetDISKCapacity = new Action("GetDISKCapacity");
+        param = new ParameterString("DISKTotal", allowedValues);
+        iActionGetDISKCapacity.addOutputParameter(param);
+        param = new ParameterString("DISKUsed", allowedValues);
+        iActionGetDISKCapacity.addOutputParameter(param);
+        param = new ParameterString("DISKAvailable", allowedValues);
+        iActionGetDISKCapacity.addOutputParameter(param);
+
+        iActionForceRescan = new Action("ForceRescan");
 
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
@@ -1704,6 +1821,163 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncUSBImport()
+    {
+        SyncUSBImportAvOpenhomeOrgServerConfig1 sync = new SyncUSBImportAvOpenhomeOrgServerConfig1(this);
+        beginUSBImport(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endUSBImport}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginUSBImport(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionUSBImport, aCallback);
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginUSBImport} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginUSBImport} method.
+     */
+    public void endUSBImport(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public GetDISKCapacity syncGetDISKCapacity()
+    {
+        SyncGetDISKCapacityAvOpenhomeOrgServerConfig1 sync = new SyncGetDISKCapacityAvOpenhomeOrgServerConfig1(this);
+        beginGetDISKCapacity(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return new GetDISKCapacity(
+            sync.getDISKTotal(),
+            sync.getDISKUsed(),
+            sync.getDISKAvailable()
+        );
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetDISKCapacity}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetDISKCapacity(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetDISKCapacity, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetDISKCapacity.getOutputParameter(outIndex++)));
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetDISKCapacity.getOutputParameter(outIndex++)));
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetDISKCapacity.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetDISKCapacity} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetDISKCapacity} method.
+     * @return the result of the previously invoked action.
+     */
+    public GetDISKCapacity endGetDISKCapacity(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String dISKTotal = Invocation.getOutputString(aAsyncHandle, index++);
+        String dISKUsed = Invocation.getOutputString(aAsyncHandle, index++);
+        String dISKAvailable = Invocation.getOutputString(aAsyncHandle, index++);
+        return new GetDISKCapacity(
+            dISKTotal,
+            dISKUsed,
+            dISKAvailable
+        );
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncForceRescan()
+    {
+        SyncForceRescanAvOpenhomeOrgServerConfig1 sync = new SyncForceRescanAvOpenhomeOrgServerConfig1(this);
+        beginForceRescan(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endForceRescan}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginForceRescan(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionForceRescan, aCallback);
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginForceRescan} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginForceRescan} method.
+     */
+    public void endForceRescan(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
@@ -1777,6 +2051,9 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             iActionScanVersionDiff.destroy();
             iActionGetInitHDDResult.destroy();
             iActionGetHDDHasInited.destroy();
+            iActionUSBImport.destroy();
+            iActionGetDISKCapacity.destroy();
+            iActionForceRescan.destroy();
             iAlive.destroy();
         }
     }

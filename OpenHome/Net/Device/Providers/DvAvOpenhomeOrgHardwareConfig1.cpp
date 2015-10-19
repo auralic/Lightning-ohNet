@@ -700,6 +700,23 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetHaltStatus()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionGetFilterMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetFilterMode");
+    action->AddOutputParameter(new ParameterString("FilterMode"));
+    action->AddOutputParameter(new ParameterString("FilterModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoGetFilterMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetFilterMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetFilterMode");
+    action->AddInputParameter(new ParameterString("FilterMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetFilterMode);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::DoIsAlive(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -986,6 +1003,26 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetHaltStatus(IDviInvocation& aIn
     SetHaltStatus(invocation, HaltStatus);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoGetFilterMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respFilterMode(aInvocation, "FilterMode");
+    DviInvocationResponseString respFilterModeList(aInvocation, "FilterModeList");
+    GetFilterMode(invocation, respFilterMode, respFilterModeList);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetFilterMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz FilterMode;
+    aInvocation.InvocationReadString("FilterMode", FilterMode);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetFilterMode(invocation, FilterMode);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::IsAlive(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aAlive*/)
 {
     ASSERTS();
@@ -1117,6 +1154,16 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetHaltStatus(IDvInvocation& /*aRes
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::SetHaltStatus(IDvInvocation& /*aResponse*/, TBool /*aHaltStatus*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::GetFilterMode(IDvInvocation& /*aResponse*/, IDvInvocationResponseString& /*aFilterMode*/, IDvInvocationResponseString& /*aFilterModeList*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetFilterMode(IDvInvocation& /*aResponse*/, const Brx& /*aFilterMode*/)
 {
     ASSERTS();
 }

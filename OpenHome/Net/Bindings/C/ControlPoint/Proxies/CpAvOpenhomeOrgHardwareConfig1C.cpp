@@ -131,6 +131,14 @@ public:
     void BeginSetHaltStatus(TBool aHaltStatus, FunctorAsync& aFunctor);
     void EndSetHaltStatus(IAsync& aAsync);
 
+    void SyncGetFilterMode(Brh& aFilterMode, Brh& aFilterModeList);
+    void BeginGetFilterMode(FunctorAsync& aFunctor);
+    void EndGetFilterMode(IAsync& aAsync, Brh& aFilterMode, Brh& aFilterModeList);
+
+    void SyncSetFilterMode(const Brx& aFilterMode);
+    void BeginSetFilterMode(const Brx& aFilterMode, FunctorAsync& aFunctor);
+    void EndSetFilterMode(IAsync& aAsync);
+
     void SetPropertyAliveChanged(Functor& aFunctor);
     void SetPropertyCurrentActionChanged(Functor& aFunctor);
     void SetPropertyRestartChanged(Functor& aFunctor);
@@ -231,6 +239,8 @@ private:
     Action* iActionGetNetInterface;
     Action* iActionGetHaltStatus;
     Action* iActionSetHaltStatus;
+    Action* iActionGetFilterMode;
+    Action* iActionSetFilterMode;
     PropertyBool* iAlive;
     PropertyUint* iCurrentAction;
     PropertyBool* iRestart;
@@ -900,6 +910,52 @@ void SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAs
     iService.EndSetHaltStatus(aAsync);
 }
 
+
+class SyncGetFilterModeAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncGetFilterModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, Brh& aFilterMode, Brh& aFilterModeList);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetFilterModeAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+    Brh& iFilterMode;
+    Brh& iFilterModeList;
+};
+
+SyncGetFilterModeAvOpenhomeOrgHardwareConfig1C::SyncGetFilterModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, Brh& aFilterMode, Brh& aFilterModeList)
+    : iService(aProxy)
+    , iFilterMode(aFilterMode)
+    , iFilterModeList(aFilterModeList)
+{
+}
+
+void SyncGetFilterModeAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetFilterMode(aAsync, iFilterMode, iFilterModeList);
+}
+
+
+class SyncSetFilterModeAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncSetFilterModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetFilterModeAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+};
+
+SyncSetFilterModeAvOpenhomeOrgHardwareConfig1C::SyncSetFilterModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetFilterModeAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetFilterMode(aAsync);
+}
+
 CpProxyAvOpenhomeOrgHardwareConfig1C::CpProxyAvOpenhomeOrgHardwareConfig1C(CpDeviceC aDevice)
     : CpProxyC("av-openhome-org", "HardwareConfig", 1, *reinterpret_cast<CpiDevice*>(aDevice))
     , iLock("MPCS")
@@ -1060,6 +1116,16 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::CpProxyAvOpenhomeOrgHardwareConfig1C(CpDev
     param = new OpenHome::Net::ParameterBool("HaltStatus");
     iActionSetHaltStatus->AddInputParameter(param);
 
+    iActionGetFilterMode = new Action("GetFilterMode");
+    param = new OpenHome::Net::ParameterString("FilterMode");
+    iActionGetFilterMode->AddOutputParameter(param);
+    param = new OpenHome::Net::ParameterString("FilterModeList");
+    iActionGetFilterMode->AddOutputParameter(param);
+
+    iActionSetFilterMode = new Action("SetFilterMode");
+    param = new OpenHome::Net::ParameterString("FilterMode");
+    iActionSetFilterMode->AddInputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1C::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
@@ -1162,6 +1228,8 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::~CpProxyAvOpenhomeOrgHardwareConfig1C()
     delete iActionGetNetInterface;
     delete iActionGetHaltStatus;
     delete iActionSetHaltStatus;
+    delete iActionGetFilterMode;
+    delete iActionSetFilterMode;
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncIsAlive(TBool& aAlive)
@@ -2027,6 +2095,70 @@ void CpProxyAvOpenhomeOrgHardwareConfig1C::EndSetHaltStatus(IAsync& aAsync)
     ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
     Invocation& invocation = (Invocation&)aAsync;
     ASSERT(invocation.Action().Name() == Brn("SetHaltStatus"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncGetFilterMode(Brh& aFilterMode, Brh& aFilterModeList)
+{
+    SyncGetFilterModeAvOpenhomeOrgHardwareConfig1C sync(*this, aFilterMode, aFilterModeList);
+    BeginGetFilterMode(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginGetFilterMode(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionGetFilterMode, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetFilterMode->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndGetFilterMode(IAsync& aAsync, Brh& aFilterMode, Brh& aFilterModeList)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetFilterMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aFilterMode);
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aFilterModeList);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncSetFilterMode(const Brx& aFilterMode)
+{
+    SyncSetFilterModeAvOpenhomeOrgHardwareConfig1C sync(*this);
+    BeginSetFilterMode(aFilterMode, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginSetFilterMode(const Brx& aFilterMode, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionSetFilterMode, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetFilterMode->InputParameters();
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aFilterMode));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndSetFilterMode(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetFilterMode"));
 
     Error::ELevel level;
     TUint code;
@@ -3688,6 +3820,96 @@ int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetHaltStatus(THandle aHan
     ASSERT(async != NULL);
     try {
         proxyC->EndSetHaltStatus(*async);
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetFilterMode(THandle aHandle, char** aFilterMode, char** aFilterModeList)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aFilterMode;
+    Brh buf_aFilterModeList;
+    int32_t err = 0;
+    try {
+        proxyC->SyncGetFilterMode(buf_aFilterMode, buf_aFilterModeList);
+        *aFilterMode = buf_aFilterMode.Extract();
+        *aFilterModeList = buf_aFilterModeList.Extract();
+    }
+    catch (ProxyError& ) {
+        err = -1;
+        *aFilterMode = NULL;
+        *aFilterModeList = NULL;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginGetFilterMode(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginGetFilterMode(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetFilterMode(THandle aHandle, OhNetHandleAsync aAsync, char** aFilterMode, char** aFilterModeList)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    Brh buf_aFilterMode;
+    *aFilterMode = NULL;
+    Brh buf_aFilterModeList;
+    *aFilterModeList = NULL;
+    try {
+        proxyC->EndGetFilterMode(*async, buf_aFilterMode, buf_aFilterModeList);
+        *aFilterMode = buf_aFilterMode.Extract();
+        *aFilterModeList = buf_aFilterModeList.Extract();
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetFilterMode(THandle aHandle, const char* aFilterMode)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aFilterMode(aFilterMode);
+    int32_t err = 0;
+    try {
+        proxyC->SyncSetFilterMode(buf_aFilterMode);
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetFilterMode(THandle aHandle, const char* aFilterMode, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aFilterMode(aFilterMode);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginSetFilterMode(buf_aFilterMode, functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetFilterMode(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndSetFilterMode(*async);
     }
     catch(...) {
         err = -1;

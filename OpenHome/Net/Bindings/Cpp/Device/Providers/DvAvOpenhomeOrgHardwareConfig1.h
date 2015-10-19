@@ -610,6 +610,18 @@ protected:
      * SetHaltStatus must be overridden if this is called.
      */
     void EnableActionSetHaltStatus();
+    /**
+     * Signal that the action GetFilterMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetFilterMode must be overridden if this is called.
+     */
+    void EnableActionGetFilterMode();
+    /**
+     * Signal that the action SetFilterMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetFilterMode must be overridden if this is called.
+     */
+    void EnableActionSetFilterMode();
 private:
     /**
      * IsAlive action.
@@ -827,6 +839,22 @@ private:
      * Must be implemented iff EnableActionSetHaltStatus was called.
      */
     virtual void SetHaltStatus(IDvInvocationStd& aInvocation, bool aHaltStatus);
+    /**
+     * GetFilterMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetFilterMode action for the owning device.
+     * Must be implemented iff EnableActionGetFilterMode was called.
+     */
+    virtual void GetFilterMode(IDvInvocationStd& aInvocation, std::string& aFilterMode, std::string& aFilterModeList);
+    /**
+     * SetFilterMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetFilterMode action for the owning device.
+     * Must be implemented iff EnableActionSetFilterMode was called.
+     */
+    virtual void SetFilterMode(IDvInvocationStd& aInvocation, const std::string& aFilterMode);
 private:
     DvProviderAvOpenhomeOrgHardwareConfig1Cpp();
     void DoIsAlive(IDviInvocation& aInvocation);
@@ -856,6 +884,8 @@ private:
     void DoGetNetInterface(IDviInvocation& aInvocation);
     void DoGetHaltStatus(IDviInvocation& aInvocation);
     void DoSetHaltStatus(IDviInvocation& aInvocation);
+    void DoGetFilterMode(IDviInvocation& aInvocation);
+    void DoSetFilterMode(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;

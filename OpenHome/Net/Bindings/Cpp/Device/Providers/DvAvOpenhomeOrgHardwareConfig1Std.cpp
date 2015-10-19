@@ -726,6 +726,23 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetHaltStatus()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetFilterMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetFilterMode");
+    action->AddOutputParameter(new ParameterString("FilterMode"));
+    action->AddOutputParameter(new ParameterString("FilterModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetFilterMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetFilterMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetFilterMode");
+    action->AddInputParameter(new ParameterString("FilterMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetFilterMode);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoIsAlive(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -1182,6 +1199,39 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetHaltStatus(IDviInvocation& 
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetFilterMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    std::string respFilterMode;
+    std::string respFilterModeList;
+    DvInvocationStd invocation(aInvocation);
+    GetFilterMode(invocation, respFilterMode, respFilterModeList);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterFilterMode(aInvocation, "FilterMode");
+    Brn buf_FilterMode((const TByte*)respFilterMode.c_str(), (TUint)respFilterMode.length());
+    respWriterFilterMode.Write(buf_FilterMode);
+    aInvocation.InvocationWriteStringEnd("FilterMode");
+    DviInvocationResponseString respWriterFilterModeList(aInvocation, "FilterModeList");
+    Brn buf_FilterModeList((const TByte*)respFilterModeList.c_str(), (TUint)respFilterModeList.length());
+    respWriterFilterModeList.Write(buf_FilterModeList);
+    aInvocation.InvocationWriteStringEnd("FilterModeList");
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetFilterMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_FilterMode;
+    aInvocation.InvocationReadString("FilterMode", buf_FilterMode);
+    std::string FilterMode((const char*)buf_FilterMode.Ptr(), buf_FilterMode.Bytes());
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetFilterMode(invocation, FilterMode);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::IsAlive(IDvInvocationStd& /*aInvocation*/, bool& /*aAlive*/)
 {
     ASSERTS();
@@ -1313,6 +1363,16 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetHaltStatus(IDvInvocationStd& 
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetHaltStatus(IDvInvocationStd& /*aInvocation*/, bool /*aHaltStatus*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetFilterMode(IDvInvocationStd& /*aInvocation*/, std::string& /*aFilterMode*/, std::string& /*aFilterModeList*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetFilterMode(IDvInvocationStd& /*aInvocation*/, const std::string& /*aFilterMode*/)
 {
     ASSERTS();
 }

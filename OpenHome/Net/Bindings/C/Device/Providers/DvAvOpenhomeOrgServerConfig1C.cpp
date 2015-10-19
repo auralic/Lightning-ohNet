@@ -40,6 +40,9 @@ public:
     void EnableActionScanVersionDiff(CallbackServerConfig1ScanVersionDiff aCallback, void* aPtr);
     void EnableActionGetInitHDDResult(CallbackServerConfig1GetInitHDDResult aCallback, void* aPtr);
     void EnableActionGetHDDHasInited(CallbackServerConfig1GetHDDHasInited aCallback, void* aPtr);
+    void EnableActionUSBImport(CallbackServerConfig1USBImport aCallback, void* aPtr);
+    void EnableActionGetDISKCapacity(CallbackServerConfig1GetDISKCapacity aCallback, void* aPtr);
+    void EnableActionForceRescan(CallbackServerConfig1ForceRescan aCallback, void* aPtr);
 private:
     void DoSetServerName(IDviInvocation& aInvocation);
     void DoGetServerVersion(IDviInvocation& aInvocation);
@@ -60,6 +63,9 @@ private:
     void DoScanVersionDiff(IDviInvocation& aInvocation);
     void DoGetInitHDDResult(IDviInvocation& aInvocation);
     void DoGetHDDHasInited(IDviInvocation& aInvocation);
+    void DoUSBImport(IDviInvocation& aInvocation);
+    void DoGetDISKCapacity(IDviInvocation& aInvocation);
+    void DoForceRescan(IDviInvocation& aInvocation);
 private:
     CallbackServerConfig1SetServerName iCallbackSetServerName;
     void* iPtrSetServerName;
@@ -99,6 +105,12 @@ private:
     void* iPtrGetInitHDDResult;
     CallbackServerConfig1GetHDDHasInited iCallbackGetHDDHasInited;
     void* iPtrGetHDDHasInited;
+    CallbackServerConfig1USBImport iCallbackUSBImport;
+    void* iPtrUSBImport;
+    CallbackServerConfig1GetDISKCapacity iCallbackGetDISKCapacity;
+    void* iPtrGetDISKCapacity;
+    CallbackServerConfig1ForceRescan iCallbackForceRescan;
+    void* iPtrForceRescan;
     PropertyBool* iPropertyAlive;
 };
 
@@ -317,6 +329,36 @@ void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionGetHDDHasInited(Callback
     OpenHome::Net::Action* action = new OpenHome::Net::Action("GetHDDHasInited");
     action->AddOutputParameter(new ParameterBool("HDDHasInited"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoGetHDDHasInited);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionUSBImport(CallbackServerConfig1USBImport aCallback, void* aPtr)
+{
+    iCallbackUSBImport = aCallback;
+    iPtrUSBImport = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("USBImport");
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoUSBImport);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionGetDISKCapacity(CallbackServerConfig1GetDISKCapacity aCallback, void* aPtr)
+{
+    iCallbackGetDISKCapacity = aCallback;
+    iPtrGetDISKCapacity = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetDISKCapacity");
+    action->AddOutputParameter(new ParameterString("DISKTotal"));
+    action->AddOutputParameter(new ParameterString("DISKUsed"));
+    action->AddOutputParameter(new ParameterString("DISKAvailable"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoGetDISKCapacity);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionForceRescan(CallbackServerConfig1ForceRescan aCallback, void* aPtr)
+{
+    iCallbackForceRescan = aCallback;
+    iPtrForceRescan = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("ForceRescan");
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoForceRescan);
     iService->AddAction(action, functor);
 }
 
@@ -764,6 +806,78 @@ void DvProviderAvOpenhomeOrgServerConfig1C::DoGetHDDHasInited(IDviInvocation& aI
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1C::DoUSBImport(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackUSBImport != NULL);
+    if (0 != iCallbackUSBImport(iPtrUSBImport, invocationC, invocationCPtr)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::DoGetDISKCapacity(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* DISKTotal;
+    char* DISKUsed;
+    char* DISKAvailable;
+    ASSERT(iCallbackGetDISKCapacity != NULL);
+    if (0 != iCallbackGetDISKCapacity(iPtrGetDISKCapacity, invocationC, invocationCPtr, &DISKTotal, &DISKUsed, &DISKAvailable)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respDISKTotal(aInvocation, "DISKTotal");
+    DviInvocationResponseString respDISKUsed(aInvocation, "DISKUsed");
+    DviInvocationResponseString respDISKAvailable(aInvocation, "DISKAvailable");
+    invocation.StartResponse();
+    Brhz bufDISKTotal((const TChar*)DISKTotal);
+    OhNetFreeExternal(DISKTotal);
+    respDISKTotal.Write(bufDISKTotal);
+    respDISKTotal.WriteFlush();
+    Brhz bufDISKUsed((const TChar*)DISKUsed);
+    OhNetFreeExternal(DISKUsed);
+    respDISKUsed.Write(bufDISKUsed);
+    respDISKUsed.WriteFlush();
+    Brhz bufDISKAvailable((const TChar*)DISKAvailable);
+    OhNetFreeExternal(DISKAvailable);
+    respDISKAvailable.Write(bufDISKAvailable);
+    respDISKAvailable.WriteFlush();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::DoForceRescan(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackForceRescan != NULL);
+    if (0 != iCallbackForceRescan(iPtrForceRescan, invocationC, invocationCPtr)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgServerConfig1Create(DvDeviceC aDevice)
@@ -869,6 +983,21 @@ void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetInitHDDResult(TH
 void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetHDDHasInited(THandle aProvider, CallbackServerConfig1GetHDDHasInited aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionGetHDDHasInited(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionUSBImport(THandle aProvider, CallbackServerConfig1USBImport aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionUSBImport(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetDISKCapacity(THandle aProvider, CallbackServerConfig1GetDISKCapacity aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionGetDISKCapacity(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionForceRescan(THandle aProvider, CallbackServerConfig1ForceRescan aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionForceRescan(aCallback, aPtr);
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)

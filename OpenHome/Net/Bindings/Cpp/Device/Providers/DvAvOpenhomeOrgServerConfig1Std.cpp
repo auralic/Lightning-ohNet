@@ -189,6 +189,30 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionGetHDDHasInited()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionUSBImport()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("USBImport");
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1Cpp::DoUSBImport);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionGetDISKCapacity()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetDISKCapacity");
+    action->AddOutputParameter(new ParameterString("DISKTotal"));
+    action->AddOutputParameter(new ParameterString("DISKUsed"));
+    action->AddOutputParameter(new ParameterString("DISKAvailable"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetDISKCapacity);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionForceRescan()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("ForceRescan");
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1Cpp::DoForceRescan);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoSetServerName(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -474,6 +498,51 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetHDDHasInited(IDviInvocation& 
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoUSBImport(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    USBImport(invocation);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetDISKCapacity(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    std::string respDISKTotal;
+    std::string respDISKUsed;
+    std::string respDISKAvailable;
+    DvInvocationStd invocation(aInvocation);
+    GetDISKCapacity(invocation, respDISKTotal, respDISKUsed, respDISKAvailable);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterDISKTotal(aInvocation, "DISKTotal");
+    Brn buf_DISKTotal((const TByte*)respDISKTotal.c_str(), (TUint)respDISKTotal.length());
+    respWriterDISKTotal.Write(buf_DISKTotal);
+    aInvocation.InvocationWriteStringEnd("DISKTotal");
+    DviInvocationResponseString respWriterDISKUsed(aInvocation, "DISKUsed");
+    Brn buf_DISKUsed((const TByte*)respDISKUsed.c_str(), (TUint)respDISKUsed.length());
+    respWriterDISKUsed.Write(buf_DISKUsed);
+    aInvocation.InvocationWriteStringEnd("DISKUsed");
+    DviInvocationResponseString respWriterDISKAvailable(aInvocation, "DISKAvailable");
+    Brn buf_DISKAvailable((const TByte*)respDISKAvailable.c_str(), (TUint)respDISKAvailable.length());
+    respWriterDISKAvailable.Write(buf_DISKAvailable);
+    aInvocation.InvocationWriteStringEnd("DISKAvailable");
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoForceRescan(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    ForceRescan(invocation);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::SetServerName(IDvInvocationStd& /*aInvocation*/, const std::string& /*aServerName*/)
 {
     ASSERTS();
@@ -565,6 +634,21 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetInitHDDResult(IDvInvocationStd&
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetHDDHasInited(IDvInvocationStd& /*aInvocation*/, bool& /*aHDDHasInited*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::USBImport(IDvInvocationStd& /*aInvocation*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetDISKCapacity(IDvInvocationStd& /*aInvocation*/, std::string& /*aDISKTotal*/, std::string& /*aDISKUsed*/, std::string& /*aDISKAvailable*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::ForceRescan(IDvInvocationStd& /*aInvocation*/)
 {
     ASSERTS();
 }

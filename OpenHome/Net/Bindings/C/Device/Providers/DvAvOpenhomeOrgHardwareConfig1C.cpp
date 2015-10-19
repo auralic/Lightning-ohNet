@@ -114,6 +114,8 @@ public:
     void EnableActionGetNetInterface(CallbackHardwareConfig1GetNetInterface aCallback, void* aPtr);
     void EnableActionGetHaltStatus(CallbackHardwareConfig1GetHaltStatus aCallback, void* aPtr);
     void EnableActionSetHaltStatus(CallbackHardwareConfig1SetHaltStatus aCallback, void* aPtr);
+    void EnableActionGetFilterMode(CallbackHardwareConfig1GetFilterMode aCallback, void* aPtr);
+    void EnableActionSetFilterMode(CallbackHardwareConfig1SetFilterMode aCallback, void* aPtr);
 private:
     void DoIsAlive(IDviInvocation& aInvocation);
     void DoUpdate(IDviInvocation& aInvocation);
@@ -142,6 +144,8 @@ private:
     void DoGetNetInterface(IDviInvocation& aInvocation);
     void DoGetHaltStatus(IDviInvocation& aInvocation);
     void DoSetHaltStatus(IDviInvocation& aInvocation);
+    void DoGetFilterMode(IDviInvocation& aInvocation);
+    void DoSetFilterMode(IDviInvocation& aInvocation);
 private:
     CallbackHardwareConfig1IsAlive iCallbackIsAlive;
     void* iPtrIsAlive;
@@ -197,6 +201,10 @@ private:
     void* iPtrGetHaltStatus;
     CallbackHardwareConfig1SetHaltStatus iCallbackSetHaltStatus;
     void* iPtrSetHaltStatus;
+    CallbackHardwareConfig1GetFilterMode iCallbackGetFilterMode;
+    void* iPtrGetFilterMode;
+    CallbackHardwareConfig1SetFilterMode iCallbackSetFilterMode;
+    void* iPtrSetFilterMode;
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;
     PropertyBool* iPropertyRestart;
@@ -957,6 +965,27 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetHaltStatus(Callback
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetFilterMode(CallbackHardwareConfig1GetFilterMode aCallback, void* aPtr)
+{
+    iCallbackGetFilterMode = aCallback;
+    iPtrGetFilterMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetFilterMode");
+    action->AddOutputParameter(new ParameterString("FilterMode"));
+    action->AddOutputParameter(new ParameterString("FilterModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetFilterMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetFilterMode(CallbackHardwareConfig1SetFilterMode aCallback, void* aPtr)
+{
+    iCallbackSetFilterMode = aCallback;
+    iPtrSetFilterMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetFilterMode");
+    action->AddInputParameter(new ParameterString("FilterMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetFilterMode);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1C::DoIsAlive(IDviInvocation& aInvocation)
 {
     DvInvocationCPrivate invocationWrapper(aInvocation);
@@ -1630,6 +1659,56 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetHaltStatus(IDviInvocation& aI
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetFilterMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* FilterMode;
+    char* FilterModeList;
+    ASSERT(iCallbackGetFilterMode != NULL);
+    if (0 != iCallbackGetFilterMode(iPtrGetFilterMode, invocationC, invocationCPtr, &FilterMode, &FilterModeList)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respFilterMode(aInvocation, "FilterMode");
+    DviInvocationResponseString respFilterModeList(aInvocation, "FilterModeList");
+    invocation.StartResponse();
+    Brhz bufFilterMode((const TChar*)FilterMode);
+    OhNetFreeExternal(FilterMode);
+    respFilterMode.Write(bufFilterMode);
+    respFilterMode.WriteFlush();
+    Brhz bufFilterModeList((const TChar*)FilterModeList);
+    OhNetFreeExternal(FilterModeList);
+    respFilterModeList.Write(bufFilterModeList);
+    respFilterModeList.WriteFlush();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetFilterMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz FilterMode;
+    aInvocation.InvocationReadString("FilterMode", FilterMode);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetFilterMode != NULL);
+    if (0 != iCallbackSetFilterMode(iPtrSetFilterMode, invocationC, invocationCPtr, (const char*)FilterMode.Ptr())) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Create(DvDeviceC aDevice)
@@ -1775,6 +1854,16 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetHaltStatus(THa
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetHaltStatus(THandle aProvider, CallbackHardwareConfig1SetHaltStatus aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetHaltStatus(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetFilterMode(THandle aProvider, CallbackHardwareConfig1GetFilterMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetFilterMode(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetFilterMode(THandle aProvider, CallbackHardwareConfig1SetFilterMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetFilterMode(aCallback, aPtr);
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)

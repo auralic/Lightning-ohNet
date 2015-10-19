@@ -251,6 +251,42 @@ typedef int32_t (STDCALL *CallbackServerConfig1GetInitHDDResult)(void* aPtr, IDv
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackServerConfig1GetHDDHasInited)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t* aHDDHasInited);
+/**
+ * Callback which runs when the USBImport action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionUSBImport
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1USBImport)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr);
+/**
+ * Callback which runs when the GetDISKCapacity action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionGetDISKCapacity
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aDISKTotal
+ * @param[out] aDISKUsed
+ * @param[out] aDISKAvailable
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1GetDISKCapacity)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, char** aDISKTotal, char** aDISKUsed, char** aDISKAvailable);
+/**
+ * Callback which runs when the ForceRescan action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionForceRescan
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1ForceRescan)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr);
 
 /**
  * Provider constructor
@@ -482,6 +518,39 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetInitHD
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetHDDHasInited(THandle aProvider, CallbackServerConfig1GetHDDHasInited aCallback, void* aPtr);
+/**
+ * Register a callback for the action USBImport
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionUSBImport(THandle aProvider, CallbackServerConfig1USBImport aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetDISKCapacity
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetDISKCapacity(THandle aProvider, CallbackServerConfig1GetDISKCapacity aCallback, void* aPtr);
+/**
+ * Register a callback for the action ForceRescan
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionForceRescan(THandle aProvider, CallbackServerConfig1ForceRescan aCallback, void* aPtr);
 
 /**
  * Set the value of the Alive property

@@ -130,6 +130,36 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
         }
     }
 
+    public class GetDISKCapacity
+    {
+        private String iDISKTotal;
+        private String iDISKUsed;
+        private String iDISKAvailable;
+
+        public GetDISKCapacity(
+            String aDISKTotal,
+            String aDISKUsed,
+            String aDISKAvailable
+        )
+        {
+            iDISKTotal = aDISKTotal;
+            iDISKUsed = aDISKUsed;
+            iDISKAvailable = aDISKAvailable;
+        }
+        public String getDISKTotal()
+        {
+            return iDISKTotal;
+        }
+        public String getDISKUsed()
+        {
+            return iDISKUsed;
+        }
+        public String getDISKAvailable()
+        {
+            return iDISKAvailable;
+        }
+    }
+
     private IDvInvocationListener iDelegateSetServerName;
     private IDvInvocationListener iDelegateGetServerVersion;
     private IDvInvocationListener iDelegateGetProgressInfo;
@@ -149,6 +179,9 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     private IDvInvocationListener iDelegateScanVersionDiff;
     private IDvInvocationListener iDelegateGetInitHDDResult;
     private IDvInvocationListener iDelegateGetHDDHasInited;
+    private IDvInvocationListener iDelegateUSBImport;
+    private IDvInvocationListener iDelegateGetDISKCapacity;
+    private IDvInvocationListener iDelegateForceRescan;
     private PropertyBool iPropertyAlive;
 
     /**
@@ -463,6 +496,48 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     }
 
     /**
+     * Signal that the action USBImport is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * USBImport must be overridden if this is called.
+     */      
+    protected void enableActionUSBImport()
+    {
+        Action action = new Action("USBImport");
+        iDelegateUSBImport = new DoUSBImport();
+        enableAction(action, iDelegateUSBImport);
+    }
+
+    /**
+     * Signal that the action GetDISKCapacity is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetDISKCapacity must be overridden if this is called.
+     */      
+    protected void enableActionGetDISKCapacity()
+    {
+        Action action = new Action("GetDISKCapacity");        List<String> allowedValues = new LinkedList<String>();
+        action.addOutputParameter(new ParameterString("DISKTotal", allowedValues));
+        action.addOutputParameter(new ParameterString("DISKUsed", allowedValues));
+        action.addOutputParameter(new ParameterString("DISKAvailable", allowedValues));
+        iDelegateGetDISKCapacity = new DoGetDISKCapacity();
+        enableAction(action, iDelegateGetDISKCapacity);
+    }
+
+    /**
+     * Signal that the action ForceRescan is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * ForceRescan must be overridden if this is called.
+     */      
+    protected void enableActionForceRescan()
+    {
+        Action action = new Action("ForceRescan");
+        iDelegateForceRescan = new DoForceRescan();
+        enableAction(action, iDelegateForceRescan);
+    }
+
+    /**
      * SetServerName action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -749,6 +824,51 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
      * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
      */
     protected boolean getHDDHasInited(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * USBImport action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * USBImport action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionUSBImport} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected void uSBImport(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetDISKCapacity action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetDISKCapacity action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetDISKCapacity} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected GetDISKCapacity getDISKCapacity(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * ForceRescan action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * ForceRescan action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionForceRescan} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected void forceRescan(IDvInvocation aInvocation)
     {
         throw (new ActionDisabledError());
     }
@@ -1688,6 +1808,154 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
             {
                 invocation.writeStart();
                 invocation.writeBool("HDDHasInited", hDDHasInited);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoUSBImport implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                uSBImport(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "USBImport");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetDISKCapacity implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String dISKTotal;
+            String dISKUsed;
+            String dISKAvailable;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+
+            GetDISKCapacity outArgs = getDISKCapacity(invocation);
+            dISKTotal = outArgs.getDISKTotal();
+            dISKUsed = outArgs.getDISKUsed();
+            dISKAvailable = outArgs.getDISKAvailable();
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetDISKCapacity");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("DISKTotal", dISKTotal);
+                invocation.writeString("DISKUsed", dISKUsed);
+                invocation.writeString("DISKAvailable", dISKAvailable);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoForceRescan implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                forceRescan(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "ForceRescan");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
                 invocation.writeEnd();
             }
             catch (ActionError ae)

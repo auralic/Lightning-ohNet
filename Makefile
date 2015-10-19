@@ -24,7 +24,7 @@ android_ndk_debug=0
 endif
 
 
-
+CROSS_COMPILE=arm-poky-linux-gnueabi-
 # Figure out platform, openhome_system and openhome_architecture
 
 gcc_machine = $(shell ${CROSS_COMPILE}gcc -dumpmachine)
@@ -113,7 +113,7 @@ else
 endif
 
 detected_openhome_system ?= Unknown
-detected_openhome_architecture ?= Unknown
+detected_openhome_architecture ?= armhf
 
 ifneq (${openhome_system},)
   ifneq (${openhome_system},${detected_openhome_system})

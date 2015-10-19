@@ -91,6 +91,12 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncSetHaltStatus(bool aHaltStatus);
         void BeginSetHaltStatus(bool aHaltStatus, CpProxy.CallbackAsyncComplete aCallback);
         void EndSetHaltStatus(IntPtr aAsyncHandle);
+        void SyncGetFilterMode(out String aFilterMode, out String aFilterModeList);
+        void BeginGetFilterMode(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetFilterMode(IntPtr aAsyncHandle, out String aFilterMode, out String aFilterModeList);
+        void SyncSetFilterMode(String aFilterMode);
+        void BeginSetFilterMode(String aFilterMode, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetFilterMode(IntPtr aAsyncHandle);
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
         void SetPropertyCurrentActionChanged(System.Action aCurrentActionChanged);
@@ -652,6 +658,44 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncGetFilterModeAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private String iFilterMode;
+        private String iFilterModeList;
+
+        public SyncGetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String FilterMode()
+        {
+            return iFilterMode;
+        }
+        public String FilterModeList()
+        {
+            return iFilterModeList;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetFilterMode(aAsyncHandle, out iFilterMode, out iFilterModeList);
+        }
+    };
+
+    internal class SyncSetFilterModeAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetFilterMode(aAsyncHandle);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
     /// </summary>
@@ -684,6 +728,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionGetNetInterface;
         private OpenHome.Net.Core.Action iActionGetHaltStatus;
         private OpenHome.Net.Core.Action iActionSetHaltStatus;
+        private OpenHome.Net.Core.Action iActionGetFilterMode;
+        private OpenHome.Net.Core.Action iActionSetFilterMode;
         private PropertyBool iAlive;
         private PropertyUint iCurrentAction;
         private PropertyBool iRestart;
@@ -896,6 +942,16 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionSetHaltStatus = new OpenHome.Net.Core.Action("SetHaltStatus");
             param = new ParameterBool("HaltStatus");
             iActionSetHaltStatus.AddInputParameter(param);
+
+            iActionGetFilterMode = new OpenHome.Net.Core.Action("GetFilterMode");
+            param = new ParameterString("FilterMode", allowedValues);
+            iActionGetFilterMode.AddOutputParameter(param);
+            param = new ParameterString("FilterModeList", allowedValues);
+            iActionGetFilterMode.AddOutputParameter(param);
+
+            iActionSetFilterMode = new OpenHome.Net.Core.Action("SetFilterMode");
+            param = new ParameterString("FilterMode", allowedValues);
+            iActionSetFilterMode.AddInputParameter(param);
 
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
@@ -2326,6 +2382,106 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aFilterMode"></param>
+        /// <param name="aFilterModeList"></param>
+        public void SyncGetFilterMode(out String aFilterMode, out String aFilterModeList)
+        {
+            SyncGetFilterModeAvOpenhomeOrgHardwareConfig1 sync = new SyncGetFilterModeAvOpenhomeOrgHardwareConfig1(this);
+            BeginGetFilterMode(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aFilterMode = sync.FilterMode();
+            aFilterModeList = sync.FilterModeList();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetFilterMode().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetFilterMode(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetFilterMode, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetFilterMode.OutputParameter(outIndex++)));
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetFilterMode.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aFilterMode"></param>
+        /// <param name="aFilterModeList"></param>
+        public void EndGetFilterMode(IntPtr aAsyncHandle, out String aFilterMode, out String aFilterModeList)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aFilterMode = Invocation.OutputString(aAsyncHandle, index++);
+            aFilterModeList = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aFilterMode"></param>
+        public void SyncSetFilterMode(String aFilterMode)
+        {
+            SyncSetFilterModeAvOpenhomeOrgHardwareConfig1 sync = new SyncSetFilterModeAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetFilterMode(aFilterMode, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetFilterMode().</remarks>
+        /// <param name="aFilterMode"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetFilterMode(String aFilterMode, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetFilterMode, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionSetFilterMode.InputParameter(inIndex++), aFilterMode));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetFilterMode(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -3376,6 +3532,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetNetInterface.Dispose();
             iActionGetHaltStatus.Dispose();
             iActionSetHaltStatus.Dispose();
+            iActionGetFilterMode.Dispose();
+            iActionSetFilterMode.Dispose();
             iAlive.Dispose();
             iCurrentAction.Dispose();
             iRestart.Dispose();

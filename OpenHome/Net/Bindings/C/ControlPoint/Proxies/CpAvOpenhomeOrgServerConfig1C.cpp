@@ -99,6 +99,18 @@ public:
     void BeginGetHDDHasInited(FunctorAsync& aFunctor);
     void EndGetHDDHasInited(IAsync& aAsync, TBool& aHDDHasInited);
 
+    void SyncUSBImport();
+    void BeginUSBImport(FunctorAsync& aFunctor);
+    void EndUSBImport(IAsync& aAsync);
+
+    void SyncGetDISKCapacity(Brh& aDISKTotal, Brh& aDISKUsed, Brh& aDISKAvailable);
+    void BeginGetDISKCapacity(FunctorAsync& aFunctor);
+    void EndGetDISKCapacity(IAsync& aAsync, Brh& aDISKTotal, Brh& aDISKUsed, Brh& aDISKAvailable);
+
+    void SyncForceRescan();
+    void BeginForceRescan(FunctorAsync& aFunctor);
+    void EndForceRescan(IAsync& aAsync);
+
     void SetPropertyAliveChanged(Functor& aFunctor);
 
     void PropertyAlive(TBool& aAlive) const;
@@ -125,6 +137,9 @@ private:
     Action* iActionScanVersionDiff;
     Action* iActionGetInitHDDResult;
     Action* iActionGetHDDHasInited;
+    Action* iActionUSBImport;
+    Action* iActionGetDISKCapacity;
+    Action* iActionForceRescan;
     PropertyBool* iAlive;
     Functor iAliveChanged;
 };
@@ -562,6 +577,75 @@ void SyncGetHDDHasInitedAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& aAs
     iService.EndGetHDDHasInited(aAsync, iHDDHasInited);
 }
 
+
+class SyncUSBImportAvOpenhomeOrgServerConfig1C : public SyncProxyAction
+{
+public:
+    SyncUSBImportAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncUSBImportAvOpenhomeOrgServerConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgServerConfig1C& iService;
+};
+
+SyncUSBImportAvOpenhomeOrgServerConfig1C::SyncUSBImportAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncUSBImportAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndUSBImport(aAsync);
+}
+
+
+class SyncGetDISKCapacityAvOpenhomeOrgServerConfig1C : public SyncProxyAction
+{
+public:
+    SyncGetDISKCapacityAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy, Brh& aDISKTotal, Brh& aDISKUsed, Brh& aDISKAvailable);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetDISKCapacityAvOpenhomeOrgServerConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgServerConfig1C& iService;
+    Brh& iDISKTotal;
+    Brh& iDISKUsed;
+    Brh& iDISKAvailable;
+};
+
+SyncGetDISKCapacityAvOpenhomeOrgServerConfig1C::SyncGetDISKCapacityAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy, Brh& aDISKTotal, Brh& aDISKUsed, Brh& aDISKAvailable)
+    : iService(aProxy)
+    , iDISKTotal(aDISKTotal)
+    , iDISKUsed(aDISKUsed)
+    , iDISKAvailable(aDISKAvailable)
+{
+}
+
+void SyncGetDISKCapacityAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetDISKCapacity(aAsync, iDISKTotal, iDISKUsed, iDISKAvailable);
+}
+
+
+class SyncForceRescanAvOpenhomeOrgServerConfig1C : public SyncProxyAction
+{
+public:
+    SyncForceRescanAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncForceRescanAvOpenhomeOrgServerConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgServerConfig1C& iService;
+};
+
+SyncForceRescanAvOpenhomeOrgServerConfig1C::SyncForceRescanAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncForceRescanAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndForceRescan(aAsync);
+}
+
 CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC aDevice)
     : CpProxyC("av-openhome-org", "ServerConfig", 1, *reinterpret_cast<CpiDevice*>(aDevice))
     , iLock("MPCS")
@@ -652,6 +736,18 @@ CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC
     param = new OpenHome::Net::ParameterBool("HDDHasInited");
     iActionGetHDDHasInited->AddOutputParameter(param);
 
+    iActionUSBImport = new Action("USBImport");
+
+    iActionGetDISKCapacity = new Action("GetDISKCapacity");
+    param = new OpenHome::Net::ParameterString("DISKTotal");
+    iActionGetDISKCapacity->AddOutputParameter(param);
+    param = new OpenHome::Net::ParameterString("DISKUsed");
+    iActionGetDISKCapacity->AddOutputParameter(param);
+    param = new OpenHome::Net::ParameterString("DISKAvailable");
+    iActionGetDISKCapacity->AddOutputParameter(param);
+
+    iActionForceRescan = new Action("ForceRescan");
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1C::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
@@ -680,6 +776,9 @@ CpProxyAvOpenhomeOrgServerConfig1C::~CpProxyAvOpenhomeOrgServerConfig1C()
     delete iActionScanVersionDiff;
     delete iActionGetInitHDDResult;
     delete iActionGetHDDHasInited;
+    delete iActionUSBImport;
+    delete iActionGetDISKCapacity;
+    delete iActionForceRescan;
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1C::SyncSetServerName(const Brx& aServerName)
@@ -1271,6 +1370,96 @@ void CpProxyAvOpenhomeOrgServerConfig1C::EndGetHDDHasInited(IAsync& aAsync, TBoo
     }
     TUint index = 0;
     aHDDHasInited = ((ArgumentBool*)invocation.OutputArguments()[index++])->Value();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::SyncUSBImport()
+{
+    SyncUSBImportAvOpenhomeOrgServerConfig1C sync(*this);
+    BeginUSBImport(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::BeginUSBImport(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionUSBImport, aFunctor);
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::EndUSBImport(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("USBImport"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::SyncGetDISKCapacity(Brh& aDISKTotal, Brh& aDISKUsed, Brh& aDISKAvailable)
+{
+    SyncGetDISKCapacityAvOpenhomeOrgServerConfig1C sync(*this, aDISKTotal, aDISKUsed, aDISKAvailable);
+    BeginGetDISKCapacity(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::BeginGetDISKCapacity(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionGetDISKCapacity, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetDISKCapacity->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::EndGetDISKCapacity(IAsync& aAsync, Brh& aDISKTotal, Brh& aDISKUsed, Brh& aDISKAvailable)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetDISKCapacity"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aDISKTotal);
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aDISKUsed);
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aDISKAvailable);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::SyncForceRescan()
+{
+    SyncForceRescanAvOpenhomeOrgServerConfig1C sync(*this);
+    BeginForceRescan(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::BeginForceRescan(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionForceRescan, aFunctor);
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::EndForceRescan(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("ForceRescan"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1C::SetPropertyAliveChanged(Functor& aFunctor)
@@ -2129,6 +2318,138 @@ int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetHDDHasInited(THandle aHan
     try {
         proxyC->EndGetHDDHasInited(*async, HDDHasInited);
         *aHDDHasInited = HDDHasInited? 1 : 0;
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncUSBImport(THandle aHandle)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    int32_t err = 0;
+    try {
+        proxyC->SyncUSBImport();
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginUSBImport(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginUSBImport(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndUSBImport(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndUSBImport(*async);
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncGetDISKCapacity(THandle aHandle, char** aDISKTotal, char** aDISKUsed, char** aDISKAvailable)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aDISKTotal;
+    Brh buf_aDISKUsed;
+    Brh buf_aDISKAvailable;
+    int32_t err = 0;
+    try {
+        proxyC->SyncGetDISKCapacity(buf_aDISKTotal, buf_aDISKUsed, buf_aDISKAvailable);
+        *aDISKTotal = buf_aDISKTotal.Extract();
+        *aDISKUsed = buf_aDISKUsed.Extract();
+        *aDISKAvailable = buf_aDISKAvailable.Extract();
+    }
+    catch (ProxyError& ) {
+        err = -1;
+        *aDISKTotal = NULL;
+        *aDISKUsed = NULL;
+        *aDISKAvailable = NULL;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginGetDISKCapacity(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginGetDISKCapacity(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetDISKCapacity(THandle aHandle, OhNetHandleAsync aAsync, char** aDISKTotal, char** aDISKUsed, char** aDISKAvailable)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    Brh buf_aDISKTotal;
+    *aDISKTotal = NULL;
+    Brh buf_aDISKUsed;
+    *aDISKUsed = NULL;
+    Brh buf_aDISKAvailable;
+    *aDISKAvailable = NULL;
+    try {
+        proxyC->EndGetDISKCapacity(*async, buf_aDISKTotal, buf_aDISKUsed, buf_aDISKAvailable);
+        *aDISKTotal = buf_aDISKTotal.Extract();
+        *aDISKUsed = buf_aDISKUsed.Extract();
+        *aDISKAvailable = buf_aDISKAvailable.Extract();
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncForceRescan(THandle aHandle)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    int32_t err = 0;
+    try {
+        proxyC->SyncForceRescan();
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginForceRescan(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginForceRescan(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndForceRescan(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndForceRescan(*async);
     }
     catch(...) {
         err = -1;
