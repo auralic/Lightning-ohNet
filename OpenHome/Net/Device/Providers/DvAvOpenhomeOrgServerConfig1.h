@@ -170,6 +170,24 @@ protected:
      * GetHDDHasInited must be overridden if this is called.
      */
     void EnableActionGetHDDHasInited();
+    /**
+     * Signal that the action USBImport is supported.
+     * The action's availability will be published in the device's service.xml.
+     * USBImport must be overridden if this is called.
+     */
+    void EnableActionUSBImport();
+    /**
+     * Signal that the action GetDISKCapacity is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetDISKCapacity must be overridden if this is called.
+     */
+    void EnableActionGetDISKCapacity();
+    /**
+     * Signal that the action ForceRescan is supported.
+     * The action's availability will be published in the device's service.xml.
+     * ForceRescan must be overridden if this is called.
+     */
+    void EnableActionForceRescan();
 private:
     /**
      * SetServerName action.
@@ -323,6 +341,30 @@ private:
      * Must be implemented iff EnableActionGetHDDHasInited was called.
      */
     virtual void GetHDDHasInited(IDvInvocation& aInvocation, IDvInvocationResponseBool& aHDDHasInited);
+    /**
+     * USBImport action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * USBImport action for the owning device.
+     * Must be implemented iff EnableActionUSBImport was called.
+     */
+    virtual void USBImport(IDvInvocation& aInvocation);
+    /**
+     * GetDISKCapacity action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetDISKCapacity action for the owning device.
+     * Must be implemented iff EnableActionGetDISKCapacity was called.
+     */
+    virtual void GetDISKCapacity(IDvInvocation& aInvocation, IDvInvocationResponseString& aDISKTotal, IDvInvocationResponseString& aDISKUsed, IDvInvocationResponseString& aDISKAvailable);
+    /**
+     * ForceRescan action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * ForceRescan action for the owning device.
+     * Must be implemented iff EnableActionForceRescan was called.
+     */
+    virtual void ForceRescan(IDvInvocation& aInvocation);
 private:
     DvProviderAvOpenhomeOrgServerConfig1();
     void Construct();
@@ -345,6 +387,9 @@ private:
     void DoScanVersionDiff(IDviInvocation& aInvocation);
     void DoGetInitHDDResult(IDviInvocation& aInvocation);
     void DoGetHDDHasInited(IDviInvocation& aInvocation);
+    void DoUSBImport(IDviInvocation& aInvocation);
+    void DoGetDISKCapacity(IDviInvocation& aInvocation);
+    void DoForceRescan(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
 };

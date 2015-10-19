@@ -199,6 +199,30 @@ void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetHDDHasInited()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionUSBImport()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("USBImport");
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoUSBImport);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetDISKCapacity()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetDISKCapacity");
+    action->AddOutputParameter(new ParameterString("DISKTotal"));
+    action->AddOutputParameter(new ParameterString("DISKUsed"));
+    action->AddOutputParameter(new ParameterString("DISKAvailable"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoGetDISKCapacity);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionForceRescan()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("ForceRescan");
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoForceRescan);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1::DoSetServerName(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -380,6 +404,33 @@ void DvProviderAvOpenhomeOrgServerConfig1::DoGetHDDHasInited(IDviInvocation& aIn
     GetHDDHasInited(invocation, respHDDHasInited);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1::DoUSBImport(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    USBImport(invocation);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::DoGetDISKCapacity(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respDISKTotal(aInvocation, "DISKTotal");
+    DviInvocationResponseString respDISKUsed(aInvocation, "DISKUsed");
+    DviInvocationResponseString respDISKAvailable(aInvocation, "DISKAvailable");
+    GetDISKCapacity(invocation, respDISKTotal, respDISKUsed, respDISKAvailable);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::DoForceRescan(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ForceRescan(invocation);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1::SetServerName(IDvInvocation& /*aResponse*/, const Brx& /*aServerName*/)
 {
     ASSERTS();
@@ -471,6 +522,21 @@ void DvProviderAvOpenhomeOrgServerConfig1::GetInitHDDResult(IDvInvocation& /*aRe
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::GetHDDHasInited(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aHDDHasInited*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::USBImport(IDvInvocation& /*aResponse*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::GetDISKCapacity(IDvInvocation& /*aResponse*/, IDvInvocationResponseString& /*aDISKTotal*/, IDvInvocationResponseString& /*aDISKUsed*/, IDvInvocationResponseString& /*aDISKAvailable*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::ForceRescan(IDvInvocation& /*aResponse*/)
 {
     ASSERTS();
 }

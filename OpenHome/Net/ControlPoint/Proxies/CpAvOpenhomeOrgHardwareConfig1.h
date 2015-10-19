@@ -790,6 +790,60 @@ public:
     void EndSetHaltStatus(IAsync& aAsync);
 
     /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aFilterMode
+     * @param[out] aFilterModeList
+     */
+    void SyncGetFilterMode(Brh& aFilterMode, Brh& aFilterModeList);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetFilterMode().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetFilterMode(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aFilterMode
+     * @param[out] aFilterModeList
+     */
+    void EndGetFilterMode(IAsync& aAsync, Brh& aFilterMode, Brh& aFilterModeList);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aFilterMode
+     */
+    void SyncSetFilterMode(const Brx& aFilterMode);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetFilterMode().
+     *
+     * @param[in] aFilterMode
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetFilterMode(const Brx& aFilterMode, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetFilterMode(IAsync& aAsync);
+
+    /**
      * Set a callback to be run when the Alive state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -1279,6 +1333,8 @@ private:
     Action* iActionGetNetInterface;
     Action* iActionGetHaltStatus;
     Action* iActionSetHaltStatus;
+    Action* iActionGetFilterMode;
+    Action* iActionSetFilterMode;
     PropertyBool* iAlive;
     PropertyUint* iCurrentAction;
     PropertyBool* iRestart;

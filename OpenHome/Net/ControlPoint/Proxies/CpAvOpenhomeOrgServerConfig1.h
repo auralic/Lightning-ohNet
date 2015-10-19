@@ -542,6 +542,82 @@ public:
     void EndGetHDDHasInited(IAsync& aAsync, TBool& aHDDHasInited);
 
     /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     */
+    void SyncUSBImport();
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndUSBImport().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginUSBImport(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndUSBImport(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aDISKTotal
+     * @param[out] aDISKUsed
+     * @param[out] aDISKAvailable
+     */
+    void SyncGetDISKCapacity(Brh& aDISKTotal, Brh& aDISKUsed, Brh& aDISKAvailable);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetDISKCapacity().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetDISKCapacity(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aDISKTotal
+     * @param[out] aDISKUsed
+     * @param[out] aDISKAvailable
+     */
+    void EndGetDISKCapacity(IAsync& aAsync, Brh& aDISKTotal, Brh& aDISKUsed, Brh& aDISKAvailable);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     */
+    void SyncForceRescan();
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndForceRescan().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginForceRescan(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndForceRescan(IAsync& aAsync);
+
+    /**
      * Set a callback to be run when the Alive state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -583,6 +659,9 @@ private:
     Action* iActionScanVersionDiff;
     Action* iActionGetInitHDDResult;
     Action* iActionGetHDDHasInited;
+    Action* iActionUSBImport;
+    Action* iActionGetDISKCapacity;
+    Action* iActionForceRescan;
     PropertyBool* iAlive;
     Functor iAliveChanged;
 };

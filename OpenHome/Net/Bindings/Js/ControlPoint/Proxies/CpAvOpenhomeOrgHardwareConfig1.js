@@ -953,4 +953,46 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetHaltStatus = function(HaltStatu
 }
 
 
+/**
+* A service action to GetFilterMode
+* @method GetFilterMode
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetFilterMode = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetFilterMode", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["FilterMode"] = ohnet.soaprequest.readStringParameter(result["FilterMode"]); 
+        result["FilterModeList"] = ohnet.soaprequest.readStringParameter(result["FilterModeList"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetFilterMode
+* @method SetFilterMode
+* @param {String} FilterMode An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetFilterMode = function(FilterMode, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetFilterMode", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("FilterMode", FilterMode);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
 

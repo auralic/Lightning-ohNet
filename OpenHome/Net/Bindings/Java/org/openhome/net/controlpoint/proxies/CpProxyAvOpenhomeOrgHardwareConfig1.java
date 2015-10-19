@@ -91,6 +91,12 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public void syncSetHaltStatus(boolean aHaltStatus);
     public void beginSetHaltStatus(boolean aHaltStatus, ICpProxyListener aCallback);
     public void endSetHaltStatus(long aAsyncHandle);
+    public GetFilterMode syncGetFilterMode();
+    public void beginGetFilterMode(ICpProxyListener aCallback);
+    public GetFilterMode endGetFilterMode(long aAsyncHandle);
+    public void syncSetFilterMode(String aFilterMode);
+    public void beginSetFilterMode(String aFilterMode, ICpProxyListener aCallback);
+    public void endSetFilterMode(long aAsyncHandle);
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
     public void setPropertyCurrentActionChanged(IPropertyChangeListener aCurrentActionChanged);
@@ -706,6 +712,48 @@ class SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
     }
 }
 
+class SyncGetFilterModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private String iFilterMode;
+    private String iFilterModeList;
+
+    public SyncGetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getFilterMode()
+    {
+        return iFilterMode;
+    }
+    public String getFilterModeList()
+    {
+        return iFilterModeList;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        GetFilterMode result = iService.endGetFilterMode(aAsyncHandle);
+        
+        iFilterMode = result.getFilterMode();
+        iFilterModeList = result.getFilterModeList();
+    }
+}
+
+class SyncSetFilterModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetFilterMode(aAsyncHandle);
+        
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
  */
@@ -915,6 +963,29 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         }
     }
 
+    public class GetFilterMode
+    {
+        private String iFilterMode;
+        private String iFilterModeList;
+
+        public GetFilterMode(
+            String aFilterMode,
+            String aFilterModeList
+        )
+        {
+            iFilterMode = aFilterMode;
+            iFilterModeList = aFilterModeList;
+        }
+        public String getFilterMode()
+        {
+            return iFilterMode;
+        }
+        public String getFilterModeList()
+        {
+            return iFilterModeList;
+        }
+    }
+
     private Action iActionIsAlive;
     private Action iActionUpdate;
     private Action iActionActive;
@@ -942,6 +1013,8 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private Action iActionGetNetInterface;
     private Action iActionGetHaltStatus;
     private Action iActionSetHaltStatus;
+    private Action iActionGetFilterMode;
+    private Action iActionSetFilterMode;
     private PropertyBool iAlive;
     private PropertyUint iCurrentAction;
     private PropertyBool iRestart;
@@ -1156,6 +1229,16 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         iActionSetHaltStatus = new Action("SetHaltStatus");
         param = new ParameterBool("HaltStatus");
         iActionSetHaltStatus.addInputParameter(param);
+
+        iActionGetFilterMode = new Action("GetFilterMode");
+        param = new ParameterString("FilterMode", allowedValues);
+        iActionGetFilterMode.addOutputParameter(param);
+        param = new ParameterString("FilterModeList", allowedValues);
+        iActionGetFilterMode.addOutputParameter(param);
+
+        iActionSetFilterMode = new Action("SetFilterMode");
+        param = new ParameterString("FilterMode", allowedValues);
+        iActionSetFilterMode.addInputParameter(param);
 
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
@@ -2860,6 +2943,117 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public GetFilterMode syncGetFilterMode()
+    {
+        SyncGetFilterModeAvOpenhomeOrgHardwareConfig1 sync = new SyncGetFilterModeAvOpenhomeOrgHardwareConfig1(this);
+        beginGetFilterMode(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return new GetFilterMode(
+            sync.getFilterMode(),
+            sync.getFilterModeList()
+        );
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetFilterMode}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetFilterMode(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetFilterMode, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetFilterMode.getOutputParameter(outIndex++)));
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetFilterMode.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetFilterMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetFilterMode} method.
+     * @return the result of the previously invoked action.
+     */
+    public GetFilterMode endGetFilterMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String filterMode = Invocation.getOutputString(aAsyncHandle, index++);
+        String filterModeList = Invocation.getOutputString(aAsyncHandle, index++);
+        return new GetFilterMode(
+            filterMode,
+            filterModeList
+        );
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetFilterMode(String aFilterMode)
+    {
+        SyncSetFilterModeAvOpenhomeOrgHardwareConfig1 sync = new SyncSetFilterModeAvOpenhomeOrgHardwareConfig1(this);
+        beginSetFilterMode(aFilterMode, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetFilterMode}.
+     * 
+     * @param aFilterMode
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetFilterMode(String aFilterMode, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetFilterMode, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionSetFilterMode.getInputParameter(inIndex++), aFilterMode));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetFilterMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetFilterMode} method.
+     */
+    public void endSetFilterMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
@@ -3799,6 +3993,8 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             iActionGetNetInterface.destroy();
             iActionGetHaltStatus.destroy();
             iActionSetHaltStatus.destroy();
+            iActionGetFilterMode.destroy();
+            iActionSetFilterMode.destroy();
             iAlive.destroy();
             iCurrentAction.destroy();
             iRestart.destroy();

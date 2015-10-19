@@ -588,6 +588,29 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
         }
     }
 
+    public class GetFilterMode
+    {
+        private String iFilterMode;
+        private String iFilterModeList;
+
+        public GetFilterMode(
+            String aFilterMode,
+            String aFilterModeList
+        )
+        {
+            iFilterMode = aFilterMode;
+            iFilterModeList = aFilterModeList;
+        }
+        public String getFilterMode()
+        {
+            return iFilterMode;
+        }
+        public String getFilterModeList()
+        {
+            return iFilterModeList;
+        }
+    }
+
     private IDvInvocationListener iDelegateIsAlive;
     private IDvInvocationListener iDelegateUpdate;
     private IDvInvocationListener iDelegateActive;
@@ -615,6 +638,8 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     private IDvInvocationListener iDelegateGetNetInterface;
     private IDvInvocationListener iDelegateGetHaltStatus;
     private IDvInvocationListener iDelegateSetHaltStatus;
+    private IDvInvocationListener iDelegateGetFilterMode;
+    private IDvInvocationListener iDelegateSetFilterMode;
     private PropertyBool iPropertyAlive;
     private PropertyUint iPropertyCurrentAction;
     private PropertyBool iPropertyRestart;
@@ -1782,6 +1807,35 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     }
 
     /**
+     * Signal that the action GetFilterMode is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetFilterMode must be overridden if this is called.
+     */      
+    protected void enableActionGetFilterMode()
+    {
+        Action action = new Action("GetFilterMode");        List<String> allowedValues = new LinkedList<String>();
+        action.addOutputParameter(new ParameterString("FilterMode", allowedValues));
+        action.addOutputParameter(new ParameterString("FilterModeList", allowedValues));
+        iDelegateGetFilterMode = new DoGetFilterMode();
+        enableAction(action, iDelegateGetFilterMode);
+    }
+
+    /**
+     * Signal that the action SetFilterMode is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetFilterMode must be overridden if this is called.
+     */      
+    protected void enableActionSetFilterMode()
+    {
+        Action action = new Action("SetFilterMode");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("FilterMode", allowedValues));
+        iDelegateSetFilterMode = new DoSetFilterMode();
+        enableAction(action, iDelegateSetFilterMode);
+    }
+
+    /**
      * IsAlive action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -2205,6 +2259,37 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
      * @param aHaltStatus
      */
     protected void setHaltStatus(IDvInvocation aInvocation, boolean aHaltStatus)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetFilterMode action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetFilterMode action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetFilterMode} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected GetFilterMode getFilterMode(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetFilterMode action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetFilterMode action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetFilterMode} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aFilterMode
+     */
+    protected void setFilterMode(IDvInvocation aInvocation, String aFilterMode)
     {
         throw (new ActionDisabledError());
     }
@@ -3563,6 +3648,107 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
             catch (ActionError ae)
             {
                 invocation.reportActionError(ae, "SetHaltStatus");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetFilterMode implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String filterMode;
+            String filterModeList;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+
+            GetFilterMode outArgs = getFilterMode(invocation);
+            filterMode = outArgs.getFilterMode();
+            filterModeList = outArgs.getFilterModeList();
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetFilterMode");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("FilterMode", filterMode);
+                invocation.writeString("FilterModeList", filterModeList);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetFilterMode implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String filterMode;
+            try
+            {
+                invocation.readStart();
+                filterMode = invocation.readString("FilterMode");
+                invocation.readEnd();
+                setFilterMode(invocation, filterMode);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetFilterMode");
                 return;
             }
             catch (PropertyUpdateError pue)

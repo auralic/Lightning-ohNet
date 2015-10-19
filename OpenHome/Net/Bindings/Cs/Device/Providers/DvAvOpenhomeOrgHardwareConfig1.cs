@@ -342,6 +342,8 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateGetNetInterface;
         private ActionDelegate iDelegateGetHaltStatus;
         private ActionDelegate iDelegateSetHaltStatus;
+        private ActionDelegate iDelegateGetFilterMode;
+        private ActionDelegate iDelegateSetFilterMode;
         private PropertyBool iPropertyAlive;
         private PropertyUint iPropertyCurrentAction;
         private PropertyBool iPropertyRestart;
@@ -1554,6 +1556,35 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action GetFilterMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetFilterMode must be overridden if this is called.</remarks>
+        protected void EnableActionGetFilterMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetFilterMode");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("FilterMode", allowedValues));
+            action.AddOutputParameter(new ParameterString("FilterModeList", allowedValues));
+            iDelegateGetFilterMode = new ActionDelegate(DoGetFilterMode);
+            EnableAction(action, iDelegateGetFilterMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetFilterMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetFilterMode must be overridden if this is called.</remarks>
+        protected void EnableActionSetFilterMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetFilterMode");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("FilterMode", allowedValues));
+            iDelegateSetFilterMode = new ActionDelegate(DoSetFilterMode);
+            EnableAction(action, iDelegateSetFilterMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// IsAlive action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -1950,6 +1981,35 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         /// <param name="aHaltStatus"></param>
         protected virtual void SetHaltStatus(IDvInvocation aInvocation, bool aHaltStatus)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetFilterMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetFilterMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetFilterMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aFilterMode"></param>
+        /// <param name="aFilterModeList"></param>
+        protected virtual void GetFilterMode(IDvInvocation aInvocation, out string aFilterMode, out string aFilterModeList)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetFilterMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetFilterMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetFilterMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aFilterMode"></param>
+        protected virtual void SetFilterMode(IDvInvocation aInvocation, string aFilterMode)
         {
             throw (new ActionDisabledError());
         }
@@ -3237,6 +3297,100 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetHaltStatus", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetFilterMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string filterMode;
+            string filterModeList;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetFilterMode(invocation, out filterMode, out filterModeList);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetFilterMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetFilterMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetFilterMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("FilterMode", filterMode);
+                invocation.WriteString("FilterModeList", filterModeList);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetFilterMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetFilterMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string filterMode;
+            try
+            {
+                invocation.ReadStart();
+                filterMode = invocation.ReadString("FilterMode");
+                invocation.ReadEnd();
+                self.SetFilterMode(invocation, filterMode);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetFilterMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetFilterMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetFilterMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetFilterMode", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

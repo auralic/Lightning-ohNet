@@ -770,7 +770,9 @@ void SocketUdp::SetMulticastIf(TIpAddress aInterface)
 
 void SocketUdp::Bind(TUint aPort, TIpAddress aInterface)
 {
-    Socket::Bind(Endpoint(aPort, aInterface));
+   // Socket::Bind(Endpoint(aPort, aInterface));
+    const Brn a("239.255.255.250");
+    Socket::Bind(Endpoint(aPort, a));
     GetPort(iPort);
 }
 

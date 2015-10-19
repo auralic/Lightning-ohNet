@@ -205,6 +205,32 @@
                 </argument>
             </argumentList>
         </action>
+        <action>
+            <name>USBImport</name>
+        </action>
+        <action>
+            <name>GetDISKCapacity</name>
+            <argumentList>
+                <argument>
+                    <name>DISKTotal</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>DISKTotal</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>DISKUsed</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>DISKUsed</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>DISKAvailable</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>DISKAvailable</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>ForceRescan</name>
+        </action>
     </actionList>
     <serviceStateTable>
       <stateVariable sendEvents="yes">
@@ -286,6 +312,18 @@
         <stateVariable sendEvents="no">
             <name>HDDHasInited</name>
             <dataType>boolean</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>DISKTotal</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>DISKUsed</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>DISKAvailable</name>
+            <dataType>string</dataType>
         </stateVariable>
     </serviceStateTable>
 </scpd>

@@ -449,4 +449,64 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.GetHDDHasInited = function(successFu
 }
 
 
+/**
+* A service action to USBImport
+* @method USBImport
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.USBImport = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("USBImport", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetDISKCapacity
+* @method GetDISKCapacity
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.GetDISKCapacity = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetDISKCapacity", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["DISKTotal"] = ohnet.soaprequest.readStringParameter(result["DISKTotal"]); 
+        result["DISKUsed"] = ohnet.soaprequest.readStringParameter(result["DISKUsed"]); 
+        result["DISKAvailable"] = ohnet.soaprequest.readStringParameter(result["DISKAvailable"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to ForceRescan
+* @method ForceRescan
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.ForceRescan = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("ForceRescan", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
 

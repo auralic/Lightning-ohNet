@@ -582,7 +582,6 @@ int32_t OsThreadSupportsPriorities(OsContext* aContext)
 typedef struct OsNetworkHandle
 {
     int32_t    iSocket;
-    int32_t    bSocket;
     int32_t    iPipe[2];
     int32_t    iInterrupted;
     OsContext* iCtx;
@@ -596,9 +595,6 @@ static int nfds(const OsNetworkHandle* aHandle)
     }
     if (aHandle->iSocket > nfds) {
         nfds = aHandle->iSocket;
-    }
-    if (aHandle->bSocket > nfds) {
-        nfds = aHandle->bSocket;
     }
     return nfds+1;
 }
@@ -650,7 +646,6 @@ static OsNetworkHandle* CreateHandle(OsContext* aContext, int32_t aSocket)
     }
     SetFdNonBlocking(handle->iPipe[0]);
     handle->iSocket = aSocket;
-    handle->bSocket = -5;
     assert(aSocket >= 0 && aSocket < MAX_FILE_DESCRIPTOR);
     handle->iInterrupted = 0;
     handle->iCtx = aContext;
@@ -658,51 +653,17 @@ static OsNetworkHandle* CreateHandle(OsContext* aContext, int32_t aSocket)
     return handle;
 }
 
-static OsNetworkHandle* CreateHandle1(OsContext* aContext, int32_t aSocket,int32_t bSocket)
-{
-    OsNetworkHandle* handle = (OsNetworkHandle*)malloc(sizeof(OsNetworkHandle));
-#ifdef PLATFORM_MACOSX_GNU
-    int set = 1;
-    setsockopt(aSocket, SOL_SOCKET, SO_NOSIGPIPE, (void*)&set, sizeof(int));
-    if(bSocket!=-5 && bSocket!=-1)
-        setsockopt(bSocket, SOL_SOCKET, SO_NOSIGPIPE, (void*)&set, sizeof(int));
-#endif /* PLATFORM_MACOSX_GNU */
-    if (handle == NULL) {
-        return kHandleNull;
-    }
-    if (pipe(handle->iPipe) == -1) {
-        free(handle);
-        return kHandleNull;
-    }
-    SetFdNonBlocking(handle->iPipe[0]);
-    handle->iSocket = aSocket;
-    handle->bSocket = bSocket;
-    assert(aSocket >= 0 && aSocket < MAX_FILE_DESCRIPTOR);
-    handle->iInterrupted = 0;
-    handle->iCtx = aContext;
-
-    return handle;
-}
 THandle OsNetworkCreate(OsContext* aContext, OsNetworkSocketType aSocketType)
 {
-    int32_t socketH = socket(2, aSocketType, 0);
-    int32_t bsocketH = -5;
-    if(aSocketType == 2)
-    {
-        bsocketH = socket(2, aSocketType, 0);
-      //  printf("create a udp socket===%d===%d\n",socketH,bsocketH);
-    }
-    else
-    {
-      ;//  printf("create a tcp socket===%d\n",socketH);
-    }
-    OsNetworkHandle* handle = CreateHandle1(aContext, socketH,bsocketH);
+    int32_t socketH;
+    int32_t type = (aSocketType == eOsNetworkSocketStream) ? SOCK_STREAM : SOCK_DGRAM;
+
+    socketH = socket(2, type, 0);
+    OsNetworkHandle* handle = CreateHandle(aContext, socketH);
     if (handle == kHandleNull) {
         /* close is the one networking call that is exempt from being wrapped by TEMP_FAILURE_RETRY.  See
         https://sites.google.com/site/michaelsafyan/software-engineering/checkforeintrwheninvokingclosethinkagain */
         close(socketH);
-        if((bsocketH !=-5)&&(bsocketH !=-1))
-            close(bsocketH);
     }
     return (THandle)handle;
 }
@@ -713,26 +674,13 @@ int32_t OsNetworkBind(THandle aHandle, TIpAddress aAddress, uint32_t aPort)
     bzero(&addrin, sizeof(addrin));
     addrin.sin_family = AF_INET;
     addrin.sin_addr.s_addr = htonl(INADDR_ANY);
-    addrin.sin_port = htons(1900);
-//   addrin.sin_port = htons(aPort);
+    addrin.sin_port = htons(aPort);
     int32_t err;
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     struct sockaddr_in addr;
     uint16_t port = (uint16_t)aPort;
     sockaddrFromEndpoint(&addr, aAddress, port);
-    err = bind(handle->iSocket, (struct sockaddr*)&addr, sizeof(addr));
-    if (err == -1 && errno == EADDRINUSE) {
-        err = -2;
-    }
-    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-    {
-        err = bind(handle->bSocket, (struct sockaddr*)&addrin, sizeof(addr));
-        if (err == -1 && errno == EADDRINUSE) {
-            err = -2;
-        }
-    }
-/*
-    if((!strcmp(inet_ntoa( addr.sin_addr),"239.255.255.250")))
+    if((!strcmp(inet_ntoa(addr.sin_addr),"239.255.255.250")))
     {
         err = bind(handle->iSocket, (struct sockaddr*)&addrin, sizeof(addr));
         if (err == -1 && errno == EADDRINUSE) {
@@ -746,43 +694,12 @@ int32_t OsNetworkBind(THandle aHandle, TIpAddress aAddress, uint32_t aPort)
             err = -2;
         }
     }
-    */
-    return err;
-}
-int32_t OsNetworkBind1(THandle aHandle, TIpAddress aAddress, uint32_t aPort)
-{
-    struct sockaddr_in   addrin     ;
-    bzero(&addrin, sizeof(addrin));
-    addrin.sin_family = AF_INET;
-    addrin.sin_addr.s_addr = htonl(INADDR_ANY);
-    addrin.sin_port = htons(aPort);
-    
-    int32_t err;
-    OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
-    struct sockaddr_in addr;
-    uint16_t port = (uint16_t)aPort;
-    sockaddrFromEndpoint(&addr, aAddress, port);
-      //  printf("multi ip:%s====%d===%d\n",inet_ntoa( addr.sin_addr),port,handle->iSocket);
-    /*
-        {
-       err = bind(handle->iSocket, (struct sockaddr*)&addrin, sizeof(addr));
-        if (err == -1 && errno == EADDRINUSE) {
-            err = -2;
-    }
-    }
-    */
-    {
-        err = bind(handle->iSocket, (struct sockaddr*)&addr, sizeof(addr));
-        if (err == -1 && errno == EADDRINUSE) {
-            err = -2;
-        }
-    }
     return err;
 }
 
 int32_t OsNetworkBindMulticast(THandle aHandle, TIpAddress aAdapter, TIpAddress aMulticast, uint32_t aPort)
 {
-    return OsNetworkBind1(aHandle, aMulticast, aPort);
+    return OsNetworkBind(aHandle, aMulticast, aPort);
 }
 
 int32_t OsNetworkPort(THandle aHandle, uint32_t* aPort)
@@ -897,7 +814,6 @@ int32_t OsNetworkSendTo(THandle aHandle, const uint8_t* aBuffer, uint32_t aBytes
             }
         } while(bytes != -1 && sent < (int32_t)aBytes); 
         close(newsock);
- //       printf("===%s\n",aBuffer);
     }
     return sent;
 }
@@ -941,34 +857,23 @@ int32_t OsNetworkReceiveFrom(THandle aHandle, uint8_t* aBuffer, uint32_t aBytes,
     socklen_t addrLen = sizeof(addr);
 
     SetFdNonBlocking(handle->iSocket);
-    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-        SetFdNonBlocking(handle->bSocket);
 
     fd_set read;
     FD_ZERO(&read);
     FD_SET(handle->iPipe[0], &read);
     FD_SET(handle->iSocket, &read);
-    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-        FD_SET(handle->bSocket, &read);
     fd_set error;
     FD_ZERO(&error);
     FD_SET(handle->iSocket, &error);
-    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-        FD_SET(handle->bSocket, &error);
 
-    int32_t received = TEMP_FAILURE_RETRY_2(recvfrom(handle->bSocket, aBuffer, aBytes, MSG_NOSIGNAL, (struct sockaddr*)&addr, &addrLen), handle);
+    int32_t received = TEMP_FAILURE_RETRY_2(recvfrom(handle->iSocket, aBuffer, aBytes, MSG_NOSIGNAL, (struct sockaddr*)&addr, &addrLen), handle);
     if (received==-1 && errno==EWOULDBLOCK) {
         int32_t selectErr = TEMP_FAILURE_RETRY_2(select(nfds(handle), &read, NULL, &error, NULL), handle);
         if (selectErr > 0 && FD_ISSET(handle->iSocket, &read)) {
             received = TEMP_FAILURE_RETRY_2(recvfrom(handle->iSocket, aBuffer, aBytes, MSG_NOSIGNAL, (struct sockaddr*)&addr, &addrLen), handle);
         }
-        else if ((handle->bSocket!=-5)&&(handle->bSocket!=-1) && selectErr > 0 && FD_ISSET(handle->bSocket, &read)) {
-            received = TEMP_FAILURE_RETRY_2(recvfrom(handle->bSocket, aBuffer, aBytes, MSG_NOSIGNAL, (struct sockaddr*)&addr, &addrLen), handle);
-        }
     }
     SetFdBlocking(handle->iSocket);
-    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-        SetFdBlocking(handle->bSocket);
     *aAddress = addr.sin_addr.s_addr;
     *aPort = ntohs(addr.sin_port);
     return received;
@@ -1004,8 +909,6 @@ int32_t OsNetworkClose(THandle aHandle)
         err  = close(handle->iSocket);
         err |= close(handle->iPipe[0]);
         err |= close(handle->iPipe[1]);
-        if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-            close(handle->bSocket);
         free(handle);
     }
     return err;
@@ -1089,8 +992,6 @@ int32_t OsNetworkSocketSetSendBufBytes(THandle aHandle, uint32_t aBytes)
 {
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     int32_t err = setsockopt(handle->iSocket, SOL_SOCKET, SO_SNDBUF, &aBytes, sizeof(aBytes));
-    if(handle->bSocket !=-5)
-        err = setsockopt(handle->bSocket, SOL_SOCKET, SO_SNDBUF, &aBytes, sizeof(aBytes));
     return err;
 }
 
@@ -1098,8 +999,6 @@ int32_t OsNetworkSocketSetRecvBufBytes(THandle aHandle, uint32_t aBytes)
 {
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     int32_t err = setsockopt(handle->iSocket, SOL_SOCKET, SO_RCVBUF, &aBytes, sizeof(aBytes));
-    if(handle->bSocket !=-5)
-        err = setsockopt(handle->bSocket, SOL_SOCKET, SO_RCVBUF, &aBytes, sizeof(aBytes));
     return err;
 }
 
@@ -1110,8 +1009,6 @@ int32_t OsNetworkSocketSetReceiveTimeout(THandle aHandle, uint32_t aMilliSeconds
     tv.tv_sec = aMilliSeconds/1000;
     tv.tv_usec = (aMilliSeconds%1000)*1000;
     int32_t err = setsockopt(handle->iSocket, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-    if(handle->bSocket !=-5)
-        err = setsockopt(handle->bSocket, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
     return err;
 }
 
@@ -1128,13 +1025,9 @@ int32_t OsNetworkSocketSetReuseAddress(THandle aHandle)
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     int32_t reuseaddr = 1;
     int32_t err = setsockopt(handle->iSocket, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr));
-    if(handle->bSocket !=-5)
-        setsockopt(handle->bSocket, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr));
 #ifdef PLATFORM_MACOSX_GNU
     if (err == 0) {
         err = setsockopt(handle->iSocket, SOL_SOCKET, SO_REUSEPORT, &reuseaddr, sizeof(reuseaddr));
-        if(handle->bSocket !=-5)
-            err = setsockopt(handle->bSocket, SOL_SOCKET, SO_REUSEPORT, &reuseaddr, sizeof(reuseaddr));
     }
 #endif /* PLATFOTM_MACOSX_GNU */
     return err;
@@ -1144,8 +1037,6 @@ int32_t OsNetworkSocketSetMulticastTtl(THandle aHandle, uint8_t aTtl)
 {
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     uint8_t err = setsockopt(handle->iSocket, IPPROTO_IP, IP_MULTICAST_TTL, &aTtl, sizeof(aTtl));
-    if(handle->bSocket !=-5)
-        err = setsockopt(handle->bSocket, IPPROTO_IP, IP_MULTICAST_TTL, &aTtl, sizeof(aTtl));
     return err;
 }
 
@@ -1159,8 +1050,6 @@ int32_t OsNetworkSocketMulticastAddMembership(THandle aHandle, TIpAddress aInter
     mreq.imr_multiaddr.s_addr = aAddress;
     mreq.imr_interface.s_addr = aInterface;
     err = setsockopt(handle->iSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (const char*)&mreq, sizeof(mreq));
-    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-        err = setsockopt(handle->bSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (const char*)&mreq, sizeof(mreq));
 
     if (err != 0) {
         return err;
@@ -1168,8 +1057,6 @@ int32_t OsNetworkSocketMulticastAddMembership(THandle aHandle, TIpAddress aInter
     
     loop = 0;
     err = setsockopt(handle->iSocket, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
-    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-        err = setsockopt(handle->bSocket, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
     
     return err;
 }
@@ -1182,8 +1069,6 @@ int32_t OsNetworkSocketMulticastDropMembership(THandle aHandle, TIpAddress aInte
     mreq.imr_multiaddr.s_addr = aAddress;
     mreq.imr_interface.s_addr = aInterface;
     err = setsockopt(handle->iSocket, IPPROTO_IP, IP_DROP_MEMBERSHIP, &mreq, sizeof(mreq));
-    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-        err = setsockopt(handle->bSocket, IPPROTO_IP, IP_DROP_MEMBERSHIP, &mreq, sizeof(mreq));
     return err;
 }
  
@@ -1192,8 +1077,6 @@ int32_t OsNetworkSocketSetMulticastIf(THandle aHandle,  TIpAddress aInterface)
 #if defined(PLATFORM_MACOSX_GNU) || defined(PLATFORM_FREEBSD)
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     int32_t err = setsockopt(handle->iSocket, IPPROTO_IP, IP_MULTICAST_IF, &aInterface, sizeof(aInterface));
-    if((handle->bSocket!=-5)&&(handle->bSocket!=-1))
-        err = setsockopt(handle->bSocket, IPPROTO_IP, IP_MULTICAST_IF, &aInterface, sizeof(aInterface));
     return err;
 #else
     return 0;

@@ -634,6 +634,52 @@ void SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& a
 }
 
 
+class SyncGetFilterModeAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncGetFilterModeAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, std::string& aFilterMode, std::string& aFilterModeList);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetFilterModeAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+    std::string& iFilterMode;
+    std::string& iFilterModeList;
+};
+
+SyncGetFilterModeAvOpenhomeOrgHardwareConfig1Cpp::SyncGetFilterModeAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, std::string& aFilterMode, std::string& aFilterModeList)
+    : iService(aProxy)
+    , iFilterMode(aFilterMode)
+    , iFilterModeList(aFilterModeList)
+{
+}
+
+void SyncGetFilterModeAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetFilterMode(aAsync, iFilterMode, iFilterModeList);
+}
+
+
+class SyncSetFilterModeAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncSetFilterModeAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetFilterModeAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+};
+
+SyncSetFilterModeAvOpenhomeOrgHardwareConfig1Cpp::SyncSetFilterModeAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetFilterModeAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetFilterMode(aAsync);
+}
+
+
 CpProxyAvOpenhomeOrgHardwareConfig1Cpp::CpProxyAvOpenhomeOrgHardwareConfig1Cpp(CpDeviceCpp& aDevice)
     : CpProxy("av-openhome-org", "HardwareConfig", 1, aDevice.Device())
 {
@@ -793,6 +839,16 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::CpProxyAvOpenhomeOrgHardwareConfig1Cpp(C
     param = new OpenHome::Net::ParameterBool("HaltStatus");
     iActionSetHaltStatus->AddInputParameter(param);
 
+    iActionGetFilterMode = new Action("GetFilterMode");
+    param = new OpenHome::Net::ParameterString("FilterMode");
+    iActionGetFilterMode->AddOutputParameter(param);
+    param = new OpenHome::Net::ParameterString("FilterModeList");
+    iActionGetFilterMode->AddOutputParameter(param);
+
+    iActionSetFilterMode = new Action("SetFilterMode");
+    param = new OpenHome::Net::ParameterString("FilterMode");
+    iActionSetFilterMode->AddInputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1Cpp::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
@@ -895,6 +951,8 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::~CpProxyAvOpenhomeOrgHardwareConfig1Cpp(
     delete iActionGetNetInterface;
     delete iActionGetHaltStatus;
     delete iActionSetHaltStatus;
+    delete iActionGetFilterMode;
+    delete iActionSetFilterMode;
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncIsAlive(bool& aAlive)
@@ -1883,6 +1941,79 @@ void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndSetHaltStatus(IAsync& aAsync)
     ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
     Invocation& invocation = (Invocation&)aAsync;
     ASSERT(invocation.Action().Name() == Brn("SetHaltStatus"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncGetFilterMode(std::string& aFilterMode, std::string& aFilterModeList)
+{
+    SyncGetFilterModeAvOpenhomeOrgHardwareConfig1Cpp sync(*this, aFilterMode, aFilterModeList);
+    BeginGetFilterMode(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginGetFilterMode(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetFilterMode, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetFilterMode->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndGetFilterMode(IAsync& aAsync, std::string& aFilterMode, std::string& aFilterModeList)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetFilterMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    {
+        const Brx& val = ((ArgumentString*)invocation.OutputArguments()[index++])->Value();
+        aFilterMode.assign((const char*)val.Ptr(), val.Bytes());
+    }
+    {
+        const Brx& val = ((ArgumentString*)invocation.OutputArguments()[index++])->Value();
+        aFilterModeList.assign((const char*)val.Ptr(), val.Bytes());
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncSetFilterMode(const std::string& aFilterMode)
+{
+    SyncSetFilterModeAvOpenhomeOrgHardwareConfig1Cpp sync(*this);
+    BeginSetFilterMode(aFilterMode, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginSetFilterMode(const std::string& aFilterMode, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionSetFilterMode, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetFilterMode->InputParameters();
+    {
+        Brn buf((const TByte*)aFilterMode.c_str(), (TUint)aFilterMode.length());
+        invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
+    }
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndSetFilterMode(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetFilterMode"));
 
     Error::ELevel level;
     TUint code;

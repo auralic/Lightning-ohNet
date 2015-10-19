@@ -67,6 +67,15 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncGetHDDHasInited(out bool aHDDHasInited);
         void BeginGetHDDHasInited(CpProxy.CallbackAsyncComplete aCallback);
         void EndGetHDDHasInited(IntPtr aAsyncHandle, out bool aHDDHasInited);
+        void SyncUSBImport();
+        void BeginUSBImport(CpProxy.CallbackAsyncComplete aCallback);
+        void EndUSBImport(IntPtr aAsyncHandle);
+        void SyncGetDISKCapacity(out String aDISKTotal, out String aDISKUsed, out String aDISKAvailable);
+        void BeginGetDISKCapacity(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetDISKCapacity(IntPtr aAsyncHandle, out String aDISKTotal, out String aDISKUsed, out String aDISKAvailable);
+        void SyncForceRescan();
+        void BeginForceRescan(CpProxy.CallbackAsyncComplete aCallback);
+        void EndForceRescan(IntPtr aAsyncHandle);
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
     }
@@ -422,6 +431,63 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncUSBImportAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+        public SyncUSBImportAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndUSBImport(aAsyncHandle);
+        }
+    };
+
+    internal class SyncGetDISKCapacityAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+        private String iDISKTotal;
+        private String iDISKUsed;
+        private String iDISKAvailable;
+
+        public SyncGetDISKCapacityAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String DISKTotal()
+        {
+            return iDISKTotal;
+        }
+        public String DISKUsed()
+        {
+            return iDISKUsed;
+        }
+        public String DISKAvailable()
+        {
+            return iDISKAvailable;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetDISKCapacity(aAsyncHandle, out iDISKTotal, out iDISKUsed, out iDISKAvailable);
+        }
+    };
+
+    internal class SyncForceRescanAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+        public SyncForceRescanAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndForceRescan(aAsyncHandle);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:ServerConfig:1 UPnP service
     /// </summary>
@@ -446,6 +512,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionScanVersionDiff;
         private OpenHome.Net.Core.Action iActionGetInitHDDResult;
         private OpenHome.Net.Core.Action iActionGetHDDHasInited;
+        private OpenHome.Net.Core.Action iActionUSBImport;
+        private OpenHome.Net.Core.Action iActionGetDISKCapacity;
+        private OpenHome.Net.Core.Action iActionForceRescan;
         private PropertyBool iAlive;
         private System.Action iAliveChanged;
         private Mutex iPropertyLock;
@@ -544,6 +613,18 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetHDDHasInited = new OpenHome.Net.Core.Action("GetHDDHasInited");
             param = new ParameterBool("HDDHasInited");
             iActionGetHDDHasInited.AddOutputParameter(param);
+
+            iActionUSBImport = new OpenHome.Net.Core.Action("USBImport");
+
+            iActionGetDISKCapacity = new OpenHome.Net.Core.Action("GetDISKCapacity");
+            param = new ParameterString("DISKTotal", allowedValues);
+            iActionGetDISKCapacity.AddOutputParameter(param);
+            param = new ParameterString("DISKUsed", allowedValues);
+            iActionGetDISKCapacity.AddOutputParameter(param);
+            param = new ParameterString("DISKAvailable", allowedValues);
+            iActionGetDISKCapacity.AddOutputParameter(param);
+
+            iActionForceRescan = new OpenHome.Net.Core.Action("ForceRescan");
 
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
@@ -1477,6 +1558,149 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        public void SyncUSBImport()
+        {
+            SyncUSBImportAvOpenhomeOrgServerConfig1 sync = new SyncUSBImportAvOpenhomeOrgServerConfig1(this);
+            BeginUSBImport(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndUSBImport().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginUSBImport(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionUSBImport, aCallback);
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndUSBImport(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aDISKTotal"></param>
+        /// <param name="aDISKUsed"></param>
+        /// <param name="aDISKAvailable"></param>
+        public void SyncGetDISKCapacity(out String aDISKTotal, out String aDISKUsed, out String aDISKAvailable)
+        {
+            SyncGetDISKCapacityAvOpenhomeOrgServerConfig1 sync = new SyncGetDISKCapacityAvOpenhomeOrgServerConfig1(this);
+            BeginGetDISKCapacity(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aDISKTotal = sync.DISKTotal();
+            aDISKUsed = sync.DISKUsed();
+            aDISKAvailable = sync.DISKAvailable();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetDISKCapacity().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetDISKCapacity(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetDISKCapacity, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetDISKCapacity.OutputParameter(outIndex++)));
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetDISKCapacity.OutputParameter(outIndex++)));
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetDISKCapacity.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aDISKTotal"></param>
+        /// <param name="aDISKUsed"></param>
+        /// <param name="aDISKAvailable"></param>
+        public void EndGetDISKCapacity(IntPtr aAsyncHandle, out String aDISKTotal, out String aDISKUsed, out String aDISKAvailable)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aDISKTotal = Invocation.OutputString(aAsyncHandle, index++);
+            aDISKUsed = Invocation.OutputString(aAsyncHandle, index++);
+            aDISKAvailable = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        public void SyncForceRescan()
+        {
+            SyncForceRescanAvOpenhomeOrgServerConfig1 sync = new SyncForceRescanAvOpenhomeOrgServerConfig1(this);
+            BeginForceRescan(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndForceRescan().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginForceRescan(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionForceRescan, aCallback);
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndForceRescan(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -1551,6 +1775,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionScanVersionDiff.Dispose();
             iActionGetInitHDDResult.Dispose();
             iActionGetHDDHasInited.Dispose();
+            iActionUSBImport.Dispose();
+            iActionGetDISKCapacity.Dispose();
+            iActionForceRescan.Dispose();
             iAlive.Dispose();
         }
     }

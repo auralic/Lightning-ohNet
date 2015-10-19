@@ -366,6 +366,31 @@ typedef int32_t (STDCALL *CallbackHardwareConfig1GetHaltStatus)(void* aPtr, IDvI
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackHardwareConfig1SetHaltStatus)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aHaltStatus);
+/**
+ * Callback which runs when the GetFilterMode action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetFilterMode
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aFilterMode
+ * @param[out] aFilterModeList
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1GetFilterMode)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, char** aFilterMode, char** aFilterModeList);
+/**
+ * Callback which runs when the SetFilterMode action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetFilterMode
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aFilterMode
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1SetFilterMode)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aFilterMode);
 
 /**
  * Provider constructor
@@ -773,6 +798,28 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetHalt
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetHaltStatus(THandle aProvider, CallbackHardwareConfig1SetHaltStatus aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetFilterMode
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetFilterMode(THandle aProvider, CallbackHardwareConfig1GetFilterMode aCallback, void* aPtr);
+/**
+ * Register a callback for the action SetFilterMode
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetFilterMode(THandle aProvider, CallbackHardwareConfig1SetFilterMode aCallback, void* aPtr);
 
 /**
  * Set the value of the Alive property
