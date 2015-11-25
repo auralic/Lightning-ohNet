@@ -622,6 +622,42 @@ protected:
      * SetFilterMode must be overridden if this is called.
      */
     void EnableActionSetFilterMode();
+    /**
+     * Signal that the action SetSourceVisible is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetSourceVisible must be overridden if this is called.
+     */
+    void EnableActionSetSourceVisible();
+    /**
+     * Signal that the action GetSourceVisible is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetSourceVisible must be overridden if this is called.
+     */
+    void EnableActionGetSourceVisible();
+    /**
+     * Signal that the action SetLEDMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetLEDMode must be overridden if this is called.
+     */
+    void EnableActionSetLEDMode();
+    /**
+     * Signal that the action GetLEDMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetLEDMode must be overridden if this is called.
+     */
+    void EnableActionGetLEDMode();
+    /**
+     * Signal that the action SetKeyMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetKeyMode must be overridden if this is called.
+     */
+    void EnableActionSetKeyMode();
+    /**
+     * Signal that the action GetKeyMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetKeyMode must be overridden if this is called.
+     */
+    void EnableActionGetKeyMode();
 private:
     /**
      * IsAlive action.
@@ -855,6 +891,54 @@ private:
      * Must be implemented iff EnableActionSetFilterMode was called.
      */
     virtual void SetFilterMode(IDvInvocationStd& aInvocation, const std::string& aFilterMode);
+    /**
+     * SetSourceVisible action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetSourceVisible action for the owning device.
+     * Must be implemented iff EnableActionSetSourceVisible was called.
+     */
+    virtual void SetSourceVisible(IDvInvocationStd& aInvocation, const std::string& aSourceName, bool aVisible);
+    /**
+     * GetSourceVisible action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetSourceVisible action for the owning device.
+     * Must be implemented iff EnableActionGetSourceVisible was called.
+     */
+    virtual void GetSourceVisible(IDvInvocationStd& aInvocation, std::string& aVisibleInfo);
+    /**
+     * SetLEDMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetLEDMode action for the owning device.
+     * Must be implemented iff EnableActionSetLEDMode was called.
+     */
+    virtual void SetLEDMode(IDvInvocationStd& aInvocation, const std::string& aLEDMode);
+    /**
+     * GetLEDMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetLEDMode action for the owning device.
+     * Must be implemented iff EnableActionGetLEDMode was called.
+     */
+    virtual void GetLEDMode(IDvInvocationStd& aInvocation, std::string& aLEDMode, std::string& aLEDModeList);
+    /**
+     * SetKeyMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetKeyMode action for the owning device.
+     * Must be implemented iff EnableActionSetKeyMode was called.
+     */
+    virtual void SetKeyMode(IDvInvocationStd& aInvocation, const std::string& aKeyName, const std::string& aKeyMode);
+    /**
+     * GetKeyMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetKeyMode action for the owning device.
+     * Must be implemented iff EnableActionGetKeyMode was called.
+     */
+    virtual void GetKeyMode(IDvInvocationStd& aInvocation, std::string& aSideKeyMode, std::string& aMiddleKeyMode, std::string& aKeyModeList);
 private:
     DvProviderAvOpenhomeOrgHardwareConfig1Cpp();
     void DoIsAlive(IDviInvocation& aInvocation);
@@ -886,6 +970,12 @@ private:
     void DoSetHaltStatus(IDviInvocation& aInvocation);
     void DoGetFilterMode(IDviInvocation& aInvocation);
     void DoSetFilterMode(IDviInvocation& aInvocation);
+    void DoSetSourceVisible(IDviInvocation& aInvocation);
+    void DoGetSourceVisible(IDviInvocation& aInvocation);
+    void DoSetLEDMode(IDviInvocation& aInvocation);
+    void DoGetLEDMode(IDviInvocation& aInvocation);
+    void DoSetKeyMode(IDviInvocation& aInvocation);
+    void DoGetKeyMode(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;

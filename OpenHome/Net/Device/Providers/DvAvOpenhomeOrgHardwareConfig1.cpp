@@ -717,6 +717,59 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetFilterMode()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetSourceVisible()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetSourceVisible");
+    action->AddInputParameter(new ParameterString("SourceName"));
+    action->AddInputParameter(new ParameterBool("Visible"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetSourceVisible);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionGetSourceVisible()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetSourceVisible");
+    action->AddOutputParameter(new ParameterString("VisibleInfo"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoGetSourceVisible);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetLEDMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetLEDMode");
+    action->AddInputParameter(new ParameterString("LEDMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetLEDMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionGetLEDMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetLEDMode");
+    action->AddOutputParameter(new ParameterString("LEDMode"));
+    action->AddOutputParameter(new ParameterString("LEDModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoGetLEDMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetKeyMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetKeyMode");
+    action->AddInputParameter(new ParameterString("KeyName"));
+    action->AddInputParameter(new ParameterString("KeyMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetKeyMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionGetKeyMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetKeyMode");
+    action->AddOutputParameter(new ParameterString("SideKeyMode"));
+    action->AddOutputParameter(new ParameterString("MiddleKeyMode"));
+    action->AddOutputParameter(new ParameterString("KeyModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoGetKeyMode);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::DoIsAlive(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -1023,6 +1076,69 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetFilterMode(IDviInvocation& aIn
     SetFilterMode(invocation, FilterMode);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetSourceVisible(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz SourceName;
+    aInvocation.InvocationReadString("SourceName", SourceName);
+    TBool Visible = aInvocation.InvocationReadBool("Visible");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetSourceVisible(invocation, SourceName, Visible);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoGetSourceVisible(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respVisibleInfo(aInvocation, "VisibleInfo");
+    GetSourceVisible(invocation, respVisibleInfo);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetLEDMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz LEDMode;
+    aInvocation.InvocationReadString("LEDMode", LEDMode);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetLEDMode(invocation, LEDMode);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoGetLEDMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respLEDMode(aInvocation, "LEDMode");
+    DviInvocationResponseString respLEDModeList(aInvocation, "LEDModeList");
+    GetLEDMode(invocation, respLEDMode, respLEDModeList);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetKeyMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz KeyName;
+    aInvocation.InvocationReadString("KeyName", KeyName);
+    Brhz KeyMode;
+    aInvocation.InvocationReadString("KeyMode", KeyMode);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetKeyMode(invocation, KeyName, KeyMode);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoGetKeyMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respSideKeyMode(aInvocation, "SideKeyMode");
+    DviInvocationResponseString respMiddleKeyMode(aInvocation, "MiddleKeyMode");
+    DviInvocationResponseString respKeyModeList(aInvocation, "KeyModeList");
+    GetKeyMode(invocation, respSideKeyMode, respMiddleKeyMode, respKeyModeList);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::IsAlive(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aAlive*/)
 {
     ASSERTS();
@@ -1164,6 +1280,36 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetFilterMode(IDvInvocation& /*aRes
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::SetFilterMode(IDvInvocation& /*aResponse*/, const Brx& /*aFilterMode*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetSourceVisible(IDvInvocation& /*aResponse*/, const Brx& /*aSourceName*/, TBool /*aVisible*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::GetSourceVisible(IDvInvocation& /*aResponse*/, IDvInvocationResponseString& /*aVisibleInfo*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetLEDMode(IDvInvocation& /*aResponse*/, const Brx& /*aLEDMode*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::GetLEDMode(IDvInvocation& /*aResponse*/, IDvInvocationResponseString& /*aLEDMode*/, IDvInvocationResponseString& /*aLEDModeList*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetKeyMode(IDvInvocation& /*aResponse*/, const Brx& /*aKeyName*/, const Brx& /*aKeyMode*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::GetKeyMode(IDvInvocation& /*aResponse*/, IDvInvocationResponseString& /*aSideKeyMode*/, IDvInvocationResponseString& /*aMiddleKeyMode*/, IDvInvocationResponseString& /*aKeyModeList*/)
 {
     ASSERTS();
 }

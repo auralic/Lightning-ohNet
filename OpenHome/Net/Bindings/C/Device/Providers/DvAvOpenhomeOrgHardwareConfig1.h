@@ -391,6 +391,83 @@ typedef int32_t (STDCALL *CallbackHardwareConfig1GetFilterMode)(void* aPtr, IDvI
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackHardwareConfig1SetFilterMode)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aFilterMode);
+/**
+ * Callback which runs when the SetSourceVisible action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetSourceVisible
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aSourceName
+ * @param[in]  aVisible
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1SetSourceVisible)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aSourceName, uint32_t aVisible);
+/**
+ * Callback which runs when the GetSourceVisible action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetSourceVisible
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aVisibleInfo
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1GetSourceVisible)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, char** aVisibleInfo);
+/**
+ * Callback which runs when the SetLEDMode action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetLEDMode
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aLEDMode
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1SetLEDMode)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aLEDMode);
+/**
+ * Callback which runs when the GetLEDMode action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetLEDMode
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aLEDMode
+ * @param[out] aLEDModeList
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1GetLEDMode)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, char** aLEDMode, char** aLEDModeList);
+/**
+ * Callback which runs when the SetKeyMode action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetKeyMode
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aKeyName
+ * @param[in]  aKeyMode
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1SetKeyMode)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aKeyName, const char* aKeyMode);
+/**
+ * Callback which runs when the GetKeyMode action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetKeyMode
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aSideKeyMode
+ * @param[out] aMiddleKeyMode
+ * @param[out] aKeyModeList
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1GetKeyMode)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, char** aSideKeyMode, char** aMiddleKeyMode, char** aKeyModeList);
 
 /**
  * Provider constructor
@@ -820,6 +897,72 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetFilt
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetFilterMode(THandle aProvider, CallbackHardwareConfig1SetFilterMode aCallback, void* aPtr);
+/**
+ * Register a callback for the action SetSourceVisible
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetSourceVisible(THandle aProvider, CallbackHardwareConfig1SetSourceVisible aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetSourceVisible
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetSourceVisible(THandle aProvider, CallbackHardwareConfig1GetSourceVisible aCallback, void* aPtr);
+/**
+ * Register a callback for the action SetLEDMode
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetLEDMode(THandle aProvider, CallbackHardwareConfig1SetLEDMode aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetLEDMode
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetLEDMode(THandle aProvider, CallbackHardwareConfig1GetLEDMode aCallback, void* aPtr);
+/**
+ * Register a callback for the action SetKeyMode
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetKeyMode(THandle aProvider, CallbackHardwareConfig1SetKeyMode aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetKeyMode
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetKeyMode(THandle aProvider, CallbackHardwareConfig1GetKeyMode aCallback, void* aPtr);
 
 /**
  * Set the value of the Alive property

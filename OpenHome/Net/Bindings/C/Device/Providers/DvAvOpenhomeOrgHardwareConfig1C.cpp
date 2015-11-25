@@ -116,6 +116,12 @@ public:
     void EnableActionSetHaltStatus(CallbackHardwareConfig1SetHaltStatus aCallback, void* aPtr);
     void EnableActionGetFilterMode(CallbackHardwareConfig1GetFilterMode aCallback, void* aPtr);
     void EnableActionSetFilterMode(CallbackHardwareConfig1SetFilterMode aCallback, void* aPtr);
+    void EnableActionSetSourceVisible(CallbackHardwareConfig1SetSourceVisible aCallback, void* aPtr);
+    void EnableActionGetSourceVisible(CallbackHardwareConfig1GetSourceVisible aCallback, void* aPtr);
+    void EnableActionSetLEDMode(CallbackHardwareConfig1SetLEDMode aCallback, void* aPtr);
+    void EnableActionGetLEDMode(CallbackHardwareConfig1GetLEDMode aCallback, void* aPtr);
+    void EnableActionSetKeyMode(CallbackHardwareConfig1SetKeyMode aCallback, void* aPtr);
+    void EnableActionGetKeyMode(CallbackHardwareConfig1GetKeyMode aCallback, void* aPtr);
 private:
     void DoIsAlive(IDviInvocation& aInvocation);
     void DoUpdate(IDviInvocation& aInvocation);
@@ -146,6 +152,12 @@ private:
     void DoSetHaltStatus(IDviInvocation& aInvocation);
     void DoGetFilterMode(IDviInvocation& aInvocation);
     void DoSetFilterMode(IDviInvocation& aInvocation);
+    void DoSetSourceVisible(IDviInvocation& aInvocation);
+    void DoGetSourceVisible(IDviInvocation& aInvocation);
+    void DoSetLEDMode(IDviInvocation& aInvocation);
+    void DoGetLEDMode(IDviInvocation& aInvocation);
+    void DoSetKeyMode(IDviInvocation& aInvocation);
+    void DoGetKeyMode(IDviInvocation& aInvocation);
 private:
     CallbackHardwareConfig1IsAlive iCallbackIsAlive;
     void* iPtrIsAlive;
@@ -205,6 +217,18 @@ private:
     void* iPtrGetFilterMode;
     CallbackHardwareConfig1SetFilterMode iCallbackSetFilterMode;
     void* iPtrSetFilterMode;
+    CallbackHardwareConfig1SetSourceVisible iCallbackSetSourceVisible;
+    void* iPtrSetSourceVisible;
+    CallbackHardwareConfig1GetSourceVisible iCallbackGetSourceVisible;
+    void* iPtrGetSourceVisible;
+    CallbackHardwareConfig1SetLEDMode iCallbackSetLEDMode;
+    void* iPtrSetLEDMode;
+    CallbackHardwareConfig1GetLEDMode iCallbackGetLEDMode;
+    void* iPtrGetLEDMode;
+    CallbackHardwareConfig1SetKeyMode iCallbackSetKeyMode;
+    void* iPtrSetKeyMode;
+    CallbackHardwareConfig1GetKeyMode iCallbackGetKeyMode;
+    void* iPtrGetKeyMode;
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;
     PropertyBool* iPropertyRestart;
@@ -986,6 +1010,71 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetFilterMode(Callback
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetSourceVisible(CallbackHardwareConfig1SetSourceVisible aCallback, void* aPtr)
+{
+    iCallbackSetSourceVisible = aCallback;
+    iPtrSetSourceVisible = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetSourceVisible");
+    action->AddInputParameter(new ParameterString("SourceName"));
+    action->AddInputParameter(new ParameterBool("Visible"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetSourceVisible);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetSourceVisible(CallbackHardwareConfig1GetSourceVisible aCallback, void* aPtr)
+{
+    iCallbackGetSourceVisible = aCallback;
+    iPtrGetSourceVisible = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetSourceVisible");
+    action->AddOutputParameter(new ParameterString("VisibleInfo"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetSourceVisible);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetLEDMode(CallbackHardwareConfig1SetLEDMode aCallback, void* aPtr)
+{
+    iCallbackSetLEDMode = aCallback;
+    iPtrSetLEDMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetLEDMode");
+    action->AddInputParameter(new ParameterString("LEDMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetLEDMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetLEDMode(CallbackHardwareConfig1GetLEDMode aCallback, void* aPtr)
+{
+    iCallbackGetLEDMode = aCallback;
+    iPtrGetLEDMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetLEDMode");
+    action->AddOutputParameter(new ParameterString("LEDMode"));
+    action->AddOutputParameter(new ParameterString("LEDModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetLEDMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetKeyMode(CallbackHardwareConfig1SetKeyMode aCallback, void* aPtr)
+{
+    iCallbackSetKeyMode = aCallback;
+    iPtrSetKeyMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetKeyMode");
+    action->AddInputParameter(new ParameterString("KeyName"));
+    action->AddInputParameter(new ParameterString("KeyMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetKeyMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetKeyMode(CallbackHardwareConfig1GetKeyMode aCallback, void* aPtr)
+{
+    iCallbackGetKeyMode = aCallback;
+    iPtrGetKeyMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetKeyMode");
+    action->AddOutputParameter(new ParameterString("SideKeyMode"));
+    action->AddOutputParameter(new ParameterString("MiddleKeyMode"));
+    action->AddOutputParameter(new ParameterString("KeyModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetKeyMode);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1C::DoIsAlive(IDviInvocation& aInvocation)
 {
     DvInvocationCPrivate invocationWrapper(aInvocation);
@@ -1709,6 +1798,159 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetFilterMode(IDviInvocation& aI
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetSourceVisible(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz SourceName;
+    aInvocation.InvocationReadString("SourceName", SourceName);
+    TBool Visible = aInvocation.InvocationReadBool("Visible");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetSourceVisible != NULL);
+    if (0 != iCallbackSetSourceVisible(iPtrSetSourceVisible, invocationC, invocationCPtr, (const char*)SourceName.Ptr(), Visible)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetSourceVisible(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* VisibleInfo;
+    ASSERT(iCallbackGetSourceVisible != NULL);
+    if (0 != iCallbackGetSourceVisible(iPtrGetSourceVisible, invocationC, invocationCPtr, &VisibleInfo)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respVisibleInfo(aInvocation, "VisibleInfo");
+    invocation.StartResponse();
+    Brhz bufVisibleInfo((const TChar*)VisibleInfo);
+    OhNetFreeExternal(VisibleInfo);
+    respVisibleInfo.Write(bufVisibleInfo);
+    respVisibleInfo.WriteFlush();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetLEDMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz LEDMode;
+    aInvocation.InvocationReadString("LEDMode", LEDMode);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetLEDMode != NULL);
+    if (0 != iCallbackSetLEDMode(iPtrSetLEDMode, invocationC, invocationCPtr, (const char*)LEDMode.Ptr())) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetLEDMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* LEDMode;
+    char* LEDModeList;
+    ASSERT(iCallbackGetLEDMode != NULL);
+    if (0 != iCallbackGetLEDMode(iPtrGetLEDMode, invocationC, invocationCPtr, &LEDMode, &LEDModeList)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respLEDMode(aInvocation, "LEDMode");
+    DviInvocationResponseString respLEDModeList(aInvocation, "LEDModeList");
+    invocation.StartResponse();
+    Brhz bufLEDMode((const TChar*)LEDMode);
+    OhNetFreeExternal(LEDMode);
+    respLEDMode.Write(bufLEDMode);
+    respLEDMode.WriteFlush();
+    Brhz bufLEDModeList((const TChar*)LEDModeList);
+    OhNetFreeExternal(LEDModeList);
+    respLEDModeList.Write(bufLEDModeList);
+    respLEDModeList.WriteFlush();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetKeyMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz KeyName;
+    aInvocation.InvocationReadString("KeyName", KeyName);
+    Brhz KeyMode;
+    aInvocation.InvocationReadString("KeyMode", KeyMode);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetKeyMode != NULL);
+    if (0 != iCallbackSetKeyMode(iPtrSetKeyMode, invocationC, invocationCPtr, (const char*)KeyName.Ptr(), (const char*)KeyMode.Ptr())) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetKeyMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* SideKeyMode;
+    char* MiddleKeyMode;
+    char* KeyModeList;
+    ASSERT(iCallbackGetKeyMode != NULL);
+    if (0 != iCallbackGetKeyMode(iPtrGetKeyMode, invocationC, invocationCPtr, &SideKeyMode, &MiddleKeyMode, &KeyModeList)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respSideKeyMode(aInvocation, "SideKeyMode");
+    DviInvocationResponseString respMiddleKeyMode(aInvocation, "MiddleKeyMode");
+    DviInvocationResponseString respKeyModeList(aInvocation, "KeyModeList");
+    invocation.StartResponse();
+    Brhz bufSideKeyMode((const TChar*)SideKeyMode);
+    OhNetFreeExternal(SideKeyMode);
+    respSideKeyMode.Write(bufSideKeyMode);
+    respSideKeyMode.WriteFlush();
+    Brhz bufMiddleKeyMode((const TChar*)MiddleKeyMode);
+    OhNetFreeExternal(MiddleKeyMode);
+    respMiddleKeyMode.Write(bufMiddleKeyMode);
+    respMiddleKeyMode.WriteFlush();
+    Brhz bufKeyModeList((const TChar*)KeyModeList);
+    OhNetFreeExternal(KeyModeList);
+    respKeyModeList.Write(bufKeyModeList);
+    respKeyModeList.WriteFlush();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Create(DvDeviceC aDevice)
@@ -1864,6 +2106,36 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetFilterMode(THa
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetFilterMode(THandle aProvider, CallbackHardwareConfig1SetFilterMode aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetFilterMode(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetSourceVisible(THandle aProvider, CallbackHardwareConfig1SetSourceVisible aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetSourceVisible(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetSourceVisible(THandle aProvider, CallbackHardwareConfig1GetSourceVisible aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetSourceVisible(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetLEDMode(THandle aProvider, CallbackHardwareConfig1SetLEDMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetLEDMode(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetLEDMode(THandle aProvider, CallbackHardwareConfig1GetLEDMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetLEDMode(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetKeyMode(THandle aProvider, CallbackHardwareConfig1SetKeyMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetKeyMode(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetKeyMode(THandle aProvider, CallbackHardwareConfig1GetKeyMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetKeyMode(aCallback, aPtr);
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)

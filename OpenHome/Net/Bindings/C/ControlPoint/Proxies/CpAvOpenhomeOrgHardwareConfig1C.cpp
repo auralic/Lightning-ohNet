@@ -139,6 +139,30 @@ public:
     void BeginSetFilterMode(const Brx& aFilterMode, FunctorAsync& aFunctor);
     void EndSetFilterMode(IAsync& aAsync);
 
+    void SyncSetSourceVisible(const Brx& aSourceName, TBool aVisible);
+    void BeginSetSourceVisible(const Brx& aSourceName, TBool aVisible, FunctorAsync& aFunctor);
+    void EndSetSourceVisible(IAsync& aAsync);
+
+    void SyncGetSourceVisible(Brh& aVisibleInfo);
+    void BeginGetSourceVisible(FunctorAsync& aFunctor);
+    void EndGetSourceVisible(IAsync& aAsync, Brh& aVisibleInfo);
+
+    void SyncSetLEDMode(const Brx& aLEDMode);
+    void BeginSetLEDMode(const Brx& aLEDMode, FunctorAsync& aFunctor);
+    void EndSetLEDMode(IAsync& aAsync);
+
+    void SyncGetLEDMode(Brh& aLEDMode, Brh& aLEDModeList);
+    void BeginGetLEDMode(FunctorAsync& aFunctor);
+    void EndGetLEDMode(IAsync& aAsync, Brh& aLEDMode, Brh& aLEDModeList);
+
+    void SyncSetKeyMode(const Brx& aKeyName, const Brx& aKeyMode);
+    void BeginSetKeyMode(const Brx& aKeyName, const Brx& aKeyMode, FunctorAsync& aFunctor);
+    void EndSetKeyMode(IAsync& aAsync);
+
+    void SyncGetKeyMode(Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList);
+    void BeginGetKeyMode(FunctorAsync& aFunctor);
+    void EndGetKeyMode(IAsync& aAsync, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList);
+
     void SetPropertyAliveChanged(Functor& aFunctor);
     void SetPropertyCurrentActionChanged(Functor& aFunctor);
     void SetPropertyRestartChanged(Functor& aFunctor);
@@ -241,6 +265,12 @@ private:
     Action* iActionSetHaltStatus;
     Action* iActionGetFilterMode;
     Action* iActionSetFilterMode;
+    Action* iActionSetSourceVisible;
+    Action* iActionGetSourceVisible;
+    Action* iActionSetLEDMode;
+    Action* iActionGetLEDMode;
+    Action* iActionSetKeyMode;
+    Action* iActionGetKeyMode;
     PropertyBool* iAlive;
     PropertyUint* iCurrentAction;
     PropertyBool* iRestart;
@@ -956,6 +986,144 @@ void SyncSetFilterModeAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAs
     iService.EndSetFilterMode(aAsync);
 }
 
+
+class SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+};
+
+SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1C::SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetSourceVisible(aAsync);
+}
+
+
+class SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, Brh& aVisibleInfo);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+    Brh& iVisibleInfo;
+};
+
+SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1C::SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, Brh& aVisibleInfo)
+    : iService(aProxy)
+    , iVisibleInfo(aVisibleInfo)
+{
+}
+
+void SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetSourceVisible(aAsync, iVisibleInfo);
+}
+
+
+class SyncSetLEDModeAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncSetLEDModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetLEDModeAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+};
+
+SyncSetLEDModeAvOpenhomeOrgHardwareConfig1C::SyncSetLEDModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetLEDModeAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetLEDMode(aAsync);
+}
+
+
+class SyncGetLEDModeAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncGetLEDModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, Brh& aLEDMode, Brh& aLEDModeList);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetLEDModeAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+    Brh& iLEDMode;
+    Brh& iLEDModeList;
+};
+
+SyncGetLEDModeAvOpenhomeOrgHardwareConfig1C::SyncGetLEDModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, Brh& aLEDMode, Brh& aLEDModeList)
+    : iService(aProxy)
+    , iLEDMode(aLEDMode)
+    , iLEDModeList(aLEDModeList)
+{
+}
+
+void SyncGetLEDModeAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetLEDMode(aAsync, iLEDMode, iLEDModeList);
+}
+
+
+class SyncSetKeyModeAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncSetKeyModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetKeyModeAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+};
+
+SyncSetKeyModeAvOpenhomeOrgHardwareConfig1C::SyncSetKeyModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetKeyModeAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetKeyMode(aAsync);
+}
+
+
+class SyncGetKeyModeAvOpenhomeOrgHardwareConfig1C : public SyncProxyAction
+{
+public:
+    SyncGetKeyModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetKeyModeAvOpenhomeOrgHardwareConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1C& iService;
+    Brh& iSideKeyMode;
+    Brh& iMiddleKeyMode;
+    Brh& iKeyModeList;
+};
+
+SyncGetKeyModeAvOpenhomeOrgHardwareConfig1C::SyncGetKeyModeAvOpenhomeOrgHardwareConfig1C(CpProxyAvOpenhomeOrgHardwareConfig1C& aProxy, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList)
+    : iService(aProxy)
+    , iSideKeyMode(aSideKeyMode)
+    , iMiddleKeyMode(aMiddleKeyMode)
+    , iKeyModeList(aKeyModeList)
+{
+}
+
+void SyncGetKeyModeAvOpenhomeOrgHardwareConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetKeyMode(aAsync, iSideKeyMode, iMiddleKeyMode, iKeyModeList);
+}
+
 CpProxyAvOpenhomeOrgHardwareConfig1C::CpProxyAvOpenhomeOrgHardwareConfig1C(CpDeviceC aDevice)
     : CpProxyC("av-openhome-org", "HardwareConfig", 1, *reinterpret_cast<CpiDevice*>(aDevice))
     , iLock("MPCS")
@@ -1126,6 +1294,40 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::CpProxyAvOpenhomeOrgHardwareConfig1C(CpDev
     param = new OpenHome::Net::ParameterString("FilterMode");
     iActionSetFilterMode->AddInputParameter(param);
 
+    iActionSetSourceVisible = new Action("SetSourceVisible");
+    param = new OpenHome::Net::ParameterString("SourceName");
+    iActionSetSourceVisible->AddInputParameter(param);
+    param = new OpenHome::Net::ParameterBool("Visible");
+    iActionSetSourceVisible->AddInputParameter(param);
+
+    iActionGetSourceVisible = new Action("GetSourceVisible");
+    param = new OpenHome::Net::ParameterString("VisibleInfo");
+    iActionGetSourceVisible->AddOutputParameter(param);
+
+    iActionSetLEDMode = new Action("SetLEDMode");
+    param = new OpenHome::Net::ParameterString("LEDMode");
+    iActionSetLEDMode->AddInputParameter(param);
+
+    iActionGetLEDMode = new Action("GetLEDMode");
+    param = new OpenHome::Net::ParameterString("LEDMode");
+    iActionGetLEDMode->AddOutputParameter(param);
+    param = new OpenHome::Net::ParameterString("LEDModeList");
+    iActionGetLEDMode->AddOutputParameter(param);
+
+    iActionSetKeyMode = new Action("SetKeyMode");
+    param = new OpenHome::Net::ParameterString("KeyName");
+    iActionSetKeyMode->AddInputParameter(param);
+    param = new OpenHome::Net::ParameterString("KeyMode");
+    iActionSetKeyMode->AddInputParameter(param);
+
+    iActionGetKeyMode = new Action("GetKeyMode");
+    param = new OpenHome::Net::ParameterString("SideKeyMode");
+    iActionGetKeyMode->AddOutputParameter(param);
+    param = new OpenHome::Net::ParameterString("MiddleKeyMode");
+    iActionGetKeyMode->AddOutputParameter(param);
+    param = new OpenHome::Net::ParameterString("KeyModeList");
+    iActionGetKeyMode->AddOutputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1C::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
@@ -1230,6 +1432,12 @@ CpProxyAvOpenhomeOrgHardwareConfig1C::~CpProxyAvOpenhomeOrgHardwareConfig1C()
     delete iActionSetHaltStatus;
     delete iActionGetFilterMode;
     delete iActionSetFilterMode;
+    delete iActionSetSourceVisible;
+    delete iActionGetSourceVisible;
+    delete iActionSetLEDMode;
+    delete iActionGetLEDMode;
+    delete iActionSetKeyMode;
+    delete iActionGetKeyMode;
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncIsAlive(TBool& aAlive)
@@ -2166,6 +2374,200 @@ void CpProxyAvOpenhomeOrgHardwareConfig1C::EndSetFilterMode(IAsync& aAsync)
     if (invocation.Error(level, code, ignore)) {
         THROW_PROXYERROR(level, code);
     }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncSetSourceVisible(const Brx& aSourceName, TBool aVisible)
+{
+    SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1C sync(*this);
+    BeginSetSourceVisible(aSourceName, aVisible, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginSetSourceVisible(const Brx& aSourceName, TBool aVisible, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionSetSourceVisible, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetSourceVisible->InputParameters();
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aSourceName));
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aVisible));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndSetSourceVisible(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetSourceVisible"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncGetSourceVisible(Brh& aVisibleInfo)
+{
+    SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1C sync(*this, aVisibleInfo);
+    BeginGetSourceVisible(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginGetSourceVisible(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionGetSourceVisible, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetSourceVisible->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndGetSourceVisible(IAsync& aAsync, Brh& aVisibleInfo)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetSourceVisible"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aVisibleInfo);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncSetLEDMode(const Brx& aLEDMode)
+{
+    SyncSetLEDModeAvOpenhomeOrgHardwareConfig1C sync(*this);
+    BeginSetLEDMode(aLEDMode, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginSetLEDMode(const Brx& aLEDMode, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionSetLEDMode, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetLEDMode->InputParameters();
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aLEDMode));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndSetLEDMode(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetLEDMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncGetLEDMode(Brh& aLEDMode, Brh& aLEDModeList)
+{
+    SyncGetLEDModeAvOpenhomeOrgHardwareConfig1C sync(*this, aLEDMode, aLEDModeList);
+    BeginGetLEDMode(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginGetLEDMode(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionGetLEDMode, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetLEDMode->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndGetLEDMode(IAsync& aAsync, Brh& aLEDMode, Brh& aLEDModeList)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetLEDMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aLEDMode);
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aLEDModeList);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncSetKeyMode(const Brx& aKeyName, const Brx& aKeyMode)
+{
+    SyncSetKeyModeAvOpenhomeOrgHardwareConfig1C sync(*this);
+    BeginSetKeyMode(aKeyName, aKeyMode, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginSetKeyMode(const Brx& aKeyName, const Brx& aKeyMode, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionSetKeyMode, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetKeyMode->InputParameters();
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aKeyName));
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aKeyMode));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndSetKeyMode(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetKeyMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::SyncGetKeyMode(Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList)
+{
+    SyncGetKeyModeAvOpenhomeOrgHardwareConfig1C sync(*this, aSideKeyMode, aMiddleKeyMode, aKeyModeList);
+    BeginGetKeyMode(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::BeginGetKeyMode(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionGetKeyMode, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetKeyMode->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1C::EndGetKeyMode(IAsync& aAsync, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetKeyMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aSideKeyMode);
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aMiddleKeyMode);
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aKeyModeList);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1C::SetPropertyAliveChanged(Functor& aFunctor)
@@ -3910,6 +4312,278 @@ int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetFilterMode(THandle aHan
     ASSERT(async != NULL);
     try {
         proxyC->EndSetFilterMode(*async);
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetSourceVisible(THandle aHandle, const char* aSourceName, uint32_t aVisible)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aSourceName(aSourceName);
+    int32_t err = 0;
+    try {
+        proxyC->SyncSetSourceVisible(buf_aSourceName, (aVisible==0? false : true));
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetSourceVisible(THandle aHandle, const char* aSourceName, uint32_t aVisible, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aSourceName(aSourceName);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginSetSourceVisible(buf_aSourceName, (aVisible==0? false : true), functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetSourceVisible(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndSetSourceVisible(*async);
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetSourceVisible(THandle aHandle, char** aVisibleInfo)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aVisibleInfo;
+    int32_t err = 0;
+    try {
+        proxyC->SyncGetSourceVisible(buf_aVisibleInfo);
+        *aVisibleInfo = buf_aVisibleInfo.Extract();
+    }
+    catch (ProxyError& ) {
+        err = -1;
+        *aVisibleInfo = NULL;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginGetSourceVisible(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginGetSourceVisible(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetSourceVisible(THandle aHandle, OhNetHandleAsync aAsync, char** aVisibleInfo)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    Brh buf_aVisibleInfo;
+    *aVisibleInfo = NULL;
+    try {
+        proxyC->EndGetSourceVisible(*async, buf_aVisibleInfo);
+        *aVisibleInfo = buf_aVisibleInfo.Extract();
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetLEDMode(THandle aHandle, const char* aLEDMode)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aLEDMode(aLEDMode);
+    int32_t err = 0;
+    try {
+        proxyC->SyncSetLEDMode(buf_aLEDMode);
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetLEDMode(THandle aHandle, const char* aLEDMode, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aLEDMode(aLEDMode);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginSetLEDMode(buf_aLEDMode, functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetLEDMode(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndSetLEDMode(*async);
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetLEDMode(THandle aHandle, char** aLEDMode, char** aLEDModeList)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aLEDMode;
+    Brh buf_aLEDModeList;
+    int32_t err = 0;
+    try {
+        proxyC->SyncGetLEDMode(buf_aLEDMode, buf_aLEDModeList);
+        *aLEDMode = buf_aLEDMode.Extract();
+        *aLEDModeList = buf_aLEDModeList.Extract();
+    }
+    catch (ProxyError& ) {
+        err = -1;
+        *aLEDMode = NULL;
+        *aLEDModeList = NULL;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginGetLEDMode(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginGetLEDMode(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetLEDMode(THandle aHandle, OhNetHandleAsync aAsync, char** aLEDMode, char** aLEDModeList)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    Brh buf_aLEDMode;
+    *aLEDMode = NULL;
+    Brh buf_aLEDModeList;
+    *aLEDModeList = NULL;
+    try {
+        proxyC->EndGetLEDMode(*async, buf_aLEDMode, buf_aLEDModeList);
+        *aLEDMode = buf_aLEDMode.Extract();
+        *aLEDModeList = buf_aLEDModeList.Extract();
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetKeyMode(THandle aHandle, const char* aKeyName, const char* aKeyMode)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aKeyName(aKeyName);
+    Brh buf_aKeyMode(aKeyMode);
+    int32_t err = 0;
+    try {
+        proxyC->SyncSetKeyMode(buf_aKeyName, buf_aKeyMode);
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetKeyMode(THandle aHandle, const char* aKeyName, const char* aKeyMode, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aKeyName(aKeyName);
+    Brh buf_aKeyMode(aKeyMode);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginSetKeyMode(buf_aKeyName, buf_aKeyMode, functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetKeyMode(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndSetKeyMode(*async);
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetKeyMode(THandle aHandle, char** aSideKeyMode, char** aMiddleKeyMode, char** aKeyModeList)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aSideKeyMode;
+    Brh buf_aMiddleKeyMode;
+    Brh buf_aKeyModeList;
+    int32_t err = 0;
+    try {
+        proxyC->SyncGetKeyMode(buf_aSideKeyMode, buf_aMiddleKeyMode, buf_aKeyModeList);
+        *aSideKeyMode = buf_aSideKeyMode.Extract();
+        *aMiddleKeyMode = buf_aMiddleKeyMode.Extract();
+        *aKeyModeList = buf_aKeyModeList.Extract();
+    }
+    catch (ProxyError& ) {
+        err = -1;
+        *aSideKeyMode = NULL;
+        *aMiddleKeyMode = NULL;
+        *aKeyModeList = NULL;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginGetKeyMode(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginGetKeyMode(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetKeyMode(THandle aHandle, OhNetHandleAsync aAsync, char** aSideKeyMode, char** aMiddleKeyMode, char** aKeyModeList)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgHardwareConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgHardwareConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    Brh buf_aSideKeyMode;
+    *aSideKeyMode = NULL;
+    Brh buf_aMiddleKeyMode;
+    *aMiddleKeyMode = NULL;
+    Brh buf_aKeyModeList;
+    *aKeyModeList = NULL;
+    try {
+        proxyC->EndGetKeyMode(*async, buf_aSideKeyMode, buf_aMiddleKeyMode, buf_aKeyModeList);
+        *aSideKeyMode = buf_aSideKeyMode.Extract();
+        *aMiddleKeyMode = buf_aMiddleKeyMode.Extract();
+        *aKeyModeList = buf_aKeyModeList.Extract();
     }
     catch(...) {
         err = -1;

@@ -995,4 +995,134 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetFilterMode = function(FilterMod
 }
 
 
+/**
+* A service action to SetSourceVisible
+* @method SetSourceVisible
+* @param {String} SourceName An action parameter
+* @param {Boolean} Visible An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetSourceVisible = function(SourceName, Visible, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetSourceVisible", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("SourceName", SourceName);
+    request.writeBoolParameter("Visible", Visible);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetSourceVisible
+* @method GetSourceVisible
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetSourceVisible = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetSourceVisible", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["VisibleInfo"] = ohnet.soaprequest.readStringParameter(result["VisibleInfo"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetLEDMode
+* @method SetLEDMode
+* @param {String} LEDMode An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetLEDMode = function(LEDMode, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetLEDMode", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("LEDMode", LEDMode);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetLEDMode
+* @method GetLEDMode
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetLEDMode = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetLEDMode", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["LEDMode"] = ohnet.soaprequest.readStringParameter(result["LEDMode"]); 
+        result["LEDModeList"] = ohnet.soaprequest.readStringParameter(result["LEDModeList"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetKeyMode
+* @method SetKeyMode
+* @param {String} KeyName An action parameter
+* @param {String} KeyMode An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetKeyMode = function(KeyName, KeyMode, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetKeyMode", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("KeyName", KeyName);
+    request.writeStringParameter("KeyMode", KeyMode);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetKeyMode
+* @method GetKeyMode
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetKeyMode = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetKeyMode", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["SideKeyMode"] = ohnet.soaprequest.readStringParameter(result["SideKeyMode"]); 
+        result["MiddleKeyMode"] = ohnet.soaprequest.readStringParameter(result["MiddleKeyMode"]); 
+        result["KeyModeList"] = ohnet.soaprequest.readStringParameter(result["KeyModeList"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
 

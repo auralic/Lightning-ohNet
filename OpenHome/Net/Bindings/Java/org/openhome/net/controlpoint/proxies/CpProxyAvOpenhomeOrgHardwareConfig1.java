@@ -97,6 +97,24 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public void syncSetFilterMode(String aFilterMode);
     public void beginSetFilterMode(String aFilterMode, ICpProxyListener aCallback);
     public void endSetFilterMode(long aAsyncHandle);
+    public void syncSetSourceVisible(String aSourceName, boolean aVisible);
+    public void beginSetSourceVisible(String aSourceName, boolean aVisible, ICpProxyListener aCallback);
+    public void endSetSourceVisible(long aAsyncHandle);
+    public String syncGetSourceVisible();
+    public void beginGetSourceVisible(ICpProxyListener aCallback);
+    public String endGetSourceVisible(long aAsyncHandle);
+    public void syncSetLEDMode(String aLEDMode);
+    public void beginSetLEDMode(String aLEDMode, ICpProxyListener aCallback);
+    public void endSetLEDMode(long aAsyncHandle);
+    public GetLEDMode syncGetLEDMode();
+    public void beginGetLEDMode(ICpProxyListener aCallback);
+    public GetLEDMode endGetLEDMode(long aAsyncHandle);
+    public void syncSetKeyMode(String aKeyName, String aKeyMode);
+    public void beginSetKeyMode(String aKeyName, String aKeyMode, ICpProxyListener aCallback);
+    public void endSetKeyMode(long aAsyncHandle);
+    public GetKeyMode syncGetKeyMode();
+    public void beginGetKeyMode(ICpProxyListener aCallback);
+    public GetKeyMode endGetKeyMode(long aAsyncHandle);
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
     public void setPropertyCurrentActionChanged(IPropertyChangeListener aCurrentActionChanged);
@@ -754,6 +772,132 @@ class SyncSetFilterModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
     }
 }
 
+class SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetSourceVisible(aAsyncHandle);
+        
+    }
+}
+
+class SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private String iVisibleInfo;
+
+    public SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getVisibleInfo()
+    {
+        return iVisibleInfo;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        String result = iService.endGetSourceVisible(aAsyncHandle);
+        
+        iVisibleInfo = result;
+    }
+}
+
+class SyncSetLEDModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetLEDMode(aAsyncHandle);
+        
+    }
+}
+
+class SyncGetLEDModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private String iLEDMode;
+    private String iLEDModeList;
+
+    public SyncGetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getLEDMode()
+    {
+        return iLEDMode;
+    }
+    public String getLEDModeList()
+    {
+        return iLEDModeList;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        GetLEDMode result = iService.endGetLEDMode(aAsyncHandle);
+        
+        iLEDMode = result.getLEDMode();
+        iLEDModeList = result.getLEDModeList();
+    }
+}
+
+class SyncSetKeyModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetKeyMode(aAsyncHandle);
+        
+    }
+}
+
+class SyncGetKeyModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private String iSideKeyMode;
+    private String iMiddleKeyMode;
+    private String iKeyModeList;
+
+    public SyncGetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getSideKeyMode()
+    {
+        return iSideKeyMode;
+    }
+    public String getMiddleKeyMode()
+    {
+        return iMiddleKeyMode;
+    }
+    public String getKeyModeList()
+    {
+        return iKeyModeList;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        GetKeyMode result = iService.endGetKeyMode(aAsyncHandle);
+        
+        iSideKeyMode = result.getSideKeyMode();
+        iMiddleKeyMode = result.getMiddleKeyMode();
+        iKeyModeList = result.getKeyModeList();
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
  */
@@ -986,6 +1130,59 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         }
     }
 
+    public class GetLEDMode
+    {
+        private String iLEDMode;
+        private String iLEDModeList;
+
+        public GetLEDMode(
+            String aLEDMode,
+            String aLEDModeList
+        )
+        {
+            iLEDMode = aLEDMode;
+            iLEDModeList = aLEDModeList;
+        }
+        public String getLEDMode()
+        {
+            return iLEDMode;
+        }
+        public String getLEDModeList()
+        {
+            return iLEDModeList;
+        }
+    }
+
+    public class GetKeyMode
+    {
+        private String iSideKeyMode;
+        private String iMiddleKeyMode;
+        private String iKeyModeList;
+
+        public GetKeyMode(
+            String aSideKeyMode,
+            String aMiddleKeyMode,
+            String aKeyModeList
+        )
+        {
+            iSideKeyMode = aSideKeyMode;
+            iMiddleKeyMode = aMiddleKeyMode;
+            iKeyModeList = aKeyModeList;
+        }
+        public String getSideKeyMode()
+        {
+            return iSideKeyMode;
+        }
+        public String getMiddleKeyMode()
+        {
+            return iMiddleKeyMode;
+        }
+        public String getKeyModeList()
+        {
+            return iKeyModeList;
+        }
+    }
+
     private Action iActionIsAlive;
     private Action iActionUpdate;
     private Action iActionActive;
@@ -1015,6 +1212,12 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private Action iActionSetHaltStatus;
     private Action iActionGetFilterMode;
     private Action iActionSetFilterMode;
+    private Action iActionSetSourceVisible;
+    private Action iActionGetSourceVisible;
+    private Action iActionSetLEDMode;
+    private Action iActionGetLEDMode;
+    private Action iActionSetKeyMode;
+    private Action iActionGetKeyMode;
     private PropertyBool iAlive;
     private PropertyUint iCurrentAction;
     private PropertyBool iRestart;
@@ -1239,6 +1442,40 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         iActionSetFilterMode = new Action("SetFilterMode");
         param = new ParameterString("FilterMode", allowedValues);
         iActionSetFilterMode.addInputParameter(param);
+
+        iActionSetSourceVisible = new Action("SetSourceVisible");
+        param = new ParameterString("SourceName", allowedValues);
+        iActionSetSourceVisible.addInputParameter(param);
+        param = new ParameterBool("Visible");
+        iActionSetSourceVisible.addInputParameter(param);
+
+        iActionGetSourceVisible = new Action("GetSourceVisible");
+        param = new ParameterString("VisibleInfo", allowedValues);
+        iActionGetSourceVisible.addOutputParameter(param);
+
+        iActionSetLEDMode = new Action("SetLEDMode");
+        param = new ParameterString("LEDMode", allowedValues);
+        iActionSetLEDMode.addInputParameter(param);
+
+        iActionGetLEDMode = new Action("GetLEDMode");
+        param = new ParameterString("LEDMode", allowedValues);
+        iActionGetLEDMode.addOutputParameter(param);
+        param = new ParameterString("LEDModeList", allowedValues);
+        iActionGetLEDMode.addOutputParameter(param);
+
+        iActionSetKeyMode = new Action("SetKeyMode");
+        param = new ParameterString("KeyName", allowedValues);
+        iActionSetKeyMode.addInputParameter(param);
+        param = new ParameterString("KeyMode", allowedValues);
+        iActionSetKeyMode.addInputParameter(param);
+
+        iActionGetKeyMode = new Action("GetKeyMode");
+        param = new ParameterString("SideKeyMode", allowedValues);
+        iActionGetKeyMode.addOutputParameter(param);
+        param = new ParameterString("MiddleKeyMode", allowedValues);
+        iActionGetKeyMode.addOutputParameter(param);
+        param = new ParameterString("KeyModeList", allowedValues);
+        iActionGetKeyMode.addOutputParameter(param);
 
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
@@ -3054,6 +3291,339 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetSourceVisible(String aSourceName, boolean aVisible)
+    {
+        SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1 sync = new SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1(this);
+        beginSetSourceVisible(aSourceName, aVisible, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetSourceVisible}.
+     * 
+     * @param aSourceName
+     * @param aVisible
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetSourceVisible(String aSourceName, boolean aVisible, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetSourceVisible, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionSetSourceVisible.getInputParameter(inIndex++), aSourceName));
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionSetSourceVisible.getInputParameter(inIndex++), aVisible));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetSourceVisible} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetSourceVisible} method.
+     */
+    public void endSetSourceVisible(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public String syncGetSourceVisible()
+    {
+        SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1 sync = new SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1(this);
+        beginGetSourceVisible(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getVisibleInfo();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetSourceVisible}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetSourceVisible(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetSourceVisible, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetSourceVisible.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetSourceVisible} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetSourceVisible} method.
+     * @return the result of the previously invoked action.
+     */
+    public String endGetSourceVisible(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String visibleInfo = Invocation.getOutputString(aAsyncHandle, index++);
+        return visibleInfo;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetLEDMode(String aLEDMode)
+    {
+        SyncSetLEDModeAvOpenhomeOrgHardwareConfig1 sync = new SyncSetLEDModeAvOpenhomeOrgHardwareConfig1(this);
+        beginSetLEDMode(aLEDMode, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetLEDMode}.
+     * 
+     * @param aLEDMode
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetLEDMode(String aLEDMode, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetLEDMode, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionSetLEDMode.getInputParameter(inIndex++), aLEDMode));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetLEDMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetLEDMode} method.
+     */
+    public void endSetLEDMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public GetLEDMode syncGetLEDMode()
+    {
+        SyncGetLEDModeAvOpenhomeOrgHardwareConfig1 sync = new SyncGetLEDModeAvOpenhomeOrgHardwareConfig1(this);
+        beginGetLEDMode(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return new GetLEDMode(
+            sync.getLEDMode(),
+            sync.getLEDModeList()
+        );
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetLEDMode}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetLEDMode(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetLEDMode, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetLEDMode.getOutputParameter(outIndex++)));
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetLEDMode.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetLEDMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetLEDMode} method.
+     * @return the result of the previously invoked action.
+     */
+    public GetLEDMode endGetLEDMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String lEDMode = Invocation.getOutputString(aAsyncHandle, index++);
+        String lEDModeList = Invocation.getOutputString(aAsyncHandle, index++);
+        return new GetLEDMode(
+            lEDMode,
+            lEDModeList
+        );
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetKeyMode(String aKeyName, String aKeyMode)
+    {
+        SyncSetKeyModeAvOpenhomeOrgHardwareConfig1 sync = new SyncSetKeyModeAvOpenhomeOrgHardwareConfig1(this);
+        beginSetKeyMode(aKeyName, aKeyMode, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetKeyMode}.
+     * 
+     * @param aKeyName
+     * @param aKeyMode
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetKeyMode(String aKeyName, String aKeyMode, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetKeyMode, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionSetKeyMode.getInputParameter(inIndex++), aKeyName));
+        invocation.addInput(new ArgumentString((ParameterString)iActionSetKeyMode.getInputParameter(inIndex++), aKeyMode));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetKeyMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetKeyMode} method.
+     */
+    public void endSetKeyMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public GetKeyMode syncGetKeyMode()
+    {
+        SyncGetKeyModeAvOpenhomeOrgHardwareConfig1 sync = new SyncGetKeyModeAvOpenhomeOrgHardwareConfig1(this);
+        beginGetKeyMode(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return new GetKeyMode(
+            sync.getSideKeyMode(),
+            sync.getMiddleKeyMode(),
+            sync.getKeyModeList()
+        );
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetKeyMode}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetKeyMode(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetKeyMode, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetKeyMode.getOutputParameter(outIndex++)));
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetKeyMode.getOutputParameter(outIndex++)));
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetKeyMode.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetKeyMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetKeyMode} method.
+     * @return the result of the previously invoked action.
+     */
+    public GetKeyMode endGetKeyMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String sideKeyMode = Invocation.getOutputString(aAsyncHandle, index++);
+        String middleKeyMode = Invocation.getOutputString(aAsyncHandle, index++);
+        String keyModeList = Invocation.getOutputString(aAsyncHandle, index++);
+        return new GetKeyMode(
+            sideKeyMode,
+            middleKeyMode,
+            keyModeList
+        );
+    }
+        
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
@@ -3995,6 +4565,12 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             iActionSetHaltStatus.destroy();
             iActionGetFilterMode.destroy();
             iActionSetFilterMode.destroy();
+            iActionSetSourceVisible.destroy();
+            iActionGetSourceVisible.destroy();
+            iActionSetLEDMode.destroy();
+            iActionGetLEDMode.destroy();
+            iActionSetKeyMode.destroy();
+            iActionGetKeyMode.destroy();
             iAlive.destroy();
             iCurrentAction.destroy();
             iRestart.destroy();

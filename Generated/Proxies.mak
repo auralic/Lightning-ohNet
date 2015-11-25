@@ -64,6 +64,9 @@ objects_proxies = \
                   $(objdir)CpAvOpenhomeOrgMessageCenter1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgMessageCenter1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgMessageCenter1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgRenderingInfo1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgRenderingInfo1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgRenderingInfo1Std.$(objext) \
                   $(objdir)CpAvOpenhomeOrgInternetRadio1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgInternetRadio1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgInternetRadio1Std.$(objext) \
@@ -135,6 +138,7 @@ proxy_dotnet_assemblies = \
         CpAvOpenhomeOrgHardwareConfig1.net.dll \
         CpAvOpenhomeOrgServerConfig1.net.dll \
         CpAvOpenhomeOrgMessageCenter1.net.dll \
+        CpAvOpenhomeOrgRenderingInfo1.net.dll \
         CpAvOpenhomeOrgInternetRadio1.net.dll \
         CpAvOpenhomeOrgStreaming1.net.dll \
         CpAvOpenhomeOrgProduct1.net.dll \
@@ -169,6 +173,7 @@ proxy_dotnet_assemblies_with_path = \
         $(objdir)CpAvOpenhomeOrgHardwareConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgServerConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgMessageCenter1.net.dll \
+        $(objdir)CpAvOpenhomeOrgRenderingInfo1.net.dll \
         $(objdir)CpAvOpenhomeOrgInternetRadio1.net.dll \
         $(objdir)CpAvOpenhomeOrgStreaming1.net.dll \
         $(objdir)CpAvOpenhomeOrgProduct1.net.dll \
@@ -203,6 +208,7 @@ proxy_java_classes_with_path = \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgHardwareConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgServerConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgMessageCenter1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgRenderingInfo1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgInternetRadio1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgStreaming1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgProduct1.class \
@@ -339,6 +345,12 @@ $(objdir)CpAvOpenhomeOrgMessageCenter1C.$(objext) : $(proxyC)CpAvOpenhomeOrgMess
 	$(compiler)CpAvOpenhomeOrgMessageCenter1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgMessageCenter1C.cpp
 $(objdir)CpAvOpenhomeOrgMessageCenter1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgMessageCenter1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgMessageCenter1.h
 	$(compiler)CpAvOpenhomeOrgMessageCenter1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgMessageCenter1Std.cpp
+$(objdir)CpAvOpenhomeOrgRenderingInfo1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgRenderingInfo1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgRenderingInfo1.h
+	$(compiler)CpAvOpenhomeOrgRenderingInfo1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgRenderingInfo1.cpp
+$(objdir)CpAvOpenhomeOrgRenderingInfo1C.$(objext) : $(proxyC)CpAvOpenhomeOrgRenderingInfo1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgRenderingInfo1.h
+	$(compiler)CpAvOpenhomeOrgRenderingInfo1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgRenderingInfo1C.cpp
+$(objdir)CpAvOpenhomeOrgRenderingInfo1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgRenderingInfo1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgRenderingInfo1.h
+	$(compiler)CpAvOpenhomeOrgRenderingInfo1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgRenderingInfo1Std.cpp
 $(objdir)CpAvOpenhomeOrgInternetRadio1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgInternetRadio1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgInternetRadio1.h
 	$(compiler)CpAvOpenhomeOrgInternetRadio1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgInternetRadio1.cpp
 $(objdir)CpAvOpenhomeOrgInternetRadio1C.$(objext) : $(proxyC)CpAvOpenhomeOrgInternetRadio1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgInternetRadio1.h
@@ -433,6 +445,7 @@ proxy_dlls = \
              CpAvOpenhomeOrgHardwareConfig1Dll \
              CpAvOpenhomeOrgServerConfig1Dll \
              CpAvOpenhomeOrgMessageCenter1Dll \
+             CpAvOpenhomeOrgRenderingInfo1Dll \
              CpAvOpenhomeOrgInternetRadio1Dll \
              CpAvOpenhomeOrgStreaming1Dll \
              CpAvOpenhomeOrgProduct1Dll \
@@ -508,6 +521,9 @@ $(objdir)$(dllprefix)CpAvOpenhomeOrgServerConfig1.$(dllext) : ZappUpnpDll $(objd
 CpAvOpenhomeOrgMessageCenter1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgMessageCenter1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgMessageCenter1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgMessageCenter1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgMessageCenter1.$(dllext) $(objdir)CpAvOpenhomeOrgMessageCenter1.$(objext)
+CpAvOpenhomeOrgRenderingInfo1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgRenderingInfo1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgRenderingInfo1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgRenderingInfo1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgRenderingInfo1.$(dllext) $(objdir)CpAvOpenhomeOrgRenderingInfo1.$(objext)
 CpAvOpenhomeOrgInternetRadio1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgInternetRadio1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgInternetRadio1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgInternetRadio1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgInternetRadio1.$(dllext) $(objdir)CpAvOpenhomeOrgInternetRadio1.$(objext)
@@ -649,6 +665,11 @@ $(objdir)CpAvOpenhomeOrgMessageCenter1.net.dll: $(objdir)ohNet.net.dll $(proxyCs
         /out:$(objdir)CpAvOpenhomeOrgMessageCenter1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(proxyCs)CpAvOpenhomeOrgMessageCenter1.cs
+$(objdir)CpAvOpenhomeOrgRenderingInfo1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgRenderingInfo1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgRenderingInfo1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgRenderingInfo1.cs
 $(objdir)CpAvOpenhomeOrgInternetRadio1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgInternetRadio1.cs
 	$(csharp) /t:library \
         /out:$(objdir)CpAvOpenhomeOrgInternetRadio1.net.dll \
@@ -754,6 +775,8 @@ $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgServerConfig1
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgServerConfig1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgMessageCenter1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgMessageCenter1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgMessageCenter1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgRenderingInfo1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgRenderingInfo1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgRenderingInfo1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgInternetRadio1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgInternetRadio1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgInternetRadio1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgStreaming1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgStreaming1.java

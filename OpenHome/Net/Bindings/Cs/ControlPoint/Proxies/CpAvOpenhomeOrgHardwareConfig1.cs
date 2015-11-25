@@ -97,6 +97,24 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncSetFilterMode(String aFilterMode);
         void BeginSetFilterMode(String aFilterMode, CpProxy.CallbackAsyncComplete aCallback);
         void EndSetFilterMode(IntPtr aAsyncHandle);
+        void SyncSetSourceVisible(String aSourceName, bool aVisible);
+        void BeginSetSourceVisible(String aSourceName, bool aVisible, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetSourceVisible(IntPtr aAsyncHandle);
+        void SyncGetSourceVisible(out String aVisibleInfo);
+        void BeginGetSourceVisible(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetSourceVisible(IntPtr aAsyncHandle, out String aVisibleInfo);
+        void SyncSetLEDMode(String aLEDMode);
+        void BeginSetLEDMode(String aLEDMode, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetLEDMode(IntPtr aAsyncHandle);
+        void SyncGetLEDMode(out String aLEDMode, out String aLEDModeList);
+        void BeginGetLEDMode(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetLEDMode(IntPtr aAsyncHandle, out String aLEDMode, out String aLEDModeList);
+        void SyncSetKeyMode(String aKeyName, String aKeyMode);
+        void BeginSetKeyMode(String aKeyName, String aKeyMode, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetKeyMode(IntPtr aAsyncHandle);
+        void SyncGetKeyMode(out String aSideKeyMode, out String aMiddleKeyMode, out String aKeyModeList);
+        void BeginGetKeyMode(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetKeyMode(IntPtr aAsyncHandle, out String aSideKeyMode, out String aMiddleKeyMode, out String aKeyModeList);
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
         void SetPropertyCurrentActionChanged(System.Action aCurrentActionChanged);
@@ -696,6 +714,120 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetSourceVisible(aAsyncHandle);
+        }
+    };
+
+    internal class SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private String iVisibleInfo;
+
+        public SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String VisibleInfo()
+        {
+            return iVisibleInfo;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetSourceVisible(aAsyncHandle, out iVisibleInfo);
+        }
+    };
+
+    internal class SyncSetLEDModeAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetLEDMode(aAsyncHandle);
+        }
+    };
+
+    internal class SyncGetLEDModeAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private String iLEDMode;
+        private String iLEDModeList;
+
+        public SyncGetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String LEDMode()
+        {
+            return iLEDMode;
+        }
+        public String LEDModeList()
+        {
+            return iLEDModeList;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetLEDMode(aAsyncHandle, out iLEDMode, out iLEDModeList);
+        }
+    };
+
+    internal class SyncSetKeyModeAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetKeyMode(aAsyncHandle);
+        }
+    };
+
+    internal class SyncGetKeyModeAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private String iSideKeyMode;
+        private String iMiddleKeyMode;
+        private String iKeyModeList;
+
+        public SyncGetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String SideKeyMode()
+        {
+            return iSideKeyMode;
+        }
+        public String MiddleKeyMode()
+        {
+            return iMiddleKeyMode;
+        }
+        public String KeyModeList()
+        {
+            return iKeyModeList;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetKeyMode(aAsyncHandle, out iSideKeyMode, out iMiddleKeyMode, out iKeyModeList);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
     /// </summary>
@@ -730,6 +862,12 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionSetHaltStatus;
         private OpenHome.Net.Core.Action iActionGetFilterMode;
         private OpenHome.Net.Core.Action iActionSetFilterMode;
+        private OpenHome.Net.Core.Action iActionSetSourceVisible;
+        private OpenHome.Net.Core.Action iActionGetSourceVisible;
+        private OpenHome.Net.Core.Action iActionSetLEDMode;
+        private OpenHome.Net.Core.Action iActionGetLEDMode;
+        private OpenHome.Net.Core.Action iActionSetKeyMode;
+        private OpenHome.Net.Core.Action iActionGetKeyMode;
         private PropertyBool iAlive;
         private PropertyUint iCurrentAction;
         private PropertyBool iRestart;
@@ -952,6 +1090,40 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionSetFilterMode = new OpenHome.Net.Core.Action("SetFilterMode");
             param = new ParameterString("FilterMode", allowedValues);
             iActionSetFilterMode.AddInputParameter(param);
+
+            iActionSetSourceVisible = new OpenHome.Net.Core.Action("SetSourceVisible");
+            param = new ParameterString("SourceName", allowedValues);
+            iActionSetSourceVisible.AddInputParameter(param);
+            param = new ParameterBool("Visible");
+            iActionSetSourceVisible.AddInputParameter(param);
+
+            iActionGetSourceVisible = new OpenHome.Net.Core.Action("GetSourceVisible");
+            param = new ParameterString("VisibleInfo", allowedValues);
+            iActionGetSourceVisible.AddOutputParameter(param);
+
+            iActionSetLEDMode = new OpenHome.Net.Core.Action("SetLEDMode");
+            param = new ParameterString("LEDMode", allowedValues);
+            iActionSetLEDMode.AddInputParameter(param);
+
+            iActionGetLEDMode = new OpenHome.Net.Core.Action("GetLEDMode");
+            param = new ParameterString("LEDMode", allowedValues);
+            iActionGetLEDMode.AddOutputParameter(param);
+            param = new ParameterString("LEDModeList", allowedValues);
+            iActionGetLEDMode.AddOutputParameter(param);
+
+            iActionSetKeyMode = new OpenHome.Net.Core.Action("SetKeyMode");
+            param = new ParameterString("KeyName", allowedValues);
+            iActionSetKeyMode.AddInputParameter(param);
+            param = new ParameterString("KeyMode", allowedValues);
+            iActionSetKeyMode.AddInputParameter(param);
+
+            iActionGetKeyMode = new OpenHome.Net.Core.Action("GetKeyMode");
+            param = new ParameterString("SideKeyMode", allowedValues);
+            iActionGetKeyMode.AddOutputParameter(param);
+            param = new ParameterString("MiddleKeyMode", allowedValues);
+            iActionGetKeyMode.AddOutputParameter(param);
+            param = new ParameterString("KeyModeList", allowedValues);
+            iActionGetKeyMode.AddOutputParameter(param);
 
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
@@ -2482,6 +2654,312 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aSourceName"></param>
+        /// <param name="aVisible"></param>
+        public void SyncSetSourceVisible(String aSourceName, bool aVisible)
+        {
+            SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1 sync = new SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetSourceVisible(aSourceName, aVisible, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetSourceVisible().</remarks>
+        /// <param name="aSourceName"></param>
+        /// <param name="aVisible"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetSourceVisible(String aSourceName, bool aVisible, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetSourceVisible, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionSetSourceVisible.InputParameter(inIndex++), aSourceName));
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionSetSourceVisible.InputParameter(inIndex++), aVisible));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetSourceVisible(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aVisibleInfo"></param>
+        public void SyncGetSourceVisible(out String aVisibleInfo)
+        {
+            SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1 sync = new SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1(this);
+            BeginGetSourceVisible(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aVisibleInfo = sync.VisibleInfo();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetSourceVisible().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetSourceVisible(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetSourceVisible, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetSourceVisible.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aVisibleInfo"></param>
+        public void EndGetSourceVisible(IntPtr aAsyncHandle, out String aVisibleInfo)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aVisibleInfo = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aLEDMode"></param>
+        public void SyncSetLEDMode(String aLEDMode)
+        {
+            SyncSetLEDModeAvOpenhomeOrgHardwareConfig1 sync = new SyncSetLEDModeAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetLEDMode(aLEDMode, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetLEDMode().</remarks>
+        /// <param name="aLEDMode"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetLEDMode(String aLEDMode, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetLEDMode, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionSetLEDMode.InputParameter(inIndex++), aLEDMode));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetLEDMode(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aLEDMode"></param>
+        /// <param name="aLEDModeList"></param>
+        public void SyncGetLEDMode(out String aLEDMode, out String aLEDModeList)
+        {
+            SyncGetLEDModeAvOpenhomeOrgHardwareConfig1 sync = new SyncGetLEDModeAvOpenhomeOrgHardwareConfig1(this);
+            BeginGetLEDMode(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aLEDMode = sync.LEDMode();
+            aLEDModeList = sync.LEDModeList();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetLEDMode().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetLEDMode(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetLEDMode, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetLEDMode.OutputParameter(outIndex++)));
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetLEDMode.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aLEDMode"></param>
+        /// <param name="aLEDModeList"></param>
+        public void EndGetLEDMode(IntPtr aAsyncHandle, out String aLEDMode, out String aLEDModeList)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aLEDMode = Invocation.OutputString(aAsyncHandle, index++);
+            aLEDModeList = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aKeyName"></param>
+        /// <param name="aKeyMode"></param>
+        public void SyncSetKeyMode(String aKeyName, String aKeyMode)
+        {
+            SyncSetKeyModeAvOpenhomeOrgHardwareConfig1 sync = new SyncSetKeyModeAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetKeyMode(aKeyName, aKeyMode, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetKeyMode().</remarks>
+        /// <param name="aKeyName"></param>
+        /// <param name="aKeyMode"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetKeyMode(String aKeyName, String aKeyMode, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetKeyMode, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionSetKeyMode.InputParameter(inIndex++), aKeyName));
+            invocation.AddInput(new ArgumentString((ParameterString)iActionSetKeyMode.InputParameter(inIndex++), aKeyMode));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetKeyMode(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aSideKeyMode"></param>
+        /// <param name="aMiddleKeyMode"></param>
+        /// <param name="aKeyModeList"></param>
+        public void SyncGetKeyMode(out String aSideKeyMode, out String aMiddleKeyMode, out String aKeyModeList)
+        {
+            SyncGetKeyModeAvOpenhomeOrgHardwareConfig1 sync = new SyncGetKeyModeAvOpenhomeOrgHardwareConfig1(this);
+            BeginGetKeyMode(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aSideKeyMode = sync.SideKeyMode();
+            aMiddleKeyMode = sync.MiddleKeyMode();
+            aKeyModeList = sync.KeyModeList();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetKeyMode().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetKeyMode(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetKeyMode, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetKeyMode.OutputParameter(outIndex++)));
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetKeyMode.OutputParameter(outIndex++)));
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetKeyMode.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aSideKeyMode"></param>
+        /// <param name="aMiddleKeyMode"></param>
+        /// <param name="aKeyModeList"></param>
+        public void EndGetKeyMode(IntPtr aAsyncHandle, out String aSideKeyMode, out String aMiddleKeyMode, out String aKeyModeList)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aSideKeyMode = Invocation.OutputString(aAsyncHandle, index++);
+            aMiddleKeyMode = Invocation.OutputString(aAsyncHandle, index++);
+            aKeyModeList = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -3534,6 +4012,12 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionSetHaltStatus.Dispose();
             iActionGetFilterMode.Dispose();
             iActionSetFilterMode.Dispose();
+            iActionSetSourceVisible.Dispose();
+            iActionGetSourceVisible.Dispose();
+            iActionSetLEDMode.Dispose();
+            iActionGetLEDMode.Dispose();
+            iActionSetKeyMode.Dispose();
+            iActionGetKeyMode.Dispose();
             iAlive.Dispose();
             iCurrentAction.Dispose();
             iRestart.Dispose();

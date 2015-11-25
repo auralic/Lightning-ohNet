@@ -409,6 +409,91 @@
                 </argument>
          </argumentList>
       </action>
+      <action>
+         <name>SetSourceVisible</name>
+         <argumentList>
+                <argument>
+                    <name>SourceName</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>SourceName</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>Visible</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Visible</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetSourceVisible</name>
+         <argumentList>
+                <argument>
+                    <name>VisibleInfo</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>VisibleInfo</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetLEDMode</name>
+         <argumentList>
+                <argument>
+                    <name>LEDMode</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>LEDMode</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetLEDMode</name>
+         <argumentList>
+                <argument>
+                    <name>LEDMode</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>LEDMode</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>LEDModeList</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>LEDModeList</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetKeyMode</name>
+         <argumentList>
+                <argument>
+                    <name>KeyName</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>KeyName</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>KeyMode</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>KeyMode</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetKeyMode</name>
+         <argumentList>
+                <argument>
+                    <name>SideKeyMode</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>KeyMode</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>MiddleKeyMode</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>KeyMode</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>KeyModeList</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>KeyModeList</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
    </actionList>
    <serviceStateTable>
       <stateVariable sendEvents="yes">
@@ -533,6 +618,38 @@
       </stateVariable>
       <stateVariable sendEvents="no">
          <name>FilterMode</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>SourceName</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>Visible</name>
+         <dataType>boolean</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>LEDMode</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>KeyMode</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>KeyName</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>VisibleInfo</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>LEDModeList</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>KeyModeList</name>
          <dataType>string</dataType>
       </stateVariable>
    </serviceStateTable>
