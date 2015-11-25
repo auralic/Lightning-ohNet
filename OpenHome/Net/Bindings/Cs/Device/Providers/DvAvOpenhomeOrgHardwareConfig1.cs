@@ -344,6 +344,12 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateSetHaltStatus;
         private ActionDelegate iDelegateGetFilterMode;
         private ActionDelegate iDelegateSetFilterMode;
+        private ActionDelegate iDelegateSetSourceVisible;
+        private ActionDelegate iDelegateGetSourceVisible;
+        private ActionDelegate iDelegateSetLEDMode;
+        private ActionDelegate iDelegateGetLEDMode;
+        private ActionDelegate iDelegateSetKeyMode;
+        private ActionDelegate iDelegateGetKeyMode;
         private PropertyBool iPropertyAlive;
         private PropertyUint iPropertyCurrentAction;
         private PropertyBool iPropertyRestart;
@@ -1585,6 +1591,95 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action SetSourceVisible is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetSourceVisible must be overridden if this is called.</remarks>
+        protected void EnableActionSetSourceVisible()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetSourceVisible");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("SourceName", allowedValues));
+            action.AddInputParameter(new ParameterBool("Visible"));
+            iDelegateSetSourceVisible = new ActionDelegate(DoSetSourceVisible);
+            EnableAction(action, iDelegateSetSourceVisible, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetSourceVisible is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetSourceVisible must be overridden if this is called.</remarks>
+        protected void EnableActionGetSourceVisible()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetSourceVisible");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("VisibleInfo", allowedValues));
+            iDelegateGetSourceVisible = new ActionDelegate(DoGetSourceVisible);
+            EnableAction(action, iDelegateGetSourceVisible, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetLEDMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetLEDMode must be overridden if this is called.</remarks>
+        protected void EnableActionSetLEDMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetLEDMode");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("LEDMode", allowedValues));
+            iDelegateSetLEDMode = new ActionDelegate(DoSetLEDMode);
+            EnableAction(action, iDelegateSetLEDMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetLEDMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetLEDMode must be overridden if this is called.</remarks>
+        protected void EnableActionGetLEDMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetLEDMode");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("LEDMode", allowedValues));
+            action.AddOutputParameter(new ParameterString("LEDModeList", allowedValues));
+            iDelegateGetLEDMode = new ActionDelegate(DoGetLEDMode);
+            EnableAction(action, iDelegateGetLEDMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetKeyMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetKeyMode must be overridden if this is called.</remarks>
+        protected void EnableActionSetKeyMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetKeyMode");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("KeyName", allowedValues));
+            action.AddInputParameter(new ParameterString("KeyMode", allowedValues));
+            iDelegateSetKeyMode = new ActionDelegate(DoSetKeyMode);
+            EnableAction(action, iDelegateSetKeyMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetKeyMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetKeyMode must be overridden if this is called.</remarks>
+        protected void EnableActionGetKeyMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetKeyMode");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("SideKeyMode", allowedValues));
+            action.AddOutputParameter(new ParameterString("MiddleKeyMode", allowedValues));
+            action.AddOutputParameter(new ParameterString("KeyModeList", allowedValues));
+            iDelegateGetKeyMode = new ActionDelegate(DoGetKeyMode);
+            EnableAction(action, iDelegateGetKeyMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// IsAlive action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -2010,6 +2105,95 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         /// <param name="aFilterMode"></param>
         protected virtual void SetFilterMode(IDvInvocation aInvocation, string aFilterMode)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetSourceVisible action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetSourceVisible action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetSourceVisible was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aSourceName"></param>
+        /// <param name="aVisible"></param>
+        protected virtual void SetSourceVisible(IDvInvocation aInvocation, string aSourceName, bool aVisible)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetSourceVisible action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetSourceVisible action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetSourceVisible was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aVisibleInfo"></param>
+        protected virtual void GetSourceVisible(IDvInvocation aInvocation, out string aVisibleInfo)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetLEDMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetLEDMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetLEDMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aLEDMode"></param>
+        protected virtual void SetLEDMode(IDvInvocation aInvocation, string aLEDMode)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetLEDMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetLEDMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetLEDMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aLEDMode"></param>
+        /// <param name="aLEDModeList"></param>
+        protected virtual void GetLEDMode(IDvInvocation aInvocation, out string aLEDMode, out string aLEDModeList)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetKeyMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetKeyMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetKeyMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aKeyName"></param>
+        /// <param name="aKeyMode"></param>
+        protected virtual void SetKeyMode(IDvInvocation aInvocation, string aKeyName, string aKeyMode)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetKeyMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetKeyMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetKeyMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aSideKeyMode"></param>
+        /// <param name="aMiddleKeyMode"></param>
+        /// <param name="aKeyModeList"></param>
+        protected virtual void GetKeyMode(IDvInvocation aInvocation, out string aSideKeyMode, out string aMiddleKeyMode, out string aKeyModeList)
         {
             throw (new ActionDisabledError());
         }
@@ -3391,6 +3575,292 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetFilterMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetSourceVisible(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string sourceName;
+            bool visible;
+            try
+            {
+                invocation.ReadStart();
+                sourceName = invocation.ReadString("SourceName");
+                visible = invocation.ReadBool("Visible");
+                invocation.ReadEnd();
+                self.SetSourceVisible(invocation, sourceName, visible);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetSourceVisible");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetSourceVisible"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetSourceVisible", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetSourceVisible", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetSourceVisible(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string visibleInfo;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetSourceVisible(invocation, out visibleInfo);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetSourceVisible");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetSourceVisible"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetSourceVisible", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("VisibleInfo", visibleInfo);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetSourceVisible", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetLEDMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string lEDMode;
+            try
+            {
+                invocation.ReadStart();
+                lEDMode = invocation.ReadString("LEDMode");
+                invocation.ReadEnd();
+                self.SetLEDMode(invocation, lEDMode);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetLEDMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetLEDMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetLEDMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetLEDMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetLEDMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string lEDMode;
+            string lEDModeList;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetLEDMode(invocation, out lEDMode, out lEDModeList);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetLEDMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetLEDMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetLEDMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("LEDMode", lEDMode);
+                invocation.WriteString("LEDModeList", lEDModeList);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetLEDMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetKeyMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string keyName;
+            string keyMode;
+            try
+            {
+                invocation.ReadStart();
+                keyName = invocation.ReadString("KeyName");
+                keyMode = invocation.ReadString("KeyMode");
+                invocation.ReadEnd();
+                self.SetKeyMode(invocation, keyName, keyMode);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetKeyMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetKeyMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetKeyMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetKeyMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetKeyMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string sideKeyMode;
+            string middleKeyMode;
+            string keyModeList;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetKeyMode(invocation, out sideKeyMode, out middleKeyMode, out keyModeList);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetKeyMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetKeyMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetKeyMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("SideKeyMode", sideKeyMode);
+                invocation.WriteString("MiddleKeyMode", middleKeyMode);
+                invocation.WriteString("KeyModeList", keyModeList);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetKeyMode", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

@@ -611,6 +611,59 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
         }
     }
 
+    public class GetLEDMode
+    {
+        private String iLEDMode;
+        private String iLEDModeList;
+
+        public GetLEDMode(
+            String aLEDMode,
+            String aLEDModeList
+        )
+        {
+            iLEDMode = aLEDMode;
+            iLEDModeList = aLEDModeList;
+        }
+        public String getLEDMode()
+        {
+            return iLEDMode;
+        }
+        public String getLEDModeList()
+        {
+            return iLEDModeList;
+        }
+    }
+
+    public class GetKeyMode
+    {
+        private String iSideKeyMode;
+        private String iMiddleKeyMode;
+        private String iKeyModeList;
+
+        public GetKeyMode(
+            String aSideKeyMode,
+            String aMiddleKeyMode,
+            String aKeyModeList
+        )
+        {
+            iSideKeyMode = aSideKeyMode;
+            iMiddleKeyMode = aMiddleKeyMode;
+            iKeyModeList = aKeyModeList;
+        }
+        public String getSideKeyMode()
+        {
+            return iSideKeyMode;
+        }
+        public String getMiddleKeyMode()
+        {
+            return iMiddleKeyMode;
+        }
+        public String getKeyModeList()
+        {
+            return iKeyModeList;
+        }
+    }
+
     private IDvInvocationListener iDelegateIsAlive;
     private IDvInvocationListener iDelegateUpdate;
     private IDvInvocationListener iDelegateActive;
@@ -640,6 +693,12 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     private IDvInvocationListener iDelegateSetHaltStatus;
     private IDvInvocationListener iDelegateGetFilterMode;
     private IDvInvocationListener iDelegateSetFilterMode;
+    private IDvInvocationListener iDelegateSetSourceVisible;
+    private IDvInvocationListener iDelegateGetSourceVisible;
+    private IDvInvocationListener iDelegateSetLEDMode;
+    private IDvInvocationListener iDelegateGetLEDMode;
+    private IDvInvocationListener iDelegateSetKeyMode;
+    private IDvInvocationListener iDelegateGetKeyMode;
     private PropertyBool iPropertyAlive;
     private PropertyUint iPropertyCurrentAction;
     private PropertyBool iPropertyRestart;
@@ -1836,6 +1895,95 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     }
 
     /**
+     * Signal that the action SetSourceVisible is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetSourceVisible must be overridden if this is called.
+     */      
+    protected void enableActionSetSourceVisible()
+    {
+        Action action = new Action("SetSourceVisible");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("SourceName", allowedValues));
+        action.addInputParameter(new ParameterBool("Visible"));
+        iDelegateSetSourceVisible = new DoSetSourceVisible();
+        enableAction(action, iDelegateSetSourceVisible);
+    }
+
+    /**
+     * Signal that the action GetSourceVisible is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetSourceVisible must be overridden if this is called.
+     */      
+    protected void enableActionGetSourceVisible()
+    {
+        Action action = new Action("GetSourceVisible");        List<String> allowedValues = new LinkedList<String>();
+        action.addOutputParameter(new ParameterString("VisibleInfo", allowedValues));
+        iDelegateGetSourceVisible = new DoGetSourceVisible();
+        enableAction(action, iDelegateGetSourceVisible);
+    }
+
+    /**
+     * Signal that the action SetLEDMode is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetLEDMode must be overridden if this is called.
+     */      
+    protected void enableActionSetLEDMode()
+    {
+        Action action = new Action("SetLEDMode");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("LEDMode", allowedValues));
+        iDelegateSetLEDMode = new DoSetLEDMode();
+        enableAction(action, iDelegateSetLEDMode);
+    }
+
+    /**
+     * Signal that the action GetLEDMode is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetLEDMode must be overridden if this is called.
+     */      
+    protected void enableActionGetLEDMode()
+    {
+        Action action = new Action("GetLEDMode");        List<String> allowedValues = new LinkedList<String>();
+        action.addOutputParameter(new ParameterString("LEDMode", allowedValues));
+        action.addOutputParameter(new ParameterString("LEDModeList", allowedValues));
+        iDelegateGetLEDMode = new DoGetLEDMode();
+        enableAction(action, iDelegateGetLEDMode);
+    }
+
+    /**
+     * Signal that the action SetKeyMode is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetKeyMode must be overridden if this is called.
+     */      
+    protected void enableActionSetKeyMode()
+    {
+        Action action = new Action("SetKeyMode");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("KeyName", allowedValues));
+        action.addInputParameter(new ParameterString("KeyMode", allowedValues));
+        iDelegateSetKeyMode = new DoSetKeyMode();
+        enableAction(action, iDelegateSetKeyMode);
+    }
+
+    /**
+     * Signal that the action GetKeyMode is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetKeyMode must be overridden if this is called.
+     */      
+    protected void enableActionGetKeyMode()
+    {
+        Action action = new Action("GetKeyMode");        List<String> allowedValues = new LinkedList<String>();
+        action.addOutputParameter(new ParameterString("SideKeyMode", allowedValues));
+        action.addOutputParameter(new ParameterString("MiddleKeyMode", allowedValues));
+        action.addOutputParameter(new ParameterString("KeyModeList", allowedValues));
+        iDelegateGetKeyMode = new DoGetKeyMode();
+        enableAction(action, iDelegateGetKeyMode);
+    }
+
+    /**
      * IsAlive action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -2290,6 +2438,101 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
      * @param aFilterMode
      */
     protected void setFilterMode(IDvInvocation aInvocation, String aFilterMode)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetSourceVisible action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetSourceVisible action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetSourceVisible} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aSourceName
+     * @param aVisible
+     */
+    protected void setSourceVisible(IDvInvocation aInvocation, String aSourceName, boolean aVisible)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetSourceVisible action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetSourceVisible action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetSourceVisible} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected String getSourceVisible(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetLEDMode action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetLEDMode action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetLEDMode} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aLEDMode
+     */
+    protected void setLEDMode(IDvInvocation aInvocation, String aLEDMode)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetLEDMode action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetLEDMode action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetLEDMode} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected GetLEDMode getLEDMode(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetKeyMode action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetKeyMode action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetKeyMode} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aKeyName
+     * @param aKeyMode
+     */
+    protected void setKeyMode(IDvInvocation aInvocation, String aKeyName, String aKeyMode)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetKeyMode action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetKeyMode action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetKeyMode} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected GetKeyMode getKeyMode(IDvInvocation aInvocation)
     {
         throw (new ActionDisabledError());
     }
@@ -3766,6 +4009,311 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
             try
             {
                 invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetSourceVisible implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String sourceName;
+            boolean visible;
+            try
+            {
+                invocation.readStart();
+                sourceName = invocation.readString("SourceName");
+                visible = invocation.readBool("Visible");
+                invocation.readEnd();
+                setSourceVisible(invocation, sourceName, visible);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetSourceVisible");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetSourceVisible implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String visibleInfo;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                 visibleInfo = getSourceVisible(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetSourceVisible");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("VisibleInfo", visibleInfo);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetLEDMode implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String lEDMode;
+            try
+            {
+                invocation.readStart();
+                lEDMode = invocation.readString("LEDMode");
+                invocation.readEnd();
+                setLEDMode(invocation, lEDMode);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetLEDMode");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetLEDMode implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String lEDMode;
+            String lEDModeList;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+
+            GetLEDMode outArgs = getLEDMode(invocation);
+            lEDMode = outArgs.getLEDMode();
+            lEDModeList = outArgs.getLEDModeList();
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetLEDMode");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("LEDMode", lEDMode);
+                invocation.writeString("LEDModeList", lEDModeList);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetKeyMode implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String keyName;
+            String keyMode;
+            try
+            {
+                invocation.readStart();
+                keyName = invocation.readString("KeyName");
+                keyMode = invocation.readString("KeyMode");
+                invocation.readEnd();
+                setKeyMode(invocation, keyName, keyMode);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetKeyMode");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetKeyMode implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String sideKeyMode;
+            String middleKeyMode;
+            String keyModeList;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+
+            GetKeyMode outArgs = getKeyMode(invocation);
+            sideKeyMode = outArgs.getSideKeyMode();
+            middleKeyMode = outArgs.getMiddleKeyMode();
+            keyModeList = outArgs.getKeyModeList();
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetKeyMode");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("SideKeyMode", sideKeyMode);
+                invocation.writeString("MiddleKeyMode", middleKeyMode);
+                invocation.writeString("KeyModeList", keyModeList);
                 invocation.writeEnd();
             }
             catch (ActionError ae)

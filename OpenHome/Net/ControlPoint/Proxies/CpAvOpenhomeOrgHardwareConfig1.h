@@ -844,6 +844,172 @@ public:
     void EndSetFilterMode(IAsync& aAsync);
 
     /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aSourceName
+     * @param[in]  aVisible
+     */
+    void SyncSetSourceVisible(const Brx& aSourceName, TBool aVisible);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetSourceVisible().
+     *
+     * @param[in] aSourceName
+     * @param[in] aVisible
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetSourceVisible(const Brx& aSourceName, TBool aVisible, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetSourceVisible(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aVisibleInfo
+     */
+    void SyncGetSourceVisible(Brh& aVisibleInfo);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetSourceVisible().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetSourceVisible(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aVisibleInfo
+     */
+    void EndGetSourceVisible(IAsync& aAsync, Brh& aVisibleInfo);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aLEDMode
+     */
+    void SyncSetLEDMode(const Brx& aLEDMode);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetLEDMode().
+     *
+     * @param[in] aLEDMode
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetLEDMode(const Brx& aLEDMode, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetLEDMode(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aLEDMode
+     * @param[out] aLEDModeList
+     */
+    void SyncGetLEDMode(Brh& aLEDMode, Brh& aLEDModeList);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetLEDMode().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetLEDMode(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aLEDMode
+     * @param[out] aLEDModeList
+     */
+    void EndGetLEDMode(IAsync& aAsync, Brh& aLEDMode, Brh& aLEDModeList);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aKeyName
+     * @param[in]  aKeyMode
+     */
+    void SyncSetKeyMode(const Brx& aKeyName, const Brx& aKeyMode);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetKeyMode().
+     *
+     * @param[in] aKeyName
+     * @param[in] aKeyMode
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetKeyMode(const Brx& aKeyName, const Brx& aKeyMode, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetKeyMode(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aSideKeyMode
+     * @param[out] aMiddleKeyMode
+     * @param[out] aKeyModeList
+     */
+    void SyncGetKeyMode(Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetKeyMode().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetKeyMode(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aSideKeyMode
+     * @param[out] aMiddleKeyMode
+     * @param[out] aKeyModeList
+     */
+    void EndGetKeyMode(IAsync& aAsync, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList);
+
+    /**
      * Set a callback to be run when the Alive state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -1335,6 +1501,12 @@ private:
     Action* iActionSetHaltStatus;
     Action* iActionGetFilterMode;
     Action* iActionSetFilterMode;
+    Action* iActionSetSourceVisible;
+    Action* iActionGetSourceVisible;
+    Action* iActionSetLEDMode;
+    Action* iActionGetLEDMode;
+    Action* iActionSetKeyMode;
+    Action* iActionGetKeyMode;
     PropertyBool* iAlive;
     PropertyUint* iCurrentAction;
     PropertyBool* iRestart;

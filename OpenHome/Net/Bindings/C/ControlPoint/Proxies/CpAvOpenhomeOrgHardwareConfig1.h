@@ -1133,6 +1133,232 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetFilterMode(THa
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetFilterMode(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aSourceName
+ * @param[in]  aVisible
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetSourceVisible(THandle aHandle, const char* aSourceName, uint32_t aVisible);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aSourceName
+ * @param[in]  aVisible
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetSourceVisible(THandle aHandle, const char* aSourceName, uint32_t aVisible, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetSourceVisible(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[out] aVisibleInfo
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetSourceVisible(THandle aHandle, char** aVisibleInfo);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginGetSourceVisible(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ * @param[out] aVisibleInfo
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetSourceVisible(THandle aHandle, OhNetHandleAsync aAsync, char** aVisibleInfo);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aLEDMode
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetLEDMode(THandle aHandle, const char* aLEDMode);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aLEDMode
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetLEDMode(THandle aHandle, const char* aLEDMode, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetLEDMode(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[out] aLEDMode
+ * @param[out] aLEDModeList
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetLEDMode(THandle aHandle, char** aLEDMode, char** aLEDModeList);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginGetLEDMode(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ * @param[out] aLEDMode
+ * @param[out] aLEDModeList
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetLEDMode(THandle aHandle, OhNetHandleAsync aAsync, char** aLEDMode, char** aLEDModeList);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aKeyName
+ * @param[in]  aKeyMode
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetKeyMode(THandle aHandle, const char* aKeyName, const char* aKeyMode);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aKeyName
+ * @param[in]  aKeyMode
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetKeyMode(THandle aHandle, const char* aKeyName, const char* aKeyMode, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetKeyMode(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[out] aSideKeyMode
+ * @param[out] aMiddleKeyMode
+ * @param[out] aKeyModeList
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetKeyMode(THandle aHandle, char** aSideKeyMode, char** aMiddleKeyMode, char** aKeyModeList);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginGetKeyMode(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ * @param[out] aSideKeyMode
+ * @param[out] aMiddleKeyMode
+ * @param[out] aKeyModeList
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetKeyMode(THandle aHandle, OhNetHandleAsync aAsync, char** aSideKeyMode, char** aMiddleKeyMode, char** aKeyModeList);
 /**
  * Set a callback to be run when the Alive state variable changes.
  *

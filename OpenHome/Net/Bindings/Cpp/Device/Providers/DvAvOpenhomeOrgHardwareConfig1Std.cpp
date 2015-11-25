@@ -743,6 +743,59 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetFilterMode()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetSourceVisible()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetSourceVisible");
+    action->AddInputParameter(new ParameterString("SourceName"));
+    action->AddInputParameter(new ParameterBool("Visible"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetSourceVisible);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetSourceVisible()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetSourceVisible");
+    action->AddOutputParameter(new ParameterString("VisibleInfo"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetSourceVisible);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetLEDMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetLEDMode");
+    action->AddInputParameter(new ParameterString("LEDMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetLEDMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetLEDMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetLEDMode");
+    action->AddOutputParameter(new ParameterString("LEDMode"));
+    action->AddOutputParameter(new ParameterString("LEDModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetLEDMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetKeyMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetKeyMode");
+    action->AddInputParameter(new ParameterString("KeyName"));
+    action->AddInputParameter(new ParameterString("KeyMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetKeyMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetKeyMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetKeyMode");
+    action->AddOutputParameter(new ParameterString("SideKeyMode"));
+    action->AddOutputParameter(new ParameterString("MiddleKeyMode"));
+    action->AddOutputParameter(new ParameterString("KeyModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetKeyMode);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoIsAlive(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -1232,6 +1285,109 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetFilterMode(IDviInvocation& 
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetSourceVisible(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_SourceName;
+    aInvocation.InvocationReadString("SourceName", buf_SourceName);
+    std::string SourceName((const char*)buf_SourceName.Ptr(), buf_SourceName.Bytes());
+    bool Visible = aInvocation.InvocationReadBool("Visible");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetSourceVisible(invocation, SourceName, Visible);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetSourceVisible(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    std::string respVisibleInfo;
+    DvInvocationStd invocation(aInvocation);
+    GetSourceVisible(invocation, respVisibleInfo);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterVisibleInfo(aInvocation, "VisibleInfo");
+    Brn buf_VisibleInfo((const TByte*)respVisibleInfo.c_str(), (TUint)respVisibleInfo.length());
+    respWriterVisibleInfo.Write(buf_VisibleInfo);
+    aInvocation.InvocationWriteStringEnd("VisibleInfo");
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetLEDMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_LEDMode;
+    aInvocation.InvocationReadString("LEDMode", buf_LEDMode);
+    std::string LEDMode((const char*)buf_LEDMode.Ptr(), buf_LEDMode.Bytes());
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetLEDMode(invocation, LEDMode);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetLEDMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    std::string respLEDMode;
+    std::string respLEDModeList;
+    DvInvocationStd invocation(aInvocation);
+    GetLEDMode(invocation, respLEDMode, respLEDModeList);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterLEDMode(aInvocation, "LEDMode");
+    Brn buf_LEDMode((const TByte*)respLEDMode.c_str(), (TUint)respLEDMode.length());
+    respWriterLEDMode.Write(buf_LEDMode);
+    aInvocation.InvocationWriteStringEnd("LEDMode");
+    DviInvocationResponseString respWriterLEDModeList(aInvocation, "LEDModeList");
+    Brn buf_LEDModeList((const TByte*)respLEDModeList.c_str(), (TUint)respLEDModeList.length());
+    respWriterLEDModeList.Write(buf_LEDModeList);
+    aInvocation.InvocationWriteStringEnd("LEDModeList");
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetKeyMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_KeyName;
+    aInvocation.InvocationReadString("KeyName", buf_KeyName);
+    std::string KeyName((const char*)buf_KeyName.Ptr(), buf_KeyName.Bytes());
+    Brhz buf_KeyMode;
+    aInvocation.InvocationReadString("KeyMode", buf_KeyMode);
+    std::string KeyMode((const char*)buf_KeyMode.Ptr(), buf_KeyMode.Bytes());
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetKeyMode(invocation, KeyName, KeyMode);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetKeyMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    std::string respSideKeyMode;
+    std::string respMiddleKeyMode;
+    std::string respKeyModeList;
+    DvInvocationStd invocation(aInvocation);
+    GetKeyMode(invocation, respSideKeyMode, respMiddleKeyMode, respKeyModeList);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterSideKeyMode(aInvocation, "SideKeyMode");
+    Brn buf_SideKeyMode((const TByte*)respSideKeyMode.c_str(), (TUint)respSideKeyMode.length());
+    respWriterSideKeyMode.Write(buf_SideKeyMode);
+    aInvocation.InvocationWriteStringEnd("SideKeyMode");
+    DviInvocationResponseString respWriterMiddleKeyMode(aInvocation, "MiddleKeyMode");
+    Brn buf_MiddleKeyMode((const TByte*)respMiddleKeyMode.c_str(), (TUint)respMiddleKeyMode.length());
+    respWriterMiddleKeyMode.Write(buf_MiddleKeyMode);
+    aInvocation.InvocationWriteStringEnd("MiddleKeyMode");
+    DviInvocationResponseString respWriterKeyModeList(aInvocation, "KeyModeList");
+    Brn buf_KeyModeList((const TByte*)respKeyModeList.c_str(), (TUint)respKeyModeList.length());
+    respWriterKeyModeList.Write(buf_KeyModeList);
+    aInvocation.InvocationWriteStringEnd("KeyModeList");
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::IsAlive(IDvInvocationStd& /*aInvocation*/, bool& /*aAlive*/)
 {
     ASSERTS();
@@ -1373,6 +1529,36 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetFilterMode(IDvInvocationStd& 
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetFilterMode(IDvInvocationStd& /*aInvocation*/, const std::string& /*aFilterMode*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetSourceVisible(IDvInvocationStd& /*aInvocation*/, const std::string& /*aSourceName*/, bool /*aVisible*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetSourceVisible(IDvInvocationStd& /*aInvocation*/, std::string& /*aVisibleInfo*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetLEDMode(IDvInvocationStd& /*aInvocation*/, const std::string& /*aLEDMode*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetLEDMode(IDvInvocationStd& /*aInvocation*/, std::string& /*aLEDMode*/, std::string& /*aLEDModeList*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetKeyMode(IDvInvocationStd& /*aInvocation*/, const std::string& /*aKeyName*/, const std::string& /*aKeyMode*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetKeyMode(IDvInvocationStd& /*aInvocation*/, std::string& /*aSideKeyMode*/, std::string& /*aMiddleKeyMode*/, std::string& /*aKeyModeList*/)
 {
     ASSERTS();
 }
