@@ -67,6 +67,9 @@ objects_devices = \
                   $(objdir)DvAvOpenhomeOrgRenderingInfo1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgRenderingInfo1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgRenderingInfo1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgRoon1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgRoon1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgRoon1C.$(objext) \
                   $(objdir)DvAvOpenhomeOrgInternetRadio1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgInternetRadio1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgInternetRadio1C.$(objext) \
@@ -133,6 +136,7 @@ device_dotnet_assemblies = \
         DvAvOpenhomeOrgServerConfig1.net.dll \
         DvAvOpenhomeOrgMessageCenter1.net.dll \
         DvAvOpenhomeOrgRenderingInfo1.net.dll \
+        DvAvOpenhomeOrgRoon1.net.dll \
         DvAvOpenhomeOrgInternetRadio1.net.dll \
         DvAvOpenhomeOrgStreaming1.net.dll \
         DvAvOpenhomeOrgProduct1.net.dll \
@@ -168,6 +172,7 @@ device_dotnet_assemblies_with_path = \
         $(objdir)DvAvOpenhomeOrgServerConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgMessageCenter1.net.dll \
         $(objdir)DvAvOpenhomeOrgRenderingInfo1.net.dll \
+        $(objdir)DvAvOpenhomeOrgRoon1.net.dll \
         $(objdir)DvAvOpenhomeOrgInternetRadio1.net.dll \
         $(objdir)DvAvOpenhomeOrgStreaming1.net.dll \
         $(objdir)DvAvOpenhomeOrgProduct1.net.dll \
@@ -203,6 +208,7 @@ device_java_classes_with_path = \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgServerConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgMessageCenter1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgRenderingInfo1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgRoon1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgInternetRadio1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgStreaming1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgProduct1.class \
@@ -344,6 +350,12 @@ $(objdir)DvAvOpenhomeOrgRenderingInfo1Std.$(objext) : $(deviceCppStd)DvAvOpenhom
 	$(compiler)DvAvOpenhomeOrgRenderingInfo1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgRenderingInfo1Std.cpp
 $(objdir)DvAvOpenhomeOrgRenderingInfo1C.$(objext) : $(deviceC)DvAvOpenhomeOrgRenderingInfo1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgRenderingInfo1.h
 	$(compiler)DvAvOpenhomeOrgRenderingInfo1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgRenderingInfo1C.cpp
+$(objdir)DvAvOpenhomeOrgRoon1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgRoon1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgRoon1.h
+	$(compiler)DvAvOpenhomeOrgRoon1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgRoon1.cpp
+$(objdir)DvAvOpenhomeOrgRoon1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgRoon1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgRoon1.h
+	$(compiler)DvAvOpenhomeOrgRoon1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgRoon1Std.cpp
+$(objdir)DvAvOpenhomeOrgRoon1C.$(objext) : $(deviceC)DvAvOpenhomeOrgRoon1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgRoon1.h
+	$(compiler)DvAvOpenhomeOrgRoon1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgRoon1C.cpp
 $(objdir)DvAvOpenhomeOrgInternetRadio1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgInternetRadio1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgInternetRadio1.h
 	$(compiler)DvAvOpenhomeOrgInternetRadio1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgInternetRadio1.cpp
 $(objdir)DvAvOpenhomeOrgInternetRadio1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgInternetRadio1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgInternetRadio1.h
@@ -439,6 +451,7 @@ device_dlls = \
              DvAvOpenhomeOrgServerConfig1Dll \
              DvAvOpenhomeOrgMessageCenter1Dll \
              DvAvOpenhomeOrgRenderingInfo1Dll \
+             DvAvOpenhomeOrgRoon1Dll \
              DvAvOpenhomeOrgInternetRadio1Dll \
              DvAvOpenhomeOrgStreaming1Dll \
              DvAvOpenhomeOrgProduct1Dll \
@@ -516,6 +529,9 @@ $(objdir)$(dllprefix)DvAvOpenhomeOrgMessageCenter1.$(dllext) : ZappUpnpDll $(obj
 DvAvOpenhomeOrgRenderingInfo1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgRenderingInfo1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgRenderingInfo1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgRenderingInfo1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgRenderingInfo1.$(dllext) $(objdir)DvAvOpenhomeOrgRenderingInfo1.$(objext)
+DvAvOpenhomeOrgRoon1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgRoon1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgRoon1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgRoon1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgRoon1.$(dllext) $(objdir)DvAvOpenhomeOrgRoon1.$(objext)
 DvAvOpenhomeOrgInternetRadio1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgInternetRadio1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgInternetRadio1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgInternetRadio1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgInternetRadio1.$(dllext) $(objdir)DvAvOpenhomeOrgInternetRadio1.$(objext)
@@ -663,6 +679,11 @@ $(objdir)DvAvOpenhomeOrgRenderingInfo1.net.dll: $(objdir)ohNet.net.dll $(deviceC
         /out:$(objdir)DvAvOpenhomeOrgRenderingInfo1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(deviceCs)DvAvOpenhomeOrgRenderingInfo1.cs
+$(objdir)DvAvOpenhomeOrgRoon1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgRoon1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgRoon1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgRoon1.cs
 $(objdir)DvAvOpenhomeOrgInternetRadio1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgInternetRadio1.cs
 	$(csharp) /t:library \
         /out:$(objdir)DvAvOpenhomeOrgInternetRadio1.net.dll \
@@ -770,6 +791,8 @@ $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgMessageCenter1
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgMessageCenter1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgRenderingInfo1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgRenderingInfo1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgRenderingInfo1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgRoon1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgRoon1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgRoon1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgInternetRadio1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgInternetRadio1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgInternetRadio1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgStreaming1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgStreaming1.java
