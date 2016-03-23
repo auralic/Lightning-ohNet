@@ -223,6 +223,14 @@ void DvProviderAvOpenhomeOrgServerConfig1::EnableActionForceRescan()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetCurrentScanFile()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetCurrentScanFile");
+    action->AddOutputParameter(new ParameterString("ScanFile"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoGetCurrentScanFile);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1::DoSetServerName(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -431,6 +439,15 @@ void DvProviderAvOpenhomeOrgServerConfig1::DoForceRescan(IDviInvocation& aInvoca
     ForceRescan(invocation);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1::DoGetCurrentScanFile(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respScanFile(aInvocation, "ScanFile");
+    GetCurrentScanFile(invocation, respScanFile);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1::SetServerName(IDvInvocation& /*aResponse*/, const Brx& /*aServerName*/)
 {
     ASSERTS();
@@ -537,6 +554,11 @@ void DvProviderAvOpenhomeOrgServerConfig1::GetDISKCapacity(IDvInvocation& /*aRes
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::ForceRescan(IDvInvocation& /*aResponse*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::GetCurrentScanFile(IDvInvocation& /*aResponse*/, IDvInvocationResponseString& /*aScanFile*/)
 {
     ASSERTS();
 }

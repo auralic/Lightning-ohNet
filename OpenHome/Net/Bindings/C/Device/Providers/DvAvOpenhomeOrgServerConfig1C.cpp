@@ -43,6 +43,7 @@ public:
     void EnableActionUSBImport(CallbackServerConfig1USBImport aCallback, void* aPtr);
     void EnableActionGetDISKCapacity(CallbackServerConfig1GetDISKCapacity aCallback, void* aPtr);
     void EnableActionForceRescan(CallbackServerConfig1ForceRescan aCallback, void* aPtr);
+    void EnableActionGetCurrentScanFile(CallbackServerConfig1GetCurrentScanFile aCallback, void* aPtr);
 private:
     void DoSetServerName(IDviInvocation& aInvocation);
     void DoGetServerVersion(IDviInvocation& aInvocation);
@@ -66,6 +67,7 @@ private:
     void DoUSBImport(IDviInvocation& aInvocation);
     void DoGetDISKCapacity(IDviInvocation& aInvocation);
     void DoForceRescan(IDviInvocation& aInvocation);
+    void DoGetCurrentScanFile(IDviInvocation& aInvocation);
 private:
     CallbackServerConfig1SetServerName iCallbackSetServerName;
     void* iPtrSetServerName;
@@ -111,6 +113,8 @@ private:
     void* iPtrGetDISKCapacity;
     CallbackServerConfig1ForceRescan iCallbackForceRescan;
     void* iPtrForceRescan;
+    CallbackServerConfig1GetCurrentScanFile iCallbackGetCurrentScanFile;
+    void* iPtrGetCurrentScanFile;
     PropertyBool* iPropertyAlive;
 };
 
@@ -359,6 +363,16 @@ void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionForceRescan(CallbackServ
     iPtrForceRescan = aPtr;
     OpenHome::Net::Action* action = new OpenHome::Net::Action("ForceRescan");
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoForceRescan);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionGetCurrentScanFile(CallbackServerConfig1GetCurrentScanFile aCallback, void* aPtr)
+{
+    iCallbackGetCurrentScanFile = aCallback;
+    iPtrGetCurrentScanFile = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetCurrentScanFile");
+    action->AddOutputParameter(new ParameterString("ScanFile"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoGetCurrentScanFile);
     iService->AddAction(action, functor);
 }
 
@@ -878,6 +892,30 @@ void DvProviderAvOpenhomeOrgServerConfig1C::DoForceRescan(IDviInvocation& aInvoc
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1C::DoGetCurrentScanFile(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* ScanFile;
+    ASSERT(iCallbackGetCurrentScanFile != NULL);
+    if (0 != iCallbackGetCurrentScanFile(iPtrGetCurrentScanFile, invocationC, invocationCPtr, &ScanFile)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respScanFile(aInvocation, "ScanFile");
+    invocation.StartResponse();
+    Brhz bufScanFile((const TChar*)ScanFile);
+    OhNetFreeExternal(ScanFile);
+    respScanFile.Write(bufScanFile);
+    respScanFile.WriteFlush();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgServerConfig1Create(DvDeviceC aDevice)
@@ -998,6 +1036,11 @@ void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetDISKCapacity(THa
 void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionForceRescan(THandle aProvider, CallbackServerConfig1ForceRescan aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionForceRescan(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetCurrentScanFile(THandle aProvider, CallbackServerConfig1GetCurrentScanFile aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionGetCurrentScanFile(aCallback, aPtr);
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)

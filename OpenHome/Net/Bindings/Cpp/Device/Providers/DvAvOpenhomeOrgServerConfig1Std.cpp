@@ -213,6 +213,14 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionForceRescan()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionGetCurrentScanFile()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetCurrentScanFile");
+    action->AddOutputParameter(new ParameterString("ScanFile"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetCurrentScanFile);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoSetServerName(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -543,6 +551,21 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoForceRescan(IDviInvocation& aInv
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetCurrentScanFile(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    std::string respScanFile;
+    DvInvocationStd invocation(aInvocation);
+    GetCurrentScanFile(invocation, respScanFile);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterScanFile(aInvocation, "ScanFile");
+    Brn buf_ScanFile((const TByte*)respScanFile.c_str(), (TUint)respScanFile.length());
+    respWriterScanFile.Write(buf_ScanFile);
+    aInvocation.InvocationWriteStringEnd("ScanFile");
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::SetServerName(IDvInvocationStd& /*aInvocation*/, const std::string& /*aServerName*/)
 {
     ASSERTS();
@@ -649,6 +672,11 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetDISKCapacity(IDvInvocationStd& 
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::ForceRescan(IDvInvocationStd& /*aInvocation*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetCurrentScanFile(IDvInvocationStd& /*aInvocation*/, std::string& /*aScanFile*/)
 {
     ASSERTS();
 }

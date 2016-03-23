@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+    
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+
+    <actionList>
+        <action>
+            <name>SetGroupMode</name>
+            <argumentList>
+                <argument>
+                    <name>GroupMode</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>GroupMode</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>GroupID</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>GroupID</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>GroupName</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>GroupName</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>GetGroupMode</name>
+            <argumentList>
+                <argument>
+                    <name>GroupMode</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>GroupMode</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>GroupID</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>GroupID</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>GroupName</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>GroupName</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>SetGroupVolume</name>
+            <argumentList>
+                <argument>
+                    <name>GroupVolume</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>GroupVolume</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>GetGroupVolume</name>
+            <argumentList>
+                <argument>
+                    <name>GroupVolume</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>GroupVolume</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>SetGroupMute</name>
+            <argumentList>
+                <argument>
+                    <name>GroupMute</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>GroupMute</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>GetGroupMute</name>
+            <argumentList>
+                <argument>
+                    <name>GroupMute</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>GroupMute</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>GetGroupStatus</name>
+            <argumentList>
+                <argument>
+                    <name>GroupStatus</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>GroupStatus</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>SetGroupStatus</name>
+            <argumentList>
+                <argument>
+                    <name>GroupStatus</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>GroupStatus</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+    </actionList>
+
+    <serviceStateTable>
+        <stateVariable sendEvents="yes">
+            <name>GroupMode</name>
+            <dataType>string</dataType>
+            <allowedValueList>
+                <allowedValue>Master</allowedValue>
+                <allowedValue>Slave</allowedValue>
+                <allowedValue>None</allowedValue>
+            </allowedValueList>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>GroupName</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>GroupID</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>GroupVolume</name>
+            <dataType>ui4</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>GroupMute</name>
+            <dataType>boolean</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>GroupStatus</name>
+            <dataType>string</dataType>
+        </stateVariable>
+    </serviceStateTable>
+</scpd>
+

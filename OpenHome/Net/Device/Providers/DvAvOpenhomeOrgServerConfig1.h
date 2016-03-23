@@ -188,6 +188,12 @@ protected:
      * ForceRescan must be overridden if this is called.
      */
     void EnableActionForceRescan();
+    /**
+     * Signal that the action GetCurrentScanFile is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetCurrentScanFile must be overridden if this is called.
+     */
+    void EnableActionGetCurrentScanFile();
 private:
     /**
      * SetServerName action.
@@ -365,6 +371,14 @@ private:
      * Must be implemented iff EnableActionForceRescan was called.
      */
     virtual void ForceRescan(IDvInvocation& aInvocation);
+    /**
+     * GetCurrentScanFile action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetCurrentScanFile action for the owning device.
+     * Must be implemented iff EnableActionGetCurrentScanFile was called.
+     */
+    virtual void GetCurrentScanFile(IDvInvocation& aInvocation, IDvInvocationResponseString& aScanFile);
 private:
     DvProviderAvOpenhomeOrgServerConfig1();
     void Construct();
@@ -390,6 +404,7 @@ private:
     void DoUSBImport(IDviInvocation& aInvocation);
     void DoGetDISKCapacity(IDviInvocation& aInvocation);
     void DoForceRescan(IDviInvocation& aInvocation);
+    void DoGetCurrentScanFile(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
 };

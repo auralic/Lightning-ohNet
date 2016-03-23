@@ -182,6 +182,7 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     private IDvInvocationListener iDelegateUSBImport;
     private IDvInvocationListener iDelegateGetDISKCapacity;
     private IDvInvocationListener iDelegateForceRescan;
+    private IDvInvocationListener iDelegateGetCurrentScanFile;
     private PropertyBool iPropertyAlive;
 
     /**
@@ -538,6 +539,20 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     }
 
     /**
+     * Signal that the action GetCurrentScanFile is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetCurrentScanFile must be overridden if this is called.
+     */      
+    protected void enableActionGetCurrentScanFile()
+    {
+        Action action = new Action("GetCurrentScanFile");        List<String> allowedValues = new LinkedList<String>();
+        action.addOutputParameter(new ParameterString("ScanFile", allowedValues));
+        iDelegateGetCurrentScanFile = new DoGetCurrentScanFile();
+        enableAction(action, iDelegateGetCurrentScanFile);
+    }
+
+    /**
      * SetServerName action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -869,6 +884,21 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
      * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
      */
     protected void forceRescan(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetCurrentScanFile action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetCurrentScanFile action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetCurrentScanFile} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected String getCurrentScanFile(IDvInvocation aInvocation)
     {
         throw (new ActionDisabledError());
     }
@@ -1956,6 +1986,54 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
             try
             {
                 invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetCurrentScanFile implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String scanFile;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                 scanFile = getCurrentScanFile(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetCurrentScanFile");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("ScanFile", scanFile);
                 invocation.writeEnd();
             }
             catch (ActionError ae)
