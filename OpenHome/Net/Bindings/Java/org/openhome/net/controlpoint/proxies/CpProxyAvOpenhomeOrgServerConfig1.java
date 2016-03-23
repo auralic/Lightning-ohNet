@@ -76,6 +76,9 @@ interface ICpProxyAvOpenhomeOrgServerConfig1 extends ICpProxy
     public void syncForceRescan();
     public void beginForceRescan(ICpProxyListener aCallback);
     public void endForceRescan(long aAsyncHandle);
+    public String syncGetCurrentScanFile();
+    public void beginGetCurrentScanFile(ICpProxyListener aCallback);
+    public String endGetCurrentScanFile(long aAsyncHandle);
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
 }
@@ -530,6 +533,27 @@ class SyncForceRescanAvOpenhomeOrgServerConfig1 extends SyncProxyAction
     }
 }
 
+class SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+    private String iScanFile;
+
+    public SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getScanFile()
+    {
+        return iScanFile;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        String result = iService.endGetCurrentScanFile(aAsyncHandle);
+        
+        iScanFile = result;
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:ServerConfig:1 UPnP service
  */
@@ -685,6 +709,7 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     private Action iActionUSBImport;
     private Action iActionGetDISKCapacity;
     private Action iActionForceRescan;
+    private Action iActionGetCurrentScanFile;
     private PropertyBool iAlive;
     private IPropertyChangeListener iAliveChanged;
     private Object iPropertyLock;
@@ -797,6 +822,10 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         iActionGetDISKCapacity.addOutputParameter(param);
 
         iActionForceRescan = new Action("ForceRescan");
+
+        iActionGetCurrentScanFile = new Action("GetCurrentScanFile");
+        param = new ParameterString("ScanFile", allowedValues);
+        iActionGetCurrentScanFile.addOutputParameter(param);
 
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
@@ -1978,6 +2007,61 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public String syncGetCurrentScanFile()
+    {
+        SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1 sync = new SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1(this);
+        beginGetCurrentScanFile(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getScanFile();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetCurrentScanFile}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetCurrentScanFile(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetCurrentScanFile, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetCurrentScanFile.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetCurrentScanFile} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetCurrentScanFile} method.
+     * @return the result of the previously invoked action.
+     */
+    public String endGetCurrentScanFile(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String scanFile = Invocation.getOutputString(aAsyncHandle, index++);
+        return scanFile;
+    }
+        
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
@@ -2054,6 +2138,7 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             iActionUSBImport.destroy();
             iActionGetDISKCapacity.destroy();
             iActionForceRescan.destroy();
+            iActionGetCurrentScanFile.destroy();
             iAlive.destroy();
         }
     }

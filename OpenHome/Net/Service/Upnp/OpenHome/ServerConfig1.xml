@@ -231,6 +231,16 @@
         <action>
             <name>ForceRescan</name>
         </action>
+        <action>
+            <name>GetCurrentScanFile</name>
+            <argumentList>
+                <argument>
+                    <name>ScanFile</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>ScanFile</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
     </actionList>
     <serviceStateTable>
       <stateVariable sendEvents="yes">
@@ -323,6 +333,10 @@
         </stateVariable>
         <stateVariable sendEvents="no">
             <name>DISKAvailable</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>ScanFile</name>
             <dataType>string</dataType>
         </stateVariable>
     </serviceStateTable>

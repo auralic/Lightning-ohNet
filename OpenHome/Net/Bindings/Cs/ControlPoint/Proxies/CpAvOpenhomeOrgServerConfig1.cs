@@ -76,6 +76,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncForceRescan();
         void BeginForceRescan(CpProxy.CallbackAsyncComplete aCallback);
         void EndForceRescan(IntPtr aAsyncHandle);
+        void SyncGetCurrentScanFile(out String aScanFile);
+        void BeginGetCurrentScanFile(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetCurrentScanFile(IntPtr aAsyncHandle, out String aScanFile);
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
     }
@@ -488,6 +491,25 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+        private String iScanFile;
+
+        public SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String ScanFile()
+        {
+            return iScanFile;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetCurrentScanFile(aAsyncHandle, out iScanFile);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:ServerConfig:1 UPnP service
     /// </summary>
@@ -515,6 +537,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionUSBImport;
         private OpenHome.Net.Core.Action iActionGetDISKCapacity;
         private OpenHome.Net.Core.Action iActionForceRescan;
+        private OpenHome.Net.Core.Action iActionGetCurrentScanFile;
         private PropertyBool iAlive;
         private System.Action iAliveChanged;
         private Mutex iPropertyLock;
@@ -625,6 +648,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetDISKCapacity.AddOutputParameter(param);
 
             iActionForceRescan = new OpenHome.Net.Core.Action("ForceRescan");
+
+            iActionGetCurrentScanFile = new OpenHome.Net.Core.Action("GetCurrentScanFile");
+            param = new ParameterString("ScanFile", allowedValues);
+            iActionGetCurrentScanFile.AddOutputParameter(param);
 
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
@@ -1701,6 +1728,55 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aScanFile"></param>
+        public void SyncGetCurrentScanFile(out String aScanFile)
+        {
+            SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1 sync = new SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1(this);
+            BeginGetCurrentScanFile(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aScanFile = sync.ScanFile();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetCurrentScanFile().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetCurrentScanFile(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetCurrentScanFile, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetCurrentScanFile.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aScanFile"></param>
+        public void EndGetCurrentScanFile(IntPtr aAsyncHandle, out String aScanFile)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aScanFile = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -1778,6 +1854,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionUSBImport.Dispose();
             iActionGetDISKCapacity.Dispose();
             iActionForceRescan.Dispose();
+            iActionGetCurrentScanFile.Dispose();
             iAlive.Dispose();
         }
     }

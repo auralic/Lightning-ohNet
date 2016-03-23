@@ -509,4 +509,24 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.ForceRescan = function(successFuncti
 }
 
 
+/**
+* A service action to GetCurrentScanFile
+* @method GetCurrentScanFile
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.GetCurrentScanFile = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetCurrentScanFile", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["ScanFile"] = ohnet.soaprequest.readStringParameter(result["ScanFile"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
 

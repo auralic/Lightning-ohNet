@@ -618,6 +618,32 @@ public:
     void EndForceRescan(IAsync& aAsync);
 
     /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aScanFile
+     */
+    void SyncGetCurrentScanFile(Brh& aScanFile);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetCurrentScanFile().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetCurrentScanFile(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aScanFile
+     */
+    void EndGetCurrentScanFile(IAsync& aAsync, Brh& aScanFile);
+
+    /**
      * Set a callback to be run when the Alive state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -662,6 +688,7 @@ private:
     Action* iActionUSBImport;
     Action* iActionGetDISKCapacity;
     Action* iActionForceRescan;
+    Action* iActionGetCurrentScanFile;
     PropertyBool* iAlive;
     Functor iAliveChanged;
 };

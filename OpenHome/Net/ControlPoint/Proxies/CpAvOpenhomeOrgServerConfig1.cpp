@@ -513,6 +513,29 @@ void SyncForceRescanAvOpenhomeOrgServerConfig1::CompleteRequest(IAsync& aAsync)
 }
 
 
+class SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1& aProxy, Brh& aScanFile);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1() {}
+private:
+    CpProxyAvOpenhomeOrgServerConfig1& iService;
+    Brh& iScanFile;
+};
+
+SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1::SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1& aProxy, Brh& aScanFile)
+    : iService(aProxy)
+    , iScanFile(aScanFile)
+{
+}
+
+void SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetCurrentScanFile(aAsync, iScanFile);
+}
+
+
 CpProxyAvOpenhomeOrgServerConfig1::CpProxyAvOpenhomeOrgServerConfig1(CpDevice& aDevice)
     : CpProxy("av-openhome-org", "ServerConfig", 1, aDevice.Device())
 {
@@ -614,6 +637,10 @@ CpProxyAvOpenhomeOrgServerConfig1::CpProxyAvOpenhomeOrgServerConfig1(CpDevice& a
 
     iActionForceRescan = new Action("ForceRescan");
 
+    iActionGetCurrentScanFile = new Action("GetCurrentScanFile");
+    param = new OpenHome::Net::ParameterString("ScanFile");
+    iActionGetCurrentScanFile->AddOutputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
@@ -645,6 +672,7 @@ CpProxyAvOpenhomeOrgServerConfig1::~CpProxyAvOpenhomeOrgServerConfig1()
     delete iActionUSBImport;
     delete iActionGetDISKCapacity;
     delete iActionForceRescan;
+    delete iActionGetCurrentScanFile;
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1::SyncSetServerName(const Brx& aServerName)
@@ -1326,6 +1354,38 @@ void CpProxyAvOpenhomeOrgServerConfig1::EndForceRescan(IAsync& aAsync)
     if (invocation.Error(level, code, ignore)) {
         THROW_PROXYERROR(level, code);
     }
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1::SyncGetCurrentScanFile(Brh& aScanFile)
+{
+    SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1 sync(*this, aScanFile);
+    BeginGetCurrentScanFile(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1::BeginGetCurrentScanFile(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetCurrentScanFile, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetCurrentScanFile->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1::EndGetCurrentScanFile(IAsync& aAsync, Brh& aScanFile)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetCurrentScanFile"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aScanFile);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1::SetPropertyAliveChanged(Functor& aFunctor)

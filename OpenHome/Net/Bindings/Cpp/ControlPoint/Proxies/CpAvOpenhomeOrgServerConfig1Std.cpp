@@ -515,6 +515,29 @@ void SyncForceRescanAvOpenhomeOrgServerConfig1Cpp::CompleteRequest(IAsync& aAsyn
 }
 
 
+class SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy, std::string& aScanFile);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgServerConfig1Cpp& iService;
+    std::string& iScanFile;
+};
+
+SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1Cpp::SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy, std::string& aScanFile)
+    : iService(aProxy)
+    , iScanFile(aScanFile)
+{
+}
+
+void SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetCurrentScanFile(aAsync, iScanFile);
+}
+
+
 CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDeviceCpp& aDevice)
     : CpProxy("av-openhome-org", "ServerConfig", 1, aDevice.Device())
 {
@@ -616,6 +639,10 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDev
 
     iActionForceRescan = new Action("ForceRescan");
 
+    iActionGetCurrentScanFile = new Action("GetCurrentScanFile");
+    param = new OpenHome::Net::ParameterString("ScanFile");
+    iActionGetCurrentScanFile->AddOutputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1Cpp::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
@@ -647,6 +674,7 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::~CpProxyAvOpenhomeOrgServerConfig1Cpp()
     delete iActionUSBImport;
     delete iActionGetDISKCapacity;
     delete iActionForceRescan;
+    delete iActionGetCurrentScanFile;
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetServerName(const std::string& aServerName)
@@ -1393,6 +1421,41 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndForceRescan(IAsync& aAsync)
     const TChar* ignore;
     if (invocation.Error(level, code, ignore)) {
         THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetCurrentScanFile(std::string& aScanFile)
+{
+    SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1Cpp sync(*this, aScanFile);
+    BeginGetCurrentScanFile(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetCurrentScanFile(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetCurrentScanFile, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetCurrentScanFile->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetCurrentScanFile(IAsync& aAsync, std::string& aScanFile)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetCurrentScanFile"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    {
+        const Brx& val = ((ArgumentString*)invocation.OutputArguments()[index++])->Value();
+        aScanFile.assign((const char*)val.Ptr(), val.Bytes());
     }
 }
 

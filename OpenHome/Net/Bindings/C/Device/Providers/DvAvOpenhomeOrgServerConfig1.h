@@ -287,6 +287,18 @@ typedef int32_t (STDCALL *CallbackServerConfig1GetDISKCapacity)(void* aPtr, IDvI
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackServerConfig1ForceRescan)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr);
+/**
+ * Callback which runs when the GetCurrentScanFile action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionGetCurrentScanFile
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aScanFile
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1GetCurrentScanFile)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, char** aScanFile);
 
 /**
  * Provider constructor
@@ -551,6 +563,17 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetDISKCa
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionForceRescan(THandle aProvider, CallbackServerConfig1ForceRescan aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetCurrentScanFile
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetCurrentScanFile(THandle aProvider, CallbackServerConfig1GetCurrentScanFile aCallback, void* aPtr);
 
 /**
  * Set the value of the Alive property
