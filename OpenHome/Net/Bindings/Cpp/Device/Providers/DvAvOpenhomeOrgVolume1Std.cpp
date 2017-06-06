@@ -244,6 +244,14 @@ void DvProviderAvOpenhomeOrgVolume1Cpp::EnableActionSetVolume()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgVolume1Cpp::EnableActionCanSetVolume()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("CanSetVolume");
+    action->AddInputParameter(new ParameterRelated("Value", *iPropertyVolume));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgVolume1Cpp::DoCanSetVolume);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgVolume1Cpp::EnableActionVolumeInc()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("VolumeInc");
@@ -334,6 +342,14 @@ void DvProviderAvOpenhomeOrgVolume1Cpp::EnableActionSetMute()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgVolume1Cpp::EnableActionCanSetMute()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("CanSetMute");
+    action->AddInputParameter(new ParameterRelated("Value", *iPropertyMute));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgVolume1Cpp::DoCanSetMute);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgVolume1Cpp::EnableActionMute()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("Mute");
@@ -385,6 +401,17 @@ void DvProviderAvOpenhomeOrgVolume1Cpp::DoSetVolume(IDviInvocation& aInvocation)
     aInvocation.InvocationReadEnd();
     DvInvocationStd invocation(aInvocation);
     SetVolume(invocation, Value);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgVolume1Cpp::DoCanSetVolume(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    uint32_t Value = aInvocation.InvocationReadUint("Value");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    CanSetVolume(invocation, Value);
     aInvocation.InvocationWriteStart();
     aInvocation.InvocationWriteEnd();
 }
@@ -521,6 +548,17 @@ void DvProviderAvOpenhomeOrgVolume1Cpp::DoSetMute(IDviInvocation& aInvocation)
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgVolume1Cpp::DoCanSetMute(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    bool Value = aInvocation.InvocationReadBool("Value");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    CanSetMute(invocation, Value);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgVolume1Cpp::DoMute(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -553,6 +591,11 @@ void DvProviderAvOpenhomeOrgVolume1Cpp::Characteristics(IDvInvocationStd& /*aInv
 }
 
 void DvProviderAvOpenhomeOrgVolume1Cpp::SetVolume(IDvInvocationStd& /*aInvocation*/, uint32_t /*aValue*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgVolume1Cpp::CanSetVolume(IDvInvocationStd& /*aInvocation*/, uint32_t /*aValue*/)
 {
     ASSERTS();
 }
@@ -613,6 +656,11 @@ void DvProviderAvOpenhomeOrgVolume1Cpp::Fade(IDvInvocationStd& /*aInvocation*/, 
 }
 
 void DvProviderAvOpenhomeOrgVolume1Cpp::SetMute(IDvInvocationStd& /*aInvocation*/, bool /*aValue*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgVolume1Cpp::CanSetMute(IDvInvocationStd& /*aInvocation*/, bool /*aValue*/)
 {
     ASSERTS();
 }

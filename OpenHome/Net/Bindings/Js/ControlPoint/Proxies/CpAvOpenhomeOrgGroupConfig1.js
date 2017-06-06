@@ -24,13 +24,14 @@ var CpProxyAvOpenhomeOrgGroupConfig1 = function(udn){
     this.serviceProperties["GroupVolume"] = new ohnet.serviceproperty("GroupVolume","int");
     this.serviceProperties["GroupMute"] = new ohnet.serviceproperty("GroupMute","bool");
     this.serviceProperties["GroupStatus"] = new ohnet.serviceproperty("GroupStatus","string");
+    this.serviceProperties["BitPerfectMode"] = new ohnet.serviceproperty("BitPerfectMode","bool");
 
             
     this.GroupModeAllowedValues = [];
     this.GroupModeAllowedValues.push("Master");
     this.GroupModeAllowedValues.push("Slave");
     this.GroupModeAllowedValues.push("None");
-                              
+                                    
 }
 
 
@@ -130,6 +131,19 @@ CpProxyAvOpenhomeOrgGroupConfig1.prototype.GroupStatus_Changed = function (state
     this.serviceProperties.GroupStatus.addListener(function (state) 
     { 
         stateChangedFunction(ohnet.soaprequest.readStringParameter(state)); 
+    });
+}
+    
+
+/**
+* Adds a listener to handle "BitPerfectMode" property change events
+* @method BitPerfectMode_Changed
+* @param {Function} stateChangedFunction The handler for state changes
+*/
+CpProxyAvOpenhomeOrgGroupConfig1.prototype.BitPerfectMode_Changed = function (stateChangedFunction) {
+    this.serviceProperties.BitPerfectMode.addListener(function (state) 
+    { 
+        stateChangedFunction(ohnet.soaprequest.readBoolParameter(state)); 
     });
 }
 
@@ -293,6 +307,47 @@ CpProxyAvOpenhomeOrgGroupConfig1.prototype.GetGroupStatus = function(successFunc
 CpProxyAvOpenhomeOrgGroupConfig1.prototype.SetGroupStatus = function(GroupStatus, successFunction, errorFunction){ 
     var request = new ohnet.soaprequest("SetGroupStatus", this.url, this.domain, this.type, this.version);     
     request.writeStringParameter("GroupStatus", GroupStatus);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetBitPerfectMode
+* @method GetBitPerfectMode
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgGroupConfig1.prototype.GetBitPerfectMode = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetBitPerfectMode", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["BitPerfectMode"] = ohnet.soaprequest.readBoolParameter(result["BitPerfectMode"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetBitPerfectMode
+* @method SetBitPerfectMode
+* @param {Boolean} BitPerfectMode An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgGroupConfig1.prototype.SetBitPerfectMode = function(BitPerfectMode, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetBitPerfectMode", this.url, this.domain, this.type, this.version);     
+    request.writeBoolParameter("BitPerfectMode", BitPerfectMode);
     request.send(function(result){
     
         if (successFunction){

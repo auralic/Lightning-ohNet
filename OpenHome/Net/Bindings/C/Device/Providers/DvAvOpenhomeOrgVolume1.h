@@ -49,6 +49,18 @@ typedef int32_t (STDCALL *CallbackVolume1Characteristics)(void* aPtr, IDvInvocat
  */
 typedef int32_t (STDCALL *CallbackVolume1SetVolume)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aValue);
 /**
+ * Callback which runs when the CanSetVolume action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgVolume1EnableActionCanSetVolume
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aValue
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackVolume1CanSetVolume)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aValue);
+/**
  * Callback which runs when the VolumeInc action is invoked
  *
  * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgVolume1EnableActionVolumeInc
@@ -187,6 +199,18 @@ typedef int32_t (STDCALL *CallbackVolume1Fade)(void* aPtr, IDvInvocationC* aInvo
  */
 typedef int32_t (STDCALL *CallbackVolume1SetMute)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aValue);
 /**
+ * Callback which runs when the CanSetMute action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgVolume1EnableActionCanSetMute
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aValue
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackVolume1CanSetMute)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aValue);
+/**
  * Callback which runs when the Mute action is invoked
  *
  * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgVolume1EnableActionMute
@@ -294,6 +318,17 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionCharacteristics
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionSetVolume(THandle aProvider, CallbackVolume1SetVolume aCallback, void* aPtr);
+/**
+ * Register a callback for the action CanSetVolume
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgVolume1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionCanSetVolume(THandle aProvider, CallbackVolume1CanSetVolume aCallback, void* aPtr);
 /**
  * Register a callback for the action VolumeInc
  *
@@ -426,6 +461,17 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionFade(THandle aP
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionSetMute(THandle aProvider, CallbackVolume1SetMute aCallback, void* aPtr);
+/**
+ * Register a callback for the action CanSetMute
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgVolume1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionCanSetMute(THandle aProvider, CallbackVolume1CanSetMute aCallback, void* aPtr);
 /**
  * Register a callback for the action Mute
  *

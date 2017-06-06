@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+   <specVersion>
+      <major>1</major>
+      <minor>0</minor>
+   </specVersion>
+   <actionList>
+      <action>
+         <name>GetDeviceConfig</name>
+         <argumentList>
+                <argument>
+                    <name>DeviceConfig</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>DeviceConfig</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetDeviceConfig</name>
+         <argumentList>
+                <argument>
+                    <name>DeviceConfig</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>DeviceConfig</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetWiFiList</name>
+         <argumentList>
+                <argument>
+                    <name>WiFiList</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>WiFiList</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetTimeZone</name>
+         <argumentList>
+                <argument>
+                    <name>TimeZone</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>TimeZone</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>CurrentTime</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>CurrentTime</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>TimeStamp</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>TimeStamp</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetServiceLocation</name>
+         <argumentList>
+                <argument>
+                    <name>ServiceLoaction</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>ServiceLocation</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+   </actionList>
+   <serviceStateTable>
+      <stateVariable sendEvents="yes">
+         <name>Alive</name>
+         <dataType>boolean</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="yes">
+         <name>DeviceConfig</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="yes">
+         <name>CurrentAction</name>
+         <dataType>ui4</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>WiFiList</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>TimeZone</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>CurrentTime</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>TimeStamp</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>ServiceLocation</name>
+         <dataType>string</dataType>
+      </stateVariable>
+   </serviceStateTable>
+</scpd>
+

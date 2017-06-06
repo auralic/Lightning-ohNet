@@ -818,6 +818,186 @@ void SyncGetKeyModeAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsy
 }
 
 
+class SyncSetBrightnessAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncSetBrightnessAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetBrightnessAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+};
+
+SyncSetBrightnessAvOpenhomeOrgHardwareConfig1Cpp::SyncSetBrightnessAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetBrightnessAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetBrightness(aAsync);
+}
+
+
+class SyncGetBrightnessAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncGetBrightnessAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, std::string& aBrightness, std::string& aList);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetBrightnessAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+    std::string& iBrightness;
+    std::string& iList;
+};
+
+SyncGetBrightnessAvOpenhomeOrgHardwareConfig1Cpp::SyncGetBrightnessAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, std::string& aBrightness, std::string& aList)
+    : iService(aProxy)
+    , iBrightness(aBrightness)
+    , iList(aList)
+{
+}
+
+void SyncGetBrightnessAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetBrightness(aAsync, iBrightness, iList);
+}
+
+
+class SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+};
+
+SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp::SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetDisplayMode(aAsync);
+}
+
+
+class SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, std::string& aDisplayMode, std::string& aDisplayModeList);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+    std::string& iDisplayMode;
+    std::string& iDisplayModeList;
+};
+
+SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp::SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, std::string& aDisplayMode, std::string& aDisplayModeList)
+    : iService(aProxy)
+    , iDisplayMode(aDisplayMode)
+    , iDisplayModeList(aDisplayModeList)
+{
+}
+
+void SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetDisplayMode(aAsync, iDisplayMode, iDisplayModeList);
+}
+
+
+class SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, uint32_t& aPhase);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+    uint32_t& iPhase;
+};
+
+SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp::SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, uint32_t& aPhase)
+    : iService(aProxy)
+    , iPhase(aPhase)
+{
+}
+
+void SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetDACPhase(aAsync, iPhase);
+}
+
+
+class SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+};
+
+SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp::SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetDACPhase(aAsync);
+}
+
+
+class SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, uint32_t& aBalance);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+    uint32_t& iBalance;
+};
+
+SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp::SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy, uint32_t& aBalance)
+    : iService(aProxy)
+    , iBalance(aBalance)
+{
+}
+
+void SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetDACBalance(aAsync, iBalance);
+}
+
+
+class SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+};
+
+SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp::SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetDACBalance(aAsync);
+}
+
+
 CpProxyAvOpenhomeOrgHardwareConfig1Cpp::CpProxyAvOpenhomeOrgHardwareConfig1Cpp(CpDeviceCpp& aDevice)
     : CpProxy("av-openhome-org", "HardwareConfig", 1, aDevice.Device())
 {
@@ -1021,6 +1201,42 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::CpProxyAvOpenhomeOrgHardwareConfig1Cpp(C
     param = new OpenHome::Net::ParameterString("KeyModeList");
     iActionGetKeyMode->AddOutputParameter(param);
 
+    iActionSetBrightness = new Action("SetBrightness");
+    param = new OpenHome::Net::ParameterString("Brightness");
+    iActionSetBrightness->AddInputParameter(param);
+
+    iActionGetBrightness = new Action("GetBrightness");
+    param = new OpenHome::Net::ParameterString("Brightness");
+    iActionGetBrightness->AddOutputParameter(param);
+    param = new OpenHome::Net::ParameterString("List");
+    iActionGetBrightness->AddOutputParameter(param);
+
+    iActionSetDisplayMode = new Action("SetDisplayMode");
+    param = new OpenHome::Net::ParameterString("DisplayMode");
+    iActionSetDisplayMode->AddInputParameter(param);
+
+    iActionGetDisplayMode = new Action("GetDisplayMode");
+    param = new OpenHome::Net::ParameterString("DisplayMode");
+    iActionGetDisplayMode->AddOutputParameter(param);
+    param = new OpenHome::Net::ParameterString("DisplayModeList");
+    iActionGetDisplayMode->AddOutputParameter(param);
+
+    iActionGetDACPhase = new Action("GetDACPhase");
+    param = new OpenHome::Net::ParameterUint("Phase");
+    iActionGetDACPhase->AddOutputParameter(param);
+
+    iActionSetDACPhase = new Action("SetDACPhase");
+    param = new OpenHome::Net::ParameterUint("Phase");
+    iActionSetDACPhase->AddInputParameter(param);
+
+    iActionGetDACBalance = new Action("GetDACBalance");
+    param = new OpenHome::Net::ParameterUint("Balance");
+    iActionGetDACBalance->AddOutputParameter(param);
+
+    iActionSetDACBalance = new Action("SetDACBalance");
+    param = new OpenHome::Net::ParameterUint("Balance");
+    iActionSetDACBalance->AddInputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1Cpp::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
@@ -1131,6 +1347,14 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::~CpProxyAvOpenhomeOrgHardwareConfig1Cpp(
     delete iActionGetLEDMode;
     delete iActionSetKeyMode;
     delete iActionGetKeyMode;
+    delete iActionSetBrightness;
+    delete iActionGetBrightness;
+    delete iActionSetDisplayMode;
+    delete iActionGetDisplayMode;
+    delete iActionGetDACPhase;
+    delete iActionSetDACPhase;
+    delete iActionGetDACBalance;
+    delete iActionSetDACBalance;
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncIsAlive(bool& aAlive)
@@ -2422,6 +2646,276 @@ void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndGetKeyMode(IAsync& aAsync, std::
     {
         const Brx& val = ((ArgumentString*)invocation.OutputArguments()[index++])->Value();
         aKeyModeList.assign((const char*)val.Ptr(), val.Bytes());
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncSetBrightness(const std::string& aBrightness)
+{
+    SyncSetBrightnessAvOpenhomeOrgHardwareConfig1Cpp sync(*this);
+    BeginSetBrightness(aBrightness, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginSetBrightness(const std::string& aBrightness, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionSetBrightness, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetBrightness->InputParameters();
+    {
+        Brn buf((const TByte*)aBrightness.c_str(), (TUint)aBrightness.length());
+        invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
+    }
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndSetBrightness(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetBrightness"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncGetBrightness(std::string& aBrightness, std::string& aList)
+{
+    SyncGetBrightnessAvOpenhomeOrgHardwareConfig1Cpp sync(*this, aBrightness, aList);
+    BeginGetBrightness(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginGetBrightness(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetBrightness, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetBrightness->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndGetBrightness(IAsync& aAsync, std::string& aBrightness, std::string& aList)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetBrightness"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    {
+        const Brx& val = ((ArgumentString*)invocation.OutputArguments()[index++])->Value();
+        aBrightness.assign((const char*)val.Ptr(), val.Bytes());
+    }
+    {
+        const Brx& val = ((ArgumentString*)invocation.OutputArguments()[index++])->Value();
+        aList.assign((const char*)val.Ptr(), val.Bytes());
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncSetDisplayMode(const std::string& aDisplayMode)
+{
+    SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp sync(*this);
+    BeginSetDisplayMode(aDisplayMode, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginSetDisplayMode(const std::string& aDisplayMode, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionSetDisplayMode, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetDisplayMode->InputParameters();
+    {
+        Brn buf((const TByte*)aDisplayMode.c_str(), (TUint)aDisplayMode.length());
+        invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
+    }
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndSetDisplayMode(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetDisplayMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncGetDisplayMode(std::string& aDisplayMode, std::string& aDisplayModeList)
+{
+    SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1Cpp sync(*this, aDisplayMode, aDisplayModeList);
+    BeginGetDisplayMode(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginGetDisplayMode(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetDisplayMode, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetDisplayMode->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndGetDisplayMode(IAsync& aAsync, std::string& aDisplayMode, std::string& aDisplayModeList)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetDisplayMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    {
+        const Brx& val = ((ArgumentString*)invocation.OutputArguments()[index++])->Value();
+        aDisplayMode.assign((const char*)val.Ptr(), val.Bytes());
+    }
+    {
+        const Brx& val = ((ArgumentString*)invocation.OutputArguments()[index++])->Value();
+        aDisplayModeList.assign((const char*)val.Ptr(), val.Bytes());
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncGetDACPhase(uint32_t& aPhase)
+{
+    SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp sync(*this, aPhase);
+    BeginGetDACPhase(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginGetDACPhase(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetDACPhase, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetDACPhase->OutputParameters();
+    invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndGetDACPhase(IAsync& aAsync, uint32_t& aPhase)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetDACPhase"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    aPhase = ((ArgumentUint*)invocation.OutputArguments()[index++])->Value();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncSetDACPhase(uint32_t aPhase)
+{
+    SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1Cpp sync(*this);
+    BeginSetDACPhase(aPhase, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginSetDACPhase(uint32_t aPhase, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionSetDACPhase, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetDACPhase->InputParameters();
+    invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aPhase));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndSetDACPhase(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetDACPhase"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncGetDACBalance(uint32_t& aBalance)
+{
+    SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp sync(*this, aBalance);
+    BeginGetDACBalance(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginGetDACBalance(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetDACBalance, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetDACBalance->OutputParameters();
+    invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndGetDACBalance(IAsync& aAsync, uint32_t& aBalance)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetDACBalance"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    aBalance = ((ArgumentUint*)invocation.OutputArguments()[index++])->Value();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncSetDACBalance(uint32_t aBalance)
+{
+    SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1Cpp sync(*this);
+    BeginSetDACBalance(aBalance, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginSetDACBalance(uint32_t aBalance, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionSetDACBalance, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetDACBalance->InputParameters();
+    invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aBalance));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndSetDACBalance(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetDACBalance"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
     }
 }
 

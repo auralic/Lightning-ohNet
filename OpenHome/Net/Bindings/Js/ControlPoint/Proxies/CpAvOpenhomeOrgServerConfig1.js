@@ -19,8 +19,9 @@ var CpProxyAvOpenhomeOrgServerConfig1 = function(udn){
     // Collection of service properties
     this.serviceProperties = {};
     this.serviceProperties["Alive"] = new ohnet.serviceproperty("Alive","bool");
+    this.serviceProperties["SubscriptValue"] = new ohnet.serviceproperty("SubscriptValue","string");
 
-          
+                
 }
 
 
@@ -55,6 +56,19 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.Alive_Changed = function (stateChang
     this.serviceProperties.Alive.addListener(function (state) 
     { 
         stateChangedFunction(ohnet.soaprequest.readBoolParameter(state)); 
+    });
+}
+    
+
+/**
+* Adds a listener to handle "SubscriptValue" property change events
+* @method SubscriptValue_Changed
+* @param {Function} stateChangedFunction The handler for state changes
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.SubscriptValue_Changed = function (stateChangedFunction) {
+    this.serviceProperties.SubscriptValue.addListener(function (state) 
+    { 
+        stateChangedFunction(ohnet.soaprequest.readStringParameter(state)); 
     });
 }
 
@@ -519,6 +533,47 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.GetCurrentScanFile = function(succes
     var request = new ohnet.soaprequest("GetCurrentScanFile", this.url, this.domain, this.type, this.version);     
     request.send(function(result){
         result["ScanFile"] = ohnet.soaprequest.readStringParameter(result["ScanFile"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetServerConfig
+* @method GetServerConfig
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.GetServerConfig = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetServerConfig", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["GetValue"] = ohnet.soaprequest.readStringParameter(result["GetValue"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetServerConfig
+* @method SetServerConfig
+* @param {String} SetValue An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.SetServerConfig = function(SetValue, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetServerConfig", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("SetValue", SetValue);
+    request.send(function(result){
     
         if (successFunction){
             successFunction(result);

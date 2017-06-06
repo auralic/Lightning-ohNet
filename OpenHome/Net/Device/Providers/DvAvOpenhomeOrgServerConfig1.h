@@ -39,6 +39,20 @@ public:
      * Can only be called if EnablePropertyAlive has previously been called.
      */
     void GetPropertyAlive(TBool& aValue);
+    /**
+     * Set the value of the SubscriptValue property
+     *
+     * Can only be called if EnablePropertySubscriptValue has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertySubscriptValue(const Brx& aValue);
+    /**
+     * Get a copy of the value of the SubscriptValue property
+     *
+     * Can only be called if EnablePropertySubscriptValue has previously been called.
+     */
+    void GetPropertySubscriptValue(Brhz& aValue);
 protected:
     /**
      * Constructor
@@ -56,6 +70,10 @@ protected:
      * Enable the Alive property.
      */
     void EnablePropertyAlive();
+    /**
+     * Enable the SubscriptValue property.
+     */
+    void EnablePropertySubscriptValue();
     /**
      * Signal that the action SetServerName is supported.
      * The action's availability will be published in the device's service.xml.
@@ -194,6 +212,18 @@ protected:
      * GetCurrentScanFile must be overridden if this is called.
      */
     void EnableActionGetCurrentScanFile();
+    /**
+     * Signal that the action GetServerConfig is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetServerConfig must be overridden if this is called.
+     */
+    void EnableActionGetServerConfig();
+    /**
+     * Signal that the action SetServerConfig is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetServerConfig must be overridden if this is called.
+     */
+    void EnableActionSetServerConfig();
 private:
     /**
      * SetServerName action.
@@ -379,6 +409,22 @@ private:
      * Must be implemented iff EnableActionGetCurrentScanFile was called.
      */
     virtual void GetCurrentScanFile(IDvInvocation& aInvocation, IDvInvocationResponseString& aScanFile);
+    /**
+     * GetServerConfig action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetServerConfig action for the owning device.
+     * Must be implemented iff EnableActionGetServerConfig was called.
+     */
+    virtual void GetServerConfig(IDvInvocation& aInvocation, IDvInvocationResponseString& aGetValue);
+    /**
+     * SetServerConfig action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetServerConfig action for the owning device.
+     * Must be implemented iff EnableActionSetServerConfig was called.
+     */
+    virtual void SetServerConfig(IDvInvocation& aInvocation, const Brx& aSetValue);
 private:
     DvProviderAvOpenhomeOrgServerConfig1();
     void Construct();
@@ -405,8 +451,11 @@ private:
     void DoGetDISKCapacity(IDviInvocation& aInvocation);
     void DoForceRescan(IDviInvocation& aInvocation);
     void DoGetCurrentScanFile(IDviInvocation& aInvocation);
+    void DoGetServerConfig(IDviInvocation& aInvocation);
+    void DoSetServerConfig(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
+    PropertyString* iPropertySubscriptValue;
 };
 
 } // namespace Net

@@ -41,6 +41,20 @@ public:
      * Can only be called if EnablePropertyAlive has previously been called.
      */
     void GetPropertyAlive(bool& aValue);
+    /**
+     * Set the value of the SubscriptValue property
+     *
+     * Can only be called if EnablePropertySubscriptValue has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    bool SetPropertySubscriptValue(const std::string& aValue);
+    /**
+     * Get a copy of the value of the SubscriptValue property
+     *
+     * Can only be called if EnablePropertySubscriptValue has previously been called.
+     */
+    void GetPropertySubscriptValue(std::string& aValue);
 protected:
     /**
      * Constructor
@@ -52,6 +66,10 @@ protected:
      * Enable the Alive property.
      */
     void EnablePropertyAlive();
+    /**
+     * Enable the SubscriptValue property.
+     */
+    void EnablePropertySubscriptValue();
     /**
      * Signal that the action SetServerName is supported.
      * The action's availability will be published in the device's service.xml.
@@ -190,6 +208,18 @@ protected:
      * GetCurrentScanFile must be overridden if this is called.
      */
     void EnableActionGetCurrentScanFile();
+    /**
+     * Signal that the action GetServerConfig is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetServerConfig must be overridden if this is called.
+     */
+    void EnableActionGetServerConfig();
+    /**
+     * Signal that the action SetServerConfig is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetServerConfig must be overridden if this is called.
+     */
+    void EnableActionSetServerConfig();
 private:
     /**
      * SetServerName action.
@@ -375,6 +405,22 @@ private:
      * Must be implemented iff EnableActionGetCurrentScanFile was called.
      */
     virtual void GetCurrentScanFile(IDvInvocationStd& aInvocation, std::string& aScanFile);
+    /**
+     * GetServerConfig action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetServerConfig action for the owning device.
+     * Must be implemented iff EnableActionGetServerConfig was called.
+     */
+    virtual void GetServerConfig(IDvInvocationStd& aInvocation, std::string& aGetValue);
+    /**
+     * SetServerConfig action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetServerConfig action for the owning device.
+     * Must be implemented iff EnableActionSetServerConfig was called.
+     */
+    virtual void SetServerConfig(IDvInvocationStd& aInvocation, const std::string& aSetValue);
 private:
     DvProviderAvOpenhomeOrgServerConfig1Cpp();
     void DoSetServerName(IDviInvocation& aInvocation);
@@ -400,8 +446,11 @@ private:
     void DoGetDISKCapacity(IDviInvocation& aInvocation);
     void DoForceRescan(IDviInvocation& aInvocation);
     void DoGetCurrentScanFile(IDviInvocation& aInvocation);
+    void DoGetServerConfig(IDviInvocation& aInvocation);
+    void DoSetServerConfig(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
+    PropertyString* iPropertySubscriptValue;
 };
 
 } // namespace Net

@@ -16,6 +16,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncSetVolume(uint aValue);
         void BeginSetVolume(uint aValue, CpProxy.CallbackAsyncComplete aCallback);
         void EndSetVolume(IntPtr aAsyncHandle);
+        void SyncCanSetVolume(uint aValue);
+        void BeginCanSetVolume(uint aValue, CpProxy.CallbackAsyncComplete aCallback);
+        void EndCanSetVolume(IntPtr aAsyncHandle);
         void SyncVolumeInc();
         void BeginVolumeInc(CpProxy.CallbackAsyncComplete aCallback);
         void EndVolumeInc(IntPtr aAsyncHandle);
@@ -52,6 +55,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncSetMute(bool aValue);
         void BeginSetMute(bool aValue, CpProxy.CallbackAsyncComplete aCallback);
         void EndSetMute(IntPtr aAsyncHandle);
+        void SyncCanSetMute(bool aValue);
+        void BeginCanSetMute(bool aValue, CpProxy.CallbackAsyncComplete aCallback);
+        void EndCanSetMute(IntPtr aAsyncHandle);
         void SyncMute(out bool aValue);
         void BeginMute(CpProxy.CallbackAsyncComplete aCallback);
         void EndMute(IntPtr aAsyncHandle, out bool aValue);
@@ -137,6 +143,20 @@ namespace OpenHome.Net.ControlPoint.Proxies
         protected override void CompleteRequest(IntPtr aAsyncHandle)
         {
             iService.EndSetVolume(aAsyncHandle);
+        }
+    };
+
+    internal class SyncCanSetVolumeAvOpenhomeOrgVolume1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgVolume1 iService;
+
+        public SyncCanSetVolumeAvOpenhomeOrgVolume1(CpProxyAvOpenhomeOrgVolume1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndCanSetVolume(aAsyncHandle);
         }
     };
 
@@ -323,6 +343,20 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncCanSetMuteAvOpenhomeOrgVolume1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgVolume1 iService;
+
+        public SyncCanSetMuteAvOpenhomeOrgVolume1(CpProxyAvOpenhomeOrgVolume1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndCanSetMute(aAsyncHandle);
+        }
+    };
+
     internal class SyncMuteAvOpenhomeOrgVolume1 : SyncProxyAction
     {
         private CpProxyAvOpenhomeOrgVolume1 iService;
@@ -368,6 +402,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
     {
         private OpenHome.Net.Core.Action iActionCharacteristics;
         private OpenHome.Net.Core.Action iActionSetVolume;
+        private OpenHome.Net.Core.Action iActionCanSetVolume;
         private OpenHome.Net.Core.Action iActionVolumeInc;
         private OpenHome.Net.Core.Action iActionVolumeDec;
         private OpenHome.Net.Core.Action iActionVolume;
@@ -380,6 +415,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionFadeDec;
         private OpenHome.Net.Core.Action iActionFade;
         private OpenHome.Net.Core.Action iActionSetMute;
+        private OpenHome.Net.Core.Action iActionCanSetMute;
         private OpenHome.Net.Core.Action iActionMute;
         private OpenHome.Net.Core.Action iActionVolumeLimit;
         private PropertyUint iVolume;
@@ -435,6 +471,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
             param = new ParameterUint("Value");
             iActionSetVolume.AddInputParameter(param);
 
+            iActionCanSetVolume = new OpenHome.Net.Core.Action("CanSetVolume");
+            param = new ParameterUint("Value");
+            iActionCanSetVolume.AddInputParameter(param);
+
             iActionVolumeInc = new OpenHome.Net.Core.Action("VolumeInc");
 
             iActionVolumeDec = new OpenHome.Net.Core.Action("VolumeDec");
@@ -470,6 +510,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionSetMute = new OpenHome.Net.Core.Action("SetMute");
             param = new ParameterBool("Value");
             iActionSetMute.AddInputParameter(param);
+
+            iActionCanSetMute = new OpenHome.Net.Core.Action("CanSetMute");
+            param = new ParameterBool("Value");
+            iActionCanSetMute.AddInputParameter(param);
 
             iActionMute = new OpenHome.Net.Core.Action("Mute");
             param = new ParameterBool("Value");
@@ -616,6 +660,52 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
         /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
         public void EndSetVolume(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aValue"></param>
+        public void SyncCanSetVolume(uint aValue)
+        {
+            SyncCanSetVolumeAvOpenhomeOrgVolume1 sync = new SyncCanSetVolumeAvOpenhomeOrgVolume1(this);
+            BeginCanSetVolume(aValue, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndCanSetVolume().</remarks>
+        /// <param name="aValue"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginCanSetVolume(uint aValue, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionCanSetVolume, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentUint((ParameterUint)iActionCanSetVolume.InputParameter(inIndex++), aValue));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndCanSetVolume(IntPtr aAsyncHandle)
         {
             uint code;
             string desc;
@@ -1153,6 +1243,52 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
         /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
         public void EndSetMute(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aValue"></param>
+        public void SyncCanSetMute(bool aValue)
+        {
+            SyncCanSetMuteAvOpenhomeOrgVolume1 sync = new SyncCanSetMuteAvOpenhomeOrgVolume1(this);
+            BeginCanSetMute(aValue, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndCanSetMute().</remarks>
+        /// <param name="aValue"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginCanSetMute(bool aValue, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionCanSetMute, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionCanSetMute.InputParameter(inIndex++), aValue));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndCanSetMute(IntPtr aAsyncHandle)
         {
             uint code;
             string desc;
@@ -1758,6 +1894,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             }
             iActionCharacteristics.Dispose();
             iActionSetVolume.Dispose();
+            iActionCanSetVolume.Dispose();
             iActionVolumeInc.Dispose();
             iActionVolumeDec.Dispose();
             iActionVolume.Dispose();
@@ -1770,6 +1907,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionFadeDec.Dispose();
             iActionFade.Dispose();
             iActionSetMute.Dispose();
+            iActionCanSetMute.Dispose();
             iActionMute.Dispose();
             iActionVolumeLimit.Dispose();
             iVolume.Dispose();

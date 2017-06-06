@@ -494,6 +494,96 @@
                 </argument>
          </argumentList>
       </action>
+      <action>
+         <name>SetBrightness</name>
+         <argumentList>
+                <argument>
+                    <name>Brightness</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Brightness</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetBrightness</name>
+         <argumentList>
+                <argument>
+                    <name>Brightness</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>Brightness</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>List</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>List</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetDisplayMode</name>
+         <argumentList>
+                <argument>
+                    <name>DisplayMode</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>DisplayMode</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetDisplayMode</name>
+         <argumentList>
+                <argument>
+                    <name>DisplayMode</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>DisplayMode</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>DisplayModeList</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>DisplayModeList</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetDACPhase</name>
+         <argumentList>
+                <argument>
+                    <name>Phase</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>Phase</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetDACPhase</name>
+         <argumentList>
+                <argument>
+                    <name>Phase</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Phase</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetDACBalance</name>
+         <argumentList>
+                <argument>
+                    <name>Balance</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>Balance</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetDACBalance</name>
+         <argumentList>
+                <argument>
+                    <name>Balance</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Balance</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
    </actionList>
    <serviceStateTable>
       <stateVariable sendEvents="yes">
@@ -651,6 +741,30 @@
       <stateVariable sendEvents="no">
          <name>KeyModeList</name>
          <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>Brightness</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>List</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>DisplayMode</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>DisplayModeList</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>Phase</name>
+         <dataType>ui4</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>Balance</name>
+         <dataType>ui4</dataType>
       </stateVariable>
    </serviceStateTable>
 </scpd>

@@ -65,6 +65,27 @@ void SyncSetVolumeAvOpenhomeOrgVolume1::CompleteRequest(IAsync& aAsync)
 }
 
 
+class SyncCanSetVolumeAvOpenhomeOrgVolume1 : public SyncProxyAction
+{
+public:
+    SyncCanSetVolumeAvOpenhomeOrgVolume1(CpProxyAvOpenhomeOrgVolume1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncCanSetVolumeAvOpenhomeOrgVolume1() {}
+private:
+    CpProxyAvOpenhomeOrgVolume1& iService;
+};
+
+SyncCanSetVolumeAvOpenhomeOrgVolume1::SyncCanSetVolumeAvOpenhomeOrgVolume1(CpProxyAvOpenhomeOrgVolume1& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncCanSetVolumeAvOpenhomeOrgVolume1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndCanSetVolume(aAsync);
+}
+
+
 class SyncVolumeIncAvOpenhomeOrgVolume1 : public SyncProxyAction
 {
 public:
@@ -323,6 +344,27 @@ void SyncSetMuteAvOpenhomeOrgVolume1::CompleteRequest(IAsync& aAsync)
 }
 
 
+class SyncCanSetMuteAvOpenhomeOrgVolume1 : public SyncProxyAction
+{
+public:
+    SyncCanSetMuteAvOpenhomeOrgVolume1(CpProxyAvOpenhomeOrgVolume1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncCanSetMuteAvOpenhomeOrgVolume1() {}
+private:
+    CpProxyAvOpenhomeOrgVolume1& iService;
+};
+
+SyncCanSetMuteAvOpenhomeOrgVolume1::SyncCanSetMuteAvOpenhomeOrgVolume1(CpProxyAvOpenhomeOrgVolume1& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncCanSetMuteAvOpenhomeOrgVolume1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndCanSetMute(aAsync);
+}
+
+
 class SyncMuteAvOpenhomeOrgVolume1 : public SyncProxyAction
 {
 public:
@@ -392,6 +434,10 @@ CpProxyAvOpenhomeOrgVolume1::CpProxyAvOpenhomeOrgVolume1(CpDevice& aDevice)
     param = new OpenHome::Net::ParameterUint("Value");
     iActionSetVolume->AddInputParameter(param);
 
+    iActionCanSetVolume = new Action("CanSetVolume");
+    param = new OpenHome::Net::ParameterUint("Value");
+    iActionCanSetVolume->AddInputParameter(param);
+
     iActionVolumeInc = new Action("VolumeInc");
 
     iActionVolumeDec = new Action("VolumeDec");
@@ -427,6 +473,10 @@ CpProxyAvOpenhomeOrgVolume1::CpProxyAvOpenhomeOrgVolume1(CpDevice& aDevice)
     iActionSetMute = new Action("SetMute");
     param = new OpenHome::Net::ParameterBool("Value");
     iActionSetMute->AddInputParameter(param);
+
+    iActionCanSetMute = new Action("CanSetMute");
+    param = new OpenHome::Net::ParameterBool("Value");
+    iActionCanSetMute->AddInputParameter(param);
 
     iActionMute = new Action("Mute");
     param = new OpenHome::Net::ParameterBool("Value");
@@ -477,6 +527,7 @@ CpProxyAvOpenhomeOrgVolume1::~CpProxyAvOpenhomeOrgVolume1()
     DestroyService();
     delete iActionCharacteristics;
     delete iActionSetVolume;
+    delete iActionCanSetVolume;
     delete iActionVolumeInc;
     delete iActionVolumeDec;
     delete iActionVolume;
@@ -489,6 +540,7 @@ CpProxyAvOpenhomeOrgVolume1::~CpProxyAvOpenhomeOrgVolume1()
     delete iActionFadeDec;
     delete iActionFade;
     delete iActionSetMute;
+    delete iActionCanSetMute;
     delete iActionMute;
     delete iActionVolumeLimit;
 }
@@ -556,6 +608,36 @@ void CpProxyAvOpenhomeOrgVolume1::EndSetVolume(IAsync& aAsync)
     ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
     Invocation& invocation = (Invocation&)aAsync;
     ASSERT(invocation.Action().Name() == Brn("SetVolume"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgVolume1::SyncCanSetVolume(TUint aValue)
+{
+    SyncCanSetVolumeAvOpenhomeOrgVolume1 sync(*this);
+    BeginCanSetVolume(aValue, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgVolume1::BeginCanSetVolume(TUint aValue, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionCanSetVolume, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionCanSetVolume->InputParameters();
+    invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aValue));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgVolume1::EndCanSetVolume(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("CanSetVolume"));
 
     Error::ELevel level;
     TUint code;
@@ -904,6 +986,36 @@ void CpProxyAvOpenhomeOrgVolume1::EndSetMute(IAsync& aAsync)
     ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
     Invocation& invocation = (Invocation&)aAsync;
     ASSERT(invocation.Action().Name() == Brn("SetMute"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgVolume1::SyncCanSetMute(TBool aValue)
+{
+    SyncCanSetMuteAvOpenhomeOrgVolume1 sync(*this);
+    BeginCanSetMute(aValue, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgVolume1::BeginCanSetMute(TBool aValue, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionCanSetMute, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionCanSetMute->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aValue));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgVolume1::EndCanSetMute(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("CanSetMute"));
 
     Error::ELevel level;
     TUint code;

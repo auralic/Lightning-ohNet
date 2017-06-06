@@ -34,6 +34,12 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncSetGroupStatus(String aGroupStatus);
         void BeginSetGroupStatus(String aGroupStatus, CpProxy.CallbackAsyncComplete aCallback);
         void EndSetGroupStatus(IntPtr aAsyncHandle);
+        void SyncGetBitPerfectMode(out bool aBitPerfectMode);
+        void BeginGetBitPerfectMode(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetBitPerfectMode(IntPtr aAsyncHandle, out bool aBitPerfectMode);
+        void SyncSetBitPerfectMode(bool aBitPerfectMode);
+        void BeginSetBitPerfectMode(bool aBitPerfectMode, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetBitPerfectMode(IntPtr aAsyncHandle);
         void SetPropertyGroupModeChanged(System.Action aGroupModeChanged);
         String PropertyGroupMode();
         void SetPropertyGroupNameChanged(System.Action aGroupNameChanged);
@@ -46,6 +52,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
         bool PropertyGroupMute();
         void SetPropertyGroupStatusChanged(System.Action aGroupStatusChanged);
         String PropertyGroupStatus();
+        void SetPropertyBitPerfectModeChanged(System.Action aBitPerfectModeChanged);
+        bool PropertyBitPerfectMode();
     }
 
     internal class SyncSetGroupModeAvOpenhomeOrgGroupConfig1 : SyncProxyAction
@@ -190,6 +198,39 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgGroupConfig1 iService;
+        private bool iBitPerfectMode;
+
+        public SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1(CpProxyAvOpenhomeOrgGroupConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public bool BitPerfectMode()
+        {
+            return iBitPerfectMode;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetBitPerfectMode(aAsyncHandle, out iBitPerfectMode);
+        }
+    };
+
+    internal class SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgGroupConfig1 iService;
+
+        public SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1(CpProxyAvOpenhomeOrgGroupConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetBitPerfectMode(aAsyncHandle);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:GroupConfig:1 UPnP service
     /// </summary>
@@ -203,18 +244,22 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionGetGroupMute;
         private OpenHome.Net.Core.Action iActionGetGroupStatus;
         private OpenHome.Net.Core.Action iActionSetGroupStatus;
+        private OpenHome.Net.Core.Action iActionGetBitPerfectMode;
+        private OpenHome.Net.Core.Action iActionSetBitPerfectMode;
         private PropertyString iGroupMode;
         private PropertyString iGroupName;
         private PropertyString iGroupID;
         private PropertyUint iGroupVolume;
         private PropertyBool iGroupMute;
         private PropertyString iGroupStatus;
+        private PropertyBool iBitPerfectMode;
         private System.Action iGroupModeChanged;
         private System.Action iGroupNameChanged;
         private System.Action iGroupIDChanged;
         private System.Action iGroupVolumeChanged;
         private System.Action iGroupMuteChanged;
         private System.Action iGroupStatusChanged;
+        private System.Action iBitPerfectModeChanged;
         private Mutex iPropertyLock;
 
         /// <summary>
@@ -276,6 +321,14 @@ namespace OpenHome.Net.ControlPoint.Proxies
             param = new ParameterString("GroupStatus", allowedValues);
             iActionSetGroupStatus.AddInputParameter(param);
 
+            iActionGetBitPerfectMode = new OpenHome.Net.Core.Action("GetBitPerfectMode");
+            param = new ParameterBool("BitPerfectMode");
+            iActionGetBitPerfectMode.AddOutputParameter(param);
+
+            iActionSetBitPerfectMode = new OpenHome.Net.Core.Action("SetBitPerfectMode");
+            param = new ParameterBool("BitPerfectMode");
+            iActionSetBitPerfectMode.AddInputParameter(param);
+
             iGroupMode = new PropertyString("GroupMode", GroupModePropertyChanged);
             AddProperty(iGroupMode);
             iGroupName = new PropertyString("GroupName", GroupNamePropertyChanged);
@@ -288,6 +341,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
             AddProperty(iGroupMute);
             iGroupStatus = new PropertyString("GroupStatus", GroupStatusPropertyChanged);
             AddProperty(iGroupStatus);
+            iBitPerfectMode = new PropertyBool("BitPerfectMode", BitPerfectModePropertyChanged);
+            AddProperty(iBitPerfectMode);
             
             iPropertyLock = new Mutex();
         }
@@ -689,6 +744,101 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aBitPerfectMode"></param>
+        public void SyncGetBitPerfectMode(out bool aBitPerfectMode)
+        {
+            SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1 sync = new SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1(this);
+            BeginGetBitPerfectMode(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aBitPerfectMode = sync.BitPerfectMode();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetBitPerfectMode().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetBitPerfectMode(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetBitPerfectMode, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentBool((ParameterBool)iActionGetBitPerfectMode.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aBitPerfectMode"></param>
+        public void EndGetBitPerfectMode(IntPtr aAsyncHandle, out bool aBitPerfectMode)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aBitPerfectMode = Invocation.OutputBool(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aBitPerfectMode"></param>
+        public void SyncSetBitPerfectMode(bool aBitPerfectMode)
+        {
+            SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1 sync = new SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1(this);
+            BeginSetBitPerfectMode(aBitPerfectMode, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetBitPerfectMode().</remarks>
+        /// <param name="aBitPerfectMode"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetBitPerfectMode(bool aBitPerfectMode, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetBitPerfectMode, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionSetBitPerfectMode.InputParameter(inIndex++), aBitPerfectMode));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetBitPerfectMode(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the GroupMode state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -817,6 +967,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
             lock (iPropertyLock)
             {
                 ReportEvent(iGroupStatusChanged);
+            }
+        }
+
+        /// <summary>
+        /// Set a delegate to be run when the BitPerfectMode state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgGroupConfig1 instance will not overlap.</remarks>
+        /// <param name="aBitPerfectModeChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyBitPerfectModeChanged(System.Action aBitPerfectModeChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iBitPerfectModeChanged = aBitPerfectModeChanged;
+            }
+        }
+
+        private void BitPerfectModePropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iBitPerfectModeChanged);
             }
         }
 
@@ -953,6 +1125,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Query the value of the BitPerfectMode property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the BitPerfectMode property</returns>
+        public bool PropertyBitPerfectMode()
+        {
+            PropertyReadLock();
+            bool val;
+            try
+            {
+                val = iBitPerfectMode.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
+        }
+
+        /// <summary>
         /// Must be called for each class instance.  Must be called before Core.Library.Close().
         /// </summary>
         public void Dispose()
@@ -972,12 +1166,15 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetGroupMute.Dispose();
             iActionGetGroupStatus.Dispose();
             iActionSetGroupStatus.Dispose();
+            iActionGetBitPerfectMode.Dispose();
+            iActionSetBitPerfectMode.Dispose();
             iGroupMode.Dispose();
             iGroupName.Dispose();
             iGroupID.Dispose();
             iGroupVolume.Dispose();
             iGroupMute.Dispose();
             iGroupStatus.Dispose();
+            iBitPerfectMode.Dispose();
         }
     }
 }

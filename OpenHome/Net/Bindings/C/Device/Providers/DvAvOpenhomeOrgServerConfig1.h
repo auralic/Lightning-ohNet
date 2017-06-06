@@ -299,6 +299,30 @@ typedef int32_t (STDCALL *CallbackServerConfig1ForceRescan)(void* aPtr, IDvInvoc
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackServerConfig1GetCurrentScanFile)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, char** aScanFile);
+/**
+ * Callback which runs when the GetServerConfig action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionGetServerConfig
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[out] aGetValue
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1GetServerConfig)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, char** aGetValue);
+/**
+ * Callback which runs when the SetServerConfig action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgServerConfig1EnableActionSetServerConfig
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aSetValue
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackServerConfig1SetServerConfig)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aSetValue);
 
 /**
  * Provider constructor
@@ -320,6 +344,10 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1Destroy(THandle aProv
  * Enable the Alive property.
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnablePropertyAlive(THandle aProvider);
+/**
+ * Enable the SubscriptValue property.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnablePropertySubscriptValue(THandle aProvider);
 
 /**
  * Register a callback for the action SetServerName
@@ -574,6 +602,28 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionForceResc
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetCurrentScanFile(THandle aProvider, CallbackServerConfig1GetCurrentScanFile aCallback, void* aPtr);
+/**
+ * Register a callback for the action GetServerConfig
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetServerConfig(THandle aProvider, CallbackServerConfig1GetServerConfig aCallback, void* aPtr);
+/**
+ * Register a callback for the action SetServerConfig
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionSetServerConfig(THandle aProvider, CallbackServerConfig1SetServerConfig aCallback, void* aPtr);
 
 /**
  * Set the value of the Alive property
@@ -597,6 +647,28 @@ DllExport int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertyAlive(T
  * @param[out] aValue     Value for the property
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1GetPropertyAlive(THandle aProvider, uint32_t* aValue);
+/**
+ * Set the value of the SubscriptValue property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgServerConfig1EnablePropertySubscriptValue has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[in]  aValue     New value for the property (will be copied)
+ * @param[out] aChanged   1 if the value has been updated; 0 if it was the same as the previous value
+ *
+ * @return  0 if the property was successfully set; non-zero if there was an error (including
+ *          an attempt to set a property to a value not in its allowed range/set)
+ */
+DllExport int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertySubscriptValue(THandle aProvider, const char* aValue, uint32_t* aChanged);
+/**
+ * Get a copy of the value of the SubscriptValue property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgServerConfig1EnablePropertySubscriptValue has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgServerConfig1Create
+ * @param[out] aValue     Value for the property.  Caller is responsible for freeing this.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgServerConfig1GetPropertySubscriptValue(THandle aProvider, char** aValue);
 
 /* @} */
 

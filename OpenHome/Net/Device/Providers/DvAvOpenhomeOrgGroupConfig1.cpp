@@ -80,6 +80,18 @@ void DvProviderAvOpenhomeOrgGroupConfig1::GetPropertyGroupStatus(Brhz& aValue)
     aValue.Set(iPropertyGroupStatus->Value());
 }
 
+TBool DvProviderAvOpenhomeOrgGroupConfig1::SetPropertyBitPerfectMode(TBool aValue)
+{
+    ASSERT(iPropertyBitPerfectMode != NULL);
+    return SetPropertyBool(*iPropertyBitPerfectMode, aValue);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1::GetPropertyBitPerfectMode(TBool& aValue)
+{
+    ASSERT(iPropertyBitPerfectMode != NULL);
+    aValue = iPropertyBitPerfectMode->Value();
+}
+
 DvProviderAvOpenhomeOrgGroupConfig1::DvProviderAvOpenhomeOrgGroupConfig1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "GroupConfig", 1)
 {
@@ -100,6 +112,7 @@ void DvProviderAvOpenhomeOrgGroupConfig1::Construct()
     iPropertyGroupVolume = NULL;
     iPropertyGroupMute = NULL;
     iPropertyGroupStatus = NULL;
+    iPropertyBitPerfectMode = NULL;
 }
 
 void DvProviderAvOpenhomeOrgGroupConfig1::EnablePropertyGroupMode()
@@ -143,6 +156,12 @@ void DvProviderAvOpenhomeOrgGroupConfig1::EnablePropertyGroupStatus()
 {
     iPropertyGroupStatus = new PropertyString(new ParameterString("GroupStatus"));
     iService->AddProperty(iPropertyGroupStatus); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1::EnablePropertyBitPerfectMode()
+{
+    iPropertyBitPerfectMode = new PropertyBool(new ParameterBool("BitPerfectMode"));
+    iService->AddProperty(iPropertyBitPerfectMode); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgGroupConfig1::EnableActionSetGroupMode()
@@ -210,6 +229,22 @@ void DvProviderAvOpenhomeOrgGroupConfig1::EnableActionSetGroupStatus()
     OpenHome::Net::Action* action = new OpenHome::Net::Action("SetGroupStatus");
     action->AddInputParameter(new ParameterRelated("GroupStatus", *iPropertyGroupStatus));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgGroupConfig1::DoSetGroupStatus);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1::EnableActionGetBitPerfectMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetBitPerfectMode");
+    action->AddOutputParameter(new ParameterRelated("BitPerfectMode", *iPropertyBitPerfectMode));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgGroupConfig1::DoGetBitPerfectMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1::EnableActionSetBitPerfectMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetBitPerfectMode");
+    action->AddInputParameter(new ParameterRelated("BitPerfectMode", *iPropertyBitPerfectMode));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgGroupConfig1::DoSetBitPerfectMode);
     iService->AddAction(action, functor);
 }
 
@@ -293,6 +328,24 @@ void DvProviderAvOpenhomeOrgGroupConfig1::DoSetGroupStatus(IDviInvocation& aInvo
     SetGroupStatus(invocation, GroupStatus);
 }
 
+void DvProviderAvOpenhomeOrgGroupConfig1::DoGetBitPerfectMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseBool respBitPerfectMode(aInvocation, "BitPerfectMode");
+    GetBitPerfectMode(invocation, respBitPerfectMode);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1::DoSetBitPerfectMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TBool BitPerfectMode = aInvocation.InvocationReadBool("BitPerfectMode");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetBitPerfectMode(invocation, BitPerfectMode);
+}
+
 void DvProviderAvOpenhomeOrgGroupConfig1::SetGroupMode(IDvInvocation& /*aResponse*/, const Brx& /*aGroupMode*/, const Brx& /*aGroupID*/, const Brx& /*aGroupName*/)
 {
     ASSERTS();
@@ -329,6 +382,16 @@ void DvProviderAvOpenhomeOrgGroupConfig1::GetGroupStatus(IDvInvocation& /*aRespo
 }
 
 void DvProviderAvOpenhomeOrgGroupConfig1::SetGroupStatus(IDvInvocation& /*aResponse*/, const Brx& /*aGroupStatus*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1::GetBitPerfectMode(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aBitPerfectMode*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1::SetBitPerfectMode(IDvInvocation& /*aResponse*/, TBool /*aBitPerfectMode*/)
 {
     ASSERTS();
 }

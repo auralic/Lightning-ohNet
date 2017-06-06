@@ -122,6 +122,14 @@ public:
     void EnableActionGetLEDMode(CallbackHardwareConfig1GetLEDMode aCallback, void* aPtr);
     void EnableActionSetKeyMode(CallbackHardwareConfig1SetKeyMode aCallback, void* aPtr);
     void EnableActionGetKeyMode(CallbackHardwareConfig1GetKeyMode aCallback, void* aPtr);
+    void EnableActionSetBrightness(CallbackHardwareConfig1SetBrightness aCallback, void* aPtr);
+    void EnableActionGetBrightness(CallbackHardwareConfig1GetBrightness aCallback, void* aPtr);
+    void EnableActionSetDisplayMode(CallbackHardwareConfig1SetDisplayMode aCallback, void* aPtr);
+    void EnableActionGetDisplayMode(CallbackHardwareConfig1GetDisplayMode aCallback, void* aPtr);
+    void EnableActionGetDACPhase(CallbackHardwareConfig1GetDACPhase aCallback, void* aPtr);
+    void EnableActionSetDACPhase(CallbackHardwareConfig1SetDACPhase aCallback, void* aPtr);
+    void EnableActionGetDACBalance(CallbackHardwareConfig1GetDACBalance aCallback, void* aPtr);
+    void EnableActionSetDACBalance(CallbackHardwareConfig1SetDACBalance aCallback, void* aPtr);
 private:
     void DoIsAlive(IDviInvocation& aInvocation);
     void DoUpdate(IDviInvocation& aInvocation);
@@ -158,6 +166,14 @@ private:
     void DoGetLEDMode(IDviInvocation& aInvocation);
     void DoSetKeyMode(IDviInvocation& aInvocation);
     void DoGetKeyMode(IDviInvocation& aInvocation);
+    void DoSetBrightness(IDviInvocation& aInvocation);
+    void DoGetBrightness(IDviInvocation& aInvocation);
+    void DoSetDisplayMode(IDviInvocation& aInvocation);
+    void DoGetDisplayMode(IDviInvocation& aInvocation);
+    void DoGetDACPhase(IDviInvocation& aInvocation);
+    void DoSetDACPhase(IDviInvocation& aInvocation);
+    void DoGetDACBalance(IDviInvocation& aInvocation);
+    void DoSetDACBalance(IDviInvocation& aInvocation);
 private:
     CallbackHardwareConfig1IsAlive iCallbackIsAlive;
     void* iPtrIsAlive;
@@ -229,6 +245,22 @@ private:
     void* iPtrSetKeyMode;
     CallbackHardwareConfig1GetKeyMode iCallbackGetKeyMode;
     void* iPtrGetKeyMode;
+    CallbackHardwareConfig1SetBrightness iCallbackSetBrightness;
+    void* iPtrSetBrightness;
+    CallbackHardwareConfig1GetBrightness iCallbackGetBrightness;
+    void* iPtrGetBrightness;
+    CallbackHardwareConfig1SetDisplayMode iCallbackSetDisplayMode;
+    void* iPtrSetDisplayMode;
+    CallbackHardwareConfig1GetDisplayMode iCallbackGetDisplayMode;
+    void* iPtrGetDisplayMode;
+    CallbackHardwareConfig1GetDACPhase iCallbackGetDACPhase;
+    void* iPtrGetDACPhase;
+    CallbackHardwareConfig1SetDACPhase iCallbackSetDACPhase;
+    void* iPtrSetDACPhase;
+    CallbackHardwareConfig1GetDACBalance iCallbackGetDACBalance;
+    void* iPtrGetDACBalance;
+    CallbackHardwareConfig1SetDACBalance iCallbackSetDACBalance;
+    void* iPtrSetDACBalance;
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;
     PropertyBool* iPropertyRestart;
@@ -1072,6 +1104,88 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetKeyMode(CallbackHar
     action->AddOutputParameter(new ParameterString("MiddleKeyMode"));
     action->AddOutputParameter(new ParameterString("KeyModeList"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetKeyMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetBrightness(CallbackHardwareConfig1SetBrightness aCallback, void* aPtr)
+{
+    iCallbackSetBrightness = aCallback;
+    iPtrSetBrightness = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetBrightness");
+    action->AddInputParameter(new ParameterString("Brightness"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetBrightness);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetBrightness(CallbackHardwareConfig1GetBrightness aCallback, void* aPtr)
+{
+    iCallbackGetBrightness = aCallback;
+    iPtrGetBrightness = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetBrightness");
+    action->AddOutputParameter(new ParameterString("Brightness"));
+    action->AddOutputParameter(new ParameterString("List"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetBrightness);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetDisplayMode(CallbackHardwareConfig1SetDisplayMode aCallback, void* aPtr)
+{
+    iCallbackSetDisplayMode = aCallback;
+    iPtrSetDisplayMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetDisplayMode");
+    action->AddInputParameter(new ParameterString("DisplayMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetDisplayMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetDisplayMode(CallbackHardwareConfig1GetDisplayMode aCallback, void* aPtr)
+{
+    iCallbackGetDisplayMode = aCallback;
+    iPtrGetDisplayMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetDisplayMode");
+    action->AddOutputParameter(new ParameterString("DisplayMode"));
+    action->AddOutputParameter(new ParameterString("DisplayModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetDisplayMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetDACPhase(CallbackHardwareConfig1GetDACPhase aCallback, void* aPtr)
+{
+    iCallbackGetDACPhase = aCallback;
+    iPtrGetDACPhase = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetDACPhase");
+    action->AddOutputParameter(new ParameterUint("Phase"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetDACPhase);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetDACPhase(CallbackHardwareConfig1SetDACPhase aCallback, void* aPtr)
+{
+    iCallbackSetDACPhase = aCallback;
+    iPtrSetDACPhase = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetDACPhase");
+    action->AddInputParameter(new ParameterUint("Phase"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetDACPhase);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionGetDACBalance(CallbackHardwareConfig1GetDACBalance aCallback, void* aPtr)
+{
+    iCallbackGetDACBalance = aCallback;
+    iPtrGetDACBalance = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetDACBalance");
+    action->AddOutputParameter(new ParameterUint("Balance"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetDACBalance);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetDACBalance(CallbackHardwareConfig1SetDACBalance aCallback, void* aPtr)
+{
+    iCallbackSetDACBalance = aCallback;
+    iPtrSetDACBalance = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetDACBalance");
+    action->AddInputParameter(new ParameterUint("Balance"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetDACBalance);
     iService->AddAction(action, functor);
 }
 
@@ -1951,6 +2065,186 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetKeyMode(IDviInvocation& aInvo
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetBrightness(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz Brightness;
+    aInvocation.InvocationReadString("Brightness", Brightness);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetBrightness != NULL);
+    if (0 != iCallbackSetBrightness(iPtrSetBrightness, invocationC, invocationCPtr, (const char*)Brightness.Ptr())) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetBrightness(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* Brightness;
+    char* List;
+    ASSERT(iCallbackGetBrightness != NULL);
+    if (0 != iCallbackGetBrightness(iPtrGetBrightness, invocationC, invocationCPtr, &Brightness, &List)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respBrightness(aInvocation, "Brightness");
+    DviInvocationResponseString respList(aInvocation, "List");
+    invocation.StartResponse();
+    Brhz bufBrightness((const TChar*)Brightness);
+    OhNetFreeExternal(Brightness);
+    respBrightness.Write(bufBrightness);
+    respBrightness.WriteFlush();
+    Brhz bufList((const TChar*)List);
+    OhNetFreeExternal(List);
+    respList.Write(bufList);
+    respList.WriteFlush();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetDisplayMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz DisplayMode;
+    aInvocation.InvocationReadString("DisplayMode", DisplayMode);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetDisplayMode != NULL);
+    if (0 != iCallbackSetDisplayMode(iPtrSetDisplayMode, invocationC, invocationCPtr, (const char*)DisplayMode.Ptr())) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetDisplayMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* DisplayMode;
+    char* DisplayModeList;
+    ASSERT(iCallbackGetDisplayMode != NULL);
+    if (0 != iCallbackGetDisplayMode(iPtrGetDisplayMode, invocationC, invocationCPtr, &DisplayMode, &DisplayModeList)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respDisplayMode(aInvocation, "DisplayMode");
+    DviInvocationResponseString respDisplayModeList(aInvocation, "DisplayModeList");
+    invocation.StartResponse();
+    Brhz bufDisplayMode((const TChar*)DisplayMode);
+    OhNetFreeExternal(DisplayMode);
+    respDisplayMode.Write(bufDisplayMode);
+    respDisplayMode.WriteFlush();
+    Brhz bufDisplayModeList((const TChar*)DisplayModeList);
+    OhNetFreeExternal(DisplayModeList);
+    respDisplayModeList.Write(bufDisplayModeList);
+    respDisplayModeList.WriteFlush();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetDACPhase(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    uint32_t Phase;
+    ASSERT(iCallbackGetDACPhase != NULL);
+    if (0 != iCallbackGetDACPhase(iPtrGetDACPhase, invocationC, invocationCPtr, &Phase)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseUint respPhase(aInvocation, "Phase");
+    invocation.StartResponse();
+    respPhase.Write(Phase);
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetDACPhase(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TUint Phase = aInvocation.InvocationReadUint("Phase");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetDACPhase != NULL);
+    if (0 != iCallbackSetDACPhase(iPtrSetDACPhase, invocationC, invocationCPtr, Phase)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoGetDACBalance(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    uint32_t Balance;
+    ASSERT(iCallbackGetDACBalance != NULL);
+    if (0 != iCallbackGetDACBalance(iPtrGetDACBalance, invocationC, invocationCPtr, &Balance)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseUint respBalance(aInvocation, "Balance");
+    invocation.StartResponse();
+    respBalance.Write(Balance);
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetDACBalance(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TUint Balance = aInvocation.InvocationReadUint("Balance");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetDACBalance != NULL);
+    if (0 != iCallbackSetDACBalance(iPtrSetDACBalance, invocationC, invocationCPtr, Balance)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Create(DvDeviceC aDevice)
@@ -2136,6 +2430,46 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetKeyMode(THandl
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetKeyMode(THandle aProvider, CallbackHardwareConfig1GetKeyMode aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetKeyMode(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetBrightness(THandle aProvider, CallbackHardwareConfig1SetBrightness aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetBrightness(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetBrightness(THandle aProvider, CallbackHardwareConfig1GetBrightness aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetBrightness(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetDisplayMode(THandle aProvider, CallbackHardwareConfig1SetDisplayMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetDisplayMode(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetDisplayMode(THandle aProvider, CallbackHardwareConfig1GetDisplayMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetDisplayMode(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetDACPhase(THandle aProvider, CallbackHardwareConfig1GetDACPhase aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetDACPhase(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetDACPhase(THandle aProvider, CallbackHardwareConfig1SetDACPhase aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetDACPhase(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetDACBalance(THandle aProvider, CallbackHardwareConfig1GetDACBalance aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionGetDACBalance(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetDACBalance(THandle aProvider, CallbackHardwareConfig1SetDACBalance aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetDACBalance(aCallback, aPtr);
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)

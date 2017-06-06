@@ -24,6 +24,22 @@ interface IDvProviderAvOpenhomeOrgServerConfig1
      * @return value of the Alive property.
      */
     public boolean getPropertyAlive();
+
+    /**
+     * Set the value of the SubscriptValue property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertySubscriptValue(String aValue);
+
+    /**
+     * Get a copy of the value of the SubscriptValue property
+     *
+     * @return value of the SubscriptValue property.
+     */
+    public String getPropertySubscriptValue();
         
 }
 
@@ -183,7 +199,10 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     private IDvInvocationListener iDelegateGetDISKCapacity;
     private IDvInvocationListener iDelegateForceRescan;
     private IDvInvocationListener iDelegateGetCurrentScanFile;
+    private IDvInvocationListener iDelegateGetServerConfig;
+    private IDvInvocationListener iDelegateSetServerConfig;
     private PropertyBool iPropertyAlive;
+    private PropertyString iPropertySubscriptValue;
 
     /**
      * Constructor
@@ -202,6 +221,16 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     {
         iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
         addProperty(iPropertyAlive);
+    }
+
+    /**
+     * Enable the SubscriptValue property.
+     */
+    public void enablePropertySubscriptValue()
+    {
+        List<String> allowedValues = new LinkedList<String>();
+        iPropertySubscriptValue = new PropertyString(new ParameterString("SubscriptValue", allowedValues));
+        addProperty(iPropertySubscriptValue);
     }
 
     /**
@@ -224,6 +253,28 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     public boolean getPropertyAlive()
     {
         return iPropertyAlive.getValue();
+    }
+
+    /**
+     * Set the value of the SubscriptValue property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertySubscriptValue(String aValue)
+    {
+        return setPropertyString(iPropertySubscriptValue, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the SubscriptValue property
+     *
+     * @return  value of the SubscriptValue property.
+     */
+    public String getPropertySubscriptValue()
+    {
+        return iPropertySubscriptValue.getValue();
     }
 
     /**
@@ -550,6 +601,34 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
         action.addOutputParameter(new ParameterString("ScanFile", allowedValues));
         iDelegateGetCurrentScanFile = new DoGetCurrentScanFile();
         enableAction(action, iDelegateGetCurrentScanFile);
+    }
+
+    /**
+     * Signal that the action GetServerConfig is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetServerConfig must be overridden if this is called.
+     */      
+    protected void enableActionGetServerConfig()
+    {
+        Action action = new Action("GetServerConfig");        List<String> allowedValues = new LinkedList<String>();
+        action.addOutputParameter(new ParameterString("GetValue", allowedValues));
+        iDelegateGetServerConfig = new DoGetServerConfig();
+        enableAction(action, iDelegateGetServerConfig);
+    }
+
+    /**
+     * Signal that the action SetServerConfig is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetServerConfig must be overridden if this is called.
+     */      
+    protected void enableActionSetServerConfig()
+    {
+        Action action = new Action("SetServerConfig");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("SetValue", allowedValues));
+        iDelegateSetServerConfig = new DoSetServerConfig();
+        enableAction(action, iDelegateSetServerConfig);
     }
 
     /**
@@ -899,6 +978,37 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
      * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
      */
     protected String getCurrentScanFile(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetServerConfig action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetServerConfig action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetServerConfig} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected String getServerConfig(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetServerConfig action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetServerConfig action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetServerConfig} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aSetValue
+     */
+    protected void setServerConfig(IDvInvocation aInvocation, String aSetValue)
     {
         throw (new ActionDisabledError());
     }
@@ -2034,6 +2144,102 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
             {
                 invocation.writeStart();
                 invocation.writeString("ScanFile", scanFile);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetServerConfig implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String getValue;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                 getValue = getServerConfig(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetServerConfig");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("GetValue", getValue);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetServerConfig implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String setValue;
+            try
+            {
+                invocation.readStart();
+                setValue = invocation.readString("SetValue");
+                invocation.readEnd();
+                setServerConfig(invocation, setValue);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetServerConfig");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
                 invocation.writeEnd();
             }
             catch (ActionError ae)

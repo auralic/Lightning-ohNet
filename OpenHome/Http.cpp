@@ -8,7 +8,8 @@
 
 #include <ctype.h>
 #include <algorithm>
-
+#include <string.h>
+#include <stdio.h>
 using namespace OpenHome;
 
 // Http Methods
@@ -173,7 +174,10 @@ void Http::WriteHeaderContentType(WriterHttpHeader& aWriter, const Brx& aType)
 {
     aWriter.WriteHeader(Http::kHeaderContentType, aType);
 }
-
+void Http::WriteHeaderAllowOrigin(WriterHttpHeader& aWriter, const Brx& aType)
+{
+    aWriter.WriteHeader(Http::kHeaderAllowOrigin, aType);
+}
 void Http::WriteHeaderConnectionClose(WriterHttpHeader& aWriter)
 {
     aWriter.WriteHeader(Http::kHeaderConnection, Http::kConnectionClose);
@@ -409,7 +413,38 @@ void ReaderHttpRequest::ProcessMethod(const Brx& aMethod, const Brx& aUri, const
                 THROW(HttpError);
             }
             iUri.SetBytes(0);
-            Uri::Unescape(iUri, aUri);
+            if(aMethod == Brn("POST"))
+            {
+                //added by changpeng
+                if(strstr((const char*)aUri.Ptr(),"?SOAPAction="))
+                {
+                    Parser parser(aUri);
+                    Brn a = parser.Next('?');
+                    Brn field = parser.Next('=');
+                    Brn value = Ascii::Trim(parser.Next());
+                    Parser parser1(value);
+                    Brn b = parser1.Next('@');
+                    Brn c = parser1.Remaining();
+                    char buffer[1024]={0};
+                    char *q = buffer;
+                    snprintf(q,b.Bytes()+1,"%s",(const char*)b.Ptr());
+                    snprintf(q+b.Bytes(),2,"#");
+                    snprintf(q+b.Bytes()+1,c.Bytes()+1,"%s",(const char*)c.Ptr());
+                    printf("%s\n",buffer);
+                    Brn d(buffer);
+                    ProcessHeader(field, d);
+                    Uri::Unescape(iUri, a);
+                }
+                else
+                    //end by changpeng
+                {
+                    Uri::Unescape(iUri, aUri);
+                }
+            }
+            else
+            {
+                Uri::Unescape(iUri, aUri);
+            }
             //May throw HttpError
             iVersion = Http::Version(aVersion);
             return;

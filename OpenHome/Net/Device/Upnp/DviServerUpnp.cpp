@@ -19,7 +19,8 @@
 #include <OpenHome/OsWrapper.h>
 
 #include <stdlib.h>
-
+#include <stdio.h>
+#include <string.h>
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
@@ -545,6 +546,7 @@ DviSessionUpnp::DviSessionUpnp(DvStack& aDvStack, TIpAddress aInterface, TUint a
 
     iReaderRequest->AddMethod(Http::kMethodGet);
     iReaderRequest->AddMethod(Http::kMethodPost);
+    iReaderRequest->AddMethod(Http::kMethodOptions);
     iReaderRequest->AddMethod(Http::kMethodHead);
     iReaderRequest->AddMethod(kUpnpMethodSubscribe);
     iReaderRequest->AddMethod(kUpnpMethodUnsubscribe);
@@ -624,6 +626,19 @@ void DviSessionUpnp::Run()
         else if (method == Http::kMethodPost) {
             Post();
         }
+        //added by changpeng
+        else if (method == Http::kMethodOptions) {
+            iResponseStarted = true;
+            iWriterResponse->WriteStatus(HttpStatus::kOk, Http::eHttp11);
+            iWriterResponse->WriteHeader(Http::kHeaderAllowOrigin, Brn("*"));
+//            iWriterResponse->WriteHeader(Brn("Access-Control-Allow-Methods"), Brn("POST"));
+            iWriterResponse->WriteHeader(Brn("Access-Control-Allow-Headers"), Brn("accept,content-type,SOAPAction"));
+ //           iWriterResponse->WriteHeader(Brn("Access-Control-Allow-Headers"), Brn("*"));
+            iWriterResponse->WriteHeader(Brn("Access-Control-Max-Age"), Brn("1728000"));
+            iWriterResponse->WriteFlush();
+            iResponseEnded = true;
+        }
+        //end by changpeng
         else if (method == kUpnpMethodSubscribe) {
             Subscribe();
         }
@@ -656,7 +671,8 @@ void DviSessionUpnp::Run()
             iWriterResponse->WriteFlush();
         }
     }
-    catch (WriterError&) {}
+    catch (WriterError&) {
+    }
     iShutdownSem.Signal();
 }
 
@@ -673,7 +689,6 @@ void DviSessionUpnp::Get()
             Error(HttpStatus::kBadRequest);
         }
     }
-
     Brn redirectTo;
     if (!iRedirector.RedirectUri(iReaderRequest->Uri(), redirectTo)) {
         iDvStack.DeviceMap().WriteResource(iReaderRequest->Uri(), iInterface, iHeaderAcceptLanguage.LanguageList(), *this);
@@ -708,8 +723,16 @@ void DviSessionUpnp::Post()
             Error(HttpStatus::kBadRequest);
         }
     }
-
-    ParseRequestUri(DviProtocolUpnp::kControlUrlTail, &iInvocationDevice, &iInvocationService);
+    /*
+    if(strstr((const char*)iReaderRequest->Uri().Ptr(),"?SOAPAction="))
+    {
+        MyParseRequestUri(DviProtocolUpnp::kControlUrlTail, &iInvocationDevice, &iInvocationService);
+    }
+    else
+    */
+    {
+        ParseRequestUri(DviProtocolUpnp::kControlUrlTail, &iInvocationDevice, &iInvocationService);
+    }
     if (iInvocationDevice != NULL && iInvocationService != NULL) {
         try {
             if (iHeaderExpect.Continue()) {
@@ -942,8 +965,40 @@ void DviSessionUpnp::ParseRequestUri(const Brx& aUrlTail, DviDevice** aDevice, D
     }
 }
 
+void DviSessionUpnp::MyParseRequestUri(const Brx& aUrlTail, DviDevice** aDevice, DviService** aService)
+{
+    Parser parser(iReaderRequest->Uri());
+    Brn tmp = parser.Next('/');
+    if (tmp.Bytes() > 0) {
+        Error(HttpStatus::kPreconditionFailed);
+    }
+    Brn udn = parser.Next('/');
+    DviDevice* device = iDvStack.DeviceMap().Find(udn);
+    *aDevice = device;
+    if (device == NULL) {
+        Error(HttpStatus::kPreconditionFailed);
+    }
+    Brn serviceName = parser.Next('/');
+    Brn a = parser.Next('?');
+
+    if (a != aUrlTail) {
+        Error(HttpStatus::kPreconditionFailed);
+    }
+    const TUint count = device->ServiceCount();
+    for (TUint i=0; i<count; i++) {
+        DviService& service = device->Service(i);
+        if (service.ServiceType().PathUpnp() == serviceName) {
+            *aService = &service;
+            break;
+        }
+    }
+}
 void DviSessionUpnp::WriteServerHeader(IWriterHttpHeader& aWriter)
 {
+     //added by changpeng
+     aWriter.WriteHeader(Http::kHeaderAllowOrigin, Brn("*"));
+//    aWriter.WriteFlush();
+    //end by changpeng
     IWriterAscii& stream = aWriter.WriteHeaderField(Brn("SERVER"));
     TUint major, minor;
     Brn osName = Os::GetPlatformNameAndVersion(iDvStack.Env().OsCtx(), major, minor);

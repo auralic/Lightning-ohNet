@@ -21,6 +21,19 @@ namespace OpenHome.Net.Device.Providers
         /// </summary>
         /// <returns>Value of the Alive property.</param>
         bool PropertyAlive();
+
+        /// <summary>
+        /// Set the value of the SubscriptValue property
+        /// </summary>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        bool SetPropertySubscriptValue(string aValue);
+
+        /// <summary>
+        /// Get a copy of the value of the SubscriptValue property
+        /// </summary>
+        /// <returns>Value of the SubscriptValue property.</param>
+        string PropertySubscriptValue();
         
     }
     /// <summary>
@@ -52,7 +65,10 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateGetDISKCapacity;
         private ActionDelegate iDelegateForceRescan;
         private ActionDelegate iDelegateGetCurrentScanFile;
+        private ActionDelegate iDelegateGetServerConfig;
+        private ActionDelegate iDelegateSetServerConfig;
         private PropertyBool iPropertyAlive;
+        private PropertyString iPropertySubscriptValue;
 
         /// <summary>
         /// Constructor
@@ -71,6 +87,16 @@ namespace OpenHome.Net.Device.Providers
         {
             iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
             AddProperty(iPropertyAlive);
+        }
+
+        /// <summary>
+        /// Enable the SubscriptValue property.
+        /// </summary>
+        public void EnablePropertySubscriptValue()
+        {
+            List<String> allowedValues = new List<String>();
+            iPropertySubscriptValue = new PropertyString(new ParameterString("SubscriptValue", allowedValues));
+            AddProperty(iPropertySubscriptValue);
         }
 
         /// <summary>
@@ -96,6 +122,31 @@ namespace OpenHome.Net.Device.Providers
             if (iPropertyAlive == null)
                 throw new PropertyDisabledError();
             return iPropertyAlive.Value();
+        }
+
+        /// <summary>
+        /// Set the value of the SubscriptValue property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertySubscriptValue has previously been called.</remarks>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        public bool SetPropertySubscriptValue(string aValue)
+        {
+            if (iPropertySubscriptValue == null)
+                throw new PropertyDisabledError();
+            return SetPropertyString(iPropertySubscriptValue, aValue);
+        }
+
+        /// <summary>
+        /// Get a copy of the value of the SubscriptValue property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertySubscriptValue has previously been called.</remarks>
+        /// <returns>Value of the SubscriptValue property.</returns>
+        public string PropertySubscriptValue()
+        {
+            if (iPropertySubscriptValue == null)
+                throw new PropertyDisabledError();
+            return iPropertySubscriptValue.Value();
         }
 
         /// <summary>
@@ -412,6 +463,34 @@ namespace OpenHome.Net.Device.Providers
             action.AddOutputParameter(new ParameterString("ScanFile", allowedValues));
             iDelegateGetCurrentScanFile = new ActionDelegate(DoGetCurrentScanFile);
             EnableAction(action, iDelegateGetCurrentScanFile, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetServerConfig is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetServerConfig must be overridden if this is called.</remarks>
+        protected void EnableActionGetServerConfig()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetServerConfig");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("GetValue", allowedValues));
+            iDelegateGetServerConfig = new ActionDelegate(DoGetServerConfig);
+            EnableAction(action, iDelegateGetServerConfig, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetServerConfig is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetServerConfig must be overridden if this is called.</remarks>
+        protected void EnableActionSetServerConfig()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetServerConfig");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("SetValue", allowedValues));
+            iDelegateSetServerConfig = new ActionDelegate(DoSetServerConfig);
+            EnableAction(action, iDelegateSetServerConfig, GCHandle.ToIntPtr(iGch));
         }
 
         /// <summary>
@@ -736,6 +815,34 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         /// <param name="aScanFile"></param>
         protected virtual void GetCurrentScanFile(IDvInvocation aInvocation, out string aScanFile)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetServerConfig action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetServerConfig action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetServerConfig was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aGetValue"></param>
+        protected virtual void GetServerConfig(IDvInvocation aInvocation, out string aGetValue)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetServerConfig action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetServerConfig action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetServerConfig was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aSetValue"></param>
+        protected virtual void SetServerConfig(IDvInvocation aInvocation, string aSetValue)
         {
             throw (new ActionDisabledError());
         }
@@ -1801,6 +1908,98 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetCurrentScanFile", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetServerConfig(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string getValue;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetServerConfig(invocation, out getValue);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetServerConfig");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetServerConfig"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetServerConfig", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("GetValue", getValue);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetServerConfig", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetServerConfig(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgServerConfig1 self = (DvProviderAvOpenhomeOrgServerConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string setValue;
+            try
+            {
+                invocation.ReadStart();
+                setValue = invocation.ReadString("SetValue");
+                invocation.ReadEnd();
+                self.SetServerConfig(invocation, setValue);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetServerConfig");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetServerConfig"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetServerConfig", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetServerConfig", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

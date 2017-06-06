@@ -337,6 +337,78 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1BeginSetGroupStatus(THand
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndSetGroupStatus(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
+ * @param[out] aBitPerfectMode
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncGetBitPerfectMode(THandle aHandle, uint32_t* aBitPerfectMode);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1BeginGetBitPerfectMode(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ * @param[out] aBitPerfectMode
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndGetBitPerfectMode(THandle aHandle, OhNetHandleAsync aAsync, uint32_t* aBitPerfectMode);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
+ * @param[in]  aBitPerfectMode
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncSetBitPerfectMode(THandle aHandle, uint32_t aBitPerfectMode);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
+ * @param[in]  aBitPerfectMode
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1BeginSetBitPerfectMode(THandle aHandle, uint32_t aBitPerfectMode, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndSetBitPerfectMode(THandle aHandle, OhNetHandleAsync aAsync);
 /**
  * Set a callback to be run when the GroupMode state variable changes.
  *
@@ -403,6 +475,17 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1SetPropertyGroupMuteChang
  * @param[in]  aPtr      Data to be passed to the callback
  */
 DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1SetPropertyGroupStatusChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
+/**
+ * Set a callback to be run when the BitPerfectMode state variable changes.
+ *
+ * Callbacks may be run in different threads but callbacks for a
+ * CpProxyAvOpenhomeOrgGroupConfig1 instance will not overlap.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
+ * @param[in]  aCallback The callback to run when the state variable changes
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1SetPropertyBitPerfectModeChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
 
 /**
  * Query the value of the GroupMode property.
@@ -464,6 +547,16 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMute(THandle
  * @param[out] aGroupStatus
  */
 DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupStatus(THandle aHandle, char** aGroupStatus);
+/**
+ * Query the value of the BitPerfectMode property.
+ *
+ * This function is threadsafe and can only be called after the first callback
+ * following a call to CpProxyCSubscribe() and before CpProxyCUnsubscribe().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
+ * @param[out] aBitPerfectMode
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyBitPerfectMode(THandle aHandle, uint32_t* aBitPerfectMode);
 
 /* @} */
 

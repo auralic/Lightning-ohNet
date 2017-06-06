@@ -115,11 +115,22 @@ public:
     void BeginGetCurrentScanFile(FunctorAsync& aFunctor);
     void EndGetCurrentScanFile(IAsync& aAsync, Brh& aScanFile);
 
+    void SyncGetServerConfig(Brh& aGetValue);
+    void BeginGetServerConfig(FunctorAsync& aFunctor);
+    void EndGetServerConfig(IAsync& aAsync, Brh& aGetValue);
+
+    void SyncSetServerConfig(const Brx& aSetValue);
+    void BeginSetServerConfig(const Brx& aSetValue, FunctorAsync& aFunctor);
+    void EndSetServerConfig(IAsync& aAsync);
+
     void SetPropertyAliveChanged(Functor& aFunctor);
+    void SetPropertySubscriptValueChanged(Functor& aFunctor);
 
     void PropertyAlive(TBool& aAlive) const;
+    void PropertySubscriptValue(Brhz& aSubscriptValue) const;
 private:
     void AlivePropertyChanged();
+    void SubscriptValuePropertyChanged();
 private:
     Mutex iLock;
     Action* iActionSetServerName;
@@ -145,8 +156,12 @@ private:
     Action* iActionGetDISKCapacity;
     Action* iActionForceRescan;
     Action* iActionGetCurrentScanFile;
+    Action* iActionGetServerConfig;
+    Action* iActionSetServerConfig;
     PropertyBool* iAlive;
+    PropertyString* iSubscriptValue;
     Functor iAliveChanged;
+    Functor iSubscriptValueChanged;
 };
 
 
@@ -674,6 +689,50 @@ void SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& 
     iService.EndGetCurrentScanFile(aAsync, iScanFile);
 }
 
+
+class SyncGetServerConfigAvOpenhomeOrgServerConfig1C : public SyncProxyAction
+{
+public:
+    SyncGetServerConfigAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy, Brh& aGetValue);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetServerConfigAvOpenhomeOrgServerConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgServerConfig1C& iService;
+    Brh& iGetValue;
+};
+
+SyncGetServerConfigAvOpenhomeOrgServerConfig1C::SyncGetServerConfigAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy, Brh& aGetValue)
+    : iService(aProxy)
+    , iGetValue(aGetValue)
+{
+}
+
+void SyncGetServerConfigAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetServerConfig(aAsync, iGetValue);
+}
+
+
+class SyncSetServerConfigAvOpenhomeOrgServerConfig1C : public SyncProxyAction
+{
+public:
+    SyncSetServerConfigAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetServerConfigAvOpenhomeOrgServerConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgServerConfig1C& iService;
+};
+
+SyncSetServerConfigAvOpenhomeOrgServerConfig1C::SyncSetServerConfigAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetServerConfigAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetServerConfig(aAsync);
+}
+
 CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC aDevice)
     : CpProxyC("av-openhome-org", "ServerConfig", 1, *reinterpret_cast<CpiDevice*>(aDevice))
     , iLock("MPCS")
@@ -780,10 +839,21 @@ CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC
     param = new OpenHome::Net::ParameterString("ScanFile");
     iActionGetCurrentScanFile->AddOutputParameter(param);
 
+    iActionGetServerConfig = new Action("GetServerConfig");
+    param = new OpenHome::Net::ParameterString("GetValue");
+    iActionGetServerConfig->AddOutputParameter(param);
+
+    iActionSetServerConfig = new Action("SetServerConfig");
+    param = new OpenHome::Net::ParameterString("SetValue");
+    iActionSetServerConfig->AddInputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1C::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
     AddProperty(iAlive);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1C::SubscriptValuePropertyChanged);
+    iSubscriptValue = new PropertyString("SubscriptValue", functor);
+    AddProperty(iSubscriptValue);
 }
 
 CpProxyAvOpenhomeOrgServerConfig1C::~CpProxyAvOpenhomeOrgServerConfig1C()
@@ -812,6 +882,8 @@ CpProxyAvOpenhomeOrgServerConfig1C::~CpProxyAvOpenhomeOrgServerConfig1C()
     delete iActionGetDISKCapacity;
     delete iActionForceRescan;
     delete iActionGetCurrentScanFile;
+    delete iActionGetServerConfig;
+    delete iActionSetServerConfig;
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1C::SyncSetServerName(const Brx& aServerName)
@@ -1527,10 +1599,79 @@ void CpProxyAvOpenhomeOrgServerConfig1C::EndGetCurrentScanFile(IAsync& aAsync, B
     ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aScanFile);
 }
 
+void CpProxyAvOpenhomeOrgServerConfig1C::SyncGetServerConfig(Brh& aGetValue)
+{
+    SyncGetServerConfigAvOpenhomeOrgServerConfig1C sync(*this, aGetValue);
+    BeginGetServerConfig(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::BeginGetServerConfig(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionGetServerConfig, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetServerConfig->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::EndGetServerConfig(IAsync& aAsync, Brh& aGetValue)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetServerConfig"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aGetValue);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::SyncSetServerConfig(const Brx& aSetValue)
+{
+    SyncSetServerConfigAvOpenhomeOrgServerConfig1C sync(*this);
+    BeginSetServerConfig(aSetValue, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::BeginSetServerConfig(const Brx& aSetValue, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionSetServerConfig, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetServerConfig->InputParameters();
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aSetValue));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::EndSetServerConfig(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetServerConfig"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
 void CpProxyAvOpenhomeOrgServerConfig1C::SetPropertyAliveChanged(Functor& aFunctor)
 {
     iLock.Wait();
     iAliveChanged = aFunctor;
+    iLock.Signal();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::SetPropertySubscriptValueChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iSubscriptValueChanged = aFunctor;
     iLock.Signal();
 }
 
@@ -1541,9 +1682,21 @@ void CpProxyAvOpenhomeOrgServerConfig1C::PropertyAlive(TBool& aAlive) const
     aAlive = iAlive->Value();
 }
 
+void CpProxyAvOpenhomeOrgServerConfig1C::PropertySubscriptValue(Brhz& aSubscriptValue) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    ASSERT(IsSubscribed());
+    aSubscriptValue.Set(iSubscriptValue->Value());
+}
+
 void CpProxyAvOpenhomeOrgServerConfig1C::AlivePropertyChanged()
 {
     ReportEvent(iAliveChanged);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::SubscriptValuePropertyChanged()
+{
+    ReportEvent(iSubscriptValueChanged);
 }
 
 
@@ -2566,12 +2719,104 @@ int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetCurrentScanFile(THandle a
     return err;
 }
 
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncGetServerConfig(THandle aHandle, char** aGetValue)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aGetValue;
+    int32_t err = 0;
+    try {
+        proxyC->SyncGetServerConfig(buf_aGetValue);
+        *aGetValue = buf_aGetValue.Extract();
+    }
+    catch (ProxyError& ) {
+        err = -1;
+        *aGetValue = NULL;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginGetServerConfig(THandle aHandle, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginGetServerConfig(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndGetServerConfig(THandle aHandle, OhNetHandleAsync aAsync, char** aGetValue)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    Brh buf_aGetValue;
+    *aGetValue = NULL;
+    try {
+        proxyC->EndGetServerConfig(*async, buf_aGetValue);
+        *aGetValue = buf_aGetValue.Extract();
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncSetServerConfig(THandle aHandle, const char* aSetValue)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aSetValue(aSetValue);
+    int32_t err = 0;
+    try {
+        proxyC->SyncSetServerConfig(buf_aSetValue);
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginSetServerConfig(THandle aHandle, const char* aSetValue, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brh buf_aSetValue(aSetValue);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginSetServerConfig(buf_aSetValue, functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndSetServerConfig(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndSetServerConfig(*async);
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
+}
+
 void STDCALL CpProxyAvOpenhomeOrgServerConfig1SetPropertyAliveChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
 {
     CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Functor functor = MakeFunctor(aPtr, aCallback);
     proxyC->SetPropertyAliveChanged(functor);
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1SetPropertySubscriptValueChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertySubscriptValueChanged(functor);
 }
 
 void STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
@@ -2581,5 +2826,14 @@ void STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertyAlive(THandle aHandle, uin
     TBool Alive;
     proxyC->PropertyAlive(Alive);
     *aAlive = Alive? 1 : 0;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertySubscriptValue(THandle aHandle, char** aSubscriptValue)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brhz buf_aSubscriptValue;
+    proxyC->PropertySubscriptValue(buf_aSubscriptValue);
+    *aSubscriptValue = buf_aSubscriptValue.Transfer();
 }
 

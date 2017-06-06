@@ -30,12 +30,15 @@ public:
     void GetPropertyGroupMute(TBool& aValue);
     TBool SetPropertyGroupStatus(const Brx& aValue);
     void GetPropertyGroupStatus(Brhz& aValue);
+    TBool SetPropertyBitPerfectMode(TBool aValue);
+    void GetPropertyBitPerfectMode(TBool& aValue);
     void EnablePropertyGroupMode();
     void EnablePropertyGroupName();
     void EnablePropertyGroupID();
     void EnablePropertyGroupVolume();
     void EnablePropertyGroupMute();
     void EnablePropertyGroupStatus();
+    void EnablePropertyBitPerfectMode();
     void EnableActionSetGroupMode(CallbackGroupConfig1SetGroupMode aCallback, void* aPtr);
     void EnableActionGetGroupMode(CallbackGroupConfig1GetGroupMode aCallback, void* aPtr);
     void EnableActionSetGroupVolume(CallbackGroupConfig1SetGroupVolume aCallback, void* aPtr);
@@ -44,6 +47,8 @@ public:
     void EnableActionGetGroupMute(CallbackGroupConfig1GetGroupMute aCallback, void* aPtr);
     void EnableActionGetGroupStatus(CallbackGroupConfig1GetGroupStatus aCallback, void* aPtr);
     void EnableActionSetGroupStatus(CallbackGroupConfig1SetGroupStatus aCallback, void* aPtr);
+    void EnableActionGetBitPerfectMode(CallbackGroupConfig1GetBitPerfectMode aCallback, void* aPtr);
+    void EnableActionSetBitPerfectMode(CallbackGroupConfig1SetBitPerfectMode aCallback, void* aPtr);
 private:
     void DoSetGroupMode(IDviInvocation& aInvocation);
     void DoGetGroupMode(IDviInvocation& aInvocation);
@@ -53,6 +58,8 @@ private:
     void DoGetGroupMute(IDviInvocation& aInvocation);
     void DoGetGroupStatus(IDviInvocation& aInvocation);
     void DoSetGroupStatus(IDviInvocation& aInvocation);
+    void DoGetBitPerfectMode(IDviInvocation& aInvocation);
+    void DoSetBitPerfectMode(IDviInvocation& aInvocation);
 private:
     CallbackGroupConfig1SetGroupMode iCallbackSetGroupMode;
     void* iPtrSetGroupMode;
@@ -70,12 +77,17 @@ private:
     void* iPtrGetGroupStatus;
     CallbackGroupConfig1SetGroupStatus iCallbackSetGroupStatus;
     void* iPtrSetGroupStatus;
+    CallbackGroupConfig1GetBitPerfectMode iCallbackGetBitPerfectMode;
+    void* iPtrGetBitPerfectMode;
+    CallbackGroupConfig1SetBitPerfectMode iCallbackSetBitPerfectMode;
+    void* iPtrSetBitPerfectMode;
     PropertyString* iPropertyGroupMode;
     PropertyString* iPropertyGroupName;
     PropertyString* iPropertyGroupID;
     PropertyUint* iPropertyGroupVolume;
     PropertyBool* iPropertyGroupMute;
     PropertyString* iPropertyGroupStatus;
+    PropertyBool* iPropertyBitPerfectMode;
 };
 
 DvProviderAvOpenhomeOrgGroupConfig1C::DvProviderAvOpenhomeOrgGroupConfig1C(DvDeviceC aDevice)
@@ -87,6 +99,7 @@ DvProviderAvOpenhomeOrgGroupConfig1C::DvProviderAvOpenhomeOrgGroupConfig1C(DvDev
     iPropertyGroupVolume = NULL;
     iPropertyGroupMute = NULL;
     iPropertyGroupStatus = NULL;
+    iPropertyBitPerfectMode = NULL;
 }
 
 TBool DvProviderAvOpenhomeOrgGroupConfig1C::SetPropertyGroupMode(const Brx& aValue)
@@ -161,6 +174,18 @@ void DvProviderAvOpenhomeOrgGroupConfig1C::GetPropertyGroupStatus(Brhz& aValue)
     aValue.Set(iPropertyGroupStatus->Value());
 }
 
+TBool DvProviderAvOpenhomeOrgGroupConfig1C::SetPropertyBitPerfectMode(TBool aValue)
+{
+    ASSERT(iPropertyBitPerfectMode != NULL);
+    return SetPropertyBool(*iPropertyBitPerfectMode, aValue);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1C::GetPropertyBitPerfectMode(TBool& aValue)
+{
+    ASSERT(iPropertyBitPerfectMode != NULL);
+    aValue = iPropertyBitPerfectMode->Value();
+}
+
 void DvProviderAvOpenhomeOrgGroupConfig1C::EnablePropertyGroupMode()
 {
     TChar** allowedValues;
@@ -202,6 +227,12 @@ void DvProviderAvOpenhomeOrgGroupConfig1C::EnablePropertyGroupStatus()
 {
     iPropertyGroupStatus = new PropertyString(new ParameterString("GroupStatus"));
     iService->AddProperty(iPropertyGroupStatus); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1C::EnablePropertyBitPerfectMode()
+{
+    iPropertyBitPerfectMode = new PropertyBool(new ParameterBool("BitPerfectMode"));
+    iService->AddProperty(iPropertyBitPerfectMode); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgGroupConfig1C::EnableActionSetGroupMode(CallbackGroupConfig1SetGroupMode aCallback, void* aPtr)
@@ -285,6 +316,26 @@ void DvProviderAvOpenhomeOrgGroupConfig1C::EnableActionSetGroupStatus(CallbackGr
     OpenHome::Net::Action* action = new OpenHome::Net::Action("SetGroupStatus");
     action->AddInputParameter(new ParameterRelated("GroupStatus", *iPropertyGroupStatus));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgGroupConfig1C::DoSetGroupStatus);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1C::EnableActionGetBitPerfectMode(CallbackGroupConfig1GetBitPerfectMode aCallback, void* aPtr)
+{
+    iCallbackGetBitPerfectMode = aCallback;
+    iPtrGetBitPerfectMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetBitPerfectMode");
+    action->AddOutputParameter(new ParameterRelated("BitPerfectMode", *iPropertyBitPerfectMode));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgGroupConfig1C::DoGetBitPerfectMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1C::EnableActionSetBitPerfectMode(CallbackGroupConfig1SetBitPerfectMode aCallback, void* aPtr)
+{
+    iCallbackSetBitPerfectMode = aCallback;
+    iPtrSetBitPerfectMode = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetBitPerfectMode");
+    action->AddInputParameter(new ParameterRelated("BitPerfectMode", *iPropertyBitPerfectMode));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgGroupConfig1C::DoSetBitPerfectMode);
     iService->AddAction(action, functor);
 }
 
@@ -472,6 +523,46 @@ void DvProviderAvOpenhomeOrgGroupConfig1C::DoSetGroupStatus(IDviInvocation& aInv
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgGroupConfig1C::DoGetBitPerfectMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    uint32_t BitPerfectMode;
+    ASSERT(iCallbackGetBitPerfectMode != NULL);
+    if (0 != iCallbackGetBitPerfectMode(iPtrGetBitPerfectMode, invocationC, invocationCPtr, &BitPerfectMode)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseBool respBitPerfectMode(aInvocation, "BitPerfectMode");
+    invocation.StartResponse();
+    respBitPerfectMode.Write((BitPerfectMode!=0));
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1C::DoSetBitPerfectMode(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TBool BitPerfectMode = aInvocation.InvocationReadBool("BitPerfectMode");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetBitPerfectMode != NULL);
+    if (0 != iCallbackSetBitPerfectMode(iPtrSetBitPerfectMode, invocationC, invocationCPtr, BitPerfectMode)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgGroupConfig1Create(DvDeviceC aDevice)
@@ -522,6 +613,16 @@ void STDCALL DvProviderAvOpenhomeOrgGroupConfig1EnableActionGetGroupStatus(THand
 void STDCALL DvProviderAvOpenhomeOrgGroupConfig1EnableActionSetGroupStatus(THandle aProvider, CallbackGroupConfig1SetGroupStatus aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgGroupConfig1C*>(aProvider)->EnableActionSetGroupStatus(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgGroupConfig1EnableActionGetBitPerfectMode(THandle aProvider, CallbackGroupConfig1GetBitPerfectMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgGroupConfig1C*>(aProvider)->EnableActionGetBitPerfectMode(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgGroupConfig1EnableActionSetBitPerfectMode(THandle aProvider, CallbackGroupConfig1SetBitPerfectMode aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgGroupConfig1C*>(aProvider)->EnableActionSetBitPerfectMode(aCallback, aPtr);
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgGroupConfig1SetPropertyGroupMode(THandle aProvider, const char* aValue, uint32_t* aChanged)
@@ -606,6 +707,19 @@ void STDCALL DvProviderAvOpenhomeOrgGroupConfig1GetPropertyGroupStatus(THandle a
     *aValue = (char*)buf.Transfer();
 }
 
+int32_t STDCALL DvProviderAvOpenhomeOrgGroupConfig1SetPropertyBitPerfectMode(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
+{
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgGroupConfig1C*>(aProvider)->SetPropertyBitPerfectMode((aValue!=0))? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgGroupConfig1GetPropertyBitPerfectMode(THandle aProvider, uint32_t* aValue)
+{
+    TBool val;
+    reinterpret_cast<DvProviderAvOpenhomeOrgGroupConfig1C*>(aProvider)->GetPropertyBitPerfectMode(val);
+    *aValue = (val? 1 : 0);
+}
+
 void STDCALL DvProviderAvOpenhomeOrgGroupConfig1EnablePropertyGroupMode(THandle aProvider)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgGroupConfig1C*>(aProvider)->EnablePropertyGroupMode();
@@ -634,5 +748,10 @@ void STDCALL DvProviderAvOpenhomeOrgGroupConfig1EnablePropertyGroupMute(THandle 
 void STDCALL DvProviderAvOpenhomeOrgGroupConfig1EnablePropertyGroupStatus(THandle aProvider)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgGroupConfig1C*>(aProvider)->EnablePropertyGroupStatus();
+}
+
+void STDCALL DvProviderAvOpenhomeOrgGroupConfig1EnablePropertyBitPerfectMode(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgGroupConfig1C*>(aProvider)->EnablePropertyBitPerfectMode();
 }
 

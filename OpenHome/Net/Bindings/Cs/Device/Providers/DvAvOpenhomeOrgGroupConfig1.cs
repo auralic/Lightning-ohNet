@@ -86,6 +86,19 @@ namespace OpenHome.Net.Device.Providers
         /// </summary>
         /// <returns>Value of the GroupStatus property.</param>
         string PropertyGroupStatus();
+
+        /// <summary>
+        /// Set the value of the BitPerfectMode property
+        /// </summary>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        bool SetPropertyBitPerfectMode(bool aValue);
+
+        /// <summary>
+        /// Get a copy of the value of the BitPerfectMode property
+        /// </summary>
+        /// <returns>Value of the BitPerfectMode property.</param>
+        bool PropertyBitPerfectMode();
         
     }
     /// <summary>
@@ -102,12 +115,15 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateGetGroupMute;
         private ActionDelegate iDelegateGetGroupStatus;
         private ActionDelegate iDelegateSetGroupStatus;
+        private ActionDelegate iDelegateGetBitPerfectMode;
+        private ActionDelegate iDelegateSetBitPerfectMode;
         private PropertyString iPropertyGroupMode;
         private PropertyString iPropertyGroupName;
         private PropertyString iPropertyGroupID;
         private PropertyUint iPropertyGroupVolume;
         private PropertyBool iPropertyGroupMute;
         private PropertyString iPropertyGroupStatus;
+        private PropertyBool iPropertyBitPerfectMode;
 
         /// <summary>
         /// Constructor
@@ -179,6 +195,15 @@ namespace OpenHome.Net.Device.Providers
             List<String> allowedValues = new List<String>();
             iPropertyGroupStatus = new PropertyString(new ParameterString("GroupStatus", allowedValues));
             AddProperty(iPropertyGroupStatus);
+        }
+
+        /// <summary>
+        /// Enable the BitPerfectMode property.
+        /// </summary>
+        public void EnablePropertyBitPerfectMode()
+        {
+            iPropertyBitPerfectMode = new PropertyBool(new ParameterBool("BitPerfectMode"));
+            AddProperty(iPropertyBitPerfectMode);
         }
 
         /// <summary>
@@ -332,6 +357,31 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Set the value of the BitPerfectMode property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyBitPerfectMode has previously been called.</remarks>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        public bool SetPropertyBitPerfectMode(bool aValue)
+        {
+            if (iPropertyBitPerfectMode == null)
+                throw new PropertyDisabledError();
+            return SetPropertyBool(iPropertyBitPerfectMode, aValue);
+        }
+
+        /// <summary>
+        /// Get a copy of the value of the BitPerfectMode property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyBitPerfectMode has previously been called.</remarks>
+        /// <returns>Value of the BitPerfectMode property.</returns>
+        public bool PropertyBitPerfectMode()
+        {
+            if (iPropertyBitPerfectMode == null)
+                throw new PropertyDisabledError();
+            return iPropertyBitPerfectMode.Value();
+        }
+
+        /// <summary>
         /// Signal that the action SetGroupMode is supported.
         /// </summary>
         /// <remarks>The action's availability will be published in the device's service.xml.
@@ -437,6 +487,32 @@ namespace OpenHome.Net.Device.Providers
             action.AddInputParameter(new ParameterRelated("GroupStatus", iPropertyGroupStatus));
             iDelegateSetGroupStatus = new ActionDelegate(DoSetGroupStatus);
             EnableAction(action, iDelegateSetGroupStatus, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetBitPerfectMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetBitPerfectMode must be overridden if this is called.</remarks>
+        protected void EnableActionGetBitPerfectMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetBitPerfectMode");
+            action.AddOutputParameter(new ParameterRelated("BitPerfectMode", iPropertyBitPerfectMode));
+            iDelegateGetBitPerfectMode = new ActionDelegate(DoGetBitPerfectMode);
+            EnableAction(action, iDelegateGetBitPerfectMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetBitPerfectMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetBitPerfectMode must be overridden if this is called.</remarks>
+        protected void EnableActionSetBitPerfectMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetBitPerfectMode");
+            action.AddInputParameter(new ParameterRelated("BitPerfectMode", iPropertyBitPerfectMode));
+            iDelegateSetBitPerfectMode = new ActionDelegate(DoSetBitPerfectMode);
+            EnableAction(action, iDelegateSetBitPerfectMode, GCHandle.ToIntPtr(iGch));
         }
 
         /// <summary>
@@ -551,6 +627,34 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         /// <param name="aGroupStatus"></param>
         protected virtual void SetGroupStatus(IDvInvocation aInvocation, string aGroupStatus)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetBitPerfectMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetBitPerfectMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetBitPerfectMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aBitPerfectMode"></param>
+        protected virtual void GetBitPerfectMode(IDvInvocation aInvocation, out bool aBitPerfectMode)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetBitPerfectMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetBitPerfectMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetBitPerfectMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aBitPerfectMode"></param>
+        protected virtual void SetBitPerfectMode(IDvInvocation aInvocation, bool aBitPerfectMode)
         {
             throw (new ActionDisabledError());
         }
@@ -926,6 +1030,98 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetGroupStatus", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetBitPerfectMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgGroupConfig1 self = (DvProviderAvOpenhomeOrgGroupConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool bitPerfectMode;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetBitPerfectMode(invocation, out bitPerfectMode);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetBitPerfectMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetBitPerfectMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetBitPerfectMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteBool("BitPerfectMode", bitPerfectMode);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetBitPerfectMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetBitPerfectMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgGroupConfig1 self = (DvProviderAvOpenhomeOrgGroupConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool bitPerfectMode;
+            try
+            {
+                invocation.ReadStart();
+                bitPerfectMode = invocation.ReadBool("BitPerfectMode");
+                invocation.ReadEnd();
+                self.SetBitPerfectMode(invocation, bitPerfectMode);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetBitPerfectMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetBitPerfectMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetBitPerfectMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetBitPerfectMode", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

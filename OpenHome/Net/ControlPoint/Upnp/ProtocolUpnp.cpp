@@ -172,6 +172,7 @@ void InvocationUpnp::WriteHeaders(WriterHttpRequest& aWriterRequest, const Uri& 
     ASSERT(aUri.Port()!=Uri::kPortNotSpecified);
     const Brn kContentType("text/xml; charset=\"utf-8\"");
     const Brn kSoapAction("SOAPACTION");
+    
 
     aWriterRequest.WriteMethod(Http::kMethodPost, aUri.PathAndQuery(), Http::eHttp10);
 

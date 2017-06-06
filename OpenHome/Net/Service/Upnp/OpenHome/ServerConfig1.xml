@@ -241,11 +241,35 @@
                 </argument>
             </argumentList>
         </action>
+        <action>
+            <name>GetServerConfig</name>
+            <argumentList>
+                <argument>
+                    <name>GetValue</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>GetValue</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>SetServerConfig</name>
+            <argumentList>
+                <argument>
+                    <name>SetValue</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>SetValue</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
     </actionList>
     <serviceStateTable>
       <stateVariable sendEvents="yes">
          <name>Alive</name>
          <dataType>boolean</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="yes">
+         <name>SubscriptValue</name>
+         <dataType>string</dataType>
       </stateVariable>
         <stateVariable sendEvents="no">
             <name>ServerName</name>
@@ -337,6 +361,14 @@
         </stateVariable>
         <stateVariable sendEvents="no">
             <name>ScanFile</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>GetValue</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>SetValue</name>
             <dataType>string</dataType>
         </stateVariable>
     </serviceStateTable>

@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <OpenHome/Exception.h>
 #include <OpenHome/Private/Debug.h>
-
 using namespace OpenHome;
 
 // NetworkAdapterList
@@ -302,7 +301,6 @@ void NetworkAdapterList::HandleInterfaceListChanged()
     TIpAddress oldAddress = (iCurrent==NULL ? 0 : iCurrent->Address());
     DestroySubnetList(iNetworkAdapters);
     iNetworkAdapters = list;
-
     // update the 'current' adapter and inform observers if it has changed
     UpdateCurrentAdapter();
     TIpAddress newAddress = (iCurrent==NULL? 0 : iCurrent->Address());

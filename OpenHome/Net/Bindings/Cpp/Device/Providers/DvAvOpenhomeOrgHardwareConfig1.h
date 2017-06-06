@@ -658,6 +658,54 @@ protected:
      * GetKeyMode must be overridden if this is called.
      */
     void EnableActionGetKeyMode();
+    /**
+     * Signal that the action SetBrightness is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetBrightness must be overridden if this is called.
+     */
+    void EnableActionSetBrightness();
+    /**
+     * Signal that the action GetBrightness is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetBrightness must be overridden if this is called.
+     */
+    void EnableActionGetBrightness();
+    /**
+     * Signal that the action SetDisplayMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetDisplayMode must be overridden if this is called.
+     */
+    void EnableActionSetDisplayMode();
+    /**
+     * Signal that the action GetDisplayMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetDisplayMode must be overridden if this is called.
+     */
+    void EnableActionGetDisplayMode();
+    /**
+     * Signal that the action GetDACPhase is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetDACPhase must be overridden if this is called.
+     */
+    void EnableActionGetDACPhase();
+    /**
+     * Signal that the action SetDACPhase is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetDACPhase must be overridden if this is called.
+     */
+    void EnableActionSetDACPhase();
+    /**
+     * Signal that the action GetDACBalance is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetDACBalance must be overridden if this is called.
+     */
+    void EnableActionGetDACBalance();
+    /**
+     * Signal that the action SetDACBalance is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetDACBalance must be overridden if this is called.
+     */
+    void EnableActionSetDACBalance();
 private:
     /**
      * IsAlive action.
@@ -939,6 +987,70 @@ private:
      * Must be implemented iff EnableActionGetKeyMode was called.
      */
     virtual void GetKeyMode(IDvInvocationStd& aInvocation, std::string& aSideKeyMode, std::string& aMiddleKeyMode, std::string& aKeyModeList);
+    /**
+     * SetBrightness action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetBrightness action for the owning device.
+     * Must be implemented iff EnableActionSetBrightness was called.
+     */
+    virtual void SetBrightness(IDvInvocationStd& aInvocation, const std::string& aBrightness);
+    /**
+     * GetBrightness action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetBrightness action for the owning device.
+     * Must be implemented iff EnableActionGetBrightness was called.
+     */
+    virtual void GetBrightness(IDvInvocationStd& aInvocation, std::string& aBrightness, std::string& aList);
+    /**
+     * SetDisplayMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetDisplayMode action for the owning device.
+     * Must be implemented iff EnableActionSetDisplayMode was called.
+     */
+    virtual void SetDisplayMode(IDvInvocationStd& aInvocation, const std::string& aDisplayMode);
+    /**
+     * GetDisplayMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetDisplayMode action for the owning device.
+     * Must be implemented iff EnableActionGetDisplayMode was called.
+     */
+    virtual void GetDisplayMode(IDvInvocationStd& aInvocation, std::string& aDisplayMode, std::string& aDisplayModeList);
+    /**
+     * GetDACPhase action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetDACPhase action for the owning device.
+     * Must be implemented iff EnableActionGetDACPhase was called.
+     */
+    virtual void GetDACPhase(IDvInvocationStd& aInvocation, uint32_t& aPhase);
+    /**
+     * SetDACPhase action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetDACPhase action for the owning device.
+     * Must be implemented iff EnableActionSetDACPhase was called.
+     */
+    virtual void SetDACPhase(IDvInvocationStd& aInvocation, uint32_t aPhase);
+    /**
+     * GetDACBalance action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetDACBalance action for the owning device.
+     * Must be implemented iff EnableActionGetDACBalance was called.
+     */
+    virtual void GetDACBalance(IDvInvocationStd& aInvocation, uint32_t& aBalance);
+    /**
+     * SetDACBalance action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetDACBalance action for the owning device.
+     * Must be implemented iff EnableActionSetDACBalance was called.
+     */
+    virtual void SetDACBalance(IDvInvocationStd& aInvocation, uint32_t aBalance);
 private:
     DvProviderAvOpenhomeOrgHardwareConfig1Cpp();
     void DoIsAlive(IDviInvocation& aInvocation);
@@ -976,6 +1088,14 @@ private:
     void DoGetLEDMode(IDviInvocation& aInvocation);
     void DoSetKeyMode(IDviInvocation& aInvocation);
     void DoGetKeyMode(IDviInvocation& aInvocation);
+    void DoSetBrightness(IDviInvocation& aInvocation);
+    void DoGetBrightness(IDviInvocation& aInvocation);
+    void DoSetDisplayMode(IDviInvocation& aInvocation);
+    void DoGetDisplayMode(IDviInvocation& aInvocation);
+    void DoGetDACPhase(IDviInvocation& aInvocation);
+    void DoSetDACPhase(IDviInvocation& aInvocation);
+    void DoGetDACBalance(IDviInvocation& aInvocation);
+    void DoSetDACBalance(IDviInvocation& aInvocation);
 private:
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;

@@ -34,6 +34,12 @@ interface ICpProxyAvOpenhomeOrgGroupConfig1 extends ICpProxy
     public void syncSetGroupStatus(String aGroupStatus);
     public void beginSetGroupStatus(String aGroupStatus, ICpProxyListener aCallback);
     public void endSetGroupStatus(long aAsyncHandle);
+    public boolean syncGetBitPerfectMode();
+    public void beginGetBitPerfectMode(ICpProxyListener aCallback);
+    public boolean endGetBitPerfectMode(long aAsyncHandle);
+    public void syncSetBitPerfectMode(boolean aBitPerfectMode);
+    public void beginSetBitPerfectMode(boolean aBitPerfectMode, ICpProxyListener aCallback);
+    public void endSetBitPerfectMode(long aAsyncHandle);
     public void setPropertyGroupModeChanged(IPropertyChangeListener aGroupModeChanged);
     public String getPropertyGroupMode();
     public void setPropertyGroupNameChanged(IPropertyChangeListener aGroupNameChanged);
@@ -46,6 +52,8 @@ interface ICpProxyAvOpenhomeOrgGroupConfig1 extends ICpProxy
     public boolean getPropertyGroupMute();
     public void setPropertyGroupStatusChanged(IPropertyChangeListener aGroupStatusChanged);
     public String getPropertyGroupStatus();
+    public void setPropertyBitPerfectModeChanged(IPropertyChangeListener aBitPerfectModeChanged);
+    public boolean getPropertyBitPerfectMode();
 }
 
 class SyncSetGroupModeAvOpenhomeOrgGroupConfig1 extends SyncProxyAction
@@ -204,6 +212,42 @@ class SyncSetGroupStatusAvOpenhomeOrgGroupConfig1 extends SyncProxyAction
     }
 }
 
+class SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgGroupConfig1 iService;
+    private boolean iBitPerfectMode;
+
+    public SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1(CpProxyAvOpenhomeOrgGroupConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public boolean getBitPerfectMode()
+    {
+        return iBitPerfectMode;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        boolean result = iService.endGetBitPerfectMode(aAsyncHandle);
+        
+        iBitPerfectMode = result;
+    }
+}
+
+class SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgGroupConfig1 iService;
+
+    public SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1(CpProxyAvOpenhomeOrgGroupConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetBitPerfectMode(aAsyncHandle);
+        
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:GroupConfig:1 UPnP service
  */
@@ -248,18 +292,22 @@ public class CpProxyAvOpenhomeOrgGroupConfig1 extends CpProxy implements ICpProx
     private Action iActionGetGroupMute;
     private Action iActionGetGroupStatus;
     private Action iActionSetGroupStatus;
+    private Action iActionGetBitPerfectMode;
+    private Action iActionSetBitPerfectMode;
     private PropertyString iGroupMode;
     private PropertyString iGroupName;
     private PropertyString iGroupID;
     private PropertyUint iGroupVolume;
     private PropertyBool iGroupMute;
     private PropertyString iGroupStatus;
+    private PropertyBool iBitPerfectMode;
     private IPropertyChangeListener iGroupModeChanged;
     private IPropertyChangeListener iGroupNameChanged;
     private IPropertyChangeListener iGroupIDChanged;
     private IPropertyChangeListener iGroupVolumeChanged;
     private IPropertyChangeListener iGroupMuteChanged;
     private IPropertyChangeListener iGroupStatusChanged;
+    private IPropertyChangeListener iBitPerfectModeChanged;
     private Object iPropertyLock;
 
     /**
@@ -323,6 +371,14 @@ public class CpProxyAvOpenhomeOrgGroupConfig1 extends CpProxy implements ICpProx
         param = new ParameterString("GroupStatus", allowedValues);
         iActionSetGroupStatus.addInputParameter(param);
 
+        iActionGetBitPerfectMode = new Action("GetBitPerfectMode");
+        param = new ParameterBool("BitPerfectMode");
+        iActionGetBitPerfectMode.addOutputParameter(param);
+
+        iActionSetBitPerfectMode = new Action("SetBitPerfectMode");
+        param = new ParameterBool("BitPerfectMode");
+        iActionSetBitPerfectMode.addInputParameter(param);
+
         iGroupModeChanged = new PropertyChangeListener();
         iGroupMode = new PropertyString("GroupMode",
             new PropertyChangeListener() {
@@ -377,6 +433,15 @@ public class CpProxyAvOpenhomeOrgGroupConfig1 extends CpProxy implements ICpProx
             }
         );
         addProperty(iGroupStatus);
+        iBitPerfectModeChanged = new PropertyChangeListener();
+        iBitPerfectMode = new PropertyBool("BitPerfectMode",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    bitPerfectModePropertyChanged();
+                }
+            }
+        );
+        addProperty(iBitPerfectMode);
         iPropertyLock = new Object();
     }
     /**
@@ -808,6 +873,109 @@ public class CpProxyAvOpenhomeOrgGroupConfig1 extends CpProxy implements ICpProx
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public boolean syncGetBitPerfectMode()
+    {
+        SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1 sync = new SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1(this);
+        beginGetBitPerfectMode(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getBitPerfectMode();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetBitPerfectMode}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetBitPerfectMode(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetBitPerfectMode, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentBool((ParameterBool)iActionGetBitPerfectMode.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetBitPerfectMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetBitPerfectMode} method.
+     * @return the result of the previously invoked action.
+     */
+    public boolean endGetBitPerfectMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        boolean bitPerfectMode = Invocation.getOutputBool(aAsyncHandle, index++);
+        return bitPerfectMode;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetBitPerfectMode(boolean aBitPerfectMode)
+    {
+        SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1 sync = new SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1(this);
+        beginSetBitPerfectMode(aBitPerfectMode, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetBitPerfectMode}.
+     * 
+     * @param aBitPerfectMode
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetBitPerfectMode(boolean aBitPerfectMode, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetBitPerfectMode, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionSetBitPerfectMode.getInputParameter(inIndex++), aBitPerfectMode));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetBitPerfectMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetBitPerfectMode} method.
+     */
+    public void endSetBitPerfectMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
      * Set a delegate to be run when the GroupMode state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgGroupConfig1 instance will not overlap.
@@ -945,6 +1113,29 @@ public class CpProxyAvOpenhomeOrgGroupConfig1 extends CpProxy implements ICpProx
             reportEvent(iGroupStatusChanged);
         }
     }
+    /**
+     * Set a delegate to be run when the BitPerfectMode state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgGroupConfig1 instance will not overlap.
+     *
+     * @param aBitPerfectModeChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyBitPerfectModeChanged(IPropertyChangeListener aBitPerfectModeChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iBitPerfectModeChanged = aBitPerfectModeChanged;
+        }
+    }
+
+    private void bitPerfectModePropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iBitPerfectModeChanged);
+        }
+    }
 
     /**
      * Query the value of the GroupMode property.
@@ -1043,6 +1234,22 @@ public class CpProxyAvOpenhomeOrgGroupConfig1 extends CpProxy implements ICpProx
     }
     
     /**
+     * Query the value of the BitPerfectMode property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the BitPerfectMode property.
+     */
+    public boolean getPropertyBitPerfectMode()
+    {
+        propertyReadLock();
+        boolean val = iBitPerfectMode.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
      * Dispose of this control point proxy.
      * Must be called for each class instance.
      * Must be called before <tt>Library.close()</tt>.
@@ -1065,12 +1272,15 @@ public class CpProxyAvOpenhomeOrgGroupConfig1 extends CpProxy implements ICpProx
             iActionGetGroupMute.destroy();
             iActionGetGroupStatus.destroy();
             iActionSetGroupStatus.destroy();
+            iActionGetBitPerfectMode.destroy();
+            iActionSetBitPerfectMode.destroy();
             iGroupMode.destroy();
             iGroupName.destroy();
             iGroupID.destroy();
             iGroupVolume.destroy();
             iGroupMute.destroy();
             iGroupStatus.destroy();
+            iBitPerfectMode.destroy();
         }
     }
 }

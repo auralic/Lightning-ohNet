@@ -53,6 +53,7 @@ public:
     void EnablePropertyFadeMax();
     void EnableActionCharacteristics(CallbackVolume1Characteristics aCallback, void* aPtr);
     void EnableActionSetVolume(CallbackVolume1SetVolume aCallback, void* aPtr);
+    void EnableActionCanSetVolume(CallbackVolume1CanSetVolume aCallback, void* aPtr);
     void EnableActionVolumeInc(CallbackVolume1VolumeInc aCallback, void* aPtr);
     void EnableActionVolumeDec(CallbackVolume1VolumeDec aCallback, void* aPtr);
     void EnableActionVolume(CallbackVolume1Volume aCallback, void* aPtr);
@@ -65,11 +66,13 @@ public:
     void EnableActionFadeDec(CallbackVolume1FadeDec aCallback, void* aPtr);
     void EnableActionFade(CallbackVolume1Fade aCallback, void* aPtr);
     void EnableActionSetMute(CallbackVolume1SetMute aCallback, void* aPtr);
+    void EnableActionCanSetMute(CallbackVolume1CanSetMute aCallback, void* aPtr);
     void EnableActionMute(CallbackVolume1Mute aCallback, void* aPtr);
     void EnableActionVolumeLimit(CallbackVolume1VolumeLimit aCallback, void* aPtr);
 private:
     void DoCharacteristics(IDviInvocation& aInvocation);
     void DoSetVolume(IDviInvocation& aInvocation);
+    void DoCanSetVolume(IDviInvocation& aInvocation);
     void DoVolumeInc(IDviInvocation& aInvocation);
     void DoVolumeDec(IDviInvocation& aInvocation);
     void DoVolume(IDviInvocation& aInvocation);
@@ -82,6 +85,7 @@ private:
     void DoFadeDec(IDviInvocation& aInvocation);
     void DoFade(IDviInvocation& aInvocation);
     void DoSetMute(IDviInvocation& aInvocation);
+    void DoCanSetMute(IDviInvocation& aInvocation);
     void DoMute(IDviInvocation& aInvocation);
     void DoVolumeLimit(IDviInvocation& aInvocation);
 private:
@@ -89,6 +93,8 @@ private:
     void* iPtrCharacteristics;
     CallbackVolume1SetVolume iCallbackSetVolume;
     void* iPtrSetVolume;
+    CallbackVolume1CanSetVolume iCallbackCanSetVolume;
+    void* iPtrCanSetVolume;
     CallbackVolume1VolumeInc iCallbackVolumeInc;
     void* iPtrVolumeInc;
     CallbackVolume1VolumeDec iCallbackVolumeDec;
@@ -113,6 +119,8 @@ private:
     void* iPtrFade;
     CallbackVolume1SetMute iCallbackSetMute;
     void* iPtrSetMute;
+    CallbackVolume1CanSetMute iCallbackCanSetMute;
+    void* iPtrCanSetMute;
     CallbackVolume1Mute iCallbackMute;
     void* iPtrMute;
     CallbackVolume1VolumeLimit iCallbackVolumeLimit;
@@ -369,6 +377,16 @@ void DvProviderAvOpenhomeOrgVolume1C::EnableActionSetVolume(CallbackVolume1SetVo
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgVolume1C::EnableActionCanSetVolume(CallbackVolume1CanSetVolume aCallback, void* aPtr)
+{
+    iCallbackCanSetVolume = aCallback;
+    iPtrCanSetVolume = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("CanSetVolume");
+    action->AddInputParameter(new ParameterRelated("Value", *iPropertyVolume));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgVolume1C::DoCanSetVolume);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgVolume1C::EnableActionVolumeInc(CallbackVolume1VolumeInc aCallback, void* aPtr)
 {
     iCallbackVolumeInc = aCallback;
@@ -483,6 +501,16 @@ void DvProviderAvOpenhomeOrgVolume1C::EnableActionSetMute(CallbackVolume1SetMute
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgVolume1C::EnableActionCanSetMute(CallbackVolume1CanSetMute aCallback, void* aPtr)
+{
+    iCallbackCanSetMute = aCallback;
+    iPtrCanSetMute = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("CanSetMute");
+    action->AddInputParameter(new ParameterRelated("Value", *iPropertyMute));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgVolume1C::DoCanSetMute);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgVolume1C::EnableActionMute(CallbackVolume1Mute aCallback, void* aPtr)
 {
     iCallbackMute = aCallback;
@@ -551,6 +579,25 @@ void DvProviderAvOpenhomeOrgVolume1C::DoSetVolume(IDviInvocation& aInvocation)
     DviInvocation invocation(aInvocation);
     ASSERT(iCallbackSetVolume != NULL);
     if (0 != iCallbackSetVolume(iPtrSetVolume, invocationC, invocationCPtr, Value)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgVolume1C::DoCanSetVolume(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TUint Value = aInvocation.InvocationReadUint("Value");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackCanSetVolume != NULL);
+    if (0 != iCallbackCanSetVolume(iPtrCanSetVolume, invocationC, invocationCPtr, Value)) {
         invocation.Error(502, Brn("Action failed"));
         return;
     }
@@ -786,6 +833,25 @@ void DvProviderAvOpenhomeOrgVolume1C::DoSetMute(IDviInvocation& aInvocation)
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgVolume1C::DoCanSetMute(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TBool Value = aInvocation.InvocationReadBool("Value");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackCanSetMute != NULL);
+    if (0 != iCallbackCanSetMute(iPtrCanSetMute, invocationC, invocationCPtr, Value)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
 void DvProviderAvOpenhomeOrgVolume1C::DoMute(IDviInvocation& aInvocation)
 {
     DvInvocationCPrivate invocationWrapper(aInvocation);
@@ -850,6 +916,11 @@ void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionSetVolume(THandle aProvid
     reinterpret_cast<DvProviderAvOpenhomeOrgVolume1C*>(aProvider)->EnableActionSetVolume(aCallback, aPtr);
 }
 
+void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionCanSetVolume(THandle aProvider, CallbackVolume1CanSetVolume aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgVolume1C*>(aProvider)->EnableActionCanSetVolume(aCallback, aPtr);
+}
+
 void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionVolumeInc(THandle aProvider, CallbackVolume1VolumeInc aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgVolume1C*>(aProvider)->EnableActionVolumeInc(aCallback, aPtr);
@@ -908,6 +979,11 @@ void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionFade(THandle aProvider, C
 void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionSetMute(THandle aProvider, CallbackVolume1SetMute aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgVolume1C*>(aProvider)->EnableActionSetMute(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionCanSetMute(THandle aProvider, CallbackVolume1CanSetMute aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgVolume1C*>(aProvider)->EnableActionCanSetMute(aCallback, aPtr);
 }
 
 void STDCALL DvProviderAvOpenhomeOrgVolume1EnableActionMute(THandle aProvider, CallbackVolume1Mute aCallback, void* aPtr)

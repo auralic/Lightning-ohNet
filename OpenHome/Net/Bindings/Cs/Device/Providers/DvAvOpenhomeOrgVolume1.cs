@@ -161,6 +161,7 @@ namespace OpenHome.Net.Device.Providers
         private GCHandle iGch;
         private ActionDelegate iDelegateCharacteristics;
         private ActionDelegate iDelegateSetVolume;
+        private ActionDelegate iDelegateCanSetVolume;
         private ActionDelegate iDelegateVolumeInc;
         private ActionDelegate iDelegateVolumeDec;
         private ActionDelegate iDelegateVolume;
@@ -173,6 +174,7 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateFadeDec;
         private ActionDelegate iDelegateFade;
         private ActionDelegate iDelegateSetMute;
+        private ActionDelegate iDelegateCanSetMute;
         private ActionDelegate iDelegateMute;
         private ActionDelegate iDelegateVolumeLimit;
         private PropertyUint iPropertyVolume;
@@ -603,6 +605,19 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action CanSetVolume is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// CanSetVolume must be overridden if this is called.</remarks>
+        protected void EnableActionCanSetVolume()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("CanSetVolume");
+            action.AddInputParameter(new ParameterRelated("Value", iPropertyVolume));
+            iDelegateCanSetVolume = new ActionDelegate(DoCanSetVolume);
+            EnableAction(action, iDelegateCanSetVolume, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// Signal that the action VolumeInc is supported.
         /// </summary>
         /// <remarks>The action's availability will be published in the device's service.xml.
@@ -753,6 +768,19 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action CanSetMute is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// CanSetMute must be overridden if this is called.</remarks>
+        protected void EnableActionCanSetMute()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("CanSetMute");
+            action.AddInputParameter(new ParameterRelated("Value", iPropertyMute));
+            iDelegateCanSetMute = new ActionDelegate(DoCanSetMute);
+            EnableAction(action, iDelegateCanSetMute, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// Signal that the action Mute is supported.
         /// </summary>
         /// <remarks>The action's availability will be published in the device's service.xml.
@@ -807,6 +835,20 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         /// <param name="aValue"></param>
         protected virtual void SetVolume(IDvInvocation aInvocation, uint aValue)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// CanSetVolume action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// CanSetVolume action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionCanSetVolume was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aValue"></param>
+        protected virtual void CanSetVolume(IDvInvocation aInvocation, uint aValue)
         {
             throw (new ActionDisabledError());
         }
@@ -974,6 +1016,20 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// CanSetMute action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// CanSetMute action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionCanSetMute was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aValue"></param>
+        protected virtual void CanSetMute(IDvInvocation aInvocation, bool aValue)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
         /// Mute action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -1098,6 +1154,52 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetVolume", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoCanSetVolume(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgVolume1 self = (DvProviderAvOpenhomeOrgVolume1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            uint value;
+            try
+            {
+                invocation.ReadStart();
+                value = invocation.ReadUint("Value");
+                invocation.ReadEnd();
+                self.CanSetVolume(invocation, value);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "CanSetVolume");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "CanSetVolume"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "CanSetVolume", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "CanSetVolume", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
@@ -1638,6 +1740,52 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetMute", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoCanSetMute(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgVolume1 self = (DvProviderAvOpenhomeOrgVolume1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool value;
+            try
+            {
+                invocation.ReadStart();
+                value = invocation.ReadBool("Value");
+                invocation.ReadEnd();
+                self.CanSetMute(invocation, value);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "CanSetMute");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "CanSetMute"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "CanSetMute", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "CanSetMute", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

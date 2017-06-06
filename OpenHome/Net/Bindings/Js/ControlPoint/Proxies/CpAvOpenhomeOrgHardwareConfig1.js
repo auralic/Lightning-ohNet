@@ -1125,4 +1125,170 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetKeyMode = function(successFunct
 }
 
 
+/**
+* A service action to SetBrightness
+* @method SetBrightness
+* @param {String} Brightness An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetBrightness = function(Brightness, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetBrightness", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("Brightness", Brightness);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetBrightness
+* @method GetBrightness
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetBrightness = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetBrightness", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["Brightness"] = ohnet.soaprequest.readStringParameter(result["Brightness"]); 
+        result["List"] = ohnet.soaprequest.readStringParameter(result["List"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetDisplayMode
+* @method SetDisplayMode
+* @param {String} DisplayMode An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetDisplayMode = function(DisplayMode, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetDisplayMode", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("DisplayMode", DisplayMode);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetDisplayMode
+* @method GetDisplayMode
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetDisplayMode = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetDisplayMode", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["DisplayMode"] = ohnet.soaprequest.readStringParameter(result["DisplayMode"]); 
+        result["DisplayModeList"] = ohnet.soaprequest.readStringParameter(result["DisplayModeList"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetDACPhase
+* @method GetDACPhase
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetDACPhase = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetDACPhase", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["Phase"] = ohnet.soaprequest.readIntParameter(result["Phase"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetDACPhase
+* @method SetDACPhase
+* @param {Int} Phase An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetDACPhase = function(Phase, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetDACPhase", this.url, this.domain, this.type, this.version);     
+    request.writeIntParameter("Phase", Phase);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to GetDACBalance
+* @method GetDACBalance
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetDACBalance = function(successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("GetDACBalance", this.url, this.domain, this.type, this.version);     
+    request.send(function(result){
+        result["Balance"] = ohnet.soaprequest.readIntParameter(result["Balance"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetDACBalance
+* @method SetDACBalance
+* @param {Int} Balance An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetDACBalance = function(Balance, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetDACBalance", this.url, this.domain, this.type, this.version);     
+    request.writeIntParameter("Balance", Balance);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
 

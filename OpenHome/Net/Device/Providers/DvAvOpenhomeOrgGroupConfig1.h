@@ -109,6 +109,20 @@ public:
      * Can only be called if EnablePropertyGroupStatus has previously been called.
      */
     void GetPropertyGroupStatus(Brhz& aValue);
+    /**
+     * Set the value of the BitPerfectMode property
+     *
+     * Can only be called if EnablePropertyBitPerfectMode has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyBitPerfectMode(TBool aValue);
+    /**
+     * Get a copy of the value of the BitPerfectMode property
+     *
+     * Can only be called if EnablePropertyBitPerfectMode has previously been called.
+     */
+    void GetPropertyBitPerfectMode(TBool& aValue);
 protected:
     /**
      * Constructor
@@ -146,6 +160,10 @@ protected:
      * Enable the GroupStatus property.
      */
     void EnablePropertyGroupStatus();
+    /**
+     * Enable the BitPerfectMode property.
+     */
+    void EnablePropertyBitPerfectMode();
     /**
      * Signal that the action SetGroupMode is supported.
      * The action's availability will be published in the device's service.xml.
@@ -194,6 +212,18 @@ protected:
      * SetGroupStatus must be overridden if this is called.
      */
     void EnableActionSetGroupStatus();
+    /**
+     * Signal that the action GetBitPerfectMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * GetBitPerfectMode must be overridden if this is called.
+     */
+    void EnableActionGetBitPerfectMode();
+    /**
+     * Signal that the action SetBitPerfectMode is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetBitPerfectMode must be overridden if this is called.
+     */
+    void EnableActionSetBitPerfectMode();
 private:
     /**
      * SetGroupMode action.
@@ -259,6 +289,22 @@ private:
      * Must be implemented iff EnableActionSetGroupStatus was called.
      */
     virtual void SetGroupStatus(IDvInvocation& aInvocation, const Brx& aGroupStatus);
+    /**
+     * GetBitPerfectMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * GetBitPerfectMode action for the owning device.
+     * Must be implemented iff EnableActionGetBitPerfectMode was called.
+     */
+    virtual void GetBitPerfectMode(IDvInvocation& aInvocation, IDvInvocationResponseBool& aBitPerfectMode);
+    /**
+     * SetBitPerfectMode action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetBitPerfectMode action for the owning device.
+     * Must be implemented iff EnableActionSetBitPerfectMode was called.
+     */
+    virtual void SetBitPerfectMode(IDvInvocation& aInvocation, TBool aBitPerfectMode);
 private:
     DvProviderAvOpenhomeOrgGroupConfig1();
     void Construct();
@@ -270,6 +316,8 @@ private:
     void DoGetGroupMute(IDviInvocation& aInvocation);
     void DoGetGroupStatus(IDviInvocation& aInvocation);
     void DoSetGroupStatus(IDviInvocation& aInvocation);
+    void DoGetBitPerfectMode(IDviInvocation& aInvocation);
+    void DoSetBitPerfectMode(IDviInvocation& aInvocation);
 private:
     PropertyString* iPropertyGroupMode;
     PropertyString* iPropertyGroupName;
@@ -277,6 +325,7 @@ private:
     PropertyUint* iPropertyGroupVolume;
     PropertyBool* iPropertyGroupMute;
     PropertyString* iPropertyGroupStatus;
+    PropertyBool* iPropertyBitPerfectMode;
 };
 
 } // namespace Net

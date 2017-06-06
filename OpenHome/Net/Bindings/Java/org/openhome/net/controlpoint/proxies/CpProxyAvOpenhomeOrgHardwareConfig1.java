@@ -115,6 +115,30 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public GetKeyMode syncGetKeyMode();
     public void beginGetKeyMode(ICpProxyListener aCallback);
     public GetKeyMode endGetKeyMode(long aAsyncHandle);
+    public void syncSetBrightness(String aBrightness);
+    public void beginSetBrightness(String aBrightness, ICpProxyListener aCallback);
+    public void endSetBrightness(long aAsyncHandle);
+    public GetBrightness syncGetBrightness();
+    public void beginGetBrightness(ICpProxyListener aCallback);
+    public GetBrightness endGetBrightness(long aAsyncHandle);
+    public void syncSetDisplayMode(String aDisplayMode);
+    public void beginSetDisplayMode(String aDisplayMode, ICpProxyListener aCallback);
+    public void endSetDisplayMode(long aAsyncHandle);
+    public GetDisplayMode syncGetDisplayMode();
+    public void beginGetDisplayMode(ICpProxyListener aCallback);
+    public GetDisplayMode endGetDisplayMode(long aAsyncHandle);
+    public long syncGetDACPhase();
+    public void beginGetDACPhase(ICpProxyListener aCallback);
+    public long endGetDACPhase(long aAsyncHandle);
+    public void syncSetDACPhase(long aPhase);
+    public void beginSetDACPhase(long aPhase, ICpProxyListener aCallback);
+    public void endSetDACPhase(long aAsyncHandle);
+    public long syncGetDACBalance();
+    public void beginGetDACBalance(ICpProxyListener aCallback);
+    public long endGetDACBalance(long aAsyncHandle);
+    public void syncSetDACBalance(long aBalance);
+    public void beginSetDACBalance(long aBalance, ICpProxyListener aCallback);
+    public void endSetDACBalance(long aAsyncHandle);
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
     public void setPropertyCurrentActionChanged(IPropertyChangeListener aCurrentActionChanged);
@@ -898,6 +922,162 @@ class SyncGetKeyModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
     }
 }
 
+class SyncSetBrightnessAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetBrightness(aAsyncHandle);
+        
+    }
+}
+
+class SyncGetBrightnessAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private String iBrightness;
+    private String iList;
+
+    public SyncGetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getBrightness()
+    {
+        return iBrightness;
+    }
+    public String getList()
+    {
+        return iList;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        GetBrightness result = iService.endGetBrightness(aAsyncHandle);
+        
+        iBrightness = result.getBrightness();
+        iList = result.getList();
+    }
+}
+
+class SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetDisplayMode(aAsyncHandle);
+        
+    }
+}
+
+class SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private String iDisplayMode;
+    private String iDisplayModeList;
+
+    public SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getDisplayMode()
+    {
+        return iDisplayMode;
+    }
+    public String getDisplayModeList()
+    {
+        return iDisplayModeList;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        GetDisplayMode result = iService.endGetDisplayMode(aAsyncHandle);
+        
+        iDisplayMode = result.getDisplayMode();
+        iDisplayModeList = result.getDisplayModeList();
+    }
+}
+
+class SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private long iPhase;
+
+    public SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public long getPhase()
+    {
+        return iPhase;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        long result = iService.endGetDACPhase(aAsyncHandle);
+        
+        iPhase = result;
+    }
+}
+
+class SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetDACPhase(aAsyncHandle);
+        
+    }
+}
+
+class SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private long iBalance;
+
+    public SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public long getBalance()
+    {
+        return iBalance;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        long result = iService.endGetDACBalance(aAsyncHandle);
+        
+        iBalance = result;
+    }
+}
+
+class SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetDACBalance(aAsyncHandle);
+        
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
  */
@@ -1183,6 +1363,52 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         }
     }
 
+    public class GetBrightness
+    {
+        private String iBrightness;
+        private String iList;
+
+        public GetBrightness(
+            String aBrightness,
+            String aList
+        )
+        {
+            iBrightness = aBrightness;
+            iList = aList;
+        }
+        public String getBrightness()
+        {
+            return iBrightness;
+        }
+        public String getList()
+        {
+            return iList;
+        }
+    }
+
+    public class GetDisplayMode
+    {
+        private String iDisplayMode;
+        private String iDisplayModeList;
+
+        public GetDisplayMode(
+            String aDisplayMode,
+            String aDisplayModeList
+        )
+        {
+            iDisplayMode = aDisplayMode;
+            iDisplayModeList = aDisplayModeList;
+        }
+        public String getDisplayMode()
+        {
+            return iDisplayMode;
+        }
+        public String getDisplayModeList()
+        {
+            return iDisplayModeList;
+        }
+    }
+
     private Action iActionIsAlive;
     private Action iActionUpdate;
     private Action iActionActive;
@@ -1218,6 +1444,14 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private Action iActionGetLEDMode;
     private Action iActionSetKeyMode;
     private Action iActionGetKeyMode;
+    private Action iActionSetBrightness;
+    private Action iActionGetBrightness;
+    private Action iActionSetDisplayMode;
+    private Action iActionGetDisplayMode;
+    private Action iActionGetDACPhase;
+    private Action iActionSetDACPhase;
+    private Action iActionGetDACBalance;
+    private Action iActionSetDACBalance;
     private PropertyBool iAlive;
     private PropertyUint iCurrentAction;
     private PropertyBool iRestart;
@@ -1476,6 +1710,42 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         iActionGetKeyMode.addOutputParameter(param);
         param = new ParameterString("KeyModeList", allowedValues);
         iActionGetKeyMode.addOutputParameter(param);
+
+        iActionSetBrightness = new Action("SetBrightness");
+        param = new ParameterString("Brightness", allowedValues);
+        iActionSetBrightness.addInputParameter(param);
+
+        iActionGetBrightness = new Action("GetBrightness");
+        param = new ParameterString("Brightness", allowedValues);
+        iActionGetBrightness.addOutputParameter(param);
+        param = new ParameterString("List", allowedValues);
+        iActionGetBrightness.addOutputParameter(param);
+
+        iActionSetDisplayMode = new Action("SetDisplayMode");
+        param = new ParameterString("DisplayMode", allowedValues);
+        iActionSetDisplayMode.addInputParameter(param);
+
+        iActionGetDisplayMode = new Action("GetDisplayMode");
+        param = new ParameterString("DisplayMode", allowedValues);
+        iActionGetDisplayMode.addOutputParameter(param);
+        param = new ParameterString("DisplayModeList", allowedValues);
+        iActionGetDisplayMode.addOutputParameter(param);
+
+        iActionGetDACPhase = new Action("GetDACPhase");
+        param = new ParameterUint("Phase");
+        iActionGetDACPhase.addOutputParameter(param);
+
+        iActionSetDACPhase = new Action("SetDACPhase");
+        param = new ParameterUint("Phase");
+        iActionSetDACPhase.addInputParameter(param);
+
+        iActionGetDACBalance = new Action("GetDACBalance");
+        param = new ParameterUint("Balance");
+        iActionGetDACBalance.addOutputParameter(param);
+
+        iActionSetDACBalance = new Action("SetDACBalance");
+        param = new ParameterUint("Balance");
+        iActionSetDACBalance.addInputParameter(param);
 
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
@@ -3624,6 +3894,434 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetBrightness(String aBrightness)
+    {
+        SyncSetBrightnessAvOpenhomeOrgHardwareConfig1 sync = new SyncSetBrightnessAvOpenhomeOrgHardwareConfig1(this);
+        beginSetBrightness(aBrightness, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetBrightness}.
+     * 
+     * @param aBrightness
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetBrightness(String aBrightness, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetBrightness, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionSetBrightness.getInputParameter(inIndex++), aBrightness));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetBrightness} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetBrightness} method.
+     */
+    public void endSetBrightness(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public GetBrightness syncGetBrightness()
+    {
+        SyncGetBrightnessAvOpenhomeOrgHardwareConfig1 sync = new SyncGetBrightnessAvOpenhomeOrgHardwareConfig1(this);
+        beginGetBrightness(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return new GetBrightness(
+            sync.getBrightness(),
+            sync.getList()
+        );
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetBrightness}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetBrightness(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetBrightness, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetBrightness.getOutputParameter(outIndex++)));
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetBrightness.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetBrightness} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetBrightness} method.
+     * @return the result of the previously invoked action.
+     */
+    public GetBrightness endGetBrightness(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String brightness = Invocation.getOutputString(aAsyncHandle, index++);
+        String list = Invocation.getOutputString(aAsyncHandle, index++);
+        return new GetBrightness(
+            brightness,
+            list
+        );
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetDisplayMode(String aDisplayMode)
+    {
+        SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1 sync = new SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1(this);
+        beginSetDisplayMode(aDisplayMode, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetDisplayMode}.
+     * 
+     * @param aDisplayMode
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetDisplayMode(String aDisplayMode, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetDisplayMode, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionSetDisplayMode.getInputParameter(inIndex++), aDisplayMode));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetDisplayMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetDisplayMode} method.
+     */
+    public void endSetDisplayMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public GetDisplayMode syncGetDisplayMode()
+    {
+        SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1 sync = new SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1(this);
+        beginGetDisplayMode(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return new GetDisplayMode(
+            sync.getDisplayMode(),
+            sync.getDisplayModeList()
+        );
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetDisplayMode}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetDisplayMode(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetDisplayMode, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetDisplayMode.getOutputParameter(outIndex++)));
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetDisplayMode.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetDisplayMode} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetDisplayMode} method.
+     * @return the result of the previously invoked action.
+     */
+    public GetDisplayMode endGetDisplayMode(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String displayMode = Invocation.getOutputString(aAsyncHandle, index++);
+        String displayModeList = Invocation.getOutputString(aAsyncHandle, index++);
+        return new GetDisplayMode(
+            displayMode,
+            displayModeList
+        );
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public long syncGetDACPhase()
+    {
+        SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1 sync = new SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1(this);
+        beginGetDACPhase(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getPhase();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetDACPhase}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetDACPhase(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetDACPhase, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentUint((ParameterUint)iActionGetDACPhase.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetDACPhase} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetDACPhase} method.
+     * @return the result of the previously invoked action.
+     */
+    public long endGetDACPhase(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        long phase = Invocation.getOutputUint(aAsyncHandle, index++);
+        return phase;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetDACPhase(long aPhase)
+    {
+        SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1 sync = new SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1(this);
+        beginSetDACPhase(aPhase, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetDACPhase}.
+     * 
+     * @param aPhase
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetDACPhase(long aPhase, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetDACPhase, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentUint((ParameterUint)iActionSetDACPhase.getInputParameter(inIndex++), aPhase));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetDACPhase} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetDACPhase} method.
+     */
+    public void endSetDACPhase(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public long syncGetDACBalance()
+    {
+        SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1 sync = new SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1(this);
+        beginGetDACBalance(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getBalance();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetDACBalance}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetDACBalance(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetDACBalance, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentUint((ParameterUint)iActionGetDACBalance.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetDACBalance} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetDACBalance} method.
+     * @return the result of the previously invoked action.
+     */
+    public long endGetDACBalance(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        long balance = Invocation.getOutputUint(aAsyncHandle, index++);
+        return balance;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetDACBalance(long aBalance)
+    {
+        SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1 sync = new SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1(this);
+        beginSetDACBalance(aBalance, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetDACBalance}.
+     * 
+     * @param aBalance
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetDACBalance(long aBalance, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetDACBalance, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentUint((ParameterUint)iActionSetDACBalance.getInputParameter(inIndex++), aBalance));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetDACBalance} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetDACBalance} method.
+     */
+    public void endSetDACBalance(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
@@ -4571,6 +5269,14 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             iActionGetLEDMode.destroy();
             iActionSetKeyMode.destroy();
             iActionGetKeyMode.destroy();
+            iActionSetBrightness.destroy();
+            iActionGetBrightness.destroy();
+            iActionSetDisplayMode.destroy();
+            iActionGetDisplayMode.destroy();
+            iActionGetDACPhase.destroy();
+            iActionSetDACPhase.destroy();
+            iActionGetDACBalance.destroy();
+            iActionSetDACBalance.destroy();
             iAlive.destroy();
             iCurrentAction.destroy();
             iRestart.destroy();

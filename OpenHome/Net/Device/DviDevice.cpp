@@ -8,7 +8,7 @@
 #include <OpenHome/Net/Private/DviProviderSubscriptionLongPoll.h>
 #include <OpenHome/Net/Private/DviProtocolUpnp.h> // for DviProtocolUpnp ctor only
 #include <OpenHome/Net/Private/DviProtocolLpec.h> // for DviProtocolLpec ctor only
-
+#include <stdio.h>
 using namespace OpenHome;
 using namespace OpenHome::Net;
 

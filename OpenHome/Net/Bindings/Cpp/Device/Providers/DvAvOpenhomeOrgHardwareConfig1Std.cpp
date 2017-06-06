@@ -796,6 +796,72 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetKeyMode()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetBrightness()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetBrightness");
+    action->AddInputParameter(new ParameterString("Brightness"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetBrightness);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetBrightness()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetBrightness");
+    action->AddOutputParameter(new ParameterString("Brightness"));
+    action->AddOutputParameter(new ParameterString("List"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetBrightness);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetDisplayMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetDisplayMode");
+    action->AddInputParameter(new ParameterString("DisplayMode"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetDisplayMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetDisplayMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetDisplayMode");
+    action->AddOutputParameter(new ParameterString("DisplayMode"));
+    action->AddOutputParameter(new ParameterString("DisplayModeList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetDisplayMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetDACPhase()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetDACPhase");
+    action->AddOutputParameter(new ParameterUint("Phase"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetDACPhase);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetDACPhase()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetDACPhase");
+    action->AddInputParameter(new ParameterUint("Phase"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetDACPhase);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionGetDACBalance()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetDACBalance");
+    action->AddOutputParameter(new ParameterUint("Balance"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetDACBalance);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetDACBalance()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetDACBalance");
+    action->AddInputParameter(new ParameterUint("Balance"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetDACBalance);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoIsAlive(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -1388,6 +1454,120 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetKeyMode(IDviInvocation& aIn
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetBrightness(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_Brightness;
+    aInvocation.InvocationReadString("Brightness", buf_Brightness);
+    std::string Brightness((const char*)buf_Brightness.Ptr(), buf_Brightness.Bytes());
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetBrightness(invocation, Brightness);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetBrightness(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    std::string respBrightness;
+    std::string respList;
+    DvInvocationStd invocation(aInvocation);
+    GetBrightness(invocation, respBrightness, respList);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterBrightness(aInvocation, "Brightness");
+    Brn buf_Brightness((const TByte*)respBrightness.c_str(), (TUint)respBrightness.length());
+    respWriterBrightness.Write(buf_Brightness);
+    aInvocation.InvocationWriteStringEnd("Brightness");
+    DviInvocationResponseString respWriterList(aInvocation, "List");
+    Brn buf_List((const TByte*)respList.c_str(), (TUint)respList.length());
+    respWriterList.Write(buf_List);
+    aInvocation.InvocationWriteStringEnd("List");
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetDisplayMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_DisplayMode;
+    aInvocation.InvocationReadString("DisplayMode", buf_DisplayMode);
+    std::string DisplayMode((const char*)buf_DisplayMode.Ptr(), buf_DisplayMode.Bytes());
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetDisplayMode(invocation, DisplayMode);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetDisplayMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    std::string respDisplayMode;
+    std::string respDisplayModeList;
+    DvInvocationStd invocation(aInvocation);
+    GetDisplayMode(invocation, respDisplayMode, respDisplayModeList);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterDisplayMode(aInvocation, "DisplayMode");
+    Brn buf_DisplayMode((const TByte*)respDisplayMode.c_str(), (TUint)respDisplayMode.length());
+    respWriterDisplayMode.Write(buf_DisplayMode);
+    aInvocation.InvocationWriteStringEnd("DisplayMode");
+    DviInvocationResponseString respWriterDisplayModeList(aInvocation, "DisplayModeList");
+    Brn buf_DisplayModeList((const TByte*)respDisplayModeList.c_str(), (TUint)respDisplayModeList.length());
+    respWriterDisplayModeList.Write(buf_DisplayModeList);
+    aInvocation.InvocationWriteStringEnd("DisplayModeList");
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetDACPhase(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    uint32_t respPhase;
+    DvInvocationStd invocation(aInvocation);
+    GetDACPhase(invocation, respPhase);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseUint respWriterPhase(aInvocation, "Phase");
+    respWriterPhase.Write(respPhase);
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetDACPhase(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    uint32_t Phase = aInvocation.InvocationReadUint("Phase");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetDACPhase(invocation, Phase);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoGetDACBalance(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    uint32_t respBalance;
+    DvInvocationStd invocation(aInvocation);
+    GetDACBalance(invocation, respBalance);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseUint respWriterBalance(aInvocation, "Balance");
+    respWriterBalance.Write(respBalance);
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetDACBalance(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    uint32_t Balance = aInvocation.InvocationReadUint("Balance");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetDACBalance(invocation, Balance);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::IsAlive(IDvInvocationStd& /*aInvocation*/, bool& /*aAlive*/)
 {
     ASSERTS();
@@ -1559,6 +1739,46 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetKeyMode(IDvInvocationStd& /*a
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetKeyMode(IDvInvocationStd& /*aInvocation*/, std::string& /*aSideKeyMode*/, std::string& /*aMiddleKeyMode*/, std::string& /*aKeyModeList*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetBrightness(IDvInvocationStd& /*aInvocation*/, const std::string& /*aBrightness*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetBrightness(IDvInvocationStd& /*aInvocation*/, std::string& /*aBrightness*/, std::string& /*aList*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetDisplayMode(IDvInvocationStd& /*aInvocation*/, const std::string& /*aDisplayMode*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetDisplayMode(IDvInvocationStd& /*aInvocation*/, std::string& /*aDisplayMode*/, std::string& /*aDisplayModeList*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetDACPhase(IDvInvocationStd& /*aInvocation*/, uint32_t& /*aPhase*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetDACPhase(IDvInvocationStd& /*aInvocation*/, uint32_t /*aPhase*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetDACBalance(IDvInvocationStd& /*aInvocation*/, uint32_t& /*aBalance*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetDACBalance(IDvInvocationStd& /*aInvocation*/, uint32_t /*aBalance*/)
 {
     ASSERTS();
 }

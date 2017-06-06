@@ -115,6 +115,30 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncGetKeyMode(out String aSideKeyMode, out String aMiddleKeyMode, out String aKeyModeList);
         void BeginGetKeyMode(CpProxy.CallbackAsyncComplete aCallback);
         void EndGetKeyMode(IntPtr aAsyncHandle, out String aSideKeyMode, out String aMiddleKeyMode, out String aKeyModeList);
+        void SyncSetBrightness(String aBrightness);
+        void BeginSetBrightness(String aBrightness, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetBrightness(IntPtr aAsyncHandle);
+        void SyncGetBrightness(out String aBrightness, out String aList);
+        void BeginGetBrightness(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetBrightness(IntPtr aAsyncHandle, out String aBrightness, out String aList);
+        void SyncSetDisplayMode(String aDisplayMode);
+        void BeginSetDisplayMode(String aDisplayMode, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetDisplayMode(IntPtr aAsyncHandle);
+        void SyncGetDisplayMode(out String aDisplayMode, out String aDisplayModeList);
+        void BeginGetDisplayMode(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetDisplayMode(IntPtr aAsyncHandle, out String aDisplayMode, out String aDisplayModeList);
+        void SyncGetDACPhase(out uint aPhase);
+        void BeginGetDACPhase(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetDACPhase(IntPtr aAsyncHandle, out uint aPhase);
+        void SyncSetDACPhase(uint aPhase);
+        void BeginSetDACPhase(uint aPhase, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetDACPhase(IntPtr aAsyncHandle);
+        void SyncGetDACBalance(out uint aBalance);
+        void BeginGetDACBalance(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetDACBalance(IntPtr aAsyncHandle, out uint aBalance);
+        void SyncSetDACBalance(uint aBalance);
+        void BeginSetDACBalance(uint aBalance, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetDACBalance(IntPtr aAsyncHandle);
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
         void SetPropertyCurrentActionChanged(System.Action aCurrentActionChanged);
@@ -828,6 +852,148 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncSetBrightnessAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetBrightness(aAsyncHandle);
+        }
+    };
+
+    internal class SyncGetBrightnessAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private String iBrightness;
+        private String iList;
+
+        public SyncGetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String Brightness()
+        {
+            return iBrightness;
+        }
+        public String List()
+        {
+            return iList;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetBrightness(aAsyncHandle, out iBrightness, out iList);
+        }
+    };
+
+    internal class SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetDisplayMode(aAsyncHandle);
+        }
+    };
+
+    internal class SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private String iDisplayMode;
+        private String iDisplayModeList;
+
+        public SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String DisplayMode()
+        {
+            return iDisplayMode;
+        }
+        public String DisplayModeList()
+        {
+            return iDisplayModeList;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetDisplayMode(aAsyncHandle, out iDisplayMode, out iDisplayModeList);
+        }
+    };
+
+    internal class SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private uint iPhase;
+
+        public SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public uint Phase()
+        {
+            return iPhase;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetDACPhase(aAsyncHandle, out iPhase);
+        }
+    };
+
+    internal class SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetDACPhase(aAsyncHandle);
+        }
+    };
+
+    internal class SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private uint iBalance;
+
+        public SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public uint Balance()
+        {
+            return iBalance;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetDACBalance(aAsyncHandle, out iBalance);
+        }
+    };
+
+    internal class SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetDACBalance(aAsyncHandle);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
     /// </summary>
@@ -868,6 +1034,14 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionGetLEDMode;
         private OpenHome.Net.Core.Action iActionSetKeyMode;
         private OpenHome.Net.Core.Action iActionGetKeyMode;
+        private OpenHome.Net.Core.Action iActionSetBrightness;
+        private OpenHome.Net.Core.Action iActionGetBrightness;
+        private OpenHome.Net.Core.Action iActionSetDisplayMode;
+        private OpenHome.Net.Core.Action iActionGetDisplayMode;
+        private OpenHome.Net.Core.Action iActionGetDACPhase;
+        private OpenHome.Net.Core.Action iActionSetDACPhase;
+        private OpenHome.Net.Core.Action iActionGetDACBalance;
+        private OpenHome.Net.Core.Action iActionSetDACBalance;
         private PropertyBool iAlive;
         private PropertyUint iCurrentAction;
         private PropertyBool iRestart;
@@ -1124,6 +1298,42 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetKeyMode.AddOutputParameter(param);
             param = new ParameterString("KeyModeList", allowedValues);
             iActionGetKeyMode.AddOutputParameter(param);
+
+            iActionSetBrightness = new OpenHome.Net.Core.Action("SetBrightness");
+            param = new ParameterString("Brightness", allowedValues);
+            iActionSetBrightness.AddInputParameter(param);
+
+            iActionGetBrightness = new OpenHome.Net.Core.Action("GetBrightness");
+            param = new ParameterString("Brightness", allowedValues);
+            iActionGetBrightness.AddOutputParameter(param);
+            param = new ParameterString("List", allowedValues);
+            iActionGetBrightness.AddOutputParameter(param);
+
+            iActionSetDisplayMode = new OpenHome.Net.Core.Action("SetDisplayMode");
+            param = new ParameterString("DisplayMode", allowedValues);
+            iActionSetDisplayMode.AddInputParameter(param);
+
+            iActionGetDisplayMode = new OpenHome.Net.Core.Action("GetDisplayMode");
+            param = new ParameterString("DisplayMode", allowedValues);
+            iActionGetDisplayMode.AddOutputParameter(param);
+            param = new ParameterString("DisplayModeList", allowedValues);
+            iActionGetDisplayMode.AddOutputParameter(param);
+
+            iActionGetDACPhase = new OpenHome.Net.Core.Action("GetDACPhase");
+            param = new ParameterUint("Phase");
+            iActionGetDACPhase.AddOutputParameter(param);
+
+            iActionSetDACPhase = new OpenHome.Net.Core.Action("SetDACPhase");
+            param = new ParameterUint("Phase");
+            iActionSetDACPhase.AddInputParameter(param);
+
+            iActionGetDACBalance = new OpenHome.Net.Core.Action("GetDACBalance");
+            param = new ParameterUint("Balance");
+            iActionGetDACBalance.AddOutputParameter(param);
+
+            iActionSetDACBalance = new OpenHome.Net.Core.Action("SetDACBalance");
+            param = new ParameterUint("Balance");
+            iActionSetDACBalance.AddInputParameter(param);
 
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
@@ -2960,6 +3170,396 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aBrightness"></param>
+        public void SyncSetBrightness(String aBrightness)
+        {
+            SyncSetBrightnessAvOpenhomeOrgHardwareConfig1 sync = new SyncSetBrightnessAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetBrightness(aBrightness, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetBrightness().</remarks>
+        /// <param name="aBrightness"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetBrightness(String aBrightness, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetBrightness, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionSetBrightness.InputParameter(inIndex++), aBrightness));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetBrightness(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aBrightness"></param>
+        /// <param name="aList"></param>
+        public void SyncGetBrightness(out String aBrightness, out String aList)
+        {
+            SyncGetBrightnessAvOpenhomeOrgHardwareConfig1 sync = new SyncGetBrightnessAvOpenhomeOrgHardwareConfig1(this);
+            BeginGetBrightness(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aBrightness = sync.Brightness();
+            aList = sync.List();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetBrightness().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetBrightness(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetBrightness, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetBrightness.OutputParameter(outIndex++)));
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetBrightness.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aBrightness"></param>
+        /// <param name="aList"></param>
+        public void EndGetBrightness(IntPtr aAsyncHandle, out String aBrightness, out String aList)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aBrightness = Invocation.OutputString(aAsyncHandle, index++);
+            aList = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aDisplayMode"></param>
+        public void SyncSetDisplayMode(String aDisplayMode)
+        {
+            SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1 sync = new SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetDisplayMode(aDisplayMode, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetDisplayMode().</remarks>
+        /// <param name="aDisplayMode"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetDisplayMode(String aDisplayMode, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetDisplayMode, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionSetDisplayMode.InputParameter(inIndex++), aDisplayMode));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetDisplayMode(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aDisplayMode"></param>
+        /// <param name="aDisplayModeList"></param>
+        public void SyncGetDisplayMode(out String aDisplayMode, out String aDisplayModeList)
+        {
+            SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1 sync = new SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1(this);
+            BeginGetDisplayMode(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aDisplayMode = sync.DisplayMode();
+            aDisplayModeList = sync.DisplayModeList();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetDisplayMode().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetDisplayMode(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetDisplayMode, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetDisplayMode.OutputParameter(outIndex++)));
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetDisplayMode.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aDisplayMode"></param>
+        /// <param name="aDisplayModeList"></param>
+        public void EndGetDisplayMode(IntPtr aAsyncHandle, out String aDisplayMode, out String aDisplayModeList)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aDisplayMode = Invocation.OutputString(aAsyncHandle, index++);
+            aDisplayModeList = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aPhase"></param>
+        public void SyncGetDACPhase(out uint aPhase)
+        {
+            SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1 sync = new SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1(this);
+            BeginGetDACPhase(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aPhase = sync.Phase();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetDACPhase().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetDACPhase(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetDACPhase, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentUint((ParameterUint)iActionGetDACPhase.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aPhase"></param>
+        public void EndGetDACPhase(IntPtr aAsyncHandle, out uint aPhase)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aPhase = Invocation.OutputUint(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aPhase"></param>
+        public void SyncSetDACPhase(uint aPhase)
+        {
+            SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1 sync = new SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetDACPhase(aPhase, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetDACPhase().</remarks>
+        /// <param name="aPhase"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetDACPhase(uint aPhase, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetDACPhase, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentUint((ParameterUint)iActionSetDACPhase.InputParameter(inIndex++), aPhase));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetDACPhase(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aBalance"></param>
+        public void SyncGetDACBalance(out uint aBalance)
+        {
+            SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1 sync = new SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1(this);
+            BeginGetDACBalance(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aBalance = sync.Balance();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetDACBalance().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetDACBalance(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetDACBalance, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentUint((ParameterUint)iActionGetDACBalance.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aBalance"></param>
+        public void EndGetDACBalance(IntPtr aAsyncHandle, out uint aBalance)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aBalance = Invocation.OutputUint(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aBalance"></param>
+        public void SyncSetDACBalance(uint aBalance)
+        {
+            SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1 sync = new SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetDACBalance(aBalance, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetDACBalance().</remarks>
+        /// <param name="aBalance"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetDACBalance(uint aBalance, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetDACBalance, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentUint((ParameterUint)iActionSetDACBalance.InputParameter(inIndex++), aBalance));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetDACBalance(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -4018,6 +4618,14 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetLEDMode.Dispose();
             iActionSetKeyMode.Dispose();
             iActionGetKeyMode.Dispose();
+            iActionSetBrightness.Dispose();
+            iActionGetBrightness.Dispose();
+            iActionSetDisplayMode.Dispose();
+            iActionGetDisplayMode.Dispose();
+            iActionGetDACPhase.Dispose();
+            iActionSetDACPhase.Dispose();
+            iActionGetDACBalance.Dispose();
+            iActionSetDACBalance.Dispose();
             iAlive.Dispose();
             iCurrentAction.Dispose();
             iRestart.Dispose();

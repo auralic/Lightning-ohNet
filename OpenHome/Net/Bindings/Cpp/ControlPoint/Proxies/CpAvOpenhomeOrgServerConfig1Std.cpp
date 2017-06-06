@@ -538,6 +538,50 @@ void SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1Cpp::CompleteRequest(IAsync
 }
 
 
+class SyncGetServerConfigAvOpenhomeOrgServerConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncGetServerConfigAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy, std::string& aGetValue);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetServerConfigAvOpenhomeOrgServerConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgServerConfig1Cpp& iService;
+    std::string& iGetValue;
+};
+
+SyncGetServerConfigAvOpenhomeOrgServerConfig1Cpp::SyncGetServerConfigAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy, std::string& aGetValue)
+    : iService(aProxy)
+    , iGetValue(aGetValue)
+{
+}
+
+void SyncGetServerConfigAvOpenhomeOrgServerConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetServerConfig(aAsync, iGetValue);
+}
+
+
+class SyncSetServerConfigAvOpenhomeOrgServerConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncSetServerConfigAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetServerConfigAvOpenhomeOrgServerConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgServerConfig1Cpp& iService;
+};
+
+SyncSetServerConfigAvOpenhomeOrgServerConfig1Cpp::SyncSetServerConfigAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetServerConfigAvOpenhomeOrgServerConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetServerConfig(aAsync);
+}
+
+
 CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDeviceCpp& aDevice)
     : CpProxy("av-openhome-org", "ServerConfig", 1, aDevice.Device())
 {
@@ -643,10 +687,21 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDev
     param = new OpenHome::Net::ParameterString("ScanFile");
     iActionGetCurrentScanFile->AddOutputParameter(param);
 
+    iActionGetServerConfig = new Action("GetServerConfig");
+    param = new OpenHome::Net::ParameterString("GetValue");
+    iActionGetServerConfig->AddOutputParameter(param);
+
+    iActionSetServerConfig = new Action("SetServerConfig");
+    param = new OpenHome::Net::ParameterString("SetValue");
+    iActionSetServerConfig->AddInputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1Cpp::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
     AddProperty(iAlive);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1Cpp::SubscriptValuePropertyChanged);
+    iSubscriptValue = new PropertyString("SubscriptValue", functor);
+    AddProperty(iSubscriptValue);
 }
 
 CpProxyAvOpenhomeOrgServerConfig1Cpp::~CpProxyAvOpenhomeOrgServerConfig1Cpp()
@@ -675,6 +730,8 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::~CpProxyAvOpenhomeOrgServerConfig1Cpp()
     delete iActionGetDISKCapacity;
     delete iActionForceRescan;
     delete iActionGetCurrentScanFile;
+    delete iActionGetServerConfig;
+    delete iActionSetServerConfig;
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetServerName(const std::string& aServerName)
@@ -1459,10 +1516,85 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetCurrentScanFile(IAsync& aAsync,
     }
 }
 
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetServerConfig(std::string& aGetValue)
+{
+    SyncGetServerConfigAvOpenhomeOrgServerConfig1Cpp sync(*this, aGetValue);
+    BeginGetServerConfig(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetServerConfig(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetServerConfig, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetServerConfig->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetServerConfig(IAsync& aAsync, std::string& aGetValue)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetServerConfig"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    {
+        const Brx& val = ((ArgumentString*)invocation.OutputArguments()[index++])->Value();
+        aGetValue.assign((const char*)val.Ptr(), val.Bytes());
+    }
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetServerConfig(const std::string& aSetValue)
+{
+    SyncSetServerConfigAvOpenhomeOrgServerConfig1Cpp sync(*this);
+    BeginSetServerConfig(aSetValue, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginSetServerConfig(const std::string& aSetValue, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionSetServerConfig, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetServerConfig->InputParameters();
+    {
+        Brn buf((const TByte*)aSetValue.c_str(), (TUint)aSetValue.length());
+        invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
+    }
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndSetServerConfig(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetServerConfig"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::SetPropertyAliveChanged(Functor& aFunctor)
 {
     iLock->Wait();
     iAliveChanged = aFunctor;
+    iLock->Signal();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SetPropertySubscriptValueChanged(Functor& aFunctor)
+{
+    iLock->Wait();
+    iSubscriptValueChanged = aFunctor;
     iLock->Signal();
 }
 
@@ -1473,8 +1605,21 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::PropertyAlive(bool& aAlive) const
     aAlive = iAlive->Value();
 }
 
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::PropertySubscriptValue(std::string& aSubscriptValue) const
+{
+    AutoMutex a(PropertyReadLock());
+    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    const Brx& val = iSubscriptValue->Value();
+    aSubscriptValue.assign((const char*)val.Ptr(), val.Bytes());
+}
+
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::AlivePropertyChanged()
 {
     ReportEvent(iAliveChanged);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SubscriptValuePropertyChanged()
+{
+    ReportEvent(iSubscriptValueChanged);
 }
 

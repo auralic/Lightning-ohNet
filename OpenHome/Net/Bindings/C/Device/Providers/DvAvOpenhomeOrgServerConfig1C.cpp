@@ -20,7 +20,10 @@ public:
     DvProviderAvOpenhomeOrgServerConfig1C(DvDeviceC aDevice);
     TBool SetPropertyAlive(TBool aValue);
     void GetPropertyAlive(TBool& aValue);
+    TBool SetPropertySubscriptValue(const Brx& aValue);
+    void GetPropertySubscriptValue(Brhz& aValue);
     void EnablePropertyAlive();
+    void EnablePropertySubscriptValue();
     void EnableActionSetServerName(CallbackServerConfig1SetServerName aCallback, void* aPtr);
     void EnableActionGetServerVersion(CallbackServerConfig1GetServerVersion aCallback, void* aPtr);
     void EnableActionGetProgressInfo(CallbackServerConfig1GetProgressInfo aCallback, void* aPtr);
@@ -44,6 +47,8 @@ public:
     void EnableActionGetDISKCapacity(CallbackServerConfig1GetDISKCapacity aCallback, void* aPtr);
     void EnableActionForceRescan(CallbackServerConfig1ForceRescan aCallback, void* aPtr);
     void EnableActionGetCurrentScanFile(CallbackServerConfig1GetCurrentScanFile aCallback, void* aPtr);
+    void EnableActionGetServerConfig(CallbackServerConfig1GetServerConfig aCallback, void* aPtr);
+    void EnableActionSetServerConfig(CallbackServerConfig1SetServerConfig aCallback, void* aPtr);
 private:
     void DoSetServerName(IDviInvocation& aInvocation);
     void DoGetServerVersion(IDviInvocation& aInvocation);
@@ -68,6 +73,8 @@ private:
     void DoGetDISKCapacity(IDviInvocation& aInvocation);
     void DoForceRescan(IDviInvocation& aInvocation);
     void DoGetCurrentScanFile(IDviInvocation& aInvocation);
+    void DoGetServerConfig(IDviInvocation& aInvocation);
+    void DoSetServerConfig(IDviInvocation& aInvocation);
 private:
     CallbackServerConfig1SetServerName iCallbackSetServerName;
     void* iPtrSetServerName;
@@ -115,13 +122,19 @@ private:
     void* iPtrForceRescan;
     CallbackServerConfig1GetCurrentScanFile iCallbackGetCurrentScanFile;
     void* iPtrGetCurrentScanFile;
+    CallbackServerConfig1GetServerConfig iCallbackGetServerConfig;
+    void* iPtrGetServerConfig;
+    CallbackServerConfig1SetServerConfig iCallbackSetServerConfig;
+    void* iPtrSetServerConfig;
     PropertyBool* iPropertyAlive;
+    PropertyString* iPropertySubscriptValue;
 };
 
 DvProviderAvOpenhomeOrgServerConfig1C::DvProviderAvOpenhomeOrgServerConfig1C(DvDeviceC aDevice)
     : DvProvider(DviDeviceC::DeviceFromHandle(aDevice)->Device(), "av.openhome.org", "ServerConfig", 1)
 {
     iPropertyAlive = NULL;
+    iPropertySubscriptValue = NULL;
 }
 
 TBool DvProviderAvOpenhomeOrgServerConfig1C::SetPropertyAlive(TBool aValue)
@@ -136,10 +149,28 @@ void DvProviderAvOpenhomeOrgServerConfig1C::GetPropertyAlive(TBool& aValue)
     aValue = iPropertyAlive->Value();
 }
 
+TBool DvProviderAvOpenhomeOrgServerConfig1C::SetPropertySubscriptValue(const Brx& aValue)
+{
+    ASSERT(iPropertySubscriptValue != NULL);
+    return SetPropertyString(*iPropertySubscriptValue, aValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::GetPropertySubscriptValue(Brhz& aValue)
+{
+    ASSERT(iPropertySubscriptValue != NULL);
+    aValue.Set(iPropertySubscriptValue->Value());
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1C::EnablePropertyAlive()
 {
     iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
     iService->AddProperty(iPropertyAlive); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnablePropertySubscriptValue()
+{
+    iPropertySubscriptValue = new PropertyString(new ParameterString("SubscriptValue"));
+    iService->AddProperty(iPropertySubscriptValue); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionSetServerName(CallbackServerConfig1SetServerName aCallback, void* aPtr)
@@ -373,6 +404,26 @@ void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionGetCurrentScanFile(Callb
     OpenHome::Net::Action* action = new OpenHome::Net::Action("GetCurrentScanFile");
     action->AddOutputParameter(new ParameterString("ScanFile"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoGetCurrentScanFile);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionGetServerConfig(CallbackServerConfig1GetServerConfig aCallback, void* aPtr)
+{
+    iCallbackGetServerConfig = aCallback;
+    iPtrGetServerConfig = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetServerConfig");
+    action->AddOutputParameter(new ParameterString("GetValue"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoGetServerConfig);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionSetServerConfig(CallbackServerConfig1SetServerConfig aCallback, void* aPtr)
+{
+    iCallbackSetServerConfig = aCallback;
+    iPtrSetServerConfig = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetServerConfig");
+    action->AddInputParameter(new ParameterString("SetValue"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoSetServerConfig);
     iService->AddAction(action, functor);
 }
 
@@ -916,6 +967,50 @@ void DvProviderAvOpenhomeOrgServerConfig1C::DoGetCurrentScanFile(IDviInvocation&
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1C::DoGetServerConfig(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* GetValue;
+    ASSERT(iCallbackGetServerConfig != NULL);
+    if (0 != iCallbackGetServerConfig(iPtrGetServerConfig, invocationC, invocationCPtr, &GetValue)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respGetValue(aInvocation, "GetValue");
+    invocation.StartResponse();
+    Brhz bufGetValue((const TChar*)GetValue);
+    OhNetFreeExternal(GetValue);
+    respGetValue.Write(bufGetValue);
+    respGetValue.WriteFlush();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::DoSetServerConfig(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz SetValue;
+    aInvocation.InvocationReadString("SetValue", SetValue);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetServerConfig != NULL);
+    if (0 != iCallbackSetServerConfig(iPtrSetServerConfig, invocationC, invocationCPtr, (const char*)SetValue.Ptr())) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgServerConfig1Create(DvDeviceC aDevice)
@@ -1043,6 +1138,16 @@ void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetCurrentScanFile(
     reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionGetCurrentScanFile(aCallback, aPtr);
 }
 
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionGetServerConfig(THandle aProvider, CallbackServerConfig1GetServerConfig aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionGetServerConfig(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionSetServerConfig(THandle aProvider, CallbackServerConfig1SetServerConfig aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionSetServerConfig(aCallback, aPtr);
+}
+
 int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
 {
     *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->SetPropertyAlive((aValue!=0))? 1 : 0);
@@ -1056,8 +1161,27 @@ void STDCALL DvProviderAvOpenhomeOrgServerConfig1GetPropertyAlive(THandle aProvi
     *aValue = (val? 1 : 0);
 }
 
+int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertySubscriptValue(THandle aProvider, const char* aValue, uint32_t* aChanged)
+{
+    Brhz buf(aValue);
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->SetPropertySubscriptValue(buf)? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1GetPropertySubscriptValue(THandle aProvider, char** aValue)
+{
+    Brhz buf;
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->GetPropertySubscriptValue(buf);
+    *aValue = (char*)buf.Transfer();
+}
+
 void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnablePropertyAlive(THandle aProvider)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnablePropertyAlive();
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnablePropertySubscriptValue(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnablePropertySubscriptValue();
 }
 

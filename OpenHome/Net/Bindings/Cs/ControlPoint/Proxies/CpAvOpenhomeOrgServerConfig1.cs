@@ -79,8 +79,16 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncGetCurrentScanFile(out String aScanFile);
         void BeginGetCurrentScanFile(CpProxy.CallbackAsyncComplete aCallback);
         void EndGetCurrentScanFile(IntPtr aAsyncHandle, out String aScanFile);
+        void SyncGetServerConfig(out String aGetValue);
+        void BeginGetServerConfig(CpProxy.CallbackAsyncComplete aCallback);
+        void EndGetServerConfig(IntPtr aAsyncHandle, out String aGetValue);
+        void SyncSetServerConfig(String aSetValue);
+        void BeginSetServerConfig(String aSetValue, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetServerConfig(IntPtr aAsyncHandle);
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
+        void SetPropertySubscriptValueChanged(System.Action aSubscriptValueChanged);
+        String PropertySubscriptValue();
     }
 
     internal class SyncSetServerNameAvOpenhomeOrgServerConfig1 : SyncProxyAction
@@ -510,6 +518,39 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncGetServerConfigAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+        private String iGetValue;
+
+        public SyncGetServerConfigAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String GetValue()
+        {
+            return iGetValue;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndGetServerConfig(aAsyncHandle, out iGetValue);
+        }
+    };
+
+    internal class SyncSetServerConfigAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+        public SyncSetServerConfigAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetServerConfig(aAsyncHandle);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:ServerConfig:1 UPnP service
     /// </summary>
@@ -538,8 +579,12 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionGetDISKCapacity;
         private OpenHome.Net.Core.Action iActionForceRescan;
         private OpenHome.Net.Core.Action iActionGetCurrentScanFile;
+        private OpenHome.Net.Core.Action iActionGetServerConfig;
+        private OpenHome.Net.Core.Action iActionSetServerConfig;
         private PropertyBool iAlive;
+        private PropertyString iSubscriptValue;
         private System.Action iAliveChanged;
+        private System.Action iSubscriptValueChanged;
         private Mutex iPropertyLock;
 
         /// <summary>
@@ -653,8 +698,18 @@ namespace OpenHome.Net.ControlPoint.Proxies
             param = new ParameterString("ScanFile", allowedValues);
             iActionGetCurrentScanFile.AddOutputParameter(param);
 
+            iActionGetServerConfig = new OpenHome.Net.Core.Action("GetServerConfig");
+            param = new ParameterString("GetValue", allowedValues);
+            iActionGetServerConfig.AddOutputParameter(param);
+
+            iActionSetServerConfig = new OpenHome.Net.Core.Action("SetServerConfig");
+            param = new ParameterString("SetValue", allowedValues);
+            iActionSetServerConfig.AddInputParameter(param);
+
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
+            iSubscriptValue = new PropertyString("SubscriptValue", SubscriptValuePropertyChanged);
+            AddProperty(iSubscriptValue);
             
             iPropertyLock = new Mutex();
         }
@@ -1777,6 +1832,101 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aGetValue"></param>
+        public void SyncGetServerConfig(out String aGetValue)
+        {
+            SyncGetServerConfigAvOpenhomeOrgServerConfig1 sync = new SyncGetServerConfigAvOpenhomeOrgServerConfig1(this);
+            BeginGetServerConfig(sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aGetValue = sync.GetValue();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndGetServerConfig().</remarks>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginGetServerConfig(CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionGetServerConfig, aCallback);
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionGetServerConfig.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aGetValue"></param>
+        public void EndGetServerConfig(IntPtr aAsyncHandle, out String aGetValue)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aGetValue = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aSetValue"></param>
+        public void SyncSetServerConfig(String aSetValue)
+        {
+            SyncSetServerConfigAvOpenhomeOrgServerConfig1 sync = new SyncSetServerConfigAvOpenhomeOrgServerConfig1(this);
+            BeginSetServerConfig(aSetValue, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetServerConfig().</remarks>
+        /// <param name="aSetValue"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetServerConfig(String aSetValue, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetServerConfig, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionSetServerConfig.InputParameter(inIndex++), aSetValue));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetServerConfig(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -1799,6 +1949,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Set a delegate to be run when the SubscriptValue state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.</remarks>
+        /// <param name="aSubscriptValueChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertySubscriptValueChanged(System.Action aSubscriptValueChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iSubscriptValueChanged = aSubscriptValueChanged;
+            }
+        }
+
+        private void SubscriptValuePropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iSubscriptValueChanged);
+            }
+        }
+
+        /// <summary>
         /// Query the value of the Alive property.
         /// </summary>
         /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
@@ -1812,6 +1984,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
             try
             {
                 val = iAlive.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
+        }
+
+        /// <summary>
+        /// Query the value of the SubscriptValue property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the SubscriptValue property</returns>
+        public String PropertySubscriptValue()
+        {
+            PropertyReadLock();
+            String val;
+            try
+            {
+                val = iSubscriptValue.Value();
             }
             finally
             {
@@ -1855,7 +2049,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetDISKCapacity.Dispose();
             iActionForceRescan.Dispose();
             iActionGetCurrentScanFile.Dispose();
+            iActionGetServerConfig.Dispose();
+            iActionSetServerConfig.Dispose();
             iAlive.Dispose();
+            iSubscriptValue.Dispose();
         }
     }
 }

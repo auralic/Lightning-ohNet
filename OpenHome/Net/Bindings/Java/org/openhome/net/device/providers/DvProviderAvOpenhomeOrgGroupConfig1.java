@@ -104,6 +104,22 @@ interface IDvProviderAvOpenhomeOrgGroupConfig1
      * @return value of the GroupStatus property.
      */
     public String getPropertyGroupStatus();
+
+    /**
+     * Set the value of the BitPerfectMode property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyBitPerfectMode(boolean aValue);
+
+    /**
+     * Get a copy of the value of the BitPerfectMode property
+     *
+     * @return value of the BitPerfectMode property.
+     */
+    public boolean getPropertyBitPerfectMode();
         
 }
 
@@ -151,12 +167,15 @@ public class DvProviderAvOpenhomeOrgGroupConfig1 extends DvProvider implements I
     private IDvInvocationListener iDelegateGetGroupMute;
     private IDvInvocationListener iDelegateGetGroupStatus;
     private IDvInvocationListener iDelegateSetGroupStatus;
+    private IDvInvocationListener iDelegateGetBitPerfectMode;
+    private IDvInvocationListener iDelegateSetBitPerfectMode;
     private PropertyString iPropertyGroupMode;
     private PropertyString iPropertyGroupName;
     private PropertyString iPropertyGroupID;
     private PropertyUint iPropertyGroupVolume;
     private PropertyBool iPropertyGroupMute;
     private PropertyString iPropertyGroupStatus;
+    private PropertyBool iPropertyBitPerfectMode;
 
     /**
      * Constructor
@@ -228,6 +247,15 @@ public class DvProviderAvOpenhomeOrgGroupConfig1 extends DvProvider implements I
         List<String> allowedValues = new LinkedList<String>();
         iPropertyGroupStatus = new PropertyString(new ParameterString("GroupStatus", allowedValues));
         addProperty(iPropertyGroupStatus);
+    }
+
+    /**
+     * Enable the BitPerfectMode property.
+     */
+    public void enablePropertyBitPerfectMode()
+    {
+        iPropertyBitPerfectMode = new PropertyBool(new ParameterBool("BitPerfectMode"));
+        addProperty(iPropertyBitPerfectMode);
     }
 
     /**
@@ -363,6 +391,28 @@ public class DvProviderAvOpenhomeOrgGroupConfig1 extends DvProvider implements I
     }
 
     /**
+     * Set the value of the BitPerfectMode property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyBitPerfectMode(boolean aValue)
+    {
+        return setPropertyBool(iPropertyBitPerfectMode, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the BitPerfectMode property
+     *
+     * @return  value of the BitPerfectMode property.
+     */
+    public boolean getPropertyBitPerfectMode()
+    {
+        return iPropertyBitPerfectMode.getValue();
+    }
+
+    /**
      * Signal that the action SetGroupMode is supported.
      *
      * <p>The action's availability will be published in the device's service.xml.
@@ -476,6 +526,34 @@ public class DvProviderAvOpenhomeOrgGroupConfig1 extends DvProvider implements I
         action.addInputParameter(new ParameterRelated("GroupStatus", iPropertyGroupStatus));
         iDelegateSetGroupStatus = new DoSetGroupStatus();
         enableAction(action, iDelegateSetGroupStatus);
+    }
+
+    /**
+     * Signal that the action GetBitPerfectMode is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * GetBitPerfectMode must be overridden if this is called.
+     */      
+    protected void enableActionGetBitPerfectMode()
+    {
+        Action action = new Action("GetBitPerfectMode");
+        action.addOutputParameter(new ParameterRelated("BitPerfectMode", iPropertyBitPerfectMode));
+        iDelegateGetBitPerfectMode = new DoGetBitPerfectMode();
+        enableAction(action, iDelegateGetBitPerfectMode);
+    }
+
+    /**
+     * Signal that the action SetBitPerfectMode is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetBitPerfectMode must be overridden if this is called.
+     */      
+    protected void enableActionSetBitPerfectMode()
+    {
+        Action action = new Action("SetBitPerfectMode");
+        action.addInputParameter(new ParameterRelated("BitPerfectMode", iPropertyBitPerfectMode));
+        iDelegateSetBitPerfectMode = new DoSetBitPerfectMode();
+        enableAction(action, iDelegateSetBitPerfectMode);
     }
 
     /**
@@ -600,6 +678,37 @@ public class DvProviderAvOpenhomeOrgGroupConfig1 extends DvProvider implements I
      * @param aGroupStatus
      */
     protected void setGroupStatus(IDvInvocation aInvocation, String aGroupStatus)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * GetBitPerfectMode action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * GetBitPerfectMode action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionGetBitPerfectMode} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     */
+    protected boolean getBitPerfectMode(IDvInvocation aInvocation)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetBitPerfectMode action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetBitPerfectMode action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetBitPerfectMode} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aBitPerfectMode
+     */
+    protected void setBitPerfectMode(IDvInvocation aInvocation, boolean aBitPerfectMode)
     {
         throw (new ActionDisabledError());
     }
@@ -985,6 +1094,102 @@ public class DvProviderAvOpenhomeOrgGroupConfig1 extends DvProvider implements I
             catch (ActionError ae)
             {
                 invocation.reportActionError(ae, "SetGroupStatus");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoGetBitPerfectMode implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean bitPerfectMode;
+            try
+            {
+                invocation.readStart();
+                invocation.readEnd();
+                 bitPerfectMode = getBitPerfectMode(invocation);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "GetBitPerfectMode");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeBool("BitPerfectMode", bitPerfectMode);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetBitPerfectMode implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean bitPerfectMode;
+            try
+            {
+                invocation.readStart();
+                bitPerfectMode = invocation.readBool("BitPerfectMode");
+                invocation.readEnd();
+                setBitPerfectMode(invocation, bitPerfectMode);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetBitPerfectMode");
                 return;
             }
             catch (PropertyUpdateError pue)

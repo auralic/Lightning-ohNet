@@ -21,16 +21,37 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetPropertyAlive(bool& aValue)
     aValue = iPropertyAlive->Value();
 }
 
+bool DvProviderAvOpenhomeOrgServerConfig1Cpp::SetPropertySubscriptValue(const std::string& aValue)
+{
+    ASSERT(iPropertySubscriptValue != NULL);
+    Brn buf((const TByte*)aValue.c_str(), (TUint)aValue.length());
+    return SetPropertyString(*iPropertySubscriptValue, buf);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetPropertySubscriptValue(std::string& aValue)
+{
+    ASSERT(iPropertySubscriptValue != NULL);
+    const Brx& val = iPropertySubscriptValue->Value();
+    aValue.assign((const char*)val.Ptr(), val.Bytes());
+}
+
 DvProviderAvOpenhomeOrgServerConfig1Cpp::DvProviderAvOpenhomeOrgServerConfig1Cpp(DvDeviceStd& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "ServerConfig", 1)
 {
     iPropertyAlive = NULL;
+    iPropertySubscriptValue = NULL;
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnablePropertyAlive()
 {
     iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
     iService->AddProperty(iPropertyAlive); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnablePropertySubscriptValue()
+{
+    iPropertySubscriptValue = new PropertyString(new ParameterString("SubscriptValue"));
+    iService->AddProperty(iPropertySubscriptValue); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionSetServerName()
@@ -218,6 +239,22 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionGetCurrentScanFile()
     OpenHome::Net::Action* action = new OpenHome::Net::Action("GetCurrentScanFile");
     action->AddOutputParameter(new ParameterString("ScanFile"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetCurrentScanFile);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionGetServerConfig()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetServerConfig");
+    action->AddOutputParameter(new ParameterString("GetValue"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetServerConfig);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::EnableActionSetServerConfig()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetServerConfig");
+    action->AddInputParameter(new ParameterString("SetValue"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1Cpp::DoSetServerConfig);
     iService->AddAction(action, functor);
 }
 
@@ -566,6 +603,34 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetCurrentScanFile(IDviInvocatio
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoGetServerConfig(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    std::string respGetValue;
+    DvInvocationStd invocation(aInvocation);
+    GetServerConfig(invocation, respGetValue);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterGetValue(aInvocation, "GetValue");
+    Brn buf_GetValue((const TByte*)respGetValue.c_str(), (TUint)respGetValue.length());
+    respWriterGetValue.Write(buf_GetValue);
+    aInvocation.InvocationWriteStringEnd("GetValue");
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::DoSetServerConfig(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_SetValue;
+    aInvocation.InvocationReadString("SetValue", buf_SetValue);
+    std::string SetValue((const char*)buf_SetValue.Ptr(), buf_SetValue.Bytes());
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetServerConfig(invocation, SetValue);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::SetServerName(IDvInvocationStd& /*aInvocation*/, const std::string& /*aServerName*/)
 {
     ASSERTS();
@@ -677,6 +742,16 @@ void DvProviderAvOpenhomeOrgServerConfig1Cpp::ForceRescan(IDvInvocationStd& /*aI
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetCurrentScanFile(IDvInvocationStd& /*aInvocation*/, std::string& /*aScanFile*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::GetServerConfig(IDvInvocationStd& /*aInvocation*/, std::string& /*aGetValue*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1Cpp::SetServerConfig(IDvInvocationStd& /*aInvocation*/, const std::string& /*aSetValue*/)
 {
     ASSERTS();
 }

@@ -58,6 +58,21 @@ objects_devices = \
                   $(objdir)DvAvOpenhomeOrgHardwareConfig1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgHardwareConfig1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgHardwareConfig1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgTestResamplerConfig1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgTestResamplerConfig1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgTestResamplerConfig1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebRendererConfig1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebRendererConfig1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebRendererConfig1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebDeviceConfig1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebDeviceConfig1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebDeviceConfig1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebProcessorConfig1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebProcessorConfig1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebProcessorConfig1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgDACConfig1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgDACConfig1C.$(objext) \
                   $(objdir)DvAvOpenhomeOrgServerConfig1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgServerConfig1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgServerConfig1C.$(objext) \
@@ -136,6 +151,11 @@ device_dotnet_assemblies = \
         DvAvOpenhomeOrgPlaylist1.net.dll \
         DvAvOpenhomeOrgVolume1.net.dll \
         DvAvOpenhomeOrgHardwareConfig1.net.dll \
+        DvAvOpenhomeOrgTestResamplerConfig1.net.dll \
+        DvAvOpenhomeOrgWebRendererConfig1.net.dll \
+        DvAvOpenhomeOrgWebDeviceConfig1.net.dll \
+        DvAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        DvAvOpenhomeOrgDACConfig1.net.dll \
         DvAvOpenhomeOrgServerConfig1.net.dll \
         DvAvOpenhomeOrgMessageCenter1.net.dll \
         DvAvOpenhomeOrgRenderingInfo1.net.dll \
@@ -173,6 +193,11 @@ device_dotnet_assemblies_with_path = \
         $(objdir)DvAvOpenhomeOrgPlaylist1.net.dll \
         $(objdir)DvAvOpenhomeOrgVolume1.net.dll \
         $(objdir)DvAvOpenhomeOrgHardwareConfig1.net.dll \
+        $(objdir)DvAvOpenhomeOrgTestResamplerConfig1.net.dll \
+        $(objdir)DvAvOpenhomeOrgWebRendererConfig1.net.dll \
+        $(objdir)DvAvOpenhomeOrgWebDeviceConfig1.net.dll \
+        $(objdir)DvAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        $(objdir)DvAvOpenhomeOrgDACConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgServerConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgMessageCenter1.net.dll \
         $(objdir)DvAvOpenhomeOrgRenderingInfo1.net.dll \
@@ -210,6 +235,11 @@ device_java_classes_with_path = \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgPlaylist1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgVolume1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgHardwareConfig1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgTestResamplerConfig1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebRendererConfig1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebDeviceConfig1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebProcessorConfig1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgDACConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgServerConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgMessageCenter1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgRenderingInfo1.class \
@@ -338,6 +368,36 @@ $(objdir)DvAvOpenhomeOrgHardwareConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenho
 	$(compiler)DvAvOpenhomeOrgHardwareConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgHardwareConfig1Std.cpp
 $(objdir)DvAvOpenhomeOrgHardwareConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgHardwareConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgHardwareConfig1.h
 	$(compiler)DvAvOpenhomeOrgHardwareConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgHardwareConfig1C.cpp
+$(objdir)DvAvOpenhomeOrgTestResamplerConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgTestResamplerConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgTestResamplerConfig1.h
+	$(compiler)DvAvOpenhomeOrgTestResamplerConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgTestResamplerConfig1.cpp
+$(objdir)DvAvOpenhomeOrgTestResamplerConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgTestResamplerConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgTestResamplerConfig1.h
+	$(compiler)DvAvOpenhomeOrgTestResamplerConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgTestResamplerConfig1Std.cpp
+$(objdir)DvAvOpenhomeOrgTestResamplerConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgTestResamplerConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgTestResamplerConfig1.h
+	$(compiler)DvAvOpenhomeOrgTestResamplerConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgTestResamplerConfig1C.cpp
+$(objdir)DvAvOpenhomeOrgWebRendererConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgWebRendererConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgWebRendererConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebRendererConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgWebRendererConfig1.cpp
+$(objdir)DvAvOpenhomeOrgWebRendererConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgWebRendererConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgWebRendererConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebRendererConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgWebRendererConfig1Std.cpp
+$(objdir)DvAvOpenhomeOrgWebRendererConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgWebRendererConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgWebRendererConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebRendererConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgWebRendererConfig1C.cpp
+$(objdir)DvAvOpenhomeOrgWebDeviceConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgWebDeviceConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgWebDeviceConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebDeviceConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgWebDeviceConfig1.cpp
+$(objdir)DvAvOpenhomeOrgWebDeviceConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgWebDeviceConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgWebDeviceConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebDeviceConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgWebDeviceConfig1Std.cpp
+$(objdir)DvAvOpenhomeOrgWebDeviceConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgWebDeviceConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgWebDeviceConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebDeviceConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgWebDeviceConfig1C.cpp
+$(objdir)DvAvOpenhomeOrgWebProcessorConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgWebProcessorConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgWebProcessorConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebProcessorConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgWebProcessorConfig1.cpp
+$(objdir)DvAvOpenhomeOrgWebProcessorConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgWebProcessorConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgWebProcessorConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebProcessorConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgWebProcessorConfig1Std.cpp
+$(objdir)DvAvOpenhomeOrgWebProcessorConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgWebProcessorConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgWebProcessorConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebProcessorConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgWebProcessorConfig1C.cpp
+$(objdir)DvAvOpenhomeOrgDACConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgDACConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgDACConfig1.h
+	$(compiler)DvAvOpenhomeOrgDACConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgDACConfig1.cpp
+$(objdir)DvAvOpenhomeOrgDACConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgDACConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgDACConfig1.h
+	$(compiler)DvAvOpenhomeOrgDACConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgDACConfig1Std.cpp
+$(objdir)DvAvOpenhomeOrgDACConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgDACConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgDACConfig1.h
+	$(compiler)DvAvOpenhomeOrgDACConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgDACConfig1C.cpp
 $(objdir)DvAvOpenhomeOrgServerConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgServerConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgServerConfig1.h
 	$(compiler)DvAvOpenhomeOrgServerConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgServerConfig1.cpp
 $(objdir)DvAvOpenhomeOrgServerConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgServerConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgServerConfig1.h
@@ -460,6 +520,11 @@ device_dlls = \
              DvAvOpenhomeOrgPlaylist1Dll \
              DvAvOpenhomeOrgVolume1Dll \
              DvAvOpenhomeOrgHardwareConfig1Dll \
+             DvAvOpenhomeOrgTestResamplerConfig1Dll \
+             DvAvOpenhomeOrgWebRendererConfig1Dll \
+             DvAvOpenhomeOrgWebDeviceConfig1Dll \
+             DvAvOpenhomeOrgWebProcessorConfig1Dll \
+             DvAvOpenhomeOrgDACConfig1Dll \
              DvAvOpenhomeOrgServerConfig1Dll \
              DvAvOpenhomeOrgMessageCenter1Dll \
              DvAvOpenhomeOrgRenderingInfo1Dll \
@@ -533,6 +598,21 @@ $(objdir)$(dllprefix)DvAvOpenhomeOrgVolume1.$(dllext) : ZappUpnpDll $(objdir)DvA
 DvAvOpenhomeOrgHardwareConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgHardwareConfig1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgHardwareConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgHardwareConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgHardwareConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgHardwareConfig1.$(objext)
+DvAvOpenhomeOrgTestResamplerConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgTestResamplerConfig1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgTestResamplerConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgTestResamplerConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgTestResamplerConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgTestResamplerConfig1.$(objext)
+DvAvOpenhomeOrgWebRendererConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgWebRendererConfig1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgWebRendererConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgWebRendererConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgWebRendererConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgWebRendererConfig1.$(objext)
+DvAvOpenhomeOrgWebDeviceConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgWebDeviceConfig1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgWebDeviceConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgWebDeviceConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgWebDeviceConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgWebDeviceConfig1.$(objext)
+DvAvOpenhomeOrgWebProcessorConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgWebProcessorConfig1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgWebProcessorConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgWebProcessorConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgWebProcessorConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgWebProcessorConfig1.$(objext)
+DvAvOpenhomeOrgDACConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgDACConfig1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgDACConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgDACConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext)
 DvAvOpenhomeOrgServerConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgServerConfig1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgServerConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgServerConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgServerConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgServerConfig1.$(objext)
@@ -680,6 +760,31 @@ $(objdir)DvAvOpenhomeOrgHardwareConfig1.net.dll: $(objdir)ohNet.net.dll $(device
         /out:$(objdir)DvAvOpenhomeOrgHardwareConfig1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(deviceCs)DvAvOpenhomeOrgHardwareConfig1.cs
+$(objdir)DvAvOpenhomeOrgTestResamplerConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgTestResamplerConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgTestResamplerConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgTestResamplerConfig1.cs
+$(objdir)DvAvOpenhomeOrgWebRendererConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgWebRendererConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgWebRendererConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgWebRendererConfig1.cs
+$(objdir)DvAvOpenhomeOrgWebDeviceConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgWebDeviceConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgWebDeviceConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgWebDeviceConfig1.cs
+$(objdir)DvAvOpenhomeOrgWebProcessorConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgWebProcessorConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgWebProcessorConfig1.cs
+$(objdir)DvAvOpenhomeOrgDACConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgDACConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgDACConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgDACConfig1.cs
 $(objdir)DvAvOpenhomeOrgServerConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgServerConfig1.cs
 	$(csharp) /t:library \
         /out:$(objdir)DvAvOpenhomeOrgServerConfig1.net.dll \
@@ -806,6 +911,16 @@ $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgVolume1.class 
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgVolume1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgHardwareConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgHardwareConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgHardwareConfig1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgTestResamplerConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgTestResamplerConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgTestResamplerConfig1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebRendererConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgWebRendererConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgWebRendererConfig1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebDeviceConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgWebDeviceConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgWebDeviceConfig1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebProcessorConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgWebProcessorConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgWebProcessorConfig1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgDACConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgDACConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgDACConfig1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgServerConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgServerConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgServerConfig1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgMessageCenter1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgMessageCenter1.java

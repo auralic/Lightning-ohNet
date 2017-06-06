@@ -249,6 +249,12 @@ protected:
      */
     void EnableActionSetVolume();
     /**
+     * Signal that the action CanSetVolume is supported.
+     * The action's availability will be published in the device's service.xml.
+     * CanSetVolume must be overridden if this is called.
+     */
+    void EnableActionCanSetVolume();
+    /**
      * Signal that the action VolumeInc is supported.
      * The action's availability will be published in the device's service.xml.
      * VolumeInc must be overridden if this is called.
@@ -321,6 +327,12 @@ protected:
      */
     void EnableActionSetMute();
     /**
+     * Signal that the action CanSetMute is supported.
+     * The action's availability will be published in the device's service.xml.
+     * CanSetMute must be overridden if this is called.
+     */
+    void EnableActionCanSetMute();
+    /**
      * Signal that the action Mute is supported.
      * The action's availability will be published in the device's service.xml.
      * Mute must be overridden if this is called.
@@ -349,6 +361,14 @@ private:
      * Must be implemented iff EnableActionSetVolume was called.
      */
     virtual void SetVolume(IDvInvocation& aInvocation, TUint aValue);
+    /**
+     * CanSetVolume action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * CanSetVolume action for the owning device.
+     * Must be implemented iff EnableActionCanSetVolume was called.
+     */
+    virtual void CanSetVolume(IDvInvocation& aInvocation, TUint aValue);
     /**
      * VolumeInc action.
      *
@@ -446,6 +466,14 @@ private:
      */
     virtual void SetMute(IDvInvocation& aInvocation, TBool aValue);
     /**
+     * CanSetMute action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * CanSetMute action for the owning device.
+     * Must be implemented iff EnableActionCanSetMute was called.
+     */
+    virtual void CanSetMute(IDvInvocation& aInvocation, TBool aValue);
+    /**
      * Mute action.
      *
      * Will be called when the device stack receives an invocation of the
@@ -466,6 +494,7 @@ private:
     void Construct();
     void DoCharacteristics(IDviInvocation& aInvocation);
     void DoSetVolume(IDviInvocation& aInvocation);
+    void DoCanSetVolume(IDviInvocation& aInvocation);
     void DoVolumeInc(IDviInvocation& aInvocation);
     void DoVolumeDec(IDviInvocation& aInvocation);
     void DoVolume(IDviInvocation& aInvocation);
@@ -478,6 +507,7 @@ private:
     void DoFadeDec(IDviInvocation& aInvocation);
     void DoFade(IDviInvocation& aInvocation);
     void DoSetMute(IDviInvocation& aInvocation);
+    void DoCanSetMute(IDviInvocation& aInvocation);
     void DoMute(IDviInvocation& aInvocation);
     void DoVolumeLimit(IDviInvocation& aInvocation);
 private:

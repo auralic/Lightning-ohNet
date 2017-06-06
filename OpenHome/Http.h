@@ -115,6 +115,8 @@ public:
     static void WriteHeaderContentLength(WriterHttpHeader& aWriter, TUint aLength);
     static void WriteHeaderContentType(WriterHttpHeader& aWriter, const Brx& aType);
     static void WriteHeaderConnectionClose(WriterHttpHeader& aWriter);
+    static void WriteHeaderAllowOrigin(WriterHttpHeader& aWriter, const Brx& aType);
+
 };
 
 class HttpStatus

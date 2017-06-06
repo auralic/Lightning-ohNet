@@ -262,6 +262,58 @@ public:
     void EndSetGroupStatus(IAsync& aAsync);
 
     /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aBitPerfectMode
+     */
+    void SyncGetBitPerfectMode(bool& aBitPerfectMode);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetBitPerfectMode().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetBitPerfectMode(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aBitPerfectMode
+     */
+    void EndGetBitPerfectMode(IAsync& aAsync, bool& aBitPerfectMode);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aBitPerfectMode
+     */
+    void SyncSetBitPerfectMode(bool aBitPerfectMode);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetBitPerfectMode().
+     *
+     * @param[in] aBitPerfectMode
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetBitPerfectMode(bool aBitPerfectMode, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetBitPerfectMode(IAsync& aAsync);
+
+    /**
      * Set a callback to be run when the GroupMode state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -315,6 +367,15 @@ public:
      * @param[in]  aFunctor  The callback to run when the state variable changes
      */
     void SetPropertyGroupStatusChanged(Functor& aFunctor);
+    /**
+     * Set a callback to be run when the BitPerfectMode state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgGroupConfig1Cpp instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyBitPerfectModeChanged(Functor& aFunctor);
 
     /**
      * Query the value of the GroupMode property.
@@ -376,6 +437,16 @@ public:
      * @param[out] aGroupStatus
      */
     void PropertyGroupStatus(std::string& aGroupStatus) const;
+    /**
+     * Query the value of the BitPerfectMode property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aBitPerfectMode
+     */
+    void PropertyBitPerfectMode(bool& aBitPerfectMode) const;
 private:
     void GroupModePropertyChanged();
     void GroupNamePropertyChanged();
@@ -383,6 +454,7 @@ private:
     void GroupVolumePropertyChanged();
     void GroupMutePropertyChanged();
     void GroupStatusPropertyChanged();
+    void BitPerfectModePropertyChanged();
 private:
     Action* iActionSetGroupMode;
     Action* iActionGetGroupMode;
@@ -392,18 +464,22 @@ private:
     Action* iActionGetGroupMute;
     Action* iActionGetGroupStatus;
     Action* iActionSetGroupStatus;
+    Action* iActionGetBitPerfectMode;
+    Action* iActionSetBitPerfectMode;
     PropertyString* iGroupMode;
     PropertyString* iGroupName;
     PropertyString* iGroupID;
     PropertyUint* iGroupVolume;
     PropertyBool* iGroupMute;
     PropertyString* iGroupStatus;
+    PropertyBool* iBitPerfectMode;
     Functor iGroupModeChanged;
     Functor iGroupNameChanged;
     Functor iGroupIDChanged;
     Functor iGroupVolumeChanged;
     Functor iGroupMuteChanged;
     Functor iGroupStatusChanged;
+    Functor iBitPerfectModeChanged;
 };
 
 } // namespace Net

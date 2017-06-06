@@ -89,6 +89,18 @@ void DvProviderAvOpenhomeOrgGroupConfig1Cpp::GetPropertyGroupStatus(std::string&
     aValue.assign((const char*)val.Ptr(), val.Bytes());
 }
 
+bool DvProviderAvOpenhomeOrgGroupConfig1Cpp::SetPropertyBitPerfectMode(bool aValue)
+{
+    ASSERT(iPropertyBitPerfectMode != NULL);
+    return SetPropertyBool(*iPropertyBitPerfectMode, aValue);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1Cpp::GetPropertyBitPerfectMode(bool& aValue)
+{
+    ASSERT(iPropertyBitPerfectMode != NULL);
+    aValue = iPropertyBitPerfectMode->Value();
+}
+
 DvProviderAvOpenhomeOrgGroupConfig1Cpp::DvProviderAvOpenhomeOrgGroupConfig1Cpp(DvDeviceStd& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "GroupConfig", 1)
 {
@@ -98,6 +110,7 @@ DvProviderAvOpenhomeOrgGroupConfig1Cpp::DvProviderAvOpenhomeOrgGroupConfig1Cpp(D
     iPropertyGroupVolume = NULL;
     iPropertyGroupMute = NULL;
     iPropertyGroupStatus = NULL;
+    iPropertyBitPerfectMode = NULL;
 }
 
 void DvProviderAvOpenhomeOrgGroupConfig1Cpp::EnablePropertyGroupMode()
@@ -141,6 +154,12 @@ void DvProviderAvOpenhomeOrgGroupConfig1Cpp::EnablePropertyGroupStatus()
 {
     iPropertyGroupStatus = new PropertyString(new ParameterString("GroupStatus"));
     iService->AddProperty(iPropertyGroupStatus); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1Cpp::EnablePropertyBitPerfectMode()
+{
+    iPropertyBitPerfectMode = new PropertyBool(new ParameterBool("BitPerfectMode"));
+    iService->AddProperty(iPropertyBitPerfectMode); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgGroupConfig1Cpp::EnableActionSetGroupMode()
@@ -208,6 +227,22 @@ void DvProviderAvOpenhomeOrgGroupConfig1Cpp::EnableActionSetGroupStatus()
     OpenHome::Net::Action* action = new OpenHome::Net::Action("SetGroupStatus");
     action->AddInputParameter(new ParameterRelated("GroupStatus", *iPropertyGroupStatus));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgGroupConfig1Cpp::DoSetGroupStatus);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1Cpp::EnableActionGetBitPerfectMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetBitPerfectMode");
+    action->AddOutputParameter(new ParameterRelated("BitPerfectMode", *iPropertyBitPerfectMode));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgGroupConfig1Cpp::DoGetBitPerfectMode);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1Cpp::EnableActionSetBitPerfectMode()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetBitPerfectMode");
+    action->AddInputParameter(new ParameterRelated("BitPerfectMode", *iPropertyBitPerfectMode));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgGroupConfig1Cpp::DoSetBitPerfectMode);
     iService->AddAction(action, functor);
 }
 
@@ -331,6 +366,30 @@ void DvProviderAvOpenhomeOrgGroupConfig1Cpp::DoSetGroupStatus(IDviInvocation& aI
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgGroupConfig1Cpp::DoGetBitPerfectMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    bool respBitPerfectMode;
+    DvInvocationStd invocation(aInvocation);
+    GetBitPerfectMode(invocation, respBitPerfectMode);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseBool respWriterBitPerfectMode(aInvocation, "BitPerfectMode");
+    respWriterBitPerfectMode.Write(respBitPerfectMode);
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1Cpp::DoSetBitPerfectMode(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    bool BitPerfectMode = aInvocation.InvocationReadBool("BitPerfectMode");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetBitPerfectMode(invocation, BitPerfectMode);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgGroupConfig1Cpp::SetGroupMode(IDvInvocationStd& /*aInvocation*/, const std::string& /*aGroupMode*/, const std::string& /*aGroupID*/, const std::string& /*aGroupName*/)
 {
     ASSERTS();
@@ -367,6 +426,16 @@ void DvProviderAvOpenhomeOrgGroupConfig1Cpp::GetGroupStatus(IDvInvocationStd& /*
 }
 
 void DvProviderAvOpenhomeOrgGroupConfig1Cpp::SetGroupStatus(IDvInvocationStd& /*aInvocation*/, const std::string& /*aGroupStatus*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1Cpp::GetBitPerfectMode(IDvInvocationStd& /*aInvocation*/, bool& /*aBitPerfectMode*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1Cpp::SetBitPerfectMode(IDvInvocationStd& /*aInvocation*/, bool /*aBitPerfectMode*/)
 {
     ASSERTS();
 }

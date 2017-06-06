@@ -1,0 +1,589 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Action	DviServerUpnp.cpp	/^const Brx& HeaderSoapAction::Action() const$/;"	f	class:HeaderSoapAction
+Adapter	DviServerUpnp.cpp	/^TIpAddress DviSessionUpnp::Adapter() const$/;"	f	class:DviSessionUpnp
+AddInterface	DviProtocolUpnp.cpp	/^DviProtocolUpnpAdapterSpecificData* DviProtocolUpnp::AddInterface(const NetworkAdapter& aAdapter)$/;"	f	class:DviProtocolUpnp
+AddPrioritisedLanguage	DviServerUpnp.cpp	/^void HeaderAcceptLanguage::AddPrioritisedLanguage(std::vector<PrioritisedLanguage>& aList, PrioritisedLanguage& aLanguage)$/;"	f	class:HeaderAcceptLanguage
+AddRef	DviServerUpnp.cpp	/^void PropertyWriterFactory::AddRef()$/;"	f	class:PropertyWriterFactory
+Announcement	DviSsdpNotifier.cpp	/^DeviceAnnouncement& DviSsdpNotifierManager::Announcer::Announcement()$/;"	f	class:DviSsdpNotifierManager::Announcer
+AnnouncementAlive	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::AnnouncementAlive(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId)$/;"	f	class:DviSsdpNotifierManager
+AnnouncementByeBye	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::AnnouncementByeBye(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, Functor& aCompleted)$/;"	f	class:DviSsdpNotifierManager
+AnnouncementUpdate	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::AnnouncementUpdate(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, Functor& aCompleted)$/;"	f	class:DviSsdpNotifierManager
+Announcer	DviSsdpNotifier.cpp	/^DviSsdpNotifierManager::Announcer::Announcer(DeviceAnnouncement* aAnnouncer)$/;"	f	class:DviSsdpNotifierManager::Announcer
+Announcer	DviSsdpNotifier.h	/^    class Announcer : public Notifier$/;"	c	class:OpenHome::Net::DviSsdpNotifierManager
+BonjourDeregister	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::BonjourDeregister()$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+BonjourRegister	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::BonjourRegister(const TChar* aName, const Brx& aUdn, const Brx& aProtocol, const Brx& aResourceDir)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+ByeByesComplete	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::ByeByesComplete()$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+ClearDeviceXml	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::ClearDeviceXml()$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+ClearLanguageList	DviServerUpnp.cpp	/^void HeaderAcceptLanguage::ClearLanguageList()$/;"	f	class:HeaderAcceptLanguage
+ClientEndpoint	DviServerUpnp.cpp	/^Endpoint DviSessionUpnp::ClientEndpoint() const$/;"	f	class:DviSessionUpnp
+Close	DviServerWebSocket.cpp	/^void WsProtocol76::Close()$/;"	f	class:WsProtocol76
+Close	DviServerWebSocket.cpp	/^void WsProtocol80::Close()$/;"	f	class:WsProtocol80
+Close	DviServerWebSocket.cpp	/^void WsProtocol80::Close(TUint16 aCode)$/;"	f	class:WsProtocol80
+Connect	DviServerUpnp.cpp	/^void PropertyWriterUpnp::Connect(const Endpoint& aSubscriber)$/;"	f	class:PropertyWriterUpnp
+Create	DviServerUpnp.cpp	/^PropertyWriterUpnp* PropertyWriterUpnp::Create(DvStack& aDvStack, const Endpoint& aPublisher, const Endpoint& aSubscriber,$/;"	f	class:PropertyWriterUpnp
+Create	DviServerWebSocket.cpp	/^PropertyWriterWs* PropertyWriterWs::Create(DviSessionWebSocket& aSession, const Brx& aSid, TUint aSequenceNumber)$/;"	f	class:PropertyWriterWs
+CreateServer	DviServerUpnp.cpp	/^SocketTcpServer* DviServerUpnp::CreateServer(const NetworkAdapter& aNif)$/;"	f	class:DviServerUpnp
+CreateServer	DviServerWebSocket.cpp	/^SocketTcpServer* DviServerWebSocket::CreateServer(const NetworkAdapter& aNif)$/;"	f	class:DviServerWebSocket
+CreateWriter	DviServerUpnp.cpp	/^IPropertyWriter* PropertyWriterFactory::CreateWriter(const IDviSubscriptionUserData* aUserData, const Brx& aSid, TUint aSequenceNumber)$/;"	f	class:PropertyWriterFactory
+CreateWriter	DviServerWebSocket.cpp	/^IPropertyWriter* DviSessionWebSocket::CreateWriter(const IDviSubscriptionUserData* \/*aUserData*\/, const Brx& aSid, TUint aSequenceNumber)$/;"	f	class:DviSessionWebSocket
+Data	DviServerUpnp.cpp	/^const void* SubscriptionDataUpnp::Data() const$/;"	f	class:SubscriptionDataUpnp
+Delete	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::Delete(std::list<Notifier*>& aList)$/;"	f	class:DviSsdpNotifierManager
+Destroy	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::Destroy()$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+DeviceAnnouncement	DviSsdpNotifier.cpp	/^DeviceAnnouncement::DeviceAnnouncement(DvStack& aDvStack, ISsdpNotifyListener& aListener)$/;"	f	class:DeviceAnnouncement
+DeviceAnnouncement	DviSsdpNotifier.h	/^class DeviceAnnouncement : public SsdpNotifierScheduler$/;"	c	namespace:OpenHome::Net
+DeviceXml	DviProtocolUpnp.cpp	/^const Brx& DviProtocolUpnpAdapterSpecificData::DeviceXml() const$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+Disable	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::Disable(Functor& aComplete)$/;"	f	class:DviProtocolUpnp
+Disable	DviServerUpnp.cpp	/^void PropertyWriterFactory::Disable()$/;"	f	class:PropertyWriterFactory
+DoRead	DviServerWebSocket.cpp	/^void DviSessionWebSocket::DoRead()$/;"	f	class:DviSessionWebSocket
+Domain	DviProtocolUpnp.cpp	/^Brn DviProtocolUpnp::Domain() const$/;"	f	class:DviProtocolUpnp
+Domain	DviServerUpnp.cpp	/^const Brx& HeaderSoapAction::Domain() const$/;"	f	class:HeaderSoapAction
+DviProtocolUpnp	DviProtocolUpnp.cpp	/^DviProtocolUpnp::DviProtocolUpnp(DviDevice& aDevice)$/;"	f	class:DviProtocolUpnp
+DviProtocolUpnp	DviProtocolUpnp.h	/^class DviProtocolUpnp : public IDvProtocol, private IUpnpMsearchHandler, private IUpnpAnnouncementData$/;"	c	namespace:OpenHome::Net
+DviProtocolUpnpAdapterSpecificData	DviProtocolUpnp.cpp	/^DviProtocolUpnpAdapterSpecificData::DviProtocolUpnpAdapterSpecificData(DvStack& aDvStack, IUpnpMsearchHandler& aMsearchHandler, const NetworkAdapter& aAdapter, Bwx& aUriBase, TUint aServerPort)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+DviProtocolUpnpAdapterSpecificData	DviProtocolUpnp.h	/^class DviProtocolUpnpAdapterSpecificData : public ISsdpMsearchHandler, public INonCopyable$/;"	c	namespace:OpenHome::Net
+DviProtocolUpnpDeviceXmlWriter	DviProtocolUpnp.cpp	/^DviProtocolUpnpDeviceXmlWriter::DviProtocolUpnpDeviceXmlWriter(DviProtocolUpnp& aDeviceUpnp)$/;"	f	class:DviProtocolUpnpDeviceXmlWriter
+DviProtocolUpnpDeviceXmlWriter	DviProtocolUpnp.h	/^class DviProtocolUpnpDeviceXmlWriter : public IResourceWriter$/;"	c	namespace:OpenHome::Net
+DviProtocolUpnpServiceXmlWriter	DviProtocolUpnp.h	/^class DviProtocolUpnpServiceXmlWriter$/;"	c	namespace:OpenHome::Net
+DviServerUpnp	DviServerUpnp.cpp	/^DviServerUpnp::DviServerUpnp(DvStack& aDvStack, TUint aPort)$/;"	f	class:DviServerUpnp
+DviServerUpnp	DviServerUpnp.h	/^class DviServerUpnp : public DviServer, private IRedirector$/;"	c	namespace:OpenHome::Net
+DviServerWebSocket	DviServerWebSocket.cpp	/^DviServerWebSocket::DviServerWebSocket(DvStack& aDvStack)$/;"	f	class:DviServerWebSocket
+DviServerWebSocket	DviServerWebSocket.h	/^class DviServerWebSocket : public DviServer$/;"	c	namespace:OpenHome::Net
+DviSessionUpnp	DviServerUpnp.cpp	/^DviSessionUpnp::DviSessionUpnp(DvStack& aDvStack, TIpAddress aInterface, TUint aPort, IRedirector& aRedirector)$/;"	f	class:DviSessionUpnp
+DviSessionUpnp	DviServerUpnp.h	/^class DviSessionUpnp : public SocketTcpSession, private IResourceWriter, private IDviInvocation$/;"	c	namespace:OpenHome::Net
+DviSessionWebSocket	DviServerWebSocket.cpp	/^DviSessionWebSocket::DviSessionWebSocket(DvStack& aDvStack, TIpAddress aInterface, TUint aPort)$/;"	f	class:DviSessionWebSocket
+DviSessionWebSocket	DviServerWebSocket.h	/^class DviSessionWebSocket : public SocketTcpSession, private IPropertyWriterFactory$/;"	c	namespace:OpenHome::Net
+DviSsdpNotifierManager	DviSsdpNotifier.cpp	/^DviSsdpNotifierManager::DviSsdpNotifierManager(DvStack& aDvStack)$/;"	f	class:DviSsdpNotifierManager
+DviSsdpNotifierManager	DviSsdpNotifier.h	/^class DviSsdpNotifierManager : private ISsdpNotifyListener$/;"	c	namespace:OpenHome::Net
+ETagEscaped	DviProtocolUpnp.h	/^    enum ETagEscaped$/;"	g	class:OpenHome::Net::DviProtocolUpnpDeviceXmlWriter
+ETagRequirementLevel	DviProtocolUpnp.h	/^    enum ETagRequirementLevel$/;"	g	class:OpenHome::Net::DviProtocolUpnpDeviceXmlWriter
+Enable	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::Enable()$/;"	f	class:DviProtocolUpnp
+Endpoint	DviServerUpnp.cpp	/^const Endpoint& HeaderCallback::Endpoint() const$/;"	f	class:HeaderCallback
+Error	DviServerUpnp.cpp	/^void DviSessionUpnp::Error(const HttpStatus& aStatus)$/;"	f	class:DviSessionUpnp
+Error	DviServerWebSocket.cpp	/^void DviSessionWebSocket::Error(const HttpStatus& aStatus)$/;"	f	class:DviSessionWebSocket
+FindAdapter	DviProtocolUpnp.cpp	/^TInt DviProtocolUpnp::FindAdapter(TIpAddress aAdapter, const std::vector<NetworkAdapter*>& aAdapterList)$/;"	f	class:DviProtocolUpnp
+FindListenerForInterface	DviProtocolUpnp.cpp	/^TInt DviProtocolUpnp::FindListenerForInterface(TIpAddress aAdapter)$/;"	f	class:DviProtocolUpnp
+FindListenerForSubnet	DviProtocolUpnp.cpp	/^TInt DviProtocolUpnp::FindListenerForSubnet(TIpAddress aSubnet)$/;"	f	class:DviProtocolUpnp
+Get	DviServerUpnp.cpp	/^void DviSessionUpnp::Get()$/;"	f	class:DviSessionUpnp
+GetAnnouncer	DviSsdpNotifier.cpp	/^DviSsdpNotifierManager::Announcer* DviSsdpNotifierManager::GetAnnouncer(IUpnpAnnouncementData& aAnnouncementData)$/;"	f	class:DviSsdpNotifierManager
+GetAttribute	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::GetAttribute(const TChar* aKey, const TChar** aValue) const$/;"	f	class:DviProtocolUpnp
+GetDeviceXml	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::GetDeviceXml(Brh& aXml, TIpAddress aAdapter)$/;"	f	class:DviProtocolUpnp
+GetRelatedVariableName	DviProtocolUpnp.cpp	/^void DviProtocolUpnpServiceXmlWriter::GetRelatedVariableName(Bwh& aName, const Brx& aActionName, const Brx& aParameterName)$/;"	f	class:DviProtocolUpnpServiceXmlWriter
+GetResourceManagerUri	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::GetResourceManagerUri(const NetworkAdapter& aAdapter, Brh& aUri)$/;"	f	class:DviProtocolUpnp
+GetResponder	DviSsdpNotifier.cpp	/^DviSsdpNotifierManager::Responder* DviSsdpNotifierManager::GetResponder(IUpnpAnnouncementData& aAnnouncementData)$/;"	f	class:DviSsdpNotifierManager
+GetUriDeviceXml	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::GetUriDeviceXml(Bwx& aUri, const Brx& aUriBase)$/;"	f	class:DviProtocolUpnp
+HEADER_DVIPROTOCOLUPNP	DviProtocolUpnp.h	2;"	d
+HEADER_DVI_SERVER_UPNP	DviServerUpnp.h	2;"	d
+HEADER_DVI_SERVER_WEBSOCKET	DviServerWebSocket.h	2;"	d
+HEADER_DVI_SSDP_NOTIFIER	DviSsdpNotifier.h	2;"	d
+HandleInterfaceChange	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::HandleInterfaceChange()$/;"	f	class:DviProtocolUpnp
+Handler	DviProtocolUpnp.cpp	/^IUpnpMsearchHandler* DviProtocolUpnpAdapterSpecificData::Handler()$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+Handshake	DviServerWebSocket.cpp	/^void DviSessionWebSocket::Handshake()$/;"	f	class:DviSessionWebSocket
+Handshake76	DviServerWebSocket.cpp	/^WsProtocol* DviSessionWebSocket::Handshake76()$/;"	f	class:DviSessionWebSocket
+Handshake80	DviServerWebSocket.cpp	/^WsProtocol* DviSessionWebSocket::Handshake80()$/;"	f	class:DviSessionWebSocket
+HeaderAcceptLanguage	DviServerUpnp.h	/^class HeaderAcceptLanguage : public HttpHeader$/;"	c	namespace:OpenHome::Net
+HeaderCallback	DviServerUpnp.h	/^class HeaderCallback : public HttpHeader$/;"	c	namespace:OpenHome::Net
+HeaderSoapAction	DviServerUpnp.h	/^class HeaderSoapAction : public HttpHeader$/;"	c	namespace:OpenHome::Net
+HttpHeaderUpgrade	DviServerWebSocket.h	/^class HttpHeaderUpgrade : public HttpHeader$/;"	c	namespace:OpenHome::Net
+HttpVersion	DviServerUpnp.cpp	/^const Http::EVersion SubscriptionDataUpnp::HttpVersion() const$/;"	f	class:SubscriptionDataUpnp
+IRedirector	DviServerUpnp.h	/^class IRedirector$/;"	c	namespace:OpenHome::Net
+ISsdpNotifyListener	DviSsdpNotifier.h	/^class ISsdpNotifyListener$/;"	c	namespace:OpenHome::Net
+IUpnpAnnouncementData	DviProtocolUpnp.h	/^class IUpnpAnnouncementData$/;"	c	namespace:OpenHome::Net
+IUpnpMsearchHandler	DviProtocolUpnp.h	/^class IUpnpMsearchHandler$/;"	c	namespace:OpenHome::Net
+Interface	DviProtocolUpnp.cpp	/^TIpAddress DviProtocolUpnpAdapterSpecificData::Interface() const$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+InvocationReadBinary	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationReadBinary(const TChar* aName, Brh& aData)$/;"	f	class:DviSessionUpnp
+InvocationReadBool	DviServerUpnp.cpp	/^TBool DviSessionUpnp::InvocationReadBool(const TChar* aName)$/;"	f	class:DviSessionUpnp
+InvocationReadEnd	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationReadEnd()$/;"	f	class:DviSessionUpnp
+InvocationReadInt	DviServerUpnp.cpp	/^TInt DviSessionUpnp::InvocationReadInt(const TChar* aName)$/;"	f	class:DviSessionUpnp
+InvocationReadStart	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationReadStart()$/;"	f	class:DviSessionUpnp
+InvocationReadString	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationReadString(const TChar* aName, Brhz& aString)$/;"	f	class:DviSessionUpnp
+InvocationReadUint	DviServerUpnp.cpp	/^TUint DviSessionUpnp::InvocationReadUint(const TChar* aName)$/;"	f	class:DviSessionUpnp
+InvocationReportError	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationReportError(TUint aCode, const Brx& aDescription)$/;"	f	class:DviSessionUpnp
+InvocationReportErrorNoThrow	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationReportErrorNoThrow(TUint aCode, const Brx& aDescription)$/;"	f	class:DviSessionUpnp
+InvocationWriteBinary	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteBinary(TByte aValue)$/;"	f	class:DviSessionUpnp
+InvocationWriteBinary	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteBinary(const Brx& aValue)$/;"	f	class:DviSessionUpnp
+InvocationWriteBinaryEnd	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteBinaryEnd(const TChar* aName)$/;"	f	class:DviSessionUpnp
+InvocationWriteBinaryStart	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteBinaryStart(const TChar* aName)$/;"	f	class:DviSessionUpnp
+InvocationWriteBool	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteBool(const TChar* aName, TBool aValue)$/;"	f	class:DviSessionUpnp
+InvocationWriteEnd	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteEnd()$/;"	f	class:DviSessionUpnp
+InvocationWriteInt	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteInt(const TChar* aName, TInt aValue)$/;"	f	class:DviSessionUpnp
+InvocationWriteStart	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteStart()$/;"	f	class:DviSessionUpnp
+InvocationWriteString	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteString(TByte aValue)$/;"	f	class:DviSessionUpnp
+InvocationWriteString	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteString(const Brx& aValue)$/;"	f	class:DviSessionUpnp
+InvocationWriteStringEnd	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteStringEnd(const TChar* aName)$/;"	f	class:DviSessionUpnp
+InvocationWriteStringStart	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteStringStart(const TChar* aName)$/;"	f	class:DviSessionUpnp
+InvocationWriteUint	DviServerUpnp.cpp	/^void DviSessionUpnp::InvocationWriteUint(const TChar* aName, TUint aValue)$/;"	f	class:DviSessionUpnp
+Invoke	DviServerUpnp.cpp	/^void DviSessionUpnp::Invoke()$/;"	f	class:DviSessionUpnp
+IsRoot	DviProtocolUpnp.cpp	/^TBool DviProtocolUpnp::IsRoot() const$/;"	f	class:DviProtocolUpnp
+Key	DviServerWebSocket.cpp	/^TUint WsHeaderKey::Key() const$/;"	f	class:WsHeaderKey
+Key	DviServerWebSocket.cpp	/^const Brx& WsHeaderKey80::Key() const$/;"	f	class:WsHeaderKey80
+LanguageList	DviServerUpnp.cpp	/^std::vector<char*>& HeaderAcceptLanguage::LanguageList()$/;"	f	class:HeaderAcceptLanguage
+LanguageString	DviServerUpnp.cpp	/^const Brx& HeaderAcceptLanguage::LanguageString() const$/;"	f	class:HeaderAcceptLanguage
+Log	DviServerUpnp.cpp	/^void HeaderCallback::Log()$/;"	f	class:HeaderCallback
+LogMulticastNotification	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::LogMulticastNotification(const char* aType)$/;"	f	class:DviProtocolUpnp
+LogNotifierStart	DviSsdpNotifier.cpp	/^void SsdpNotifierScheduler::LogNotifierStart(const TChar* aType)$/;"	f	class:SsdpNotifierScheduler
+LogUnicastNotification	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::LogUnicastNotification(const char* aType)$/;"	f	class:DviProtocolUpnp
+Map	DviServerWebSocket.h	/^    typedef std::map<Brn,SubscriptionWrapper*,BufferCmp> Map;$/;"	t	class:OpenHome::Net::DviSessionWebSocket
+MatchesDevice	DviSsdpNotifier.cpp	/^TBool DviSsdpNotifierManager::Notifier::MatchesDevice(const Brx& aUdn) const$/;"	f	class:DviSsdpNotifierManager::Notifier
+MsearchResponse	DviSsdpNotifier.cpp	/^MsearchResponse::MsearchResponse(DvStack& aDvStack, ISsdpNotifyListener& aListener)$/;"	f	class:MsearchResponse
+MsearchResponse	DviSsdpNotifier.h	/^class MsearchResponse : public SsdpNotifierScheduler$/;"	c	namespace:OpenHome::Net
+MsearchResponseAll	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::MsearchResponseAll(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:DviSsdpNotifierManager
+MsearchResponseDeviceType	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::MsearchResponseDeviceType(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:DviSsdpNotifierManager
+MsearchResponseRoot	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::MsearchResponseRoot(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:DviSsdpNotifierManager
+MsearchResponseServiceType	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::MsearchResponseServiceType(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const OpenHome::Net::ServiceType& aServiceType, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:DviSsdpNotifierManager
+MsearchResponseUuid	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::MsearchResponseUuid(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:DviSsdpNotifierManager
+NEXT_MSG_DEVICE_TYPE	DviSsdpNotifier.cpp	112;"	d	file:
+NEXT_MSG_ROOT	DviSsdpNotifier.cpp	110;"	d	file:
+NEXT_MSG_SERVICE_TYPE	DviSsdpNotifier.cpp	113;"	d	file:
+NEXT_MSG_UUID	DviSsdpNotifier.cpp	111;"	d	file:
+NOTIFIER_LOG_ENABLE	DviSsdpNotifier.cpp	17;"	d	file:
+Net	DviProtocolUpnp.h	/^namespace Net {$/;"	n	namespace:OpenHome
+Net	DviServerUpnp.h	/^namespace Net {$/;"	n	namespace:OpenHome
+Net	DviServerWebSocket.h	/^namespace Net {$/;"	n	namespace:OpenHome
+Net	DviSsdpNotifier.h	/^namespace Net {$/;"	n	namespace:OpenHome
+NextMsg	DviSsdpNotifier.cpp	/^TUint DeviceAnnouncement::NextMsg()$/;"	f	class:DeviceAnnouncement
+NextMsg	DviSsdpNotifier.cpp	/^TUint MsearchResponse::NextMsg()$/;"	f	class:MsearchResponse
+Notifier	DviSsdpNotifier.cpp	/^DviSsdpNotifierManager::Notifier::Notifier(SsdpNotifierScheduler* aScheduler)$/;"	f	class:DviSsdpNotifierManager::Notifier
+Notifier	DviSsdpNotifier.h	/^    class Notifier$/;"	c	class:OpenHome::Net::DviSsdpNotifierManager
+NotifyComplete	DviSsdpNotifier.cpp	/^void DeviceAnnouncement::NotifyComplete()$/;"	f	class:DeviceAnnouncement
+NotifyComplete	DviSsdpNotifier.cpp	/^void SsdpNotifierScheduler::NotifyComplete()$/;"	f	class:SsdpNotifierScheduler
+NotifySchedulerComplete	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::NotifySchedulerComplete(SsdpNotifierScheduler* aScheduler)$/;"	f	class:DviSsdpNotifierManager
+NotifySubscriptionCreated	DviServerUpnp.cpp	/^void PropertyWriterFactory::NotifySubscriptionCreated(const Brx& \/*aSid*\/)$/;"	f	class:PropertyWriterFactory
+NotifySubscriptionCreated	DviServerWebSocket.cpp	/^void DviSessionWebSocket::NotifySubscriptionCreated(const Brx& \/*aSid*\/)$/;"	f	class:DviSessionWebSocket
+NotifySubscriptionDeleted	DviServerUpnp.cpp	/^void PropertyWriterFactory::NotifySubscriptionDeleted(const Brx& aSid)$/;"	f	class:PropertyWriterFactory
+NotifySubscriptionDeleted	DviServerWebSocket.cpp	/^void DviSessionWebSocket::NotifySubscriptionDeleted(const Brx& \/*aSid*\/)$/;"	f	class:DviSessionWebSocket
+NotifySubscriptionExpired	DviServerUpnp.cpp	/^void PropertyWriterFactory::NotifySubscriptionExpired(const Brx& \/*aSid*\/)$/;"	f	class:PropertyWriterFactory
+NotifySubscriptionExpired	DviServerWebSocket.cpp	/^void DviSessionWebSocket::NotifySubscriptionExpired(const Brx& \/*aSid*\/)$/;"	f	class:DviSessionWebSocket
+OpenHome	DviProtocolUpnp.h	/^namespace OpenHome {$/;"	n
+OpenHome	DviServerUpnp.h	/^namespace OpenHome {$/;"	n
+OpenHome	DviServerWebSocket.h	/^namespace OpenHome {$/;"	n
+OpenHome	DviSsdpNotifier.h	/^namespace OpenHome {$/;"	n
+Origin	DviServerWebSocket.cpp	/^const Brx& WsHeaderOrigin::Origin() const$/;"	f	class:WsHeaderOrigin
+ParseQualityValue	DviServerUpnp.cpp	/^TUint HeaderAcceptLanguage::ParseQualityValue(const Brx& aBuf)$/;"	f	class:HeaderAcceptLanguage
+ParseRequestUri	DviServerUpnp.cpp	/^void DviSessionUpnp::ParseRequestUri(const Brx& aUrlTail, DviDevice** aDevice, DviService** aService)$/;"	f	class:DviSessionUpnp
+Post	DviServerUpnp.cpp	/^void DviSessionUpnp::Post()$/;"	f	class:DviSessionUpnp
+PrioritisedLanguage	DviServerUpnp.h	/^    struct PrioritisedLanguage$/;"	s	class:OpenHome::Net::HeaderAcceptLanguage
+Process	DviServerUpnp.cpp	/^void HeaderAcceptLanguage::Process(const Brx& aValue)$/;"	f	class:HeaderAcceptLanguage
+Process	DviServerUpnp.cpp	/^void HeaderCallback::Process(const Brx& aValue)$/;"	f	class:HeaderCallback
+Process	DviServerUpnp.cpp	/^void HeaderSoapAction::Process(const Brx& aValue)$/;"	f	class:HeaderSoapAction
+Process	DviServerWebSocket.cpp	/^void HttpHeaderUpgrade::Process(const Brx& aValue)$/;"	f	class:HttpHeaderUpgrade
+Process	DviServerWebSocket.cpp	/^void WsHeaderKey80::Process(const Brx& aValue)$/;"	f	class:WsHeaderKey80
+Process	DviServerWebSocket.cpp	/^void WsHeaderKey::Process(const Brx& aValue)$/;"	f	class:WsHeaderKey
+Process	DviServerWebSocket.cpp	/^void WsHeaderOrigin::Process(const Brx& aValue)$/;"	f	class:WsHeaderOrigin
+Process	DviServerWebSocket.cpp	/^void WsHeaderProtocol::Process(const Brx& aValue)$/;"	f	class:WsHeaderProtocol
+Process	DviServerWebSocket.cpp	/^void WsHeaderVersion::Process(const Brx& aValue)$/;"	f	class:WsHeaderVersion
+PropertyWriteEnd	DviServerUpnp.cpp	/^void PropertyWriterUpnp::PropertyWriteEnd()$/;"	f	class:PropertyWriterUpnp
+PropertyWriteEnd	DviServerWebSocket.cpp	/^void PropertyWriterWs::PropertyWriteEnd()$/;"	f	class:PropertyWriterWs
+PropertyWriterFactory	DviServerUpnp.cpp	/^PropertyWriterFactory::PropertyWriterFactory(DvStack& aDvStack, TIpAddress aAdapter, TUint aPort)$/;"	f	class:PropertyWriterFactory
+PropertyWriterFactory	DviServerUpnp.h	/^class PropertyWriterFactory : public IPropertyWriterFactory$/;"	c	namespace:OpenHome::Net
+PropertyWriterUpnp	DviServerUpnp.cpp	/^PropertyWriterUpnp::PropertyWriterUpnp(DvStack& aDvStack)$/;"	f	class:PropertyWriterUpnp
+PropertyWriterUpnp	DviServerUpnp.h	/^class PropertyWriterUpnp : public PropertyWriter$/;"	c	namespace:OpenHome::Net
+PropertyWriterWs	DviServerWebSocket.cpp	/^PropertyWriterWs::PropertyWriterWs(DviSessionWebSocket& aSession)$/;"	f	class:PropertyWriterWs
+PropertyWriterWs	DviServerWebSocket.h	/^class PropertyWriterWs : public PropertyWriter$/;"	c	namespace:OpenHome::Net
+Protocol	DviServerWebSocket.cpp	/^const Brx& WsHeaderProtocol::Protocol() const$/;"	f	class:WsHeaderProtocol
+ProtocolName	DviProtocolUpnp.cpp	/^const Brx& DviProtocolUpnp::ProtocolName() const$/;"	f	class:DviProtocolUpnp
+QueueAliveTimer	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::QueueAliveTimer()$/;"	f	class:DviProtocolUpnp
+QueuePropertyUpdate	DviServerWebSocket.cpp	/^void DviSessionWebSocket::QueuePropertyUpdate(Brh* aUpdate)$/;"	f	class:DviSessionWebSocket
+Read	DviServerWebSocket.cpp	/^void WsProtocol76::Read(Brn& aData, TBool& aClosed)$/;"	f	class:WsProtocol76
+Read	DviServerWebSocket.cpp	/^void WsProtocol80::Read(Brn& aData, TBool& aClosed)$/;"	f	class:WsProtocol80
+Recognise	DviServerUpnp.cpp	/^TBool HeaderAcceptLanguage::Recognise(const Brx& aHeader)$/;"	f	class:HeaderAcceptLanguage
+Recognise	DviServerUpnp.cpp	/^TBool HeaderCallback::Recognise(const Brx& aHeader)$/;"	f	class:HeaderCallback
+Recognise	DviServerUpnp.cpp	/^TBool HeaderSoapAction::Recognise(const Brx& aHeader)$/;"	f	class:HeaderSoapAction
+Recognise	DviServerWebSocket.cpp	/^TBool HttpHeaderUpgrade::Recognise(const Brx& aHeader)$/;"	f	class:HttpHeaderUpgrade
+Recognise	DviServerWebSocket.cpp	/^TBool WsHeaderKey80::Recognise(const Brx& aHeader)$/;"	f	class:WsHeaderKey80
+Recognise	DviServerWebSocket.cpp	/^TBool WsHeaderKey::Recognise(const Brx& aHeader)$/;"	f	class:WsHeaderKey
+Recognise	DviServerWebSocket.cpp	/^TBool WsHeaderOrigin::Recognise(const Brx& aHeader)$/;"	f	class:WsHeaderOrigin
+Recognise	DviServerWebSocket.cpp	/^TBool WsHeaderProtocol::Recognise(const Brx& aHeader)$/;"	f	class:WsHeaderProtocol
+Recognise	DviServerWebSocket.cpp	/^TBool WsHeaderVersion::Recognise(const Brx& aHeader)$/;"	f	class:WsHeaderVersion
+Redirect	DviServerUpnp.cpp	/^void DviServerUpnp::Redirect(const Brx& aUriRequested, const Brx& aUriRedirectedTo)$/;"	f	class:DviServerUpnp
+RedirectUri	DviServerUpnp.cpp	/^TBool DviServerUpnp::RedirectUri(const Brx& aUri, Brn& aRedirectTo)$/;"	f	class:DviServerUpnp
+Release	DviServerUpnp.cpp	/^void SubscriptionDataUpnp::Release()$/;"	f	class:SubscriptionDataUpnp
+RemoveRef	DviServerUpnp.cpp	/^void PropertyWriterFactory::RemoveRef()$/;"	f	class:PropertyWriterFactory
+Renew	DviServerUpnp.cpp	/^void DviSessionUpnp::Renew()$/;"	f	class:DviSessionUpnp
+Renew	DviServerWebSocket.cpp	/^void DviSessionWebSocket::Renew(const Brx& aRequest)$/;"	f	class:DviSessionWebSocket
+ResourceUriPrefix	DviServerUpnp.cpp	/^const char* DviSessionUpnp::ResourceUriPrefix() const$/;"	f	class:DviSessionUpnp
+Responder	DviSsdpNotifier.cpp	/^DviSsdpNotifierManager::Responder::Responder(MsearchResponse* aResponder)$/;"	f	class:DviSsdpNotifierManager::Responder
+Responder	DviSsdpNotifier.h	/^    class Responder : public Notifier$/;"	c	class:OpenHome::Net::DviSsdpNotifierManager
+Response	DviSsdpNotifier.cpp	/^MsearchResponse& DviSsdpNotifierManager::Responder::Response()$/;"	f	class:DviSsdpNotifierManager::Responder
+Run	DviServerUpnp.cpp	/^void DviSessionUpnp::Run()$/;"	f	class:DviSessionUpnp
+Run	DviServerWebSocket.cpp	/^void DviSessionWebSocket::Run()$/;"	f	class:DviSessionWebSocket
+ScheduleNextTimer	DviSsdpNotifier.cpp	/^void SsdpNotifierScheduler::ScheduleNextTimer(TUint aRemainingMsgs) const$/;"	f	class:SsdpNotifierScheduler
+Scheduler	DviSsdpNotifier.cpp	/^SsdpNotifierScheduler* DviSsdpNotifierManager::Notifier::Scheduler()$/;"	f	class:DviSsdpNotifierManager::Notifier
+SendAliveNotifications	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SendAliveNotifications()$/;"	f	class:DviProtocolUpnp
+SendAlives	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SendAlives(TIpAddress aAdapter, const Brx& aUriBase)$/;"	f	class:DviProtocolUpnp
+SendByeByeThenAlive	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::SendByeByeThenAlive(DviProtocolUpnp& aDevice)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+SendByeByes	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SendByeByes(TIpAddress aAdapter, const Brx& aUriBase, Functor aCompleted)$/;"	f	class:DviProtocolUpnp
+SendNextMsg	DviSsdpNotifier.cpp	/^void SsdpNotifierScheduler::SendNextMsg()$/;"	f	class:SsdpNotifierScheduler
+SendUpdateNotifications	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SendUpdateNotifications()$/;"	f	class:DviProtocolUpnp
+ServerPort	DviProtocolUpnp.cpp	/^TUint DviProtocolUpnpAdapterSpecificData::ServerPort() const$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+Service	DviProtocolUpnp.cpp	/^DviService& DviProtocolUpnp::Service(TUint aIndex)$/;"	f	class:DviProtocolUpnp
+ServiceCount	DviProtocolUpnp.cpp	/^TUint DviProtocolUpnp::ServiceCount() const$/;"	f	class:DviProtocolUpnp
+SetActive	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::Notifier::SetActive(const Brx& aUdn)$/;"	f	class:DviSsdpNotifierManager::Notifier
+SetAttribute	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SetAttribute(const TChar* aKey, const TChar* aValue)$/;"	f	class:DviProtocolUpnp
+SetCustomData	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SetCustomData(const TChar* aTag, void* aData)$/;"	f	class:DviProtocolUpnp
+SetDeviceXml	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::SetDeviceXml(Brh& aXml)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+SetInactive	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::Notifier::SetInactive()$/;"	f	class:DviSsdpNotifierManager::Notifier
+SetPendingDelete	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::SetPendingDelete()$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+Sid	DviServerWebSocket.h	/^        const Brx& Sid() const { return iSid; }$/;"	f	class:OpenHome::Net::DviSessionWebSocket::SubscriptionWrapper
+SsdpNotifierScheduler	DviSsdpNotifier.cpp	/^SsdpNotifierScheduler::SsdpNotifierScheduler(DvStack& aDvStack, ISsdpNotifyListener& aListener)$/;"	f	class:SsdpNotifierScheduler
+SsdpNotifierScheduler	DviSsdpNotifier.h	/^class SsdpNotifierScheduler : private INonCopyable$/;"	c	namespace:OpenHome::Net
+SsdpSearchAll	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SsdpSearchAll(const Endpoint& aEndpoint, TUint aMx, TIpAddress aAdapter)$/;"	f	class:DviProtocolUpnp
+SsdpSearchAll	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::SsdpSearchAll(const Endpoint& aEndpoint, TUint aMx)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+SsdpSearchDeviceType	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SsdpSearchDeviceType(const Endpoint& aEndpoint, TUint aMx, TIpAddress aAdapter, const Brx& aDomain, const Brx& aType, TUint aVersion)$/;"	f	class:DviProtocolUpnp
+SsdpSearchDeviceType	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::SsdpSearchDeviceType(const Endpoint& aEndpoint, TUint aMx, const Brx& aDomain, const Brx& aType, TUint aVersion)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+SsdpSearchRoot	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SsdpSearchRoot(const Endpoint& aEndpoint, TUint aMx, TIpAddress aAdapter)$/;"	f	class:DviProtocolUpnp
+SsdpSearchRoot	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::SsdpSearchRoot(const Endpoint& aEndpoint, TUint aMx)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+SsdpSearchServiceType	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SsdpSearchServiceType(const Endpoint& aEndpoint, TUint aMx, TIpAddress aAdapter, const Brx& aDomain, const Brx& aType, TUint aVersion)$/;"	f	class:DviProtocolUpnp
+SsdpSearchServiceType	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::SsdpSearchServiceType(const Endpoint& aEndpoint, TUint aMx, const Brx& aDomain, const Brx& aType, TUint aVersion)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+SsdpSearchUuid	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SsdpSearchUuid(const Endpoint& aEndpoint, TUint aMx, TIpAddress aAdapter, const Brx& aUuid)$/;"	f	class:DviProtocolUpnp
+SsdpSearchUuid	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::SsdpSearchUuid(const Endpoint& aEndpoint, TUint aMx, const Brx& aUuid)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+Start	DviSsdpNotifier.cpp	/^void DeviceAnnouncement::Start(ISsdpNotify& aNotifier, IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, TUint aMsgInterval)$/;"	f	class:DeviceAnnouncement
+Start	DviSsdpNotifier.cpp	/^void MsearchResponse::Start(IUpnpAnnouncementData& aAnnouncementData, TUint aTotalMsgs, TUint aNextMsgIndex, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:MsearchResponse
+Start	DviSsdpNotifier.cpp	/^void SsdpNotifierScheduler::Start(TUint aDuration, TUint aMsgCount)$/;"	f	class:SsdpNotifierScheduler
+StartAlive	DviSsdpNotifier.cpp	/^void DeviceAnnouncement::StartAlive(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId)$/;"	f	class:DeviceAnnouncement
+StartAll	DviSsdpNotifier.cpp	/^void MsearchResponse::StartAll(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:MsearchResponse
+StartByeBye	DviSsdpNotifier.cpp	/^void DeviceAnnouncement::StartByeBye(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, Functor& aCompleted)$/;"	f	class:DeviceAnnouncement
+StartDeviceType	DviSsdpNotifier.cpp	/^void MsearchResponse::StartDeviceType(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:MsearchResponse
+StartRoot	DviSsdpNotifier.cpp	/^void MsearchResponse::StartRoot(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:MsearchResponse
+StartServiceType	DviSsdpNotifier.cpp	/^void MsearchResponse::StartServiceType(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const OpenHome::Net::ServiceType& aServiceType, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:MsearchResponse
+StartUpdate	DviSsdpNotifier.cpp	/^void DeviceAnnouncement::StartUpdate(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, Functor& aCompleted)$/;"	f	class:DeviceAnnouncement
+StartUuid	DviSsdpNotifier.cpp	/^void MsearchResponse::StartUuid(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)$/;"	f	class:MsearchResponse
+Stop	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::Stop(const Brx& aUdn)$/;"	f	class:DviSsdpNotifierManager
+Stop	DviSsdpNotifier.cpp	/^void DviSsdpNotifierManager::Stop(std::list<Notifier*>& aList, const Brx& aUdn)$/;"	f	class:DviSsdpNotifierManager
+Stop	DviSsdpNotifier.cpp	/^void SsdpNotifierScheduler::Stop()$/;"	f	class:SsdpNotifierScheduler
+Subnet	DviProtocolUpnp.cpp	/^TIpAddress DviProtocolUpnpAdapterSpecificData::Subnet() const$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+SubnetDisabled	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SubnetDisabled()$/;"	f	class:DviProtocolUpnp
+SubnetUpdated	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::SubnetUpdated()$/;"	f	class:DviProtocolUpnp
+Subscribe	DviServerUpnp.cpp	/^void DviSessionUpnp::Subscribe()$/;"	f	class:DviSessionUpnp
+Subscribe	DviServerWebSocket.cpp	/^void DviSessionWebSocket::Subscribe(const Brx& aRequest)$/;"	f	class:DviSessionWebSocket
+Subscriber	DviServerUpnp.cpp	/^const Endpoint& SubscriptionDataUpnp::Subscriber() const$/;"	f	class:SubscriptionDataUpnp
+SubscriberPath	DviServerUpnp.cpp	/^const Brx& SubscriptionDataUpnp::SubscriberPath() const$/;"	f	class:SubscriptionDataUpnp
+Subscription	DviServerWebSocket.h	/^        DviSubscription& Subscription() { return iSubscription; }$/;"	f	class:OpenHome::Net::DviSessionWebSocket::SubscriptionWrapper
+SubscriptionAdded	DviServerUpnp.cpp	/^void PropertyWriterFactory::SubscriptionAdded(DviSubscription& aSubscription)$/;"	f	class:PropertyWriterFactory
+SubscriptionDataUpnp	DviServerUpnp.cpp	/^SubscriptionDataUpnp::SubscriptionDataUpnp(const Endpoint& aSubscriber, const Brx& aSubscriberPath, const Http::EVersion aHttpVersion)$/;"	f	class:SubscriptionDataUpnp
+SubscriptionDataUpnp	DviServerUpnp.h	/^class SubscriptionDataUpnp : public IDviSubscriptionUserData$/;"	c	namespace:OpenHome::Net
+SubscriptionMap	DviServerUpnp.h	/^    typedef std::map<Brn,DviSubscription*,BufferCmp> SubscriptionMap;$/;"	t	class:OpenHome::Net::PropertyWriterFactory
+SubscriptionWrapper	DviServerWebSocket.cpp	/^DviSessionWebSocket::SubscriptionWrapper::SubscriptionWrapper(DviSubscription& aSubscription, const Brx& aSid, DviService& aService)$/;"	f	class:DviSessionWebSocket::SubscriptionWrapper
+SubscriptionWrapper	DviServerWebSocket.h	/^    class SubscriptionWrapper$/;"	c	class:OpenHome::Net::DviSessionWebSocket
+TransferTo	DviProtocolUpnp.cpp	/^void DviProtocolUpnpDeviceXmlWriter::TransferTo(Brh& aBuf)$/;"	f	class:DviProtocolUpnpDeviceXmlWriter
+TryMove	DviSsdpNotifier.cpp	/^TBool DviSsdpNotifierManager::TryMove(SsdpNotifierScheduler* aScheduler, std::list<Notifier*>& aFrom, std::list<Notifier*>& aTo)$/;"	f	class:DviSsdpNotifierManager
+Type	DviProtocolUpnp.cpp	/^Brn DviProtocolUpnp::Type() const$/;"	f	class:DviProtocolUpnp
+Type	DviServerUpnp.cpp	/^const Brx& HeaderSoapAction::Type() const$/;"	f	class:HeaderSoapAction
+Udn	DviProtocolUpnp.cpp	/^const Brx& DviProtocolUpnp::Udn() const$/;"	f	class:DviProtocolUpnp
+Unsubscribe	DviServerUpnp.cpp	/^void DviSessionUpnp::Unsubscribe()$/;"	f	class:DviSessionUpnp
+Unsubscribe	DviServerWebSocket.cpp	/^void DviSessionWebSocket::Unsubscribe(const Brx& aRequest)$/;"	f	class:DviSessionWebSocket
+UpdateServerPort	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::UpdateServerPort(DviServerUpnp& aServer)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+UpdateUriBase	DviProtocolUpnp.cpp	/^void DviProtocolUpnpAdapterSpecificData::UpdateUriBase(Bwx& aUriBase)$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+Upgrade	DviServerWebSocket.cpp	/^Brn HttpHeaderUpgrade::Upgrade() const$/;"	f	class:HttpHeaderUpgrade
+Uri	DviServerUpnp.cpp	/^const Brx& HeaderCallback::Uri() const$/;"	f	class:HeaderCallback
+UriBase	DviProtocolUpnp.cpp	/^const Brx& DviProtocolUpnpAdapterSpecificData::UriBase() const$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+Version	DviProtocolUpnp.cpp	/^TUint DviProtocolUpnp::Version() const$/;"	f	class:DviProtocolUpnp
+Version	DviServerUpnp.cpp	/^TUint DviSessionUpnp::Version() const$/;"	f	class:DviSessionUpnp
+Version	DviServerUpnp.cpp	/^TUint HeaderSoapAction::Version() const$/;"	f	class:HeaderSoapAction
+Version	DviServerWebSocket.cpp	/^TUint WsHeaderVersion::Version() const$/;"	f	class:WsHeaderVersion
+WebSocket	DviServerWebSocket.h	/^class WebSocket$/;"	c	namespace:OpenHome::Net
+Write	DviProtocolUpnp.cpp	/^void DviProtocolUpnpDeviceXmlWriter::Write(TIpAddress aAdapter)$/;"	f	class:DviProtocolUpnpDeviceXmlWriter
+Write	DviProtocolUpnp.cpp	/^void DviProtocolUpnpServiceXmlWriter::Write(const DviService& aService, const DviProtocolUpnp& aDevice, IResourceWriter& aResourceWriter)$/;"	f	class:DviProtocolUpnpServiceXmlWriter
+Write	DviServerWebSocket.cpp	/^void WsProtocol76::Write(const Brx& aData)$/;"	f	class:WsProtocol76
+Write	DviServerWebSocket.cpp	/^void WsProtocol80::Write(WsOpcode aOpcode, const Brx& aData)$/;"	f	class:WsProtocol80
+Write	DviServerWebSocket.cpp	/^void WsProtocol80::Write(const Brx& aData)$/;"	f	class:WsProtocol80
+WriteHeaders	DviServerUpnp.cpp	/^void PropertyWriterUpnp::WriteHeaders(const Endpoint& aPublisher, const Brx& aSubscriberPath,$/;"	f	class:PropertyWriterUpnp
+WriteHeaders	DviServerWebSocket.cpp	/^void PropertyWriterWs::WriteHeaders(const Brx& aSid, TUint aSequenceNumber)$/;"	f	class:PropertyWriterWs
+WritePresentationUrlTag	DviProtocolUpnp.cpp	/^void DviProtocolUpnpDeviceXmlWriter::WritePresentationUrlTag(TIpAddress aAdapter)$/;"	f	class:DviProtocolUpnpDeviceXmlWriter
+WritePropertyUpdates	DviServerWebSocket.cpp	/^void DviSessionWebSocket::WritePropertyUpdates()$/;"	f	class:DviSessionWebSocket
+WriteResource	DviProtocolUpnp.cpp	/^void DviProtocolUpnp::WriteResource(const Brx& aUriTail, TIpAddress aAdapter, std::vector<char*>& aLanguageList, IResourceWriter& aResourceWriter)$/;"	f	class:DviProtocolUpnp
+WriteResource	DviProtocolUpnp.cpp	/^void DviProtocolUpnpDeviceXmlWriter::WriteResource(const TByte* aData, TUint aBytes)$/;"	f	class:DviProtocolUpnpDeviceXmlWriter
+WriteResource	DviServerUpnp.cpp	/^void DviSessionUpnp::WriteResource(const TByte* aData, TUint aBytes)$/;"	f	class:DviSessionUpnp
+WriteResourceBegin	DviProtocolUpnp.cpp	/^void DviProtocolUpnpDeviceXmlWriter::WriteResourceBegin(TUint \/*aTotalBytes*\/, const TChar* \/*aMimeType*\/)$/;"	f	class:DviProtocolUpnpDeviceXmlWriter
+WriteResourceBegin	DviServerUpnp.cpp	/^void DviSessionUpnp::WriteResourceBegin(TUint aTotalBytes, const TChar* aMimeType)$/;"	f	class:DviSessionUpnp
+WriteResourceEnd	DviProtocolUpnp.cpp	/^void DviProtocolUpnpDeviceXmlWriter::WriteResourceEnd()$/;"	f	class:DviProtocolUpnpDeviceXmlWriter
+WriteResourceEnd	DviServerUpnp.cpp	/^void DviSessionUpnp::WriteResourceEnd()$/;"	f	class:DviSessionUpnp
+WriteServerHeader	DviServerUpnp.cpp	/^void DviSessionUpnp::WriteServerHeader(IWriterHttpHeader& aWriter)$/;"	f	class:DviSessionUpnp
+WriteServiceActionParams	DviProtocolUpnp.cpp	/^void DviProtocolUpnpServiceXmlWriter::WriteServiceActionParams(WriterBwh& aWriter, const Action& aAction, TBool aIn)$/;"	f	class:DviProtocolUpnpServiceXmlWriter
+WriteServiceXml	DviProtocolUpnp.cpp	/^void DviProtocolUpnpServiceXmlWriter::WriteServiceXml(WriterBwh& aWriter, const DviService& aService, const DviProtocolUpnp& aDevice)$/;"	f	class:DviProtocolUpnpServiceXmlWriter
+WriteStateVariable	DviProtocolUpnp.cpp	/^void DviProtocolUpnpServiceXmlWriter::WriteStateVariable(IWriter& aWriter, const OpenHome::Net::Parameter& aParam, TBool aEvented, const Action* aAction)$/;"	f	class:DviProtocolUpnpServiceXmlWriter
+WriteSubscriptionRenewed	DviServerWebSocket.cpp	/^void DviSessionWebSocket::WriteSubscriptionRenewed(const Brx& aSid, TUint aSeconds)$/;"	f	class:DviSessionWebSocket
+WriteSubscriptionSid	DviServerWebSocket.cpp	/^void DviSessionWebSocket::WriteSubscriptionSid(const Brx& aDevice, const Brx& aService, const Brx& aSid, TUint aSeconds)$/;"	f	class:DviSessionWebSocket
+WriteTag	DviProtocolUpnp.cpp	/^void DviProtocolUpnpDeviceXmlWriter::WriteTag(const TChar* aTagName, const TChar* aAttributeKey, ETagRequirementLevel aRequirementLevel, ETagEscaped aEscaped)$/;"	f	class:DviProtocolUpnpDeviceXmlWriter
+WriteTag	DviServerWebSocket.cpp	/^static void WriteTag(IWriter& aWriter, const Brx& aTag, const Brx& aValue)$/;"	f	file:
+WriteTechnicalStateVariables	DviProtocolUpnp.cpp	/^void DviProtocolUpnpServiceXmlWriter::WriteTechnicalStateVariables(IWriter& aWriter, const Action* aAction, const Action::VectorParameters& aParams)$/;"	f	class:DviProtocolUpnpServiceXmlWriter
+WsHeaderKey	DviServerWebSocket.cpp	/^WsHeaderKey::WsHeaderKey(const TChar* aHeader)$/;"	f	class:WsHeaderKey
+WsHeaderKey	DviServerWebSocket.h	/^class WsHeaderKey : public HttpHeader$/;"	c	namespace:OpenHome::Net
+WsHeaderKey1	DviServerWebSocket.cpp	/^WsHeaderKey1::WsHeaderKey1()$/;"	f	class:WsHeaderKey1
+WsHeaderKey1	DviServerWebSocket.h	/^class WsHeaderKey1 : public WsHeaderKey$/;"	c	namespace:OpenHome::Net
+WsHeaderKey2	DviServerWebSocket.cpp	/^WsHeaderKey2::WsHeaderKey2()$/;"	f	class:WsHeaderKey2
+WsHeaderKey2	DviServerWebSocket.h	/^class WsHeaderKey2 : public WsHeaderKey$/;"	c	namespace:OpenHome::Net
+WsHeaderKey80	DviServerWebSocket.h	/^class WsHeaderKey80 : public HttpHeader$/;"	c	namespace:OpenHome::Net
+WsHeaderOrigin	DviServerWebSocket.h	/^class WsHeaderOrigin : public HttpHeader$/;"	c	namespace:OpenHome::Net
+WsHeaderProtocol	DviServerWebSocket.h	/^class WsHeaderProtocol : public HttpHeader$/;"	c	namespace:OpenHome::Net
+WsHeaderVersion	DviServerWebSocket.h	/^class WsHeaderVersion : public HttpHeader$/;"	c	namespace:OpenHome::Net
+WsOpcode	DviServerWebSocket.h	/^    enum WsOpcode$/;"	g	class:OpenHome::Net::DviSessionWebSocket
+WsOpcode	DviServerWebSocket.h	/^    enum WsOpcode$/;"	g	class:OpenHome::Net::WsProtocol80
+WsProtocol	DviServerWebSocket.cpp	/^WsProtocol::WsProtocol(ReaderUntil& aReaderUntil, Swx& aWriteBuffer)$/;"	f	class:WsProtocol
+WsProtocol	DviServerWebSocket.h	/^class WsProtocol : private INonCopyable$/;"	c	namespace:OpenHome::Net
+WsProtocol76	DviServerWebSocket.cpp	/^WsProtocol76::WsProtocol76(ReaderUntil& aReaderUntil, Swx& aWriteBuffer)$/;"	f	class:WsProtocol76
+WsProtocol76	DviServerWebSocket.h	/^class WsProtocol76 : public WsProtocol$/;"	c	namespace:OpenHome::Net
+WsProtocol80	DviServerWebSocket.cpp	/^WsProtocol80::WsProtocol80(ReaderUntil& aReaderUntil, Swx& aWriteBuffer)$/;"	f	class:WsProtocol80
+WsProtocol80	DviServerWebSocket.h	/^class WsProtocol80 : public WsProtocol$/;"	c	namespace:OpenHome::Net
+eBinary	DviServerWebSocket.h	/^       ,eBinary = 0x2$/;"	e	enum:OpenHome::Net::DviSessionWebSocket::WsOpcode
+eBinary	DviServerWebSocket.h	/^       ,eBinary = 0x2$/;"	e	enum:OpenHome::Net::WsProtocol80::WsOpcode
+eClose	DviServerWebSocket.h	/^       ,eClose = 0x8$/;"	e	enum:OpenHome::Net::DviSessionWebSocket::WsOpcode
+eClose	DviServerWebSocket.h	/^       ,eClose = 0x8$/;"	e	enum:OpenHome::Net::WsProtocol80::WsOpcode
+eContinuation	DviServerWebSocket.h	/^        eContinuation = 0x0$/;"	e	enum:OpenHome::Net::DviSessionWebSocket::WsOpcode
+eContinuation	DviServerWebSocket.h	/^        eContinuation = 0x0$/;"	e	enum:OpenHome::Net::WsProtocol80::WsOpcode
+ePing	DviServerWebSocket.h	/^       ,ePing = 0x9$/;"	e	enum:OpenHome::Net::DviSessionWebSocket::WsOpcode
+ePing	DviServerWebSocket.h	/^       ,ePing = 0x9$/;"	e	enum:OpenHome::Net::WsProtocol80::WsOpcode
+ePong	DviServerWebSocket.h	/^       ,ePong = 0xA$/;"	e	enum:OpenHome::Net::DviSessionWebSocket::WsOpcode
+ePong	DviServerWebSocket.h	/^       ,ePong = 0xA$/;"	e	enum:OpenHome::Net::WsProtocol80::WsOpcode
+eTagEscaped	DviProtocolUpnp.h	/^        eTagEscaped$/;"	e	enum:OpenHome::Net::DviProtocolUpnpDeviceXmlWriter::ETagEscaped
+eTagMandatory	DviProtocolUpnp.h	/^        eTagMandatory$/;"	e	enum:OpenHome::Net::DviProtocolUpnpDeviceXmlWriter::ETagRequirementLevel
+eTagOptional	DviProtocolUpnp.h	/^       ,eTagOptional$/;"	e	enum:OpenHome::Net::DviProtocolUpnpDeviceXmlWriter::ETagRequirementLevel
+eTagRecommended	DviProtocolUpnp.h	/^       ,eTagRecommended$/;"	e	enum:OpenHome::Net::DviProtocolUpnpDeviceXmlWriter::ETagRequirementLevel
+eTagUnescaped	DviProtocolUpnp.h	/^       ,eTagUnescaped$/;"	e	enum:OpenHome::Net::DviProtocolUpnpDeviceXmlWriter::ETagEscaped
+eText	DviServerWebSocket.h	/^       ,eText = 0x1$/;"	e	enum:OpenHome::Net::DviSessionWebSocket::WsOpcode
+eText	DviServerWebSocket.h	/^       ,eText = 0x1$/;"	e	enum:OpenHome::Net::WsProtocol80::WsOpcode
+iAction	DviServerUpnp.h	/^    Brh iAction;$/;"	m	class:OpenHome::Net::HeaderSoapAction
+iActiveAnnouncers	DviSsdpNotifier.h	/^    std::list<Notifier*> iActiveAnnouncers;$/;"	m	class:OpenHome::Net::DviSsdpNotifierManager
+iActiveResponders	DviSsdpNotifier.h	/^    std::list<Notifier*> iActiveResponders;$/;"	m	class:OpenHome::Net::DviSsdpNotifierManager
+iAdapter	DviProtocolUpnp.h	/^    TIpAddress iAdapter;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iAdapter	DviServerUpnp.h	/^    TIpAddress iAdapter;$/;"	m	class:OpenHome::Net::PropertyWriterFactory
+iAdapters	DviProtocolUpnp.h	/^    std::vector<DviProtocolUpnpAdapterSpecificData*> iAdapters;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iAliveTimer	DviProtocolUpnp.h	/^    Timer* iAliveTimer;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iAnnouncementData	DviSsdpNotifier.h	/^    IUpnpAnnouncementData* iAnnouncementData;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iAnnouncementData	DviSsdpNotifier.h	/^    IUpnpAnnouncementData* iAnnouncementData;$/;"	m	class:OpenHome::Net::MsearchResponse
+iAttributeMap	DviProtocolUpnp.h	/^    AttributeMap iAttributeMap;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iBonjourWebPage	DviProtocolUpnp.h	/^    BonjourWebPage* iBonjourWebPage;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iCompleted	DviSsdpNotifier.h	/^    Functor iCompleted;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iCurrentAdapterChangeListenerId	DviProtocolUpnp.h	/^    TInt iCurrentAdapterChangeListenerId;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iCurrentNotifier	DviSsdpNotifier.h	/^    ISsdpNotify* iCurrentNotifier;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iDechunker	DviServerUpnp.h	/^    ReaderHttpChunked* iDechunker;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iDevice	DviProtocolUpnp.h	/^    DviDevice& iDevice;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iDevice	DviProtocolUpnp.h	/^    DviProtocolUpnp* iDevice;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iDeviceUpnp	DviProtocolUpnp.h	/^    DviProtocolUpnp& iDeviceUpnp;$/;"	m	class:OpenHome::Net::DviProtocolUpnpDeviceXmlWriter
+iDeviceXml	DviProtocolUpnp.h	/^    Brh iDeviceXml;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iDisableComplete	DviProtocolUpnp.h	/^    Functor iDisableComplete;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iDomain	DviServerUpnp.h	/^    Bwh iDomain;$/;"	m	class:OpenHome::Net::HeaderSoapAction
+iDvStack	DviProtocolUpnp.h	/^    DvStack& iDvStack;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iDvStack	DviProtocolUpnp.h	/^    DvStack& iDvStack;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iDvStack	DviServerUpnp.h	/^    DvStack& iDvStack;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iDvStack	DviServerUpnp.h	/^    DvStack& iDvStack;$/;"	m	class:OpenHome::Net::PropertyWriterFactory
+iDvStack	DviServerUpnp.h	/^    DvStack& iDvStack;$/;"	m	class:OpenHome::Net::PropertyWriterUpnp
+iDvStack	DviServerWebSocket.h	/^    DvStack& iDvStack;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iDvStack	DviSsdpNotifier.h	/^    DvStack& iDvStack;$/;"	m	class:OpenHome::Net::DviSsdpNotifierManager
+iDvStack	DviSsdpNotifier.h	/^    DvStack& iDvStack;$/;"	m	class:OpenHome::Net::SsdpNotifierScheduler
+iEnabled	DviServerUpnp.h	/^    TBool iEnabled;$/;"	m	class:OpenHome::Net::PropertyWriterFactory
+iEndTimeMs	DviSsdpNotifier.h	/^    TUint iEndTimeMs;$/;"	m	class:OpenHome::Net::SsdpNotifierScheduler
+iEndpoint	DviServerUpnp.h	/^    OpenHome::Endpoint iEndpoint;$/;"	m	class:OpenHome::Net::HeaderCallback
+iEndpoint	DviServerWebSocket.h	/^    Endpoint iEndpoint;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iErrorStatus	DviServerUpnp.h	/^    const HttpStatus* iErrorStatus;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iErrorStatus	DviServerWebSocket.h	/^    const HttpStatus* iErrorStatus;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iExit	DviServerWebSocket.h	/^    TBool iExit;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iFreeAnnouncers	DviSsdpNotifier.h	/^    std::list<Notifier*> iFreeAnnouncers;$/;"	m	class:OpenHome::Net::DviSsdpNotifierManager
+iFreeResponders	DviSsdpNotifier.h	/^    std::list<Notifier*> iFreeResponders;$/;"	m	class:OpenHome::Net::DviSsdpNotifierManager
+iHeader	DviServerWebSocket.h	/^    Brh iHeader;$/;"	m	class:OpenHome::Net::WsHeaderKey
+iHeaderAcceptLanguage	DviServerUpnp.h	/^    HeaderAcceptLanguage iHeaderAcceptLanguage;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderCallback	DviServerUpnp.h	/^    HeaderCallback iHeaderCallback;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderConnection	DviServerUpnp.h	/^    HttpHeaderConnection iHeaderConnection;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderConnection	DviServerWebSocket.h	/^    HttpHeaderConnection iHeaderConnection;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHeaderContentLength	DviServerUpnp.h	/^    HttpHeaderContentLength iHeaderContentLength;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderContentLength	DviServerWebSocket.h	/^    HttpHeaderContentLength iHeaderContentLength;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHeaderExpect	DviServerUpnp.h	/^    HttpHeaderExpect iHeaderExpect;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderHost	DviServerUpnp.h	/^    HttpHeaderHost iHeaderHost;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderHost	DviServerWebSocket.h	/^    HttpHeaderHost iHeaderHost;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHeaderKey1	DviServerWebSocket.h	/^    WsHeaderKey1 iHeaderKey1;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHeaderKey2	DviServerWebSocket.h	/^    WsHeaderKey2 iHeaderKey2;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHeaderNt	DviServerUpnp.h	/^    HeaderNt iHeaderNt;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderOrigin	DviServerWebSocket.h	/^    WsHeaderOrigin iHeaderOrigin;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHeaderProtocol	DviServerWebSocket.h	/^    WsHeaderProtocol iHeaderProtocol;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHeaderSid	DviServerUpnp.h	/^    HeaderSid iHeaderSid;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderSoapAction	DviServerUpnp.h	/^    HeaderSoapAction iHeaderSoapAction;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderTimeout	DviServerUpnp.h	/^    HeaderTimeout iHeaderTimeout;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderTransferEncoding	DviServerUpnp.h	/^    HttpHeaderTransferEncoding iHeaderTransferEncoding;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iHeaderUpgrade	DviServerWebSocket.h	/^    HttpHeaderUpgrade iHeaderUpgrade;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHeaderVersion	DviServerWebSocket.h	/^    WsHeaderVersion iHeaderVersion;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHeadverKeyV8	DviServerWebSocket.h	/^    WsHeaderKey80 iHeadverKeyV8;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iHttpVersion	DviServerUpnp.h	/^    Http::EVersion iHttpVersion;$/;"	m	class:OpenHome::Net::SubscriptionDataUpnp
+iId	DviProtocolUpnp.h	/^    TInt iId;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iInterface	DviServerUpnp.h	/^    TIpAddress iInterface;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iInterruptLock	DviServerWebSocket.h	/^    Mutex iInterruptLock;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iInvocationDevice	DviServerUpnp.h	/^    DviDevice* iInvocationDevice;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iInvocationService	DviServerUpnp.h	/^    DviService* iInvocationService;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iKey	DviServerWebSocket.h	/^    Brh iKey;$/;"	m	class:OpenHome::Net::WsHeaderKey
+iKey	DviServerWebSocket.h	/^    Brh iKey;$/;"	m	class:OpenHome::Net::WsHeaderKey80
+iLanguage	DviServerUpnp.h	/^        char* iLanguage;$/;"	m	struct:OpenHome::Net::HeaderAcceptLanguage::PrioritisedLanguage
+iLanguageList	DviServerUpnp.h	/^    std::vector<char*> iLanguageList;$/;"	m	class:OpenHome::Net::HeaderAcceptLanguage
+iLanguages	DviServerUpnp.h	/^    Brh iLanguages;$/;"	m	class:OpenHome::Net::HeaderAcceptLanguage
+iListener	DviProtocolUpnp.h	/^    SsdpListenerMulticast* iListener;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iListener	DviSsdpNotifier.h	/^    ISsdpNotifyListener& iListener;$/;"	m	class:OpenHome::Net::SsdpNotifierScheduler
+iLock	DviProtocolUpnp.h	/^    Mutex iLock;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iLock	DviSsdpNotifier.h	/^    Mutex iLock;$/;"	m	class:OpenHome::Net::DviSsdpNotifierManager
+iMap	DviServerWebSocket.h	/^    Map iMap;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iMessage	DviServerWebSocket.h	/^    Bwh iMessage;$/;"	m	class:OpenHome::Net::WsProtocol80
+iMsearchHandler	DviProtocolUpnp.h	/^    IUpnpMsearchHandler* iMsearchHandler;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iMsgSchedulers	DviProtocolUpnp.h	/^    std::vector<DviMsgScheduler*> iMsgSchedulers;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iNextMsgIndex	DviSsdpNotifier.h	/^    TUint iNextMsgIndex;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iNextMsgIndex	DviSsdpNotifier.h	/^    TUint iNextMsgIndex;$/;"	m	class:OpenHome::Net::MsearchResponse
+iNotifier	DviSsdpNotifier.h	/^    ISsdpNotify* iNotifier;$/;"	m	class:OpenHome::Net::MsearchResponse
+iNotifierAlive	DviSsdpNotifier.h	/^    SsdpNotifierAlive iNotifierAlive;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iNotifierByeBye	DviSsdpNotifier.h	/^    SsdpNotifierByeBye iNotifierByeBye;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iNotifierUpdate	DviSsdpNotifier.h	/^    SsdpNotifierUpdate iNotifierUpdate;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iOrigin	DviServerWebSocket.h	/^    Brh iOrigin;$/;"	m	class:OpenHome::Net::WsHeaderOrigin
+iPort	DviServerUpnp.h	/^    TUint iPort;$/;"	m	class:OpenHome::Net::DviServerUpnp
+iPort	DviServerUpnp.h	/^    TUint iPort;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iPort	DviServerUpnp.h	/^    TUint iPort;$/;"	m	class:OpenHome::Net::PropertyWriterFactory
+iPriority	DviServerUpnp.h	/^        TUint iPriority;$/;"	m	struct:OpenHome::Net::HeaderAcceptLanguage::PrioritisedLanguage
+iPropertyUpdates	DviServerWebSocket.h	/^    Fifo<Brh*> iPropertyUpdates; \/\/ used for web sockets$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iPropertyWriterFactory	DviServerUpnp.h	/^    PropertyWriterFactory* iPropertyWriterFactory;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iProtocol	DviServerWebSocket.h	/^    Brh iProtocol;$/;"	m	class:OpenHome::Net::WsHeaderProtocol
+iProtocol	DviServerWebSocket.h	/^    WsProtocol* iProtocol;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iReadBuffer	DviServerUpnp.h	/^    Srx* iReadBuffer;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iReadBuffer	DviServerWebSocket.h	/^    Srx* iReadBuffer;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iReaderProtocol	DviServerWebSocket.h	/^    ReaderProtocolS<kMaxRequestBytes> iReaderProtocol;$/;"	m	class:OpenHome::Net::WsProtocol80
+iReaderRequest	DviServerUpnp.h	/^    ReaderHttpRequest* iReaderRequest;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iReaderRequest	DviServerWebSocket.h	/^    ReaderHttpRequest* iReaderRequest;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iReaderUntil	DviServerUpnp.h	/^    ReaderUntil* iReaderUntil;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iReaderUntil	DviServerWebSocket.h	/^    ReaderUntil& iReaderUntil;$/;"	m	class:OpenHome::Net::WsProtocol
+iReaderUntil	DviServerWebSocket.h	/^    ReaderUntil* iReaderUntil;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iRedirectUriRedirectedTo	DviServerUpnp.h	/^    Brh iRedirectUriRedirectedTo;$/;"	m	class:OpenHome::Net::DviServerUpnp
+iRedirectUriRequested	DviServerUpnp.h	/^    Brh iRedirectUriRequested;$/;"	m	class:OpenHome::Net::DviServerUpnp
+iRedirector	DviServerUpnp.h	/^    IRedirector& iRedirector;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iRefCount	DviProtocolUpnp.h	/^    TUint iRefCount;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iRefCount	DviServerUpnp.h	/^    TUint iRefCount;$/;"	m	class:OpenHome::Net::PropertyWriterFactory
+iRemainingMsgs	DviSsdpNotifier.h	/^    TUint iRemainingMsgs;$/;"	m	class:OpenHome::Net::MsearchResponse
+iResourceUriPrefix	DviServerUpnp.h	/^    mutable Bws<128> iResourceUriPrefix;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iResourceWriterHeadersOnly	DviServerUpnp.h	/^    TBool iResourceWriterHeadersOnly;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iResponseEnded	DviServerUpnp.h	/^    TBool iResponseEnded;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iResponseStarted	DviServerUpnp.h	/^    TBool iResponseStarted;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iScheduler	DviSsdpNotifier.h	/^        SsdpNotifierScheduler* iScheduler;$/;"	m	class:OpenHome::Net::DviSsdpNotifierManager::Notifier
+iServer	DviProtocolUpnp.h	/^    DviServerUpnp* iServer;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iServerPort	DviProtocolUpnp.h	/^    TUint iServerPort;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iService	DviServerWebSocket.h	/^        DviService& iService;$/;"	m	class:OpenHome::Net::DviSessionWebSocket::SubscriptionWrapper
+iSession	DviServerWebSocket.h	/^    DviSessionWebSocket& iSession;$/;"	m	class:OpenHome::Net::PropertyWriterWs
+iShutdownSem	DviServerUpnp.h	/^    Semaphore iShutdownSem;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iShutdownSem	DviServerWebSocket.h	/^    Semaphore iShutdownSem;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iShutdownSem	DviSsdpNotifier.h	/^    Semaphore iShutdownSem;$/;"	m	class:OpenHome::Net::DviSsdpNotifierManager
+iSid	DviServerWebSocket.h	/^        Brh iSid;$/;"	m	class:OpenHome::Net::DviSessionWebSocket::SubscriptionWrapper
+iSoapRequest	DviServerUpnp.h	/^    Bws<kMaxRequestBytes> iSoapRequest;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iSocket	DviServerUpnp.h	/^    SocketTcpClient iSocket;$/;"	m	class:OpenHome::Net::PropertyWriterUpnp
+iSsdpNotifier	DviSsdpNotifier.h	/^    SsdpNotifier iSsdpNotifier;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iStop	DviSsdpNotifier.h	/^    TBool iStop;$/;"	m	class:OpenHome::Net::SsdpNotifierScheduler
+iSubnet	DviProtocolUpnp.h	/^    TIpAddress iSubnet;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iSubnetDisableCount	DviProtocolUpnp.h	/^    TUint iSubnetDisableCount;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iSubnetListChangeListenerId	DviProtocolUpnp.h	/^    TInt iSubnetListChangeListenerId;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iSubscriber	DviServerUpnp.h	/^    Endpoint iSubscriber;$/;"	m	class:OpenHome::Net::SubscriptionDataUpnp
+iSubscriberPath	DviServerUpnp.h	/^    Brh iSubscriberPath;$/;"	m	class:OpenHome::Net::SubscriptionDataUpnp
+iSubscription	DviServerWebSocket.h	/^        DviSubscription& iSubscription;$/;"	m	class:OpenHome::Net::DviSessionWebSocket::SubscriptionWrapper
+iSubscriptionMap	DviServerUpnp.h	/^    SubscriptionMap iSubscriptionMap;$/;"	m	class:OpenHome::Net::PropertyWriterFactory
+iSubscriptionMapLock	DviServerUpnp.h	/^    Mutex iSubscriptionMapLock;$/;"	m	class:OpenHome::Net::PropertyWriterFactory
+iSuppressScheduledEvents	DviProtocolUpnp.h	/^    TBool iSuppressScheduledEvents;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iTimer	DviSsdpNotifier.h	/^    Timer* iTimer;$/;"	m	class:OpenHome::Net::SsdpNotifierScheduler
+iTotalMsgs	DviSsdpNotifier.h	/^    TUint iTotalMsgs;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iType	DviServerUpnp.h	/^    Brh iType;$/;"	m	class:OpenHome::Net::HeaderSoapAction
+iType	DviSsdpNotifier.h	/^    const TChar* iType;$/;"	m	class:OpenHome::Net::SsdpNotifierScheduler
+iUdn	DviSsdpNotifier.h	/^        Brn iUdn;$/;"	m	class:OpenHome::Net::DviSsdpNotifierManager::Notifier
+iUpdateCount	DviProtocolUpnp.h	/^    TUint iUpdateCount;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+iUpgrade	DviServerWebSocket.h	/^    Brh iUpgrade;$/;"	m	class:OpenHome::Net::HttpHeaderUpgrade
+iUri	DviServerUpnp.h	/^    Bwh iUri;$/;"	m	class:OpenHome::Net::HeaderCallback
+iUri	DviSsdpNotifier.h	/^    Bws<kMaxUriBytes> iUri;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+iUri	DviSsdpNotifier.h	/^    Bws<kMaxUriBytes> iUri;$/;"	m	class:OpenHome::Net::MsearchResponse
+iUriBase	DviProtocolUpnp.h	/^    Bws<Uri::kMaxUriBytes> iUriBase;$/;"	m	class:OpenHome::Net::DviProtocolUpnpAdapterSpecificData
+iVersion	DviServerUpnp.h	/^    TUint iVersion;$/;"	m	class:OpenHome::Net::HeaderSoapAction
+iVersion	DviServerWebSocket.h	/^    TUint iVersion;;$/;"	m	class:OpenHome::Net::WsHeaderVersion
+iWriteBuffer	DviServerUpnp.h	/^    Sws<kMaxRequestBytes>* iWriteBuffer;$/;"	m	class:OpenHome::Net::PropertyWriterUpnp
+iWriteBuffer	DviServerWebSocket.h	/^    Swx& iWriteBuffer;$/;"	m	class:OpenHome::Net::WsProtocol
+iWriter	DviProtocolUpnp.h	/^    WriterBwh iWriter;$/;"	m	class:OpenHome::Net::DviProtocolUpnpDeviceXmlWriter
+iWriter	DviServerWebSocket.h	/^    WriterBwh iWriter;$/;"	m	class:OpenHome::Net::PropertyWriterWs
+iWriterBuffer	DviServerUpnp.h	/^    Sws<kMaxResponseBytes>* iWriterBuffer;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iWriterBuffer	DviServerWebSocket.h	/^    Sws<kMaxWriteBytes>* iWriterBuffer;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+iWriterChunked	DviServerUpnp.h	/^    WriterHttpChunked* iWriterChunked;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iWriterChunked	DviServerUpnp.h	/^    WriterHttpChunked* iWriterChunked;$/;"	m	class:OpenHome::Net::PropertyWriterUpnp
+iWriterEvent	DviServerUpnp.h	/^    WriterHttpRequest* iWriterEvent;$/;"	m	class:OpenHome::Net::PropertyWriterUpnp
+iWriterResponse	DviServerUpnp.h	/^    WriterHttpResponse* iWriterResponse;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+iWriterResponse	DviServerWebSocket.h	/^    WriterHttpResponse* iWriterResponse;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+kAttributeKeyVersionMajor	DviProtocolUpnp.cpp	/^static const TChar kAttributeKeyVersionMajor[] = "Version.Major";$/;"	v	file:
+kAttributeKeyVersionMinor	DviProtocolUpnp.cpp	/^static const TChar kAttributeKeyVersionMinor[] = "Version.Minor";$/;"	v	file:
+kCloseMsgTooLong	DviServerWebSocket.h	/^    static const TUint16 kCloseMsgTooLong      = 1004;$/;"	m	class:OpenHome::Net::WsProtocol80
+kCloseNormal	DviServerWebSocket.h	/^    static const TUint16 kCloseNormal          = 1000;$/;"	m	class:OpenHome::Net::WsProtocol80
+kCloseProtocolError	DviServerWebSocket.h	/^    static const TUint16 kCloseProtocolError   = 1002;$/;"	m	class:OpenHome::Net::WsProtocol80
+kCloseUnsupportedData	DviServerWebSocket.h	/^    static const TUint16 kCloseUnsupportedData = 1003;$/;"	m	class:OpenHome::Net::WsProtocol80
+kControlUrlTail	DviProtocolUpnp.h	/^    static const Brn kControlUrlTail;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+kDeviceXmlName	DviProtocolUpnp.h	/^    static const Brn kDeviceXmlName;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+kEventUrlTail	DviProtocolUpnp.h	/^    static const Brn kEventUrlTail;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+kFrameCloseStart	DviServerWebSocket.h	/^    static const TByte kFrameCloseStart = (TByte)'\\xff';$/;"	m	class:OpenHome::Net::WsProtocol76
+kFrameMsgStart	DviServerWebSocket.h	/^    static const TByte kFrameMsgStart = (TByte)'\\0';$/;"	m	class:OpenHome::Net::WsProtocol76
+kHeaderKey	DviServerWebSocket.h	/^    static const Brn kHeaderKey;$/;"	m	class:OpenHome::Net::WebSocket
+kHeaderLocation	DviServerWebSocket.h	/^    static const Brn kHeaderLocation;$/;"	m	class:OpenHome::Net::WebSocket
+kHeaderOrigin	DviServerWebSocket.h	/^    static const Brn kHeaderOrigin;$/;"	m	class:OpenHome::Net::WebSocket
+kHeaderProtocol	DviServerWebSocket.h	/^    static const Brn kHeaderProtocol;$/;"	m	class:OpenHome::Net::WebSocket
+kHeaderResponseOrigin	DviServerWebSocket.h	/^    static const Brn kHeaderResponseOrigin;$/;"	m	class:OpenHome::Net::WebSocket
+kHeaderVersion	DviServerWebSocket.h	/^    static const Brn kHeaderVersion;$/;"	m	class:OpenHome::Net::WebSocket
+kMaxPropertyUpdates	DviServerWebSocket.h	/^    static const TUint kMaxPropertyUpdates = 20;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+kMaxQuality	DviServerUpnp.h	/^    static const TUint kMaxQuality = 1000;$/;"	m	class:OpenHome::Net::HeaderAcceptLanguage
+kMaxQualityChars	DviServerUpnp.h	/^    static const TUint kMaxQualityChars = 5; \/\/ HTTP spec says quality scores have max 3 dec places$/;"	m	class:OpenHome::Net::HeaderAcceptLanguage
+kMaxRequestBytes	DviServerUpnp.h	/^    static const TUint kMaxRequestBytes = 12*1024;$/;"	m	class:OpenHome::Net::PropertyWriterUpnp
+kMaxRequestBytes	DviServerUpnp.h	/^    static const TUint kMaxRequestBytes = 64*1024;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+kMaxRequestBytes	DviServerWebSocket.h	/^    static const TUint kMaxRequestBytes = 4*1024;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+kMaxRequestBytes	DviServerWebSocket.h	/^    static const TUint kMaxRequestBytes = 4*1024;$/;"	m	class:OpenHome::Net::WsProtocol80
+kMaxResponseBytes	DviServerUpnp.h	/^    static const TUint kMaxResponseBytes = 128;$/;"	m	class:OpenHome::Net::PropertyWriterUpnp
+kMaxResponseBytes	DviServerUpnp.h	/^    static const TUint kMaxResponseBytes = 4*1024;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+kMaxUriBytes	DviProtocolUpnp.h	/^    static const TUint kMaxUriBytes = 256;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+kMaxUriBytes	DviSsdpNotifier.h	/^    static const TUint kMaxUriBytes = 256;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+kMaxUriBytes	DviSsdpNotifier.h	/^    static const TUint kMaxUriBytes = 256;$/;"	m	class:OpenHome::Net::MsearchResponse
+kMaxWriteBytes	DviServerWebSocket.h	/^    static const TUint kMaxWriteBytes = 4*1024;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+kMethodGetPropertyUpdates	DviServerWebSocket.h	/^    static const Brn kMethodGetPropertyUpdates;$/;"	m	class:OpenHome::Net::WebSocket
+kMethodPropertyUpdate	DviServerWebSocket.h	/^    static const Brn kMethodPropertyUpdate;$/;"	m	class:OpenHome::Net::WebSocket
+kMethodRenew	DviServerWebSocket.h	/^    static const Brn kMethodRenew;$/;"	m	class:OpenHome::Net::WebSocket
+kMethodSubscribe	DviServerWebSocket.h	/^    static const Brn kMethodSubscribe;$/;"	m	class:OpenHome::Net::WebSocket
+kMethodSubscriptionRenewed	DviServerWebSocket.h	/^    static const Brn kMethodSubscriptionRenewed;$/;"	m	class:OpenHome::Net::WebSocket
+kMethodSubscriptionSid	DviServerWebSocket.h	/^    static const Brn kMethodSubscriptionSid;$/;"	m	class:OpenHome::Net::WebSocket
+kMethodUnsubscribe	DviServerWebSocket.h	/^    static const Brn kMethodUnsubscribe;$/;"	m	class:OpenHome::Net::WebSocket
+kMinQuality	DviServerUpnp.h	/^    static const TUint kMinQuality = 0;$/;"	m	class:OpenHome::Net::HeaderAcceptLanguage
+kMinTimerIntervalMs	DviSsdpNotifier.h	/^    static const TInt kMinTimerIntervalMs   = 10;$/;"	m	class:OpenHome::Net::SsdpNotifierScheduler
+kMsgCloseEnd	DviServerWebSocket.h	/^    static const TByte kMsgCloseEnd = (TByte)'\\0';$/;"	m	class:OpenHome::Net::WsProtocol76
+kMsgEnd	DviServerWebSocket.h	/^    static const TByte kMsgEnd = (TByte)'\\xff';$/;"	m	class:OpenHome::Net::WsProtocol76
+kMsgIntervalMsAlive	DviSsdpNotifier.h	/^    static const TUint kMsgIntervalMsAlive  = 40;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+kMsgIntervalMsByeBye	DviSsdpNotifier.h	/^    static const TUint kMsgIntervalMsByeBye = 10;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+kMsgIntervalMsUpdate	DviSsdpNotifier.h	/^    static const TUint kMsgIntervalMsUpdate = 20;$/;"	m	class:OpenHome::Net::DeviceAnnouncement
+kProtocolName	DviProtocolUpnp.h	/^    static const Brn kProtocolName;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+kReadTimeoutMs	DviServerUpnp.h	/^    static const TUint kReadTimeoutMs = 5 * 1000;$/;"	m	class:OpenHome::Net::DviSessionUpnp
+kReadTimeoutMs	DviServerUpnp.h	/^    static const TUint kReadTimeoutMs = 5 * 1000;$/;"	m	class:OpenHome::Net::PropertyWriterUpnp
+kReadTimeoutMs	DviServerWebSocket.h	/^    static const TUint kReadTimeoutMs = 5 * 1000;$/;"	m	class:OpenHome::Net::DviSessionWebSocket
+kServiceXmlName	DviProtocolUpnp.h	/^    static const Brn kServiceXmlName;$/;"	m	class:OpenHome::Net::DviProtocolUpnp
+kTagClientId	DviServerWebSocket.h	/^    static const Brn kTagClientId;$/;"	m	class:OpenHome::Net::WebSocket
+kTagMethod	DviServerWebSocket.h	/^    static const Brn kTagMethod;$/;"	m	class:OpenHome::Net::WebSocket
+kTagNt	DviServerWebSocket.h	/^    static const Brn kTagNt;$/;"	m	class:OpenHome::Net::WebSocket
+kTagNts	DviServerWebSocket.h	/^    static const Brn kTagNts;$/;"	m	class:OpenHome::Net::WebSocket
+kTagRoot	DviServerWebSocket.h	/^    static const Brn kTagRoot;$/;"	m	class:OpenHome::Net::WebSocket
+kTagSeq	DviServerWebSocket.h	/^    static const Brn kTagSeq;$/;"	m	class:OpenHome::Net::WebSocket
+kTagService	DviServerWebSocket.h	/^    static const Brn kTagService;$/;"	m	class:OpenHome::Net::WebSocket
+kTagSid	DviServerWebSocket.h	/^    static const Brn kTagSid;$/;"	m	class:OpenHome::Net::WebSocket
+kTagSubscription	DviServerWebSocket.h	/^    static const Brn kTagSubscription;$/;"	m	class:OpenHome::Net::WebSocket
+kTagTimeout	DviServerWebSocket.h	/^    static const Brn kTagTimeout;$/;"	m	class:OpenHome::Net::WebSocket
+kTagUdn	DviServerWebSocket.h	/^    static const Brn kTagUdn;$/;"	m	class:OpenHome::Net::WebSocket
+kUpgradeWebSocket	DviServerWebSocket.h	/^    static const Brn kUpgradeWebSocket;$/;"	m	class:OpenHome::Net::WebSocket
+kValueNt	DviServerWebSocket.h	/^    static const Brn kValueNt;$/;"	m	class:OpenHome::Net::WebSocket
+kValuePropChange	DviServerWebSocket.h	/^    static const Brn kValuePropChange;$/;"	m	class:OpenHome::Net::WebSocket
+kValueProtocol	DviServerWebSocket.h	/^    static const Brn kValueProtocol;$/;"	m	class:OpenHome::Net::WebSocket
+kWriteBufGranularity	DviServerWebSocket.h	/^    static const TUint kWriteBufGranularity = 1024;$/;"	m	class:OpenHome::Net::PropertyWriterWs
+writeSpecVersion	DviProtocolUpnp.cpp	/^static void writeSpecVersion(WriterBwh& aWriter, const DviProtocolUpnp& aDevice)$/;"	f	file:
+writeSpecVersionNumber	DviProtocolUpnp.cpp	/^static void writeSpecVersionNumber(WriterBwh& aWriter, const DviProtocolUpnp& aDevice, const TChar* aTag, const TChar* aKey)$/;"	f	file:
+~DviProtocolUpnp	DviProtocolUpnp.cpp	/^DviProtocolUpnp::~DviProtocolUpnp()$/;"	f	class:DviProtocolUpnp
+~DviProtocolUpnpAdapterSpecificData	DviProtocolUpnp.cpp	/^DviProtocolUpnpAdapterSpecificData::~DviProtocolUpnpAdapterSpecificData()$/;"	f	class:DviProtocolUpnpAdapterSpecificData
+~DviSessionUpnp	DviServerUpnp.cpp	/^DviSessionUpnp::~DviSessionUpnp()$/;"	f	class:DviSessionUpnp
+~DviSessionWebSocket	DviServerWebSocket.cpp	/^DviSessionWebSocket::~DviSessionWebSocket()$/;"	f	class:DviSessionWebSocket
+~DviSsdpNotifierManager	DviSsdpNotifier.cpp	/^DviSsdpNotifierManager::~DviSsdpNotifierManager()$/;"	f	class:DviSsdpNotifierManager
+~HeaderAcceptLanguage	DviServerUpnp.cpp	/^HeaderAcceptLanguage::~HeaderAcceptLanguage()$/;"	f	class:HeaderAcceptLanguage
+~ISsdpNotifyListener	DviSsdpNotifier.h	/^    virtual ~ISsdpNotifyListener() {}$/;"	f	class:OpenHome::Net::ISsdpNotifyListener
+~MsearchResponse	DviSsdpNotifier.cpp	/^MsearchResponse::~MsearchResponse()$/;"	f	class:MsearchResponse
+~Notifier	DviSsdpNotifier.cpp	/^DviSsdpNotifierManager::Notifier::~Notifier()$/;"	f	class:DviSsdpNotifierManager::Notifier
+~PropertyWriterFactory	DviServerUpnp.cpp	/^PropertyWriterFactory::~PropertyWriterFactory()$/;"	f	class:PropertyWriterFactory
+~PropertyWriterUpnp	DviServerUpnp.cpp	/^PropertyWriterUpnp::~PropertyWriterUpnp()$/;"	f	class:PropertyWriterUpnp
+~PropertyWriterWs	DviServerWebSocket.cpp	/^PropertyWriterWs::~PropertyWriterWs()$/;"	f	class:PropertyWriterWs
+~SsdpNotifierScheduler	DviSsdpNotifier.cpp	/^SsdpNotifierScheduler::~SsdpNotifierScheduler()$/;"	f	class:SsdpNotifierScheduler
+~SubscriptionDataUpnp	DviServerUpnp.h	/^    ~SubscriptionDataUpnp() {}$/;"	f	class:OpenHome::Net::SubscriptionDataUpnp
+~SubscriptionWrapper	DviServerWebSocket.cpp	/^DviSessionWebSocket::SubscriptionWrapper::~SubscriptionWrapper()$/;"	f	class:DviSessionWebSocket::SubscriptionWrapper
+~WsProtocol	DviServerWebSocket.cpp	/^WsProtocol::~WsProtocol()$/;"	f	class:WsProtocol

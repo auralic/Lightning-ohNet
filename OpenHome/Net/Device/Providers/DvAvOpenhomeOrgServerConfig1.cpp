@@ -20,6 +20,18 @@ void DvProviderAvOpenhomeOrgServerConfig1::GetPropertyAlive(TBool& aValue)
     aValue = iPropertyAlive->Value();
 }
 
+TBool DvProviderAvOpenhomeOrgServerConfig1::SetPropertySubscriptValue(const Brx& aValue)
+{
+    ASSERT(iPropertySubscriptValue != NULL);
+    return SetPropertyString(*iPropertySubscriptValue, aValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::GetPropertySubscriptValue(Brhz& aValue)
+{
+    ASSERT(iPropertySubscriptValue != NULL);
+    aValue.Set(iPropertySubscriptValue->Value());
+}
+
 DvProviderAvOpenhomeOrgServerConfig1::DvProviderAvOpenhomeOrgServerConfig1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "ServerConfig", 1)
 {
@@ -35,12 +47,19 @@ DvProviderAvOpenhomeOrgServerConfig1::DvProviderAvOpenhomeOrgServerConfig1(DviDe
 void DvProviderAvOpenhomeOrgServerConfig1::Construct()
 {
     iPropertyAlive = NULL;
+    iPropertySubscriptValue = NULL;
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::EnablePropertyAlive()
 {
     iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
     iService->AddProperty(iPropertyAlive); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnablePropertySubscriptValue()
+{
+    iPropertySubscriptValue = new PropertyString(new ParameterString("SubscriptValue"));
+    iService->AddProperty(iPropertySubscriptValue); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::EnableActionSetServerName()
@@ -228,6 +247,22 @@ void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetCurrentScanFile()
     OpenHome::Net::Action* action = new OpenHome::Net::Action("GetCurrentScanFile");
     action->AddOutputParameter(new ParameterString("ScanFile"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoGetCurrentScanFile);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionGetServerConfig()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("GetServerConfig");
+    action->AddOutputParameter(new ParameterString("GetValue"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoGetServerConfig);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionSetServerConfig()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetServerConfig");
+    action->AddInputParameter(new ParameterString("SetValue"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoSetServerConfig);
     iService->AddAction(action, functor);
 }
 
@@ -448,6 +483,25 @@ void DvProviderAvOpenhomeOrgServerConfig1::DoGetCurrentScanFile(IDviInvocation& 
     GetCurrentScanFile(invocation, respScanFile);
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1::DoGetServerConfig(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respGetValue(aInvocation, "GetValue");
+    GetServerConfig(invocation, respGetValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::DoSetServerConfig(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz SetValue;
+    aInvocation.InvocationReadString("SetValue", SetValue);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetServerConfig(invocation, SetValue);
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1::SetServerName(IDvInvocation& /*aResponse*/, const Brx& /*aServerName*/)
 {
     ASSERTS();
@@ -559,6 +613,16 @@ void DvProviderAvOpenhomeOrgServerConfig1::ForceRescan(IDvInvocation& /*aRespons
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::GetCurrentScanFile(IDvInvocation& /*aResponse*/, IDvInvocationResponseString& /*aScanFile*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::GetServerConfig(IDvInvocation& /*aResponse*/, IDvInvocationResponseString& /*aGetValue*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::SetServerConfig(IDvInvocation& /*aResponse*/, const Brx& /*aSetValue*/)
 {
     ASSERTS();
 }

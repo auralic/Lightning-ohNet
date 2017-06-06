@@ -350,6 +350,14 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateGetLEDMode;
         private ActionDelegate iDelegateSetKeyMode;
         private ActionDelegate iDelegateGetKeyMode;
+        private ActionDelegate iDelegateSetBrightness;
+        private ActionDelegate iDelegateGetBrightness;
+        private ActionDelegate iDelegateSetDisplayMode;
+        private ActionDelegate iDelegateGetDisplayMode;
+        private ActionDelegate iDelegateGetDACPhase;
+        private ActionDelegate iDelegateSetDACPhase;
+        private ActionDelegate iDelegateGetDACBalance;
+        private ActionDelegate iDelegateSetDACBalance;
         private PropertyBool iPropertyAlive;
         private PropertyUint iPropertyCurrentAction;
         private PropertyBool iPropertyRestart;
@@ -1680,6 +1688,116 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action SetBrightness is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetBrightness must be overridden if this is called.</remarks>
+        protected void EnableActionSetBrightness()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetBrightness");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("Brightness", allowedValues));
+            iDelegateSetBrightness = new ActionDelegate(DoSetBrightness);
+            EnableAction(action, iDelegateSetBrightness, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetBrightness is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetBrightness must be overridden if this is called.</remarks>
+        protected void EnableActionGetBrightness()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetBrightness");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("Brightness", allowedValues));
+            action.AddOutputParameter(new ParameterString("List", allowedValues));
+            iDelegateGetBrightness = new ActionDelegate(DoGetBrightness);
+            EnableAction(action, iDelegateGetBrightness, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetDisplayMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetDisplayMode must be overridden if this is called.</remarks>
+        protected void EnableActionSetDisplayMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetDisplayMode");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("DisplayMode", allowedValues));
+            iDelegateSetDisplayMode = new ActionDelegate(DoSetDisplayMode);
+            EnableAction(action, iDelegateSetDisplayMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetDisplayMode is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetDisplayMode must be overridden if this is called.</remarks>
+        protected void EnableActionGetDisplayMode()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetDisplayMode");
+            List<String> allowedValues = new List<String>();
+            action.AddOutputParameter(new ParameterString("DisplayMode", allowedValues));
+            action.AddOutputParameter(new ParameterString("DisplayModeList", allowedValues));
+            iDelegateGetDisplayMode = new ActionDelegate(DoGetDisplayMode);
+            EnableAction(action, iDelegateGetDisplayMode, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetDACPhase is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetDACPhase must be overridden if this is called.</remarks>
+        protected void EnableActionGetDACPhase()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetDACPhase");
+            action.AddOutputParameter(new ParameterUint("Phase"));
+            iDelegateGetDACPhase = new ActionDelegate(DoGetDACPhase);
+            EnableAction(action, iDelegateGetDACPhase, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetDACPhase is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetDACPhase must be overridden if this is called.</remarks>
+        protected void EnableActionSetDACPhase()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetDACPhase");
+            action.AddInputParameter(new ParameterUint("Phase"));
+            iDelegateSetDACPhase = new ActionDelegate(DoSetDACPhase);
+            EnableAction(action, iDelegateSetDACPhase, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action GetDACBalance is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// GetDACBalance must be overridden if this is called.</remarks>
+        protected void EnableActionGetDACBalance()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("GetDACBalance");
+            action.AddOutputParameter(new ParameterUint("Balance"));
+            iDelegateGetDACBalance = new ActionDelegate(DoGetDACBalance);
+            EnableAction(action, iDelegateGetDACBalance, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action SetDACBalance is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetDACBalance must be overridden if this is called.</remarks>
+        protected void EnableActionSetDACBalance()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetDACBalance");
+            action.AddInputParameter(new ParameterUint("Balance"));
+            iDelegateSetDACBalance = new ActionDelegate(DoSetDACBalance);
+            EnableAction(action, iDelegateSetDACBalance, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// IsAlive action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -2194,6 +2312,120 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aMiddleKeyMode"></param>
         /// <param name="aKeyModeList"></param>
         protected virtual void GetKeyMode(IDvInvocation aInvocation, out string aSideKeyMode, out string aMiddleKeyMode, out string aKeyModeList)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetBrightness action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetBrightness action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetBrightness was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aBrightness"></param>
+        protected virtual void SetBrightness(IDvInvocation aInvocation, string aBrightness)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetBrightness action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetBrightness action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetBrightness was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aBrightness"></param>
+        /// <param name="aList"></param>
+        protected virtual void GetBrightness(IDvInvocation aInvocation, out string aBrightness, out string aList)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetDisplayMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetDisplayMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetDisplayMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aDisplayMode"></param>
+        protected virtual void SetDisplayMode(IDvInvocation aInvocation, string aDisplayMode)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetDisplayMode action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetDisplayMode action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetDisplayMode was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aDisplayMode"></param>
+        /// <param name="aDisplayModeList"></param>
+        protected virtual void GetDisplayMode(IDvInvocation aInvocation, out string aDisplayMode, out string aDisplayModeList)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetDACPhase action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetDACPhase action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetDACPhase was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aPhase"></param>
+        protected virtual void GetDACPhase(IDvInvocation aInvocation, out uint aPhase)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetDACPhase action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetDACPhase action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetDACPhase was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aPhase"></param>
+        protected virtual void SetDACPhase(IDvInvocation aInvocation, uint aPhase)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// GetDACBalance action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// GetDACBalance action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionGetDACBalance was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aBalance"></param>
+        protected virtual void GetDACBalance(IDvInvocation aInvocation, out uint aBalance)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetDACBalance action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetDACBalance action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetDACBalance was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aBalance"></param>
+        protected virtual void SetDACBalance(IDvInvocation aInvocation, uint aBalance)
         {
             throw (new ActionDisabledError());
         }
@@ -3861,6 +4093,378 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetKeyMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetBrightness(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string brightness;
+            try
+            {
+                invocation.ReadStart();
+                brightness = invocation.ReadString("Brightness");
+                invocation.ReadEnd();
+                self.SetBrightness(invocation, brightness);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetBrightness");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetBrightness"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetBrightness", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetBrightness", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetBrightness(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string brightness;
+            string list;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetBrightness(invocation, out brightness, out list);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetBrightness");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetBrightness"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetBrightness", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("Brightness", brightness);
+                invocation.WriteString("List", list);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetBrightness", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetDisplayMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string displayMode;
+            try
+            {
+                invocation.ReadStart();
+                displayMode = invocation.ReadString("DisplayMode");
+                invocation.ReadEnd();
+                self.SetDisplayMode(invocation, displayMode);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetDisplayMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetDisplayMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetDisplayMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetDisplayMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetDisplayMode(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string displayMode;
+            string displayModeList;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetDisplayMode(invocation, out displayMode, out displayModeList);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetDisplayMode");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetDisplayMode"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDisplayMode", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("DisplayMode", displayMode);
+                invocation.WriteString("DisplayModeList", displayModeList);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDisplayMode", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetDACPhase(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            uint phase;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetDACPhase(invocation, out phase);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetDACPhase");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetDACPhase"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDACPhase", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteUint("Phase", phase);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDACPhase", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetDACPhase(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            uint phase;
+            try
+            {
+                invocation.ReadStart();
+                phase = invocation.ReadUint("Phase");
+                invocation.ReadEnd();
+                self.SetDACPhase(invocation, phase);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetDACPhase");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetDACPhase"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetDACPhase", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetDACPhase", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoGetDACBalance(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            uint balance;
+            try
+            {
+                invocation.ReadStart();
+                invocation.ReadEnd();
+                self.GetDACBalance(invocation, out balance);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "GetDACBalance");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetDACBalance"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDACBalance", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteUint("Balance", balance);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDACBalance", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetDACBalance(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            uint balance;
+            try
+            {
+                invocation.ReadStart();
+                balance = invocation.ReadUint("Balance");
+                invocation.ReadEnd();
+                self.SetDACBalance(invocation, balance);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetDACBalance");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetDACBalance"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetDACBalance", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetDACBalance", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

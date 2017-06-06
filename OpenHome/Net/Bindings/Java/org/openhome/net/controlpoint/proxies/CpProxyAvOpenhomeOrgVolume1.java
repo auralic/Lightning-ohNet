@@ -16,6 +16,9 @@ interface ICpProxyAvOpenhomeOrgVolume1 extends ICpProxy
     public void syncSetVolume(long aValue);
     public void beginSetVolume(long aValue, ICpProxyListener aCallback);
     public void endSetVolume(long aAsyncHandle);
+    public void syncCanSetVolume(long aValue);
+    public void beginCanSetVolume(long aValue, ICpProxyListener aCallback);
+    public void endCanSetVolume(long aAsyncHandle);
     public void syncVolumeInc();
     public void beginVolumeInc(ICpProxyListener aCallback);
     public void endVolumeInc(long aAsyncHandle);
@@ -52,6 +55,9 @@ interface ICpProxyAvOpenhomeOrgVolume1 extends ICpProxy
     public void syncSetMute(boolean aValue);
     public void beginSetMute(boolean aValue, ICpProxyListener aCallback);
     public void endSetMute(long aAsyncHandle);
+    public void syncCanSetMute(boolean aValue);
+    public void beginCanSetMute(boolean aValue, ICpProxyListener aCallback);
+    public void endCanSetMute(long aAsyncHandle);
     public boolean syncMute();
     public void beginMute(ICpProxyListener aCallback);
     public boolean endMute(long aAsyncHandle);
@@ -144,6 +150,21 @@ class SyncSetVolumeAvOpenhomeOrgVolume1 extends SyncProxyAction
     protected void completeRequest(long aAsyncHandle)
     {
         iService.endSetVolume(aAsyncHandle);
+        
+    }
+}
+
+class SyncCanSetVolumeAvOpenhomeOrgVolume1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgVolume1 iService;
+
+    public SyncCanSetVolumeAvOpenhomeOrgVolume1(CpProxyAvOpenhomeOrgVolume1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endCanSetVolume(aAsyncHandle);
         
     }
 }
@@ -346,6 +367,21 @@ class SyncSetMuteAvOpenhomeOrgVolume1 extends SyncProxyAction
     }
 }
 
+class SyncCanSetMuteAvOpenhomeOrgVolume1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgVolume1 iService;
+
+    public SyncCanSetMuteAvOpenhomeOrgVolume1(CpProxyAvOpenhomeOrgVolume1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endCanSetMute(aAsyncHandle);
+        
+    }
+}
+
 class SyncMuteAvOpenhomeOrgVolume1 extends SyncProxyAction
 {
     private CpProxyAvOpenhomeOrgVolume1 iService;
@@ -447,6 +483,7 @@ public class CpProxyAvOpenhomeOrgVolume1 extends CpProxy implements ICpProxyAvOp
 
     private Action iActionCharacteristics;
     private Action iActionSetVolume;
+    private Action iActionCanSetVolume;
     private Action iActionVolumeInc;
     private Action iActionVolumeDec;
     private Action iActionVolume;
@@ -459,6 +496,7 @@ public class CpProxyAvOpenhomeOrgVolume1 extends CpProxy implements ICpProxyAvOp
     private Action iActionFadeDec;
     private Action iActionFade;
     private Action iActionSetMute;
+    private Action iActionCanSetMute;
     private Action iActionMute;
     private Action iActionVolumeLimit;
     private PropertyUint iVolume;
@@ -516,6 +554,10 @@ public class CpProxyAvOpenhomeOrgVolume1 extends CpProxy implements ICpProxyAvOp
         param = new ParameterUint("Value");
         iActionSetVolume.addInputParameter(param);
 
+        iActionCanSetVolume = new Action("CanSetVolume");
+        param = new ParameterUint("Value");
+        iActionCanSetVolume.addInputParameter(param);
+
         iActionVolumeInc = new Action("VolumeInc");
 
         iActionVolumeDec = new Action("VolumeDec");
@@ -551,6 +593,10 @@ public class CpProxyAvOpenhomeOrgVolume1 extends CpProxy implements ICpProxyAvOp
         iActionSetMute = new Action("SetMute");
         param = new ParameterBool("Value");
         iActionSetMute.addInputParameter(param);
+
+        iActionCanSetMute = new Action("CanSetMute");
+        param = new ParameterBool("Value");
+        iActionCanSetMute.addInputParameter(param);
 
         iActionMute = new Action("Mute");
         param = new ParameterBool("Value");
@@ -780,6 +826,54 @@ public class CpProxyAvOpenhomeOrgVolume1 extends CpProxy implements ICpProxyAvOp
      *          {@link #beginSetVolume} method.
      */
     public void endSetVolume(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncCanSetVolume(long aValue)
+    {
+        SyncCanSetVolumeAvOpenhomeOrgVolume1 sync = new SyncCanSetVolumeAvOpenhomeOrgVolume1(this);
+        beginCanSetVolume(aValue, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endCanSetVolume}.
+     * 
+     * @param aValue
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginCanSetVolume(long aValue, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionCanSetVolume, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentUint((ParameterUint)iActionCanSetVolume.getInputParameter(inIndex++), aValue));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginCanSetVolume} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginCanSetVolume} method.
+     */
+    public void endCanSetVolume(long aAsyncHandle)
     {
         ProxyError errObj = Invocation.error(aAsyncHandle);
         if (errObj != null)
@@ -1371,6 +1465,54 @@ public class CpProxyAvOpenhomeOrgVolume1 extends CpProxy implements ICpProxyAvOp
      * Invoke the action synchronously.
      * Blocks until the action has been processed on the device and sets any
      * output arguments.
+     */
+    public void syncCanSetMute(boolean aValue)
+    {
+        SyncCanSetMuteAvOpenhomeOrgVolume1 sync = new SyncCanSetMuteAvOpenhomeOrgVolume1(this);
+        beginCanSetMute(aValue, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endCanSetMute}.
+     * 
+     * @param aValue
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginCanSetMute(boolean aValue, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionCanSetMute, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionCanSetMute.getInputParameter(inIndex++), aValue));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginCanSetMute} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginCanSetMute} method.
+     */
+    public void endCanSetMute(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
      *
      * @return the result of the invoked action.
      */
@@ -1924,6 +2066,7 @@ public class CpProxyAvOpenhomeOrgVolume1 extends CpProxy implements ICpProxyAvOp
             iHandle = 0;
             iActionCharacteristics.destroy();
             iActionSetVolume.destroy();
+            iActionCanSetVolume.destroy();
             iActionVolumeInc.destroy();
             iActionVolumeDec.destroy();
             iActionVolume.destroy();
@@ -1936,6 +2079,7 @@ public class CpProxyAvOpenhomeOrgVolume1 extends CpProxy implements ICpProxyAvOp
             iActionFadeDec.destroy();
             iActionFade.destroy();
             iActionSetMute.destroy();
+            iActionCanSetMute.destroy();
             iActionMute.destroy();
             iActionVolumeLimit.destroy();
             iVolume.destroy();

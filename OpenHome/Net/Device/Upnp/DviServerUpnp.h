@@ -167,6 +167,7 @@ private:
     void Unsubscribe();
     void Renew();
     void ParseRequestUri(const Brx& aUrlTail, DviDevice** aDevice, DviService** aService);
+    void MyParseRequestUri(const Brx& aUrlTail, DviDevice** aDevice, DviService** aService);
     void WriteServerHeader(IWriterHttpHeader& aWriter);
     void InvocationReportErrorNoThrow(TUint aCode, const Brx& aDescription);
 private: // IResourceWriter

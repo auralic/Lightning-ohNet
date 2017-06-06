@@ -193,6 +193,50 @@ void SyncSetGroupStatusAvOpenhomeOrgGroupConfig1Cpp::CompleteRequest(IAsync& aAs
 }
 
 
+class SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp(CpProxyAvOpenhomeOrgGroupConfig1Cpp& aProxy, bool& aBitPerfectMode);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgGroupConfig1Cpp& iService;
+    bool& iBitPerfectMode;
+};
+
+SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp::SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp(CpProxyAvOpenhomeOrgGroupConfig1Cpp& aProxy, bool& aBitPerfectMode)
+    : iService(aProxy)
+    , iBitPerfectMode(aBitPerfectMode)
+{
+}
+
+void SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndGetBitPerfectMode(aAsync, iBitPerfectMode);
+}
+
+
+class SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp(CpProxyAvOpenhomeOrgGroupConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgGroupConfig1Cpp& iService;
+};
+
+SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp::SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp(CpProxyAvOpenhomeOrgGroupConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetBitPerfectMode(aAsync);
+}
+
+
 CpProxyAvOpenhomeOrgGroupConfig1Cpp::CpProxyAvOpenhomeOrgGroupConfig1Cpp(CpDeviceCpp& aDevice)
     : CpProxy("av-openhome-org", "GroupConfig", 1, aDevice.Device())
 {
@@ -252,6 +296,14 @@ CpProxyAvOpenhomeOrgGroupConfig1Cpp::CpProxyAvOpenhomeOrgGroupConfig1Cpp(CpDevic
     param = new OpenHome::Net::ParameterString("GroupStatus");
     iActionSetGroupStatus->AddInputParameter(param);
 
+    iActionGetBitPerfectMode = new Action("GetBitPerfectMode");
+    param = new OpenHome::Net::ParameterBool("BitPerfectMode");
+    iActionGetBitPerfectMode->AddOutputParameter(param);
+
+    iActionSetBitPerfectMode = new Action("SetBitPerfectMode");
+    param = new OpenHome::Net::ParameterBool("BitPerfectMode");
+    iActionSetBitPerfectMode->AddInputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgGroupConfig1Cpp::GroupModePropertyChanged);
     iGroupMode = new PropertyString("GroupMode", functor);
@@ -271,6 +323,9 @@ CpProxyAvOpenhomeOrgGroupConfig1Cpp::CpProxyAvOpenhomeOrgGroupConfig1Cpp(CpDevic
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgGroupConfig1Cpp::GroupStatusPropertyChanged);
     iGroupStatus = new PropertyString("GroupStatus", functor);
     AddProperty(iGroupStatus);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgGroupConfig1Cpp::BitPerfectModePropertyChanged);
+    iBitPerfectMode = new PropertyBool("BitPerfectMode", functor);
+    AddProperty(iBitPerfectMode);
 }
 
 CpProxyAvOpenhomeOrgGroupConfig1Cpp::~CpProxyAvOpenhomeOrgGroupConfig1Cpp()
@@ -284,6 +339,8 @@ CpProxyAvOpenhomeOrgGroupConfig1Cpp::~CpProxyAvOpenhomeOrgGroupConfig1Cpp()
     delete iActionGetGroupMute;
     delete iActionGetGroupStatus;
     delete iActionSetGroupStatus;
+    delete iActionGetBitPerfectMode;
+    delete iActionSetBitPerfectMode;
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncSetGroupMode(const std::string& aGroupMode, const std::string& aGroupID, const std::string& aGroupName)
@@ -564,6 +621,68 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndSetGroupStatus(IAsync& aAsync)
     }
 }
 
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncGetBitPerfectMode(bool& aBitPerfectMode)
+{
+    SyncGetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp sync(*this, aBitPerfectMode);
+    BeginGetBitPerfectMode(sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginGetBitPerfectMode(FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionGetBitPerfectMode, aFunctor);
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionGetBitPerfectMode->OutputParameters();
+    invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndGetBitPerfectMode(IAsync& aAsync, bool& aBitPerfectMode)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("GetBitPerfectMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    aBitPerfectMode = ((ArgumentBool*)invocation.OutputArguments()[index++])->Value();
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncSetBitPerfectMode(bool aBitPerfectMode)
+{
+    SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp sync(*this);
+    BeginSetBitPerfectMode(aBitPerfectMode, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginSetBitPerfectMode(bool aBitPerfectMode, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iService->Invocation(*iActionSetBitPerfectMode, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetBitPerfectMode->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aBitPerfectMode));
+    iInvocable.InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndSetBitPerfectMode(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetBitPerfectMode"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyGroupModeChanged(Functor& aFunctor)
 {
     iLock->Wait();
@@ -603,6 +722,13 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyGroupStatusChanged(Functor&
 {
     iLock->Wait();
     iGroupStatusChanged = aFunctor;
+    iLock->Signal();
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyBitPerfectModeChanged(Functor& aFunctor)
+{
+    iLock->Wait();
+    iBitPerfectModeChanged = aFunctor;
     iLock->Signal();
 }
 
@@ -652,6 +778,13 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::PropertyGroupStatus(std::string& aGrou
     aGroupStatus.assign((const char*)val.Ptr(), val.Bytes());
 }
 
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::PropertyBitPerfectMode(bool& aBitPerfectMode) const
+{
+    AutoMutex a(PropertyReadLock());
+    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    aBitPerfectMode = iBitPerfectMode->Value();
+}
+
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::GroupModePropertyChanged()
 {
     ReportEvent(iGroupModeChanged);
@@ -680,5 +813,10 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::GroupMutePropertyChanged()
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::GroupStatusPropertyChanged()
 {
     ReportEvent(iGroupStatusChanged);
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BitPerfectModePropertyChanged()
+{
+    ReportEvent(iBitPerfectModeChanged);
 }
 

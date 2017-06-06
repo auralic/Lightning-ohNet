@@ -246,6 +246,7 @@ public class DvProviderAvOpenhomeOrgVolume1 extends DvProvider implements IDvPro
 
     private IDvInvocationListener iDelegateCharacteristics;
     private IDvInvocationListener iDelegateSetVolume;
+    private IDvInvocationListener iDelegateCanSetVolume;
     private IDvInvocationListener iDelegateVolumeInc;
     private IDvInvocationListener iDelegateVolumeDec;
     private IDvInvocationListener iDelegateVolume;
@@ -258,6 +259,7 @@ public class DvProviderAvOpenhomeOrgVolume1 extends DvProvider implements IDvPro
     private IDvInvocationListener iDelegateFadeDec;
     private IDvInvocationListener iDelegateFade;
     private IDvInvocationListener iDelegateSetMute;
+    private IDvInvocationListener iDelegateCanSetMute;
     private IDvInvocationListener iDelegateMute;
     private IDvInvocationListener iDelegateVolumeLimit;
     private PropertyUint iPropertyVolume;
@@ -657,6 +659,20 @@ public class DvProviderAvOpenhomeOrgVolume1 extends DvProvider implements IDvPro
     }
 
     /**
+     * Signal that the action CanSetVolume is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * CanSetVolume must be overridden if this is called.
+     */      
+    protected void enableActionCanSetVolume()
+    {
+        Action action = new Action("CanSetVolume");
+        action.addInputParameter(new ParameterRelated("Value", iPropertyVolume));
+        iDelegateCanSetVolume = new DoCanSetVolume();
+        enableAction(action, iDelegateCanSetVolume);
+    }
+
+    /**
      * Signal that the action VolumeInc is supported.
      *
      * <p>The action's availability will be published in the device's service.xml.
@@ -819,6 +835,20 @@ public class DvProviderAvOpenhomeOrgVolume1 extends DvProvider implements IDvPro
     }
 
     /**
+     * Signal that the action CanSetMute is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * CanSetMute must be overridden if this is called.
+     */      
+    protected void enableActionCanSetMute()
+    {
+        Action action = new Action("CanSetMute");
+        action.addInputParameter(new ParameterRelated("Value", iPropertyMute));
+        iDelegateCanSetMute = new DoCanSetMute();
+        enableAction(action, iDelegateCanSetMute);
+    }
+
+    /**
      * Signal that the action Mute is supported.
      *
      * <p>The action's availability will be published in the device's service.xml.
@@ -873,6 +903,22 @@ public class DvProviderAvOpenhomeOrgVolume1 extends DvProvider implements IDvPro
      * @param aValue
      */
     protected void setVolume(IDvInvocation aInvocation, long aValue)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * CanSetVolume action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * CanSetVolume action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionCanSetVolume} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aValue
+     */
+    protected void canSetVolume(IDvInvocation aInvocation, long aValue)
     {
         throw (new ActionDisabledError());
     }
@@ -1061,6 +1107,22 @@ public class DvProviderAvOpenhomeOrgVolume1 extends DvProvider implements IDvPro
     }
 
     /**
+     * CanSetMute action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * CanSetMute action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionCanSetMute} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aValue
+     */
+    protected void canSetMute(IDvInvocation aInvocation, boolean aValue)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
      * Mute action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -1188,6 +1250,54 @@ public class DvProviderAvOpenhomeOrgVolume1 extends DvProvider implements IDvPro
             catch (ActionError ae)
             {
                 invocation.reportActionError(ae, "SetVolume");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoCanSetVolume implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            long value;
+            try
+            {
+                invocation.readStart();
+                value = invocation.readUint("Value");
+                invocation.readEnd();
+                canSetVolume(invocation, value);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "CanSetVolume");
                 return;
             }
             catch (PropertyUpdateError pue)
@@ -1752,6 +1862,54 @@ public class DvProviderAvOpenhomeOrgVolume1 extends DvProvider implements IDvPro
             catch (ActionError ae)
             {
                 invocation.reportActionError(ae, "SetMute");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoCanSetMute implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean value;
+            try
+            {
+                invocation.readStart();
+                value = invocation.readBool("Value");
+                invocation.readEnd();
+                canSetMute(invocation, value);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "CanSetMute");
                 return;
             }
             catch (PropertyUpdateError pue)

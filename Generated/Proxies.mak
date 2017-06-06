@@ -58,6 +58,21 @@ objects_proxies = \
                   $(objdir)CpAvOpenhomeOrgHardwareConfig1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgHardwareConfig1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgHardwareConfig1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgTestResamplerConfig1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgTestResamplerConfig1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgTestResamplerConfig1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebRendererConfig1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebRendererConfig1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebRendererConfig1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebDeviceConfig1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebDeviceConfig1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebDeviceConfig1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebProcessorConfig1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebProcessorConfig1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebProcessorConfig1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgDACConfig1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgDACConfig1Std.$(objext) \
                   $(objdir)CpAvOpenhomeOrgServerConfig1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgServerConfig1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgServerConfig1Std.$(objext) \
@@ -142,6 +157,11 @@ proxy_dotnet_assemblies = \
         CpAvOpenhomeOrgPlaylist1.net.dll \
         CpAvOpenhomeOrgVolume1.net.dll \
         CpAvOpenhomeOrgHardwareConfig1.net.dll \
+        CpAvOpenhomeOrgTestResamplerConfig1.net.dll \
+        CpAvOpenhomeOrgWebRendererConfig1.net.dll \
+        CpAvOpenhomeOrgWebDeviceConfig1.net.dll \
+        CpAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        CpAvOpenhomeOrgDACConfig1.net.dll \
         CpAvOpenhomeOrgServerConfig1.net.dll \
         CpAvOpenhomeOrgMessageCenter1.net.dll \
         CpAvOpenhomeOrgRenderingInfo1.net.dll \
@@ -179,6 +199,11 @@ proxy_dotnet_assemblies_with_path = \
         $(objdir)CpAvOpenhomeOrgPlaylist1.net.dll \
         $(objdir)CpAvOpenhomeOrgVolume1.net.dll \
         $(objdir)CpAvOpenhomeOrgHardwareConfig1.net.dll \
+        $(objdir)CpAvOpenhomeOrgTestResamplerConfig1.net.dll \
+        $(objdir)CpAvOpenhomeOrgWebRendererConfig1.net.dll \
+        $(objdir)CpAvOpenhomeOrgWebDeviceConfig1.net.dll \
+        $(objdir)CpAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        $(objdir)CpAvOpenhomeOrgDACConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgServerConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgMessageCenter1.net.dll \
         $(objdir)CpAvOpenhomeOrgRenderingInfo1.net.dll \
@@ -216,6 +241,11 @@ proxy_java_classes_with_path = \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgPlaylist1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgVolume1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgHardwareConfig1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgTestResamplerConfig1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebRendererConfig1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebDeviceConfig1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebProcessorConfig1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgDACConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgServerConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgMessageCenter1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgRenderingInfo1.class \
@@ -345,6 +375,36 @@ $(objdir)CpAvOpenhomeOrgHardwareConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgHar
 	$(compiler)CpAvOpenhomeOrgHardwareConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgHardwareConfig1C.cpp
 $(objdir)CpAvOpenhomeOrgHardwareConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgHardwareConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgHardwareConfig1.h
 	$(compiler)CpAvOpenhomeOrgHardwareConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgHardwareConfig1Std.cpp
+$(objdir)CpAvOpenhomeOrgTestResamplerConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgTestResamplerConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgTestResamplerConfig1.h
+	$(compiler)CpAvOpenhomeOrgTestResamplerConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgTestResamplerConfig1.cpp
+$(objdir)CpAvOpenhomeOrgTestResamplerConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgTestResamplerConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgTestResamplerConfig1.h
+	$(compiler)CpAvOpenhomeOrgTestResamplerConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgTestResamplerConfig1C.cpp
+$(objdir)CpAvOpenhomeOrgTestResamplerConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgTestResamplerConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgTestResamplerConfig1.h
+	$(compiler)CpAvOpenhomeOrgTestResamplerConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgTestResamplerConfig1Std.cpp
+$(objdir)CpAvOpenhomeOrgWebRendererConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgWebRendererConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgWebRendererConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebRendererConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgWebRendererConfig1.cpp
+$(objdir)CpAvOpenhomeOrgWebRendererConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgWebRendererConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgWebRendererConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebRendererConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgWebRendererConfig1C.cpp
+$(objdir)CpAvOpenhomeOrgWebRendererConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgWebRendererConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgWebRendererConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebRendererConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgWebRendererConfig1Std.cpp
+$(objdir)CpAvOpenhomeOrgWebDeviceConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgWebDeviceConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgWebDeviceConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebDeviceConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgWebDeviceConfig1.cpp
+$(objdir)CpAvOpenhomeOrgWebDeviceConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgWebDeviceConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgWebDeviceConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebDeviceConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgWebDeviceConfig1C.cpp
+$(objdir)CpAvOpenhomeOrgWebDeviceConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgWebDeviceConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgWebDeviceConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebDeviceConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgWebDeviceConfig1Std.cpp
+$(objdir)CpAvOpenhomeOrgWebProcessorConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgWebProcessorConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgWebProcessorConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebProcessorConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgWebProcessorConfig1.cpp
+$(objdir)CpAvOpenhomeOrgWebProcessorConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgWebProcessorConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgWebProcessorConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebProcessorConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgWebProcessorConfig1C.cpp
+$(objdir)CpAvOpenhomeOrgWebProcessorConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgWebProcessorConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgWebProcessorConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebProcessorConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgWebProcessorConfig1Std.cpp
+$(objdir)CpAvOpenhomeOrgDACConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgDACConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgDACConfig1.h
+	$(compiler)CpAvOpenhomeOrgDACConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgDACConfig1.cpp
+$(objdir)CpAvOpenhomeOrgDACConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgDACConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgDACConfig1.h
+	$(compiler)CpAvOpenhomeOrgDACConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgDACConfig1C.cpp
+$(objdir)CpAvOpenhomeOrgDACConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgDACConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgDACConfig1.h
+	$(compiler)CpAvOpenhomeOrgDACConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgDACConfig1Std.cpp
 $(objdir)CpAvOpenhomeOrgServerConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgServerConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgServerConfig1.h
 	$(compiler)CpAvOpenhomeOrgServerConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgServerConfig1.cpp
 $(objdir)CpAvOpenhomeOrgServerConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgServerConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgServerConfig1.h
@@ -467,6 +527,11 @@ proxy_dlls = \
              CpAvOpenhomeOrgPlaylist1Dll \
              CpAvOpenhomeOrgVolume1Dll \
              CpAvOpenhomeOrgHardwareConfig1Dll \
+             CpAvOpenhomeOrgTestResamplerConfig1Dll \
+             CpAvOpenhomeOrgWebRendererConfig1Dll \
+             CpAvOpenhomeOrgWebDeviceConfig1Dll \
+             CpAvOpenhomeOrgWebProcessorConfig1Dll \
+             CpAvOpenhomeOrgDACConfig1Dll \
              CpAvOpenhomeOrgServerConfig1Dll \
              CpAvOpenhomeOrgMessageCenter1Dll \
              CpAvOpenhomeOrgRenderingInfo1Dll \
@@ -541,6 +606,21 @@ $(objdir)$(dllprefix)CpAvOpenhomeOrgVolume1.$(dllext) : ZappUpnpDll $(objdir)CpA
 CpAvOpenhomeOrgHardwareConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgHardwareConfig1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgHardwareConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgHardwareConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgHardwareConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgHardwareConfig1.$(objext)
+CpAvOpenhomeOrgTestResamplerConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgTestResamplerConfig1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgTestResamplerConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgTestResamplerConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgTestResamplerConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgTestResamplerConfig1.$(objext)
+CpAvOpenhomeOrgWebRendererConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgWebRendererConfig1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgWebRendererConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgWebRendererConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgWebRendererConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgWebRendererConfig1.$(objext)
+CpAvOpenhomeOrgWebDeviceConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgWebDeviceConfig1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgWebDeviceConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgWebDeviceConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgWebDeviceConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgWebDeviceConfig1.$(objext)
+CpAvOpenhomeOrgWebProcessorConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgWebProcessorConfig1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgWebProcessorConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgWebProcessorConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgWebProcessorConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgWebProcessorConfig1.$(objext)
+CpAvOpenhomeOrgDACConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgDACConfig1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgDACConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgDACConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext)
 CpAvOpenhomeOrgServerConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgServerConfig1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgServerConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgServerConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgServerConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgServerConfig1.$(objext)
@@ -687,6 +767,31 @@ $(objdir)CpAvOpenhomeOrgHardwareConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyC
         /out:$(objdir)CpAvOpenhomeOrgHardwareConfig1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(proxyCs)CpAvOpenhomeOrgHardwareConfig1.cs
+$(objdir)CpAvOpenhomeOrgTestResamplerConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgTestResamplerConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgTestResamplerConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgTestResamplerConfig1.cs
+$(objdir)CpAvOpenhomeOrgWebRendererConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgWebRendererConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgWebRendererConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgWebRendererConfig1.cs
+$(objdir)CpAvOpenhomeOrgWebDeviceConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgWebDeviceConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgWebDeviceConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgWebDeviceConfig1.cs
+$(objdir)CpAvOpenhomeOrgWebProcessorConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgWebProcessorConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgWebProcessorConfig1.cs
+$(objdir)CpAvOpenhomeOrgDACConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgDACConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgDACConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgDACConfig1.cs
 $(objdir)CpAvOpenhomeOrgServerConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgServerConfig1.cs
 	$(csharp) /t:library \
         /out:$(objdir)CpAvOpenhomeOrgServerConfig1.net.dll \
@@ -813,6 +918,16 @@ $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgVolume1.class
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgVolume1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgHardwareConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgHardwareConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgHardwareConfig1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgTestResamplerConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgTestResamplerConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgTestResamplerConfig1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebRendererConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgWebRendererConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgWebRendererConfig1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebDeviceConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgWebDeviceConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgWebDeviceConfig1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebProcessorConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgWebProcessorConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgWebProcessorConfig1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgDACConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgDACConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgDACConfig1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgServerConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgServerConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgServerConfig1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgMessageCenter1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgMessageCenter1.java

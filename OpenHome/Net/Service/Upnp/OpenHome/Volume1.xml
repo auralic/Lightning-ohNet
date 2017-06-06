@@ -51,6 +51,16 @@
          </argumentList>
       </action>
       <action>
+         <name>CanSetVolume</name>
+         <argumentList>
+                <argument>
+                    <name>Value</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Volume</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
          <name>VolumeInc</name>
       </action>
       <action>
@@ -121,6 +131,16 @@
       </action>
       <action>
          <name>SetMute</name>
+         <argumentList>
+                <argument>
+                    <name>Value</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Mute</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>CanSetMute</name>
          <argumentList>
                 <argument>
                     <name>Value</name>

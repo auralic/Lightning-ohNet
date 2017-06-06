@@ -109,6 +109,32 @@ public:
     /**
      * Invoke the action synchronously.  Blocks until the action has been processed
      * on the device and sets any output arguments.
+     *
+     * @param[in]  aValue
+     */
+    void SyncCanSetVolume(TUint aValue);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndCanSetVolume().
+     *
+     * @param[in] aValue
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginCanSetVolume(TUint aValue, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndCanSetVolume(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
      */
     void SyncVolumeInc();
     /**
@@ -404,6 +430,32 @@ public:
      * Invoke the action synchronously.  Blocks until the action has been processed
      * on the device and sets any output arguments.
      *
+     * @param[in]  aValue
+     */
+    void SyncCanSetMute(TBool aValue);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndCanSetMute().
+     *
+     * @param[in] aValue
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginCanSetMute(TBool aValue, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndCanSetMute(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
      * @param[out] aValue
      */
     void SyncMute(TBool& aValue);
@@ -677,6 +729,7 @@ private:
 private:
     Action* iActionCharacteristics;
     Action* iActionSetVolume;
+    Action* iActionCanSetVolume;
     Action* iActionVolumeInc;
     Action* iActionVolumeDec;
     Action* iActionVolume;
@@ -689,6 +742,7 @@ private:
     Action* iActionFadeDec;
     Action* iActionFade;
     Action* iActionSetMute;
+    Action* iActionCanSetMute;
     Action* iActionMute;
     Action* iActionVolumeLimit;
     PropertyUint* iVolume;

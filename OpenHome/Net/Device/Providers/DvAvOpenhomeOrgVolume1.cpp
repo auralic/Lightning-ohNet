@@ -254,6 +254,14 @@ void DvProviderAvOpenhomeOrgVolume1::EnableActionSetVolume()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgVolume1::EnableActionCanSetVolume()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("CanSetVolume");
+    action->AddInputParameter(new ParameterRelated("Value", *iPropertyVolume));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgVolume1::DoCanSetVolume);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgVolume1::EnableActionVolumeInc()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("VolumeInc");
@@ -344,6 +352,14 @@ void DvProviderAvOpenhomeOrgVolume1::EnableActionSetMute()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgVolume1::EnableActionCanSetMute()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("CanSetMute");
+    action->AddInputParameter(new ParameterRelated("Value", *iPropertyMute));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgVolume1::DoCanSetMute);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgVolume1::EnableActionMute()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("Mute");
@@ -381,6 +397,15 @@ void DvProviderAvOpenhomeOrgVolume1::DoSetVolume(IDviInvocation& aInvocation)
     aInvocation.InvocationReadEnd();
     DviInvocation invocation(aInvocation);
     SetVolume(invocation, Value);
+}
+
+void DvProviderAvOpenhomeOrgVolume1::DoCanSetVolume(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TUint Value = aInvocation.InvocationReadUint("Value");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    CanSetVolume(invocation, Value);
 }
 
 void DvProviderAvOpenhomeOrgVolume1::DoVolumeInc(IDviInvocation& aInvocation)
@@ -485,6 +510,15 @@ void DvProviderAvOpenhomeOrgVolume1::DoSetMute(IDviInvocation& aInvocation)
     SetMute(invocation, Value);
 }
 
+void DvProviderAvOpenhomeOrgVolume1::DoCanSetMute(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TBool Value = aInvocation.InvocationReadBool("Value");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    CanSetMute(invocation, Value);
+}
+
 void DvProviderAvOpenhomeOrgVolume1::DoMute(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -509,6 +543,11 @@ void DvProviderAvOpenhomeOrgVolume1::Characteristics(IDvInvocation& /*aResponse*
 }
 
 void DvProviderAvOpenhomeOrgVolume1::SetVolume(IDvInvocation& /*aResponse*/, TUint /*aValue*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgVolume1::CanSetVolume(IDvInvocation& /*aResponse*/, TUint /*aValue*/)
 {
     ASSERTS();
 }
@@ -569,6 +608,11 @@ void DvProviderAvOpenhomeOrgVolume1::Fade(IDvInvocation& /*aResponse*/, IDvInvoc
 }
 
 void DvProviderAvOpenhomeOrgVolume1::SetMute(IDvInvocation& /*aResponse*/, TBool /*aValue*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgVolume1::CanSetMute(IDvInvocation& /*aResponse*/, TBool /*aValue*/)
 {
     ASSERTS();
 }

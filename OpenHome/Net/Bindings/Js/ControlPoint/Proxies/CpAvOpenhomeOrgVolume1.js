@@ -246,6 +246,27 @@ CpProxyAvOpenhomeOrgVolume1.prototype.SetVolume = function(Value, successFunctio
 
 
 /**
+* A service action to CanSetVolume
+* @method CanSetVolume
+* @param {Int} Value An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgVolume1.prototype.CanSetVolume = function(Value, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("CanSetVolume", this.url, this.domain, this.type, this.version);     
+    request.writeIntParameter("Value", Value);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
 * A service action to VolumeInc
 * @method VolumeInc
 * @param {Function} successFunction The function that is executed when the action has completed successfully
@@ -470,6 +491,27 @@ CpProxyAvOpenhomeOrgVolume1.prototype.Fade = function(successFunction, errorFunc
 */
 CpProxyAvOpenhomeOrgVolume1.prototype.SetMute = function(Value, successFunction, errorFunction){ 
     var request = new ohnet.soaprequest("SetMute", this.url, this.domain, this.type, this.version);     
+    request.writeBoolParameter("Value", Value);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to CanSetMute
+* @method CanSetMute
+* @param {Boolean} Value An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgVolume1.prototype.CanSetMute = function(Value, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("CanSetMute", this.url, this.domain, this.type, this.version);     
     request.writeBoolParameter("Value", Value);
     request.send(function(result){
     

@@ -79,8 +79,16 @@ interface ICpProxyAvOpenhomeOrgServerConfig1 extends ICpProxy
     public String syncGetCurrentScanFile();
     public void beginGetCurrentScanFile(ICpProxyListener aCallback);
     public String endGetCurrentScanFile(long aAsyncHandle);
+    public String syncGetServerConfig();
+    public void beginGetServerConfig(ICpProxyListener aCallback);
+    public String endGetServerConfig(long aAsyncHandle);
+    public void syncSetServerConfig(String aSetValue);
+    public void beginSetServerConfig(String aSetValue, ICpProxyListener aCallback);
+    public void endSetServerConfig(long aAsyncHandle);
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
+    public void setPropertySubscriptValueChanged(IPropertyChangeListener aSubscriptValueChanged);
+    public String getPropertySubscriptValue();
 }
 
 class SyncSetServerNameAvOpenhomeOrgServerConfig1 extends SyncProxyAction
@@ -554,6 +562,42 @@ class SyncGetCurrentScanFileAvOpenhomeOrgServerConfig1 extends SyncProxyAction
     }
 }
 
+class SyncGetServerConfigAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+    private String iGetValue;
+
+    public SyncGetServerConfigAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getGetValue()
+    {
+        return iGetValue;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        String result = iService.endGetServerConfig(aAsyncHandle);
+        
+        iGetValue = result;
+    }
+}
+
+class SyncSetServerConfigAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+    public SyncSetServerConfigAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetServerConfig(aAsyncHandle);
+        
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:ServerConfig:1 UPnP service
  */
@@ -710,8 +754,12 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     private Action iActionGetDISKCapacity;
     private Action iActionForceRescan;
     private Action iActionGetCurrentScanFile;
+    private Action iActionGetServerConfig;
+    private Action iActionSetServerConfig;
     private PropertyBool iAlive;
+    private PropertyString iSubscriptValue;
     private IPropertyChangeListener iAliveChanged;
+    private IPropertyChangeListener iSubscriptValueChanged;
     private Object iPropertyLock;
 
     /**
@@ -827,6 +875,14 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         param = new ParameterString("ScanFile", allowedValues);
         iActionGetCurrentScanFile.addOutputParameter(param);
 
+        iActionGetServerConfig = new Action("GetServerConfig");
+        param = new ParameterString("GetValue", allowedValues);
+        iActionGetServerConfig.addOutputParameter(param);
+
+        iActionSetServerConfig = new Action("SetServerConfig");
+        param = new ParameterString("SetValue", allowedValues);
+        iActionSetServerConfig.addInputParameter(param);
+
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
             new PropertyChangeListener() {
@@ -836,6 +892,15 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             }
         );
         addProperty(iAlive);
+        iSubscriptValueChanged = new PropertyChangeListener();
+        iSubscriptValue = new PropertyString("SubscriptValue",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    subscriptValuePropertyChanged();
+                }
+            }
+        );
+        addProperty(iSubscriptValue);
         iPropertyLock = new Object();
     }
     /**
@@ -2062,6 +2127,109 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public String syncGetServerConfig()
+    {
+        SyncGetServerConfigAvOpenhomeOrgServerConfig1 sync = new SyncGetServerConfigAvOpenhomeOrgServerConfig1(this);
+        beginGetServerConfig(sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getGetValue();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endGetServerConfig}.
+     * 
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginGetServerConfig(ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionGetServerConfig, aCallback);
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionGetServerConfig.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginGetServerConfig} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginGetServerConfig} method.
+     * @return the result of the previously invoked action.
+     */
+    public String endGetServerConfig(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String getValue = Invocation.getOutputString(aAsyncHandle, index++);
+        return getValue;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetServerConfig(String aSetValue)
+    {
+        SyncSetServerConfigAvOpenhomeOrgServerConfig1 sync = new SyncSetServerConfigAvOpenhomeOrgServerConfig1(this);
+        beginSetServerConfig(aSetValue, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetServerConfig}.
+     * 
+     * @param aSetValue
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetServerConfig(String aSetValue, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetServerConfig, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionSetServerConfig.getInputParameter(inIndex++), aSetValue));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetServerConfig} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetServerConfig} method.
+     */
+    public void endSetServerConfig(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
@@ -2084,6 +2252,29 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             reportEvent(iAliveChanged);
         }
     }
+    /**
+     * Set a delegate to be run when the SubscriptValue state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
+     *
+     * @param aSubscriptValueChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertySubscriptValueChanged(IPropertyChangeListener aSubscriptValueChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iSubscriptValueChanged = aSubscriptValueChanged;
+        }
+    }
+
+    private void subscriptValuePropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iSubscriptValueChanged);
+        }
+    }
 
     /**
      * Query the value of the Alive property.
@@ -2097,6 +2288,22 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     {
         propertyReadLock();
         boolean val = iAlive.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
+     * Query the value of the SubscriptValue property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the SubscriptValue property.
+     */
+    public String getPropertySubscriptValue()
+    {
+        propertyReadLock();
+        String val = iSubscriptValue.getValue();
         propertyReadUnlock();
         return val;
     }
@@ -2139,7 +2346,10 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             iActionGetDISKCapacity.destroy();
             iActionForceRescan.destroy();
             iActionGetCurrentScanFile.destroy();
+            iActionGetServerConfig.destroy();
+            iActionSetServerConfig.destroy();
             iAlive.destroy();
+            iSubscriptValue.destroy();
         }
     }
 }

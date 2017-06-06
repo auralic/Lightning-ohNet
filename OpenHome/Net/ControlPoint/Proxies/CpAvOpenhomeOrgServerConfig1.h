@@ -644,6 +644,58 @@ public:
     void EndGetCurrentScanFile(IAsync& aAsync, Brh& aScanFile);
 
     /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[out] aGetValue
+     */
+    void SyncGetServerConfig(Brh& aGetValue);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndGetServerConfig().
+     *
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginGetServerConfig(FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aGetValue
+     */
+    void EndGetServerConfig(IAsync& aAsync, Brh& aGetValue);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aSetValue
+     */
+    void SyncSetServerConfig(const Brx& aSetValue);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetServerConfig().
+     *
+     * @param[in] aSetValue
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetServerConfig(const Brx& aSetValue, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetServerConfig(IAsync& aAsync);
+
+    /**
      * Set a callback to be run when the Alive state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -652,6 +704,15 @@ public:
      * @param[in]  aFunctor  The callback to run when the state variable changes
      */
     void SetPropertyAliveChanged(Functor& aFunctor);
+    /**
+     * Set a callback to be run when the SubscriptValue state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertySubscriptValueChanged(Functor& aFunctor);
 
     /**
      * Query the value of the Alive property.
@@ -663,8 +724,19 @@ public:
      * @param[out] aAlive
      */
     void PropertyAlive(TBool& aAlive) const;
+    /**
+     * Query the value of the SubscriptValue property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aSubscriptValue
+     */
+    void PropertySubscriptValue(Brhz& aSubscriptValue) const;
 private:
     void AlivePropertyChanged();
+    void SubscriptValuePropertyChanged();
 private:
     Action* iActionSetServerName;
     Action* iActionGetServerVersion;
@@ -689,8 +761,12 @@ private:
     Action* iActionGetDISKCapacity;
     Action* iActionForceRescan;
     Action* iActionGetCurrentScanFile;
+    Action* iActionGetServerConfig;
+    Action* iActionSetServerConfig;
     PropertyBool* iAlive;
+    PropertyString* iSubscriptValue;
     Functor iAliveChanged;
+    Functor iSubscriptValueChanged;
 };
 
 } // namespace Net
