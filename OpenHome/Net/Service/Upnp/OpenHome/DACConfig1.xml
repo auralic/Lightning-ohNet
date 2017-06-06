@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+    
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+
+    <actionList>
+      <action>
+         <name>GetFilterMode</name>
+         <argumentList>
+                <argument>
+                    <name>FilterMode</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>FilterMode</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>FilterModeList</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>FilterMode</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetFilterMode</name>
+         <argumentList>
+                <argument>
+                    <name>FilterMode</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>FilterMode</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetDACPhase</name>
+         <argumentList>
+                <argument>
+                    <name>Phase</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>Phase</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetDACPhase</name>
+         <argumentList>
+                <argument>
+                    <name>Phase</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Phase</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetDACBalance</name>
+         <argumentList>
+                <argument>
+                    <name>Balance</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>Balance</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetDACBalance</name>
+         <argumentList>
+                <argument>
+                    <name>Balance</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Balance</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetWaitingTime</name>
+         <argumentList>
+                <argument>
+                    <name>WaitingTime</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>Time</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetWaitingTime</name>
+         <argumentList>
+                <argument>
+                    <name>WaitingTime</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Time</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+    </actionList>
+
+    <serviceStateTable>
+      <stateVariable sendEvents="yes">
+         <name>CurrentAction</name>
+         <dataType>ui4</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>Time</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>FilterMode</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>Phase</name>
+         <dataType>ui4</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>Balance</name>
+         <dataType>ui4</dataType>
+      </stateVariable>
+    </serviceStateTable>
+</scpd>
+

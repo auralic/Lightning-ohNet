@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+    
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+
+    <actionList>
+        <action>
+            <name>SetResamplerConfig</name>
+            <argumentList>
+                <argument>
+                    <name>ResamplerConfig</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>ResamplerConfig</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>GetResamplerConfig</name>
+            <argumentList>
+                <argument>
+                    <name>ResamplerConfig</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>ResamplerConfig</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>SetPCMAutoDetect</name>
+            <argumentList>
+                <argument>
+                    <name>PCMAutoDetect</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>PCMAutoDetect</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>GetPCMAutoDetect</name>
+            <argumentList>
+                <argument>
+                    <name>PCMAutoDetect</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>PCMAutoDetect</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+      <action>
+         <name>SetDSDtoPCM</name>
+         <argumentList>
+                <argument>
+                    <name>DSDtoPCM</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>DSDtoPCM</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>GetDSDtoPCM</name>
+         <argumentList>
+                <argument>
+                    <name>DSDtoPCM</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>DSDtoPCM</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+    </actionList>
+
+    <serviceStateTable>
+        <stateVariable sendEvents="no">
+            <name>ResamplerConfig</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>PCMAutoDetect</name>
+            <dataType>boolean</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>DSDtoPCM</name>
+            <dataType>boolean</dataType>
+        </stateVariable>
+      <stateVariable sendEvents="yes">
+         <name>CurrentAction</name>
+         <dataType>ui4</dataType>
+      </stateVariable>
+    </serviceStateTable>
+</scpd>
+
