@@ -58,12 +58,18 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncRead(uint aId, out String aUri, out String aMetadata);
         void BeginRead(uint aId, CpProxy.CallbackAsyncComplete aCallback);
         void EndRead(IntPtr aAsyncHandle, out String aUri, out String aMetadata);
+        void SyncSimpleReadList(String aIdList, out String aTrackList);
+        void BeginSimpleReadList(String aIdList, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSimpleReadList(IntPtr aAsyncHandle, out String aTrackList);
         void SyncReadList(String aIdList, out String aTrackList);
         void BeginReadList(String aIdList, CpProxy.CallbackAsyncComplete aCallback);
         void EndReadList(IntPtr aAsyncHandle, out String aTrackList);
         void SyncInsert(uint aAfterId, String aUri, String aMetadata, out uint aNewId);
         void BeginInsert(uint aAfterId, String aUri, String aMetadata, CpProxy.CallbackAsyncComplete aCallback);
         void EndInsert(IntPtr aAsyncHandle, out uint aNewId);
+        void SyncBatchInsert(uint aAfterId, String aSongList, out uint aNewId);
+        void BeginBatchInsert(uint aAfterId, String aSongList, CpProxy.CallbackAsyncComplete aCallback);
+        void EndBatchInsert(IntPtr aAsyncHandle, out uint aNewId);
         void SyncDeleteId(uint aValue);
         void BeginDeleteId(uint aValue, CpProxy.CallbackAsyncComplete aCallback);
         void EndDeleteId(IntPtr aAsyncHandle);
@@ -352,6 +358,25 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncSimpleReadListAvOpenhomeOrgPlaylist1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgPlaylist1 iService;
+        private String iTrackList;
+
+        public SyncSimpleReadListAvOpenhomeOrgPlaylist1(CpProxyAvOpenhomeOrgPlaylist1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String TrackList()
+        {
+            return iTrackList;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSimpleReadList(aAsyncHandle, out iTrackList);
+        }
+    };
+
     internal class SyncReadListAvOpenhomeOrgPlaylist1 : SyncProxyAction
     {
         private CpProxyAvOpenhomeOrgPlaylist1 iService;
@@ -387,6 +412,25 @@ namespace OpenHome.Net.ControlPoint.Proxies
         protected override void CompleteRequest(IntPtr aAsyncHandle)
         {
             iService.EndInsert(aAsyncHandle, out iNewId);
+        }
+    };
+
+    internal class SyncBatchInsertAvOpenhomeOrgPlaylist1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgPlaylist1 iService;
+        private uint iNewId;
+
+        public SyncBatchInsertAvOpenhomeOrgPlaylist1(CpProxyAvOpenhomeOrgPlaylist1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public uint NewId()
+        {
+            return iNewId;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndBatchInsert(aAsyncHandle, out iNewId);
         }
     };
 
@@ -520,8 +564,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionTransportState;
         private OpenHome.Net.Core.Action iActionId;
         private OpenHome.Net.Core.Action iActionRead;
+        private OpenHome.Net.Core.Action iActionSimpleReadList;
         private OpenHome.Net.Core.Action iActionReadList;
         private OpenHome.Net.Core.Action iActionInsert;
+        private OpenHome.Net.Core.Action iActionBatchInsert;
         private OpenHome.Net.Core.Action iActionDeleteId;
         private OpenHome.Net.Core.Action iActionDeleteAll;
         private OpenHome.Net.Core.Action iActionTracksMax;
@@ -618,6 +664,12 @@ namespace OpenHome.Net.ControlPoint.Proxies
             param = new ParameterString("Metadata", allowedValues);
             iActionRead.AddOutputParameter(param);
 
+            iActionSimpleReadList = new OpenHome.Net.Core.Action("SimpleReadList");
+            param = new ParameterString("IdList", allowedValues);
+            iActionSimpleReadList.AddInputParameter(param);
+            param = new ParameterString("TrackList", allowedValues);
+            iActionSimpleReadList.AddOutputParameter(param);
+
             iActionReadList = new OpenHome.Net.Core.Action("ReadList");
             param = new ParameterString("IdList", allowedValues);
             iActionReadList.AddInputParameter(param);
@@ -633,6 +685,14 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionInsert.AddInputParameter(param);
             param = new ParameterUint("NewId");
             iActionInsert.AddOutputParameter(param);
+
+            iActionBatchInsert = new OpenHome.Net.Core.Action("BatchInsert");
+            param = new ParameterUint("AfterId");
+            iActionBatchInsert.AddInputParameter(param);
+            param = new ParameterString("SongList", allowedValues);
+            iActionBatchInsert.AddInputParameter(param);
+            param = new ParameterUint("NewId");
+            iActionBatchInsert.AddOutputParameter(param);
 
             iActionDeleteId = new OpenHome.Net.Core.Action("DeleteId");
             param = new ParameterUint("Value");
@@ -1425,6 +1485,59 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// on the device and sets any output arguments</remarks>
         /// <param name="aIdList"></param>
         /// <param name="aTrackList"></param>
+        public void SyncSimpleReadList(String aIdList, out String aTrackList)
+        {
+            SyncSimpleReadListAvOpenhomeOrgPlaylist1 sync = new SyncSimpleReadListAvOpenhomeOrgPlaylist1(this);
+            BeginSimpleReadList(aIdList, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aTrackList = sync.TrackList();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSimpleReadList().</remarks>
+        /// <param name="aIdList"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSimpleReadList(String aIdList, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSimpleReadList, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionSimpleReadList.InputParameter(inIndex++), aIdList));
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionSimpleReadList.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aTrackList"></param>
+        public void EndSimpleReadList(IntPtr aAsyncHandle, out String aTrackList)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aTrackList = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aIdList"></param>
+        /// <param name="aTrackList"></param>
         public void SyncReadList(String aIdList, out String aTrackList)
         {
             SyncReadListAvOpenhomeOrgPlaylist1 sync = new SyncReadListAvOpenhomeOrgPlaylist1(this);
@@ -1519,6 +1632,62 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
         /// <param name="aNewId"></param>
         public void EndInsert(IntPtr aAsyncHandle, out uint aNewId)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aNewId = Invocation.OutputUint(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aAfterId"></param>
+        /// <param name="aSongList"></param>
+        /// <param name="aNewId"></param>
+        public void SyncBatchInsert(uint aAfterId, String aSongList, out uint aNewId)
+        {
+            SyncBatchInsertAvOpenhomeOrgPlaylist1 sync = new SyncBatchInsertAvOpenhomeOrgPlaylist1(this);
+            BeginBatchInsert(aAfterId, aSongList, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aNewId = sync.NewId();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndBatchInsert().</remarks>
+        /// <param name="aAfterId"></param>
+        /// <param name="aSongList"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginBatchInsert(uint aAfterId, String aSongList, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionBatchInsert, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentUint((ParameterUint)iActionBatchInsert.InputParameter(inIndex++), aAfterId));
+            invocation.AddInput(new ArgumentString((ParameterString)iActionBatchInsert.InputParameter(inIndex++), aSongList));
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentUint((ParameterUint)iActionBatchInsert.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aNewId"></param>
+        public void EndBatchInsert(IntPtr aAsyncHandle, out uint aNewId)
         {
             uint code;
             string desc;
@@ -2159,8 +2328,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionTransportState.Dispose();
             iActionId.Dispose();
             iActionRead.Dispose();
+            iActionSimpleReadList.Dispose();
             iActionReadList.Dispose();
             iActionInsert.Dispose();
+            iActionBatchInsert.Dispose();
             iActionDeleteId.Dispose();
             iActionDeleteAll.Dispose();
             iActionTracksMax.Dispose();

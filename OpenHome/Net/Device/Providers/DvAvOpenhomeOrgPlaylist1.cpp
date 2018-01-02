@@ -290,6 +290,15 @@ void DvProviderAvOpenhomeOrgPlaylist1::EnableActionRead()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1::EnableActionSimpleReadList()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SimpleReadList");
+    action->AddInputParameter(new ParameterString("IdList"));
+    action->AddOutputParameter(new ParameterString("TrackList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgPlaylist1::DoSimpleReadList);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgPlaylist1::EnableActionReadList()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("ReadList");
@@ -307,6 +316,16 @@ void DvProviderAvOpenhomeOrgPlaylist1::EnableActionInsert()
     action->AddInputParameter(new ParameterString("Metadata"));
     action->AddOutputParameter(new ParameterRelated("NewId", *iPropertyId));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgPlaylist1::DoInsert);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::EnableActionBatchInsert()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("BatchInsert");
+    action->AddInputParameter(new ParameterRelated("AfterId", *iPropertyId));
+    action->AddInputParameter(new ParameterString("SongList"));
+    action->AddOutputParameter(new ParameterRelated("NewId", *iPropertyId));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgPlaylist1::DoBatchInsert);
     iService->AddAction(action, functor);
 }
 
@@ -500,6 +519,17 @@ void DvProviderAvOpenhomeOrgPlaylist1::DoRead(IDviInvocation& aInvocation)
     Read(invocation, Id, respUri, respMetadata);
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1::DoSimpleReadList(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz IdList;
+    aInvocation.InvocationReadString("IdList", IdList);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respTrackList(aInvocation, "TrackList");
+    SimpleReadList(invocation, IdList, respTrackList);
+}
+
 void DvProviderAvOpenhomeOrgPlaylist1::DoReadList(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -523,6 +553,18 @@ void DvProviderAvOpenhomeOrgPlaylist1::DoInsert(IDviInvocation& aInvocation)
     DviInvocation invocation(aInvocation);
     DviInvocationResponseUint respNewId(aInvocation, "NewId");
     Insert(invocation, AfterId, Uri, Metadata, respNewId);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::DoBatchInsert(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TUint AfterId = aInvocation.InvocationReadUint("AfterId");
+    Brhz SongList;
+    aInvocation.InvocationReadString("SongList", SongList);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseUint respNewId(aInvocation, "NewId");
+    BatchInsert(invocation, AfterId, SongList, respNewId);
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1::DoDeleteId(IDviInvocation& aInvocation)
@@ -660,12 +702,22 @@ void DvProviderAvOpenhomeOrgPlaylist1::Read(IDvInvocation& /*aResponse*/, TUint 
     ASSERTS();
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1::SimpleReadList(IDvInvocation& /*aResponse*/, const Brx& /*aIdList*/, IDvInvocationResponseString& /*aTrackList*/)
+{
+    ASSERTS();
+}
+
 void DvProviderAvOpenhomeOrgPlaylist1::ReadList(IDvInvocation& /*aResponse*/, const Brx& /*aIdList*/, IDvInvocationResponseString& /*aTrackList*/)
 {
     ASSERTS();
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1::Insert(IDvInvocation& /*aResponse*/, TUint /*aAfterId*/, const Brx& /*aUri*/, const Brx& /*aMetadata*/, IDvInvocationResponseUint& /*aNewId*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::BatchInsert(IDvInvocation& /*aResponse*/, TUint /*aAfterId*/, const Brx& /*aSongList*/, IDvInvocationResponseUint& /*aNewId*/)
 {
     ASSERTS();
 }

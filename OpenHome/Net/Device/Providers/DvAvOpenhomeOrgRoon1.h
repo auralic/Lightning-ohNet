@@ -54,6 +54,20 @@ public:
      */
     void GetPropertyRepeat(TBool& aValue);
     /**
+     * Set the value of the RepeatOne property
+     *
+     * Can only be called if EnablePropertyRepeatOne has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyRepeatOne(TBool aValue);
+    /**
+     * Get a copy of the value of the RepeatOne property
+     *
+     * Can only be called if EnablePropertyRepeatOne has previously been called.
+     */
+    void GetPropertyRepeatOne(TBool& aValue);
+    /**
      * Set the value of the Shuffle property
      *
      * Can only be called if EnablePropertyShuffle has previously been called.
@@ -67,6 +81,20 @@ public:
      * Can only be called if EnablePropertyShuffle has previously been called.
      */
     void GetPropertyShuffle(TBool& aValue);
+    /**
+     * Set the value of the UpdateCover property
+     *
+     * Can only be called if EnablePropertyUpdateCover has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyUpdateCover(TBool aValue);
+    /**
+     * Get a copy of the value of the UpdateCover property
+     *
+     * Can only be called if EnablePropertyUpdateCover has previously been called.
+     */
+    void GetPropertyUpdateCover(TBool& aValue);
 protected:
     /**
      * Constructor
@@ -89,9 +117,17 @@ protected:
      */
     void EnablePropertyRepeat();
     /**
+     * Enable the RepeatOne property.
+     */
+    void EnablePropertyRepeatOne();
+    /**
      * Enable the Shuffle property.
      */
     void EnablePropertyShuffle();
+    /**
+     * Enable the UpdateCover property.
+     */
+    void EnablePropertyUpdateCover();
     /**
      * Signal that the action Play is supported.
      * The action's availability will be published in the device's service.xml.
@@ -294,7 +330,9 @@ private:
 private:
     PropertyString* iPropertyTransportState;
     PropertyBool* iPropertyRepeat;
+    PropertyBool* iPropertyRepeatOne;
     PropertyBool* iPropertyShuffle;
+    PropertyBool* iPropertyUpdateCover;
 };
 
 } // namespace Net

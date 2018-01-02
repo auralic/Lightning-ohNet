@@ -286,6 +286,15 @@ void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnableActionRead()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnableActionSimpleReadList()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SimpleReadList");
+    action->AddInputParameter(new ParameterString("IdList"));
+    action->AddOutputParameter(new ParameterString("TrackList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgPlaylist1Cpp::DoSimpleReadList);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnableActionReadList()
 {
     OpenHome::Net::Action* action = new OpenHome::Net::Action("ReadList");
@@ -303,6 +312,16 @@ void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnableActionInsert()
     action->AddInputParameter(new ParameterString("Metadata"));
     action->AddOutputParameter(new ParameterRelated("NewId", *iPropertyId));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgPlaylist1Cpp::DoInsert);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnableActionBatchInsert()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("BatchInsert");
+    action->AddInputParameter(new ParameterRelated("AfterId", *iPropertyId));
+    action->AddInputParameter(new ParameterString("SongList"));
+    action->AddOutputParameter(new ParameterRelated("NewId", *iPropertyId));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgPlaylist1Cpp::DoBatchInsert);
     iService->AddAction(action, functor);
 }
 
@@ -546,6 +565,24 @@ void DvProviderAvOpenhomeOrgPlaylist1Cpp::DoRead(IDviInvocation& aInvocation)
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::DoSimpleReadList(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_IdList;
+    aInvocation.InvocationReadString("IdList", buf_IdList);
+    std::string IdList((const char*)buf_IdList.Ptr(), buf_IdList.Bytes());
+    aInvocation.InvocationReadEnd();
+    std::string respTrackList;
+    DvInvocationStd invocation(aInvocation);
+    SimpleReadList(invocation, IdList, respTrackList);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterTrackList(aInvocation, "TrackList");
+    Brn buf_TrackList((const TByte*)respTrackList.c_str(), (TUint)respTrackList.length());
+    respWriterTrackList.Write(buf_TrackList);
+    aInvocation.InvocationWriteStringEnd("TrackList");
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgPlaylist1Cpp::DoReadList(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -578,6 +615,23 @@ void DvProviderAvOpenhomeOrgPlaylist1Cpp::DoInsert(IDviInvocation& aInvocation)
     uint32_t respNewId;
     DvInvocationStd invocation(aInvocation);
     Insert(invocation, AfterId, Uri, Metadata, respNewId);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseUint respWriterNewId(aInvocation, "NewId");
+    respWriterNewId.Write(respNewId);
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::DoBatchInsert(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    uint32_t AfterId = aInvocation.InvocationReadUint("AfterId");
+    Brhz buf_SongList;
+    aInvocation.InvocationReadString("SongList", buf_SongList);
+    std::string SongList((const char*)buf_SongList.Ptr(), buf_SongList.Bytes());
+    aInvocation.InvocationReadEnd();
+    uint32_t respNewId;
+    DvInvocationStd invocation(aInvocation);
+    BatchInsert(invocation, AfterId, SongList, respNewId);
     aInvocation.InvocationWriteStart();
     DviInvocationResponseUint respWriterNewId(aInvocation, "NewId");
     respWriterNewId.Write(respNewId);
@@ -745,12 +799,22 @@ void DvProviderAvOpenhomeOrgPlaylist1Cpp::Read(IDvInvocationStd& /*aInvocation*/
     ASSERTS();
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::SimpleReadList(IDvInvocationStd& /*aInvocation*/, const std::string& /*aIdList*/, std::string& /*aTrackList*/)
+{
+    ASSERTS();
+}
+
 void DvProviderAvOpenhomeOrgPlaylist1Cpp::ReadList(IDvInvocationStd& /*aInvocation*/, const std::string& /*aIdList*/, std::string& /*aTrackList*/)
 {
     ASSERTS();
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1Cpp::Insert(IDvInvocationStd& /*aInvocation*/, uint32_t /*aAfterId*/, const std::string& /*aUri*/, const std::string& /*aMetadata*/, uint32_t& /*aNewId*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::BatchInsert(IDvInvocationStd& /*aInvocation*/, uint32_t /*aAfterId*/, const std::string& /*aSongList*/, uint32_t& /*aNewId*/)
 {
     ASSERTS();
 }

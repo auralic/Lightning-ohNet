@@ -123,8 +123,10 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateTransportState;
         private ActionDelegate iDelegateId;
         private ActionDelegate iDelegateRead;
+        private ActionDelegate iDelegateSimpleReadList;
         private ActionDelegate iDelegateReadList;
         private ActionDelegate iDelegateInsert;
+        private ActionDelegate iDelegateBatchInsert;
         private ActionDelegate iDelegateDeleteId;
         private ActionDelegate iDelegateDeleteAll;
         private ActionDelegate iDelegateTracksMax;
@@ -601,6 +603,21 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action SimpleReadList is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SimpleReadList must be overridden if this is called.</remarks>
+        protected void EnableActionSimpleReadList()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SimpleReadList");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterString("IdList", allowedValues));
+            action.AddOutputParameter(new ParameterString("TrackList", allowedValues));
+            iDelegateSimpleReadList = new ActionDelegate(DoSimpleReadList);
+            EnableAction(action, iDelegateSimpleReadList, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// Signal that the action ReadList is supported.
         /// </summary>
         /// <remarks>The action's availability will be published in the device's service.xml.
@@ -630,6 +647,22 @@ namespace OpenHome.Net.Device.Providers
             action.AddOutputParameter(new ParameterRelated("NewId", iPropertyId));
             iDelegateInsert = new ActionDelegate(DoInsert);
             EnableAction(action, iDelegateInsert, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
+        /// Signal that the action BatchInsert is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// BatchInsert must be overridden if this is called.</remarks>
+        protected void EnableActionBatchInsert()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("BatchInsert");
+            List<String> allowedValues = new List<String>();
+            action.AddInputParameter(new ParameterRelated("AfterId", iPropertyId));
+            action.AddInputParameter(new ParameterString("SongList", allowedValues));
+            action.AddOutputParameter(new ParameterRelated("NewId", iPropertyId));
+            iDelegateBatchInsert = new ActionDelegate(DoBatchInsert);
+            EnableAction(action, iDelegateBatchInsert, GCHandle.ToIntPtr(iGch));
         }
 
         /// <summary>
@@ -933,6 +966,21 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// SimpleReadList action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SimpleReadList action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSimpleReadList was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aIdList"></param>
+        /// <param name="aTrackList"></param>
+        protected virtual void SimpleReadList(IDvInvocation aInvocation, string aIdList, out string aTrackList)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
         /// ReadList action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -960,6 +1008,22 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aMetadata"></param>
         /// <param name="aNewId"></param>
         protected virtual void Insert(IDvInvocation aInvocation, uint aAfterId, string aUri, string aMetadata, out uint aNewId)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// BatchInsert action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// BatchInsert action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionBatchInsert was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aAfterId"></param>
+        /// <param name="aSongList"></param>
+        /// <param name="aNewId"></param>
+        protected virtual void BatchInsert(IDvInvocation aInvocation, uint aAfterId, string aSongList, out uint aNewId)
         {
             throw (new ActionDisabledError());
         }
@@ -1779,6 +1843,54 @@ namespace OpenHome.Net.Device.Providers
             return 0;
         }
 
+        private static int DoSimpleReadList(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgPlaylist1 self = (DvProviderAvOpenhomeOrgPlaylist1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            string idList;
+            string trackList;
+            try
+            {
+                invocation.ReadStart();
+                idList = invocation.ReadString("IdList");
+                invocation.ReadEnd();
+                self.SimpleReadList(invocation, idList, out trackList);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SimpleReadList");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SimpleReadList"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SimpleReadList", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteString("TrackList", trackList);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SimpleReadList", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
         private static int DoReadList(IntPtr aPtr, IntPtr aInvocation)
         {
             GCHandle gch = GCHandle.FromIntPtr(aPtr);
@@ -1874,6 +1986,56 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "Insert", e.TargetSite.Name);
+                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoBatchInsert(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgPlaylist1 self = (DvProviderAvOpenhomeOrgPlaylist1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            uint afterId;
+            string songList;
+            uint newId;
+            try
+            {
+                invocation.ReadStart();
+                afterId = invocation.ReadUint("AfterId");
+                songList = invocation.ReadString("SongList");
+                invocation.ReadEnd();
+                self.BatchInsert(invocation, afterId, songList, out newId);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "BatchInsert");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", "BatchInsert"));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "BatchInsert", e.TargetSite.Name);
+                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteUint("NewId", newId);
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "BatchInsert", e.TargetSite.Name);
                 Console.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

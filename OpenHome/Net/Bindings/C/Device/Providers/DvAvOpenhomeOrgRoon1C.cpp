@@ -22,11 +22,17 @@ public:
     void GetPropertyTransportState(Brhz& aValue);
     TBool SetPropertyRepeat(TBool aValue);
     void GetPropertyRepeat(TBool& aValue);
+    TBool SetPropertyRepeatOne(TBool aValue);
+    void GetPropertyRepeatOne(TBool& aValue);
     TBool SetPropertyShuffle(TBool aValue);
     void GetPropertyShuffle(TBool& aValue);
+    TBool SetPropertyUpdateCover(TBool aValue);
+    void GetPropertyUpdateCover(TBool& aValue);
     void EnablePropertyTransportState();
     void EnablePropertyRepeat();
+    void EnablePropertyRepeatOne();
     void EnablePropertyShuffle();
+    void EnablePropertyUpdateCover();
     void EnableActionPlay(CallbackRoon1Play aCallback, void* aPtr);
     void EnableActionPause(CallbackRoon1Pause aCallback, void* aPtr);
     void EnableActionPlayPause(CallbackRoon1PlayPause aCallback, void* aPtr);
@@ -83,7 +89,9 @@ private:
     void* iPtrTransportState;
     PropertyString* iPropertyTransportState;
     PropertyBool* iPropertyRepeat;
+    PropertyBool* iPropertyRepeatOne;
     PropertyBool* iPropertyShuffle;
+    PropertyBool* iPropertyUpdateCover;
 };
 
 DvProviderAvOpenhomeOrgRoon1C::DvProviderAvOpenhomeOrgRoon1C(DvDeviceC aDevice)
@@ -91,7 +99,9 @@ DvProviderAvOpenhomeOrgRoon1C::DvProviderAvOpenhomeOrgRoon1C(DvDeviceC aDevice)
 {
     iPropertyTransportState = NULL;
     iPropertyRepeat = NULL;
+    iPropertyRepeatOne = NULL;
     iPropertyShuffle = NULL;
+    iPropertyUpdateCover = NULL;
 }
 
 TBool DvProviderAvOpenhomeOrgRoon1C::SetPropertyTransportState(const Brx& aValue)
@@ -118,6 +128,18 @@ void DvProviderAvOpenhomeOrgRoon1C::GetPropertyRepeat(TBool& aValue)
     aValue = iPropertyRepeat->Value();
 }
 
+TBool DvProviderAvOpenhomeOrgRoon1C::SetPropertyRepeatOne(TBool aValue)
+{
+    ASSERT(iPropertyRepeatOne != NULL);
+    return SetPropertyBool(*iPropertyRepeatOne, aValue);
+}
+
+void DvProviderAvOpenhomeOrgRoon1C::GetPropertyRepeatOne(TBool& aValue)
+{
+    ASSERT(iPropertyRepeatOne != NULL);
+    aValue = iPropertyRepeatOne->Value();
+}
+
 TBool DvProviderAvOpenhomeOrgRoon1C::SetPropertyShuffle(TBool aValue)
 {
     ASSERT(iPropertyShuffle != NULL);
@@ -128,6 +150,18 @@ void DvProviderAvOpenhomeOrgRoon1C::GetPropertyShuffle(TBool& aValue)
 {
     ASSERT(iPropertyShuffle != NULL);
     aValue = iPropertyShuffle->Value();
+}
+
+TBool DvProviderAvOpenhomeOrgRoon1C::SetPropertyUpdateCover(TBool aValue)
+{
+    ASSERT(iPropertyUpdateCover != NULL);
+    return SetPropertyBool(*iPropertyUpdateCover, aValue);
+}
+
+void DvProviderAvOpenhomeOrgRoon1C::GetPropertyUpdateCover(TBool& aValue)
+{
+    ASSERT(iPropertyUpdateCover != NULL);
+    aValue = iPropertyUpdateCover->Value();
 }
 
 void DvProviderAvOpenhomeOrgRoon1C::EnablePropertyTransportState()
@@ -150,10 +184,22 @@ void DvProviderAvOpenhomeOrgRoon1C::EnablePropertyRepeat()
     iService->AddProperty(iPropertyRepeat); // passes ownership
 }
 
+void DvProviderAvOpenhomeOrgRoon1C::EnablePropertyRepeatOne()
+{
+    iPropertyRepeatOne = new PropertyBool(new ParameterBool("RepeatOne"));
+    iService->AddProperty(iPropertyRepeatOne); // passes ownership
+}
+
 void DvProviderAvOpenhomeOrgRoon1C::EnablePropertyShuffle()
 {
     iPropertyShuffle = new PropertyBool(new ParameterBool("Shuffle"));
     iService->AddProperty(iPropertyShuffle); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgRoon1C::EnablePropertyUpdateCover()
+{
+    iPropertyUpdateCover = new PropertyBool(new ParameterBool("UpdateCover"));
+    iService->AddProperty(iPropertyUpdateCover); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgRoon1C::EnableActionPlay(CallbackRoon1Play aCallback, void* aPtr)
@@ -630,6 +676,19 @@ void STDCALL DvProviderAvOpenhomeOrgRoon1GetPropertyRepeat(THandle aProvider, ui
     *aValue = (val? 1 : 0);
 }
 
+int32_t STDCALL DvProviderAvOpenhomeOrgRoon1SetPropertyRepeatOne(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
+{
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->SetPropertyRepeatOne((aValue!=0))? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgRoon1GetPropertyRepeatOne(THandle aProvider, uint32_t* aValue)
+{
+    TBool val;
+    reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->GetPropertyRepeatOne(val);
+    *aValue = (val? 1 : 0);
+}
+
 int32_t STDCALL DvProviderAvOpenhomeOrgRoon1SetPropertyShuffle(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
 {
     *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->SetPropertyShuffle((aValue!=0))? 1 : 0);
@@ -643,6 +702,19 @@ void STDCALL DvProviderAvOpenhomeOrgRoon1GetPropertyShuffle(THandle aProvider, u
     *aValue = (val? 1 : 0);
 }
 
+int32_t STDCALL DvProviderAvOpenhomeOrgRoon1SetPropertyUpdateCover(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
+{
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->SetPropertyUpdateCover((aValue!=0))? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgRoon1GetPropertyUpdateCover(THandle aProvider, uint32_t* aValue)
+{
+    TBool val;
+    reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->GetPropertyUpdateCover(val);
+    *aValue = (val? 1 : 0);
+}
+
 void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyTransportState(THandle aProvider)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->EnablePropertyTransportState();
@@ -653,8 +725,18 @@ void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyRepeat(THandle aProvider)
     reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->EnablePropertyRepeat();
 }
 
+void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyRepeatOne(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->EnablePropertyRepeatOne();
+}
+
 void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyShuffle(THandle aProvider)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->EnablePropertyShuffle();
+}
+
+void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyUpdateCover(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgRoon1C*>(aProvider)->EnablePropertyUpdateCover();
 }
 

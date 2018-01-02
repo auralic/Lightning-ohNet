@@ -77,15 +77,21 @@ public:
 
     void SetPropertyTransportStateChanged(Functor& aFunctor);
     void SetPropertyRepeatChanged(Functor& aFunctor);
+    void SetPropertyRepeatOneChanged(Functor& aFunctor);
     void SetPropertyShuffleChanged(Functor& aFunctor);
+    void SetPropertyUpdateCoverChanged(Functor& aFunctor);
 
     void PropertyTransportState(Brhz& aTransportState) const;
     void PropertyRepeat(TBool& aRepeat) const;
+    void PropertyRepeatOne(TBool& aRepeatOne) const;
     void PropertyShuffle(TBool& aShuffle) const;
+    void PropertyUpdateCover(TBool& aUpdateCover) const;
 private:
     void TransportStatePropertyChanged();
     void RepeatPropertyChanged();
+    void RepeatOnePropertyChanged();
     void ShufflePropertyChanged();
+    void UpdateCoverPropertyChanged();
 private:
     Mutex iLock;
     Action* iActionPlay;
@@ -103,10 +109,14 @@ private:
     Action* iActionTransportState;
     PropertyString* iTransportState;
     PropertyBool* iRepeat;
+    PropertyBool* iRepeatOne;
     PropertyBool* iShuffle;
+    PropertyBool* iUpdateCover;
     Functor iTransportStateChanged;
     Functor iRepeatChanged;
+    Functor iRepeatOneChanged;
     Functor iShuffleChanged;
+    Functor iUpdateCoverChanged;
 };
 
 
@@ -446,9 +456,15 @@ CpProxyAvOpenhomeOrgRoon1C::CpProxyAvOpenhomeOrgRoon1C(CpDeviceC aDevice)
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1C::RepeatPropertyChanged);
     iRepeat = new PropertyBool("Repeat", functor);
     AddProperty(iRepeat);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1C::RepeatOnePropertyChanged);
+    iRepeatOne = new PropertyBool("RepeatOne", functor);
+    AddProperty(iRepeatOne);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1C::ShufflePropertyChanged);
     iShuffle = new PropertyBool("Shuffle", functor);
     AddProperty(iShuffle);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1C::UpdateCoverPropertyChanged);
+    iUpdateCover = new PropertyBool("UpdateCover", functor);
+    AddProperty(iUpdateCover);
 }
 
 CpProxyAvOpenhomeOrgRoon1C::~CpProxyAvOpenhomeOrgRoon1C()
@@ -855,10 +871,24 @@ void CpProxyAvOpenhomeOrgRoon1C::SetPropertyRepeatChanged(Functor& aFunctor)
     iLock.Signal();
 }
 
+void CpProxyAvOpenhomeOrgRoon1C::SetPropertyRepeatOneChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iRepeatOneChanged = aFunctor;
+    iLock.Signal();
+}
+
 void CpProxyAvOpenhomeOrgRoon1C::SetPropertyShuffleChanged(Functor& aFunctor)
 {
     iLock.Wait();
     iShuffleChanged = aFunctor;
+    iLock.Signal();
+}
+
+void CpProxyAvOpenhomeOrgRoon1C::SetPropertyUpdateCoverChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iUpdateCoverChanged = aFunctor;
     iLock.Signal();
 }
 
@@ -876,11 +906,25 @@ void CpProxyAvOpenhomeOrgRoon1C::PropertyRepeat(TBool& aRepeat) const
     aRepeat = iRepeat->Value();
 }
 
+void CpProxyAvOpenhomeOrgRoon1C::PropertyRepeatOne(TBool& aRepeatOne) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    ASSERT(IsSubscribed());
+    aRepeatOne = iRepeatOne->Value();
+}
+
 void CpProxyAvOpenhomeOrgRoon1C::PropertyShuffle(TBool& aShuffle) const
 {
     AutoMutex a(GetPropertyReadLock());
     ASSERT(IsSubscribed());
     aShuffle = iShuffle->Value();
+}
+
+void CpProxyAvOpenhomeOrgRoon1C::PropertyUpdateCover(TBool& aUpdateCover) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    ASSERT(IsSubscribed());
+    aUpdateCover = iUpdateCover->Value();
 }
 
 void CpProxyAvOpenhomeOrgRoon1C::TransportStatePropertyChanged()
@@ -893,9 +937,19 @@ void CpProxyAvOpenhomeOrgRoon1C::RepeatPropertyChanged()
     ReportEvent(iRepeatChanged);
 }
 
+void CpProxyAvOpenhomeOrgRoon1C::RepeatOnePropertyChanged()
+{
+    ReportEvent(iRepeatOneChanged);
+}
+
 void CpProxyAvOpenhomeOrgRoon1C::ShufflePropertyChanged()
 {
     ReportEvent(iShuffleChanged);
+}
+
+void CpProxyAvOpenhomeOrgRoon1C::UpdateCoverPropertyChanged()
+{
+    ReportEvent(iUpdateCoverChanged);
 }
 
 
@@ -1436,12 +1490,28 @@ void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyRepeatChanged(THandle aHandle, 
     proxyC->SetPropertyRepeatChanged(functor);
 }
 
+void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyRepeatOneChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyRepeatOneChanged(functor);
+}
+
 void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyShuffleChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
 {
     CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Functor functor = MakeFunctor(aPtr, aCallback);
     proxyC->SetPropertyShuffleChanged(functor);
+}
+
+void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyUpdateCoverChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyUpdateCoverChanged(functor);
 }
 
 void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyTransportState(THandle aHandle, char** aTransportState)
@@ -1462,6 +1532,15 @@ void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeat(THandle aHandle, uint32_t* 
     *aRepeat = Repeat? 1 : 0;
 }
 
+void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeatOne(THandle aHandle, uint32_t* aRepeatOne)
+{
+    CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    TBool RepeatOne;
+    proxyC->PropertyRepeatOne(RepeatOne);
+    *aRepeatOne = RepeatOne? 1 : 0;
+}
+
 void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyShuffle(THandle aHandle, uint32_t* aShuffle)
 {
     CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
@@ -1469,5 +1548,14 @@ void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyShuffle(THandle aHandle, uint32_t*
     TBool Shuffle;
     proxyC->PropertyShuffle(Shuffle);
     *aShuffle = Shuffle? 1 : 0;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyUpdateCover(THandle aHandle, uint32_t* aUpdateCover)
+{
+    CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    TBool UpdateCover;
+    proxyC->PropertyUpdateCover(UpdateCover);
+    *aUpdateCover = UpdateCover? 1 : 0;
 }
 

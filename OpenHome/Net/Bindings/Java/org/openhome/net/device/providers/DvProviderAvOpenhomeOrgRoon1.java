@@ -42,6 +42,22 @@ interface IDvProviderAvOpenhomeOrgRoon1
     public boolean getPropertyRepeat();
 
     /**
+     * Set the value of the RepeatOne property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyRepeatOne(boolean aValue);
+
+    /**
+     * Get a copy of the value of the RepeatOne property
+     *
+     * @return value of the RepeatOne property.
+     */
+    public boolean getPropertyRepeatOne();
+
+    /**
      * Set the value of the Shuffle property
      *
      * @param aValue    new value for the property.
@@ -56,6 +72,22 @@ interface IDvProviderAvOpenhomeOrgRoon1
      * @return value of the Shuffle property.
      */
     public boolean getPropertyShuffle();
+
+    /**
+     * Set the value of the UpdateCover property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyUpdateCover(boolean aValue);
+
+    /**
+     * Get a copy of the value of the UpdateCover property
+     *
+     * @return value of the UpdateCover property.
+     */
+    public boolean getPropertyUpdateCover();
         
 }
 
@@ -80,7 +112,9 @@ public class DvProviderAvOpenhomeOrgRoon1 extends DvProvider implements IDvProvi
     private IDvInvocationListener iDelegateTransportState;
     private PropertyString iPropertyTransportState;
     private PropertyBool iPropertyRepeat;
+    private PropertyBool iPropertyRepeatOne;
     private PropertyBool iPropertyShuffle;
+    private PropertyBool iPropertyUpdateCover;
 
     /**
      * Constructor
@@ -117,12 +151,30 @@ public class DvProviderAvOpenhomeOrgRoon1 extends DvProvider implements IDvProvi
     }
 
     /**
+     * Enable the RepeatOne property.
+     */
+    public void enablePropertyRepeatOne()
+    {
+        iPropertyRepeatOne = new PropertyBool(new ParameterBool("RepeatOne"));
+        addProperty(iPropertyRepeatOne);
+    }
+
+    /**
      * Enable the Shuffle property.
      */
     public void enablePropertyShuffle()
     {
         iPropertyShuffle = new PropertyBool(new ParameterBool("Shuffle"));
         addProperty(iPropertyShuffle);
+    }
+
+    /**
+     * Enable the UpdateCover property.
+     */
+    public void enablePropertyUpdateCover()
+    {
+        iPropertyUpdateCover = new PropertyBool(new ParameterBool("UpdateCover"));
+        addProperty(iPropertyUpdateCover);
     }
 
     /**
@@ -170,6 +222,28 @@ public class DvProviderAvOpenhomeOrgRoon1 extends DvProvider implements IDvProvi
     }
 
     /**
+     * Set the value of the RepeatOne property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyRepeatOne(boolean aValue)
+    {
+        return setPropertyBool(iPropertyRepeatOne, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the RepeatOne property
+     *
+     * @return  value of the RepeatOne property.
+     */
+    public boolean getPropertyRepeatOne()
+    {
+        return iPropertyRepeatOne.getValue();
+    }
+
+    /**
      * Set the value of the Shuffle property
      *
      * @param aValue    new value for the property.
@@ -189,6 +263,28 @@ public class DvProviderAvOpenhomeOrgRoon1 extends DvProvider implements IDvProvi
     public boolean getPropertyShuffle()
     {
         return iPropertyShuffle.getValue();
+    }
+
+    /**
+     * Set the value of the UpdateCover property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyUpdateCover(boolean aValue)
+    {
+        return setPropertyBool(iPropertyUpdateCover, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the UpdateCover property
+     *
+     * @return  value of the UpdateCover property.
+     */
+    public boolean getPropertyUpdateCover()
+    {
+        return iPropertyUpdateCover.getValue();
     }
 
     /**

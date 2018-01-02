@@ -193,9 +193,17 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyTransportState(
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyRepeat(THandle aProvider);
 /**
+ * Enable the RepeatOne property.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyRepeatOne(THandle aProvider);
+/**
  * Enable the Shuffle property.
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyShuffle(THandle aProvider);
+/**
+ * Enable the UpdateCover property.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgRoon1EnablePropertyUpdateCover(THandle aProvider);
 
 /**
  * Register a callback for the action Play
@@ -386,6 +394,28 @@ DllExport int32_t STDCALL DvProviderAvOpenhomeOrgRoon1SetPropertyRepeat(THandle 
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgRoon1GetPropertyRepeat(THandle aProvider, uint32_t* aValue);
 /**
+ * Set the value of the RepeatOne property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgRoon1EnablePropertyRepeatOne has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgRoon1Create
+ * @param[in]  aValue     New value for the property
+ * @param[out] aChanged   1 if the value has been updated; 0 if it was the same as the previous value
+ *
+ * @return  0 if the property was successfully set; non-zero if there was an error (including
+ *          an attempt to set a property to a value not in its allowed range/set)
+ */
+DllExport int32_t STDCALL DvProviderAvOpenhomeOrgRoon1SetPropertyRepeatOne(THandle aProvider, uint32_t aValue, uint32_t* aChanged);
+/**
+ * Get a copy of the value of the RepeatOne property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgRoon1EnablePropertyRepeatOne has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgRoon1Create
+ * @param[out] aValue     Value for the property
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgRoon1GetPropertyRepeatOne(THandle aProvider, uint32_t* aValue);
+/**
  * Set the value of the Shuffle property
  *
  * Can only be called if DvProviderAvOpenhomeOrgRoon1EnablePropertyShuffle has previously been called.
@@ -407,6 +437,28 @@ DllExport int32_t STDCALL DvProviderAvOpenhomeOrgRoon1SetPropertyShuffle(THandle
  * @param[out] aValue     Value for the property
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgRoon1GetPropertyShuffle(THandle aProvider, uint32_t* aValue);
+/**
+ * Set the value of the UpdateCover property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgRoon1EnablePropertyUpdateCover has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgRoon1Create
+ * @param[in]  aValue     New value for the property
+ * @param[out] aChanged   1 if the value has been updated; 0 if it was the same as the previous value
+ *
+ * @return  0 if the property was successfully set; non-zero if there was an error (including
+ *          an attempt to set a property to a value not in its allowed range/set)
+ */
+DllExport int32_t STDCALL DvProviderAvOpenhomeOrgRoon1SetPropertyUpdateCover(THandle aProvider, uint32_t aValue, uint32_t* aChanged);
+/**
+ * Get a copy of the value of the UpdateCover property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgRoon1EnablePropertyUpdateCover has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgRoon1Create
+ * @param[out] aValue     Value for the property
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgRoon1GetPropertyUpdateCover(THandle aProvider, uint32_t* aValue);
 
 /* @} */
 

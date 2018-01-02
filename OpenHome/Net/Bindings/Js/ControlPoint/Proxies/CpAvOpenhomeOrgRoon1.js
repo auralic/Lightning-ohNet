@@ -20,7 +20,9 @@ var CpProxyAvOpenhomeOrgRoon1 = function(udn){
     this.serviceProperties = {};
     this.serviceProperties["TransportState"] = new ohnet.serviceproperty("TransportState","string");
     this.serviceProperties["Repeat"] = new ohnet.serviceproperty("Repeat","bool");
+    this.serviceProperties["RepeatOne"] = new ohnet.serviceproperty("RepeatOne","bool");
     this.serviceProperties["Shuffle"] = new ohnet.serviceproperty("Shuffle","bool");
+    this.serviceProperties["UpdateCover"] = new ohnet.serviceproperty("UpdateCover","bool");
 
             
     this.TransportStateAllowedValues = [];
@@ -28,7 +30,7 @@ var CpProxyAvOpenhomeOrgRoon1 = function(udn){
     this.TransportStateAllowedValues.push("Paused");
     this.TransportStateAllowedValues.push("Stopped");
     this.TransportStateAllowedValues.push("Buffering");
-            
+                        
 }
 
 
@@ -81,12 +83,38 @@ CpProxyAvOpenhomeOrgRoon1.prototype.Repeat_Changed = function (stateChangedFunct
     
 
 /**
+* Adds a listener to handle "RepeatOne" property change events
+* @method RepeatOne_Changed
+* @param {Function} stateChangedFunction The handler for state changes
+*/
+CpProxyAvOpenhomeOrgRoon1.prototype.RepeatOne_Changed = function (stateChangedFunction) {
+    this.serviceProperties.RepeatOne.addListener(function (state) 
+    { 
+        stateChangedFunction(ohnet.soaprequest.readBoolParameter(state)); 
+    });
+}
+    
+
+/**
 * Adds a listener to handle "Shuffle" property change events
 * @method Shuffle_Changed
 * @param {Function} stateChangedFunction The handler for state changes
 */
 CpProxyAvOpenhomeOrgRoon1.prototype.Shuffle_Changed = function (stateChangedFunction) {
     this.serviceProperties.Shuffle.addListener(function (state) 
+    { 
+        stateChangedFunction(ohnet.soaprequest.readBoolParameter(state)); 
+    });
+}
+    
+
+/**
+* Adds a listener to handle "UpdateCover" property change events
+* @method UpdateCover_Changed
+* @param {Function} stateChangedFunction The handler for state changes
+*/
+CpProxyAvOpenhomeOrgRoon1.prototype.UpdateCover_Changed = function (stateChangedFunction) {
+    this.serviceProperties.UpdateCover.addListener(function (state) 
     { 
         stateChangedFunction(ohnet.soaprequest.readBoolParameter(state)); 
     });

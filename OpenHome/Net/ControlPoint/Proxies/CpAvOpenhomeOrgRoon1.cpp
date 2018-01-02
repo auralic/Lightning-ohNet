@@ -347,9 +347,15 @@ CpProxyAvOpenhomeOrgRoon1::CpProxyAvOpenhomeOrgRoon1(CpDevice& aDevice)
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1::RepeatPropertyChanged);
     iRepeat = new PropertyBool("Repeat", functor);
     AddProperty(iRepeat);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1::RepeatOnePropertyChanged);
+    iRepeatOne = new PropertyBool("RepeatOne", functor);
+    AddProperty(iRepeatOne);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1::ShufflePropertyChanged);
     iShuffle = new PropertyBool("Shuffle", functor);
     AddProperty(iShuffle);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1::UpdateCoverPropertyChanged);
+    iUpdateCover = new PropertyBool("UpdateCover", functor);
+    AddProperty(iUpdateCover);
 }
 
 CpProxyAvOpenhomeOrgRoon1::~CpProxyAvOpenhomeOrgRoon1()
@@ -756,10 +762,24 @@ void CpProxyAvOpenhomeOrgRoon1::SetPropertyRepeatChanged(Functor& aFunctor)
     iLock->Signal();
 }
 
+void CpProxyAvOpenhomeOrgRoon1::SetPropertyRepeatOneChanged(Functor& aFunctor)
+{
+    iLock->Wait();
+    iRepeatOneChanged = aFunctor;
+    iLock->Signal();
+}
+
 void CpProxyAvOpenhomeOrgRoon1::SetPropertyShuffleChanged(Functor& aFunctor)
 {
     iLock->Wait();
     iShuffleChanged = aFunctor;
+    iLock->Signal();
+}
+
+void CpProxyAvOpenhomeOrgRoon1::SetPropertyUpdateCoverChanged(Functor& aFunctor)
+{
+    iLock->Wait();
+    iUpdateCoverChanged = aFunctor;
     iLock->Signal();
 }
 
@@ -777,11 +797,25 @@ void CpProxyAvOpenhomeOrgRoon1::PropertyRepeat(TBool& aRepeat) const
     aRepeat = iRepeat->Value();
 }
 
+void CpProxyAvOpenhomeOrgRoon1::PropertyRepeatOne(TBool& aRepeatOne) const
+{
+    AutoMutex a(PropertyReadLock());
+    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    aRepeatOne = iRepeatOne->Value();
+}
+
 void CpProxyAvOpenhomeOrgRoon1::PropertyShuffle(TBool& aShuffle) const
 {
     AutoMutex a(PropertyReadLock());
     ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
     aShuffle = iShuffle->Value();
+}
+
+void CpProxyAvOpenhomeOrgRoon1::PropertyUpdateCover(TBool& aUpdateCover) const
+{
+    AutoMutex a(PropertyReadLock());
+    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    aUpdateCover = iUpdateCover->Value();
 }
 
 void CpProxyAvOpenhomeOrgRoon1::TransportStatePropertyChanged()
@@ -794,8 +828,18 @@ void CpProxyAvOpenhomeOrgRoon1::RepeatPropertyChanged()
     ReportEvent(iRepeatChanged);
 }
 
+void CpProxyAvOpenhomeOrgRoon1::RepeatOnePropertyChanged()
+{
+    ReportEvent(iRepeatOneChanged);
+}
+
 void CpProxyAvOpenhomeOrgRoon1::ShufflePropertyChanged()
 {
     ReportEvent(iShuffleChanged);
+}
+
+void CpProxyAvOpenhomeOrgRoon1::UpdateCoverPropertyChanged()
+{
+    ReportEvent(iUpdateCoverChanged);
 }
 

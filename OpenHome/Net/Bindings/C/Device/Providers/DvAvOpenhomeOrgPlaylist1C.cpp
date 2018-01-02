@@ -55,8 +55,10 @@ public:
     void EnableActionTransportState(CallbackPlaylist1TransportState aCallback, void* aPtr);
     void EnableActionId(CallbackPlaylist1Id aCallback, void* aPtr);
     void EnableActionRead(CallbackPlaylist1Read aCallback, void* aPtr);
+    void EnableActionSimpleReadList(CallbackPlaylist1SimpleReadList aCallback, void* aPtr);
     void EnableActionReadList(CallbackPlaylist1ReadList aCallback, void* aPtr);
     void EnableActionInsert(CallbackPlaylist1Insert aCallback, void* aPtr);
+    void EnableActionBatchInsert(CallbackPlaylist1BatchInsert aCallback, void* aPtr);
     void EnableActionDeleteId(CallbackPlaylist1DeleteId aCallback, void* aPtr);
     void EnableActionDeleteAll(CallbackPlaylist1DeleteAll aCallback, void* aPtr);
     void EnableActionTracksMax(CallbackPlaylist1TracksMax aCallback, void* aPtr);
@@ -80,8 +82,10 @@ private:
     void DoTransportState(IDviInvocation& aInvocation);
     void DoId(IDviInvocation& aInvocation);
     void DoRead(IDviInvocation& aInvocation);
+    void DoSimpleReadList(IDviInvocation& aInvocation);
     void DoReadList(IDviInvocation& aInvocation);
     void DoInsert(IDviInvocation& aInvocation);
+    void DoBatchInsert(IDviInvocation& aInvocation);
     void DoDeleteId(IDviInvocation& aInvocation);
     void DoDeleteAll(IDviInvocation& aInvocation);
     void DoTracksMax(IDviInvocation& aInvocation);
@@ -121,10 +125,14 @@ private:
     void* iPtrId;
     CallbackPlaylist1Read iCallbackRead;
     void* iPtrRead;
+    CallbackPlaylist1SimpleReadList iCallbackSimpleReadList;
+    void* iPtrSimpleReadList;
     CallbackPlaylist1ReadList iCallbackReadList;
     void* iPtrReadList;
     CallbackPlaylist1Insert iCallbackInsert;
     void* iPtrInsert;
+    CallbackPlaylist1BatchInsert iCallbackBatchInsert;
+    void* iPtrBatchInsert;
     CallbackPlaylist1DeleteId iCallbackDeleteId;
     void* iPtrDeleteId;
     CallbackPlaylist1DeleteAll iCallbackDeleteAll;
@@ -449,6 +457,17 @@ void DvProviderAvOpenhomeOrgPlaylist1C::EnableActionRead(CallbackPlaylist1Read a
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1C::EnableActionSimpleReadList(CallbackPlaylist1SimpleReadList aCallback, void* aPtr)
+{
+    iCallbackSimpleReadList = aCallback;
+    iPtrSimpleReadList = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SimpleReadList");
+    action->AddInputParameter(new ParameterString("IdList"));
+    action->AddOutputParameter(new ParameterString("TrackList"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgPlaylist1C::DoSimpleReadList);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgPlaylist1C::EnableActionReadList(CallbackPlaylist1ReadList aCallback, void* aPtr)
 {
     iCallbackReadList = aCallback;
@@ -470,6 +489,18 @@ void DvProviderAvOpenhomeOrgPlaylist1C::EnableActionInsert(CallbackPlaylist1Inse
     action->AddInputParameter(new ParameterString("Metadata"));
     action->AddOutputParameter(new ParameterRelated("NewId", *iPropertyId));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgPlaylist1C::DoInsert);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1C::EnableActionBatchInsert(CallbackPlaylist1BatchInsert aCallback, void* aPtr)
+{
+    iCallbackBatchInsert = aCallback;
+    iPtrBatchInsert = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("BatchInsert");
+    action->AddInputParameter(new ParameterRelated("AfterId", *iPropertyId));
+    action->AddInputParameter(new ParameterString("SongList"));
+    action->AddOutputParameter(new ParameterRelated("NewId", *iPropertyId));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgPlaylist1C::DoBatchInsert);
     iService->AddAction(action, functor);
 }
 
@@ -856,6 +887,32 @@ void DvProviderAvOpenhomeOrgPlaylist1C::DoRead(IDviInvocation& aInvocation)
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1C::DoSimpleReadList(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz IdList;
+    aInvocation.InvocationReadString("IdList", IdList);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* TrackList;
+    ASSERT(iCallbackSimpleReadList != NULL);
+    if (0 != iCallbackSimpleReadList(iPtrSimpleReadList, invocationC, invocationCPtr, (const char*)IdList.Ptr(), &TrackList)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respTrackList(aInvocation, "TrackList");
+    invocation.StartResponse();
+    Brhz bufTrackList((const TChar*)TrackList);
+    OhNetFreeExternal(TrackList);
+    respTrackList.Write(bufTrackList);
+    respTrackList.WriteFlush();
+    invocation.EndResponse();
+}
+
 void DvProviderAvOpenhomeOrgPlaylist1C::DoReadList(IDviInvocation& aInvocation)
 {
     DvInvocationCPrivate invocationWrapper(aInvocation);
@@ -899,6 +956,30 @@ void DvProviderAvOpenhomeOrgPlaylist1C::DoInsert(IDviInvocation& aInvocation)
     uint32_t NewId;
     ASSERT(iCallbackInsert != NULL);
     if (0 != iCallbackInsert(iPtrInsert, invocationC, invocationCPtr, AfterId, (const char*)Uri.Ptr(), (const char*)Metadata.Ptr(), &NewId)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseUint respNewId(aInvocation, "NewId");
+    invocation.StartResponse();
+    respNewId.Write(NewId);
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1C::DoBatchInsert(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TUint AfterId = aInvocation.InvocationReadUint("AfterId");
+    Brhz SongList;
+    aInvocation.InvocationReadString("SongList", SongList);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    uint32_t NewId;
+    ASSERT(iCallbackBatchInsert != NULL);
+    if (0 != iCallbackBatchInsert(iPtrBatchInsert, invocationC, invocationCPtr, AfterId, (const char*)SongList.Ptr(), &NewId)) {
         invocation.Error(502, Brn("Action failed"));
         return;
     }
@@ -1133,6 +1214,11 @@ void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionRead(THandle aProvider,
     reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnableActionRead(aCallback, aPtr);
 }
 
+void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionSimpleReadList(THandle aProvider, CallbackPlaylist1SimpleReadList aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnableActionSimpleReadList(aCallback, aPtr);
+}
+
 void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionReadList(THandle aProvider, CallbackPlaylist1ReadList aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnableActionReadList(aCallback, aPtr);
@@ -1141,6 +1227,11 @@ void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionReadList(THandle aProvi
 void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionInsert(THandle aProvider, CallbackPlaylist1Insert aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnableActionInsert(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionBatchInsert(THandle aProvider, CallbackPlaylist1BatchInsert aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnableActionBatchInsert(aCallback, aPtr);
 }
 
 void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionDeleteId(THandle aProvider, CallbackPlaylist1DeleteId aCallback, void* aPtr)

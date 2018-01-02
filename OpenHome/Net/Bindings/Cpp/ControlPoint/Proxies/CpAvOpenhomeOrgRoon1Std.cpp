@@ -349,9 +349,15 @@ CpProxyAvOpenhomeOrgRoon1Cpp::CpProxyAvOpenhomeOrgRoon1Cpp(CpDeviceCpp& aDevice)
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1Cpp::RepeatPropertyChanged);
     iRepeat = new PropertyBool("Repeat", functor);
     AddProperty(iRepeat);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1Cpp::RepeatOnePropertyChanged);
+    iRepeatOne = new PropertyBool("RepeatOne", functor);
+    AddProperty(iRepeatOne);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1Cpp::ShufflePropertyChanged);
     iShuffle = new PropertyBool("Shuffle", functor);
     AddProperty(iShuffle);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgRoon1Cpp::UpdateCoverPropertyChanged);
+    iUpdateCover = new PropertyBool("UpdateCover", functor);
+    AddProperty(iUpdateCover);
 }
 
 CpProxyAvOpenhomeOrgRoon1Cpp::~CpProxyAvOpenhomeOrgRoon1Cpp()
@@ -761,10 +767,24 @@ void CpProxyAvOpenhomeOrgRoon1Cpp::SetPropertyRepeatChanged(Functor& aFunctor)
     iLock->Signal();
 }
 
+void CpProxyAvOpenhomeOrgRoon1Cpp::SetPropertyRepeatOneChanged(Functor& aFunctor)
+{
+    iLock->Wait();
+    iRepeatOneChanged = aFunctor;
+    iLock->Signal();
+}
+
 void CpProxyAvOpenhomeOrgRoon1Cpp::SetPropertyShuffleChanged(Functor& aFunctor)
 {
     iLock->Wait();
     iShuffleChanged = aFunctor;
+    iLock->Signal();
+}
+
+void CpProxyAvOpenhomeOrgRoon1Cpp::SetPropertyUpdateCoverChanged(Functor& aFunctor)
+{
+    iLock->Wait();
+    iUpdateCoverChanged = aFunctor;
     iLock->Signal();
 }
 
@@ -783,11 +803,25 @@ void CpProxyAvOpenhomeOrgRoon1Cpp::PropertyRepeat(bool& aRepeat) const
     aRepeat = iRepeat->Value();
 }
 
+void CpProxyAvOpenhomeOrgRoon1Cpp::PropertyRepeatOne(bool& aRepeatOne) const
+{
+    AutoMutex a(PropertyReadLock());
+    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    aRepeatOne = iRepeatOne->Value();
+}
+
 void CpProxyAvOpenhomeOrgRoon1Cpp::PropertyShuffle(bool& aShuffle) const
 {
     AutoMutex a(PropertyReadLock());
     ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
     aShuffle = iShuffle->Value();
+}
+
+void CpProxyAvOpenhomeOrgRoon1Cpp::PropertyUpdateCover(bool& aUpdateCover) const
+{
+    AutoMutex a(PropertyReadLock());
+    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    aUpdateCover = iUpdateCover->Value();
 }
 
 void CpProxyAvOpenhomeOrgRoon1Cpp::TransportStatePropertyChanged()
@@ -800,8 +834,18 @@ void CpProxyAvOpenhomeOrgRoon1Cpp::RepeatPropertyChanged()
     ReportEvent(iRepeatChanged);
 }
 
+void CpProxyAvOpenhomeOrgRoon1Cpp::RepeatOnePropertyChanged()
+{
+    ReportEvent(iRepeatOneChanged);
+}
+
 void CpProxyAvOpenhomeOrgRoon1Cpp::ShufflePropertyChanged()
 {
     ReportEvent(iShuffleChanged);
+}
+
+void CpProxyAvOpenhomeOrgRoon1Cpp::UpdateCoverPropertyChanged()
+{
+    ReportEvent(iUpdateCoverChanged);
 }
 

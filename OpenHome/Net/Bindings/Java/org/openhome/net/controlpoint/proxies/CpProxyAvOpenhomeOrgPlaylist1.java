@@ -58,12 +58,18 @@ interface ICpProxyAvOpenhomeOrgPlaylist1 extends ICpProxy
     public Read syncRead(long aId);
     public void beginRead(long aId, ICpProxyListener aCallback);
     public Read endRead(long aAsyncHandle);
+    public String syncSimpleReadList(String aIdList);
+    public void beginSimpleReadList(String aIdList, ICpProxyListener aCallback);
+    public String endSimpleReadList(long aAsyncHandle);
     public String syncReadList(String aIdList);
     public void beginReadList(String aIdList, ICpProxyListener aCallback);
     public String endReadList(long aAsyncHandle);
     public long syncInsert(long aAfterId, String aUri, String aMetadata);
     public void beginInsert(long aAfterId, String aUri, String aMetadata, ICpProxyListener aCallback);
     public long endInsert(long aAsyncHandle);
+    public long syncBatchInsert(long aAfterId, String aSongList);
+    public void beginBatchInsert(long aAfterId, String aSongList, ICpProxyListener aCallback);
+    public long endBatchInsert(long aAsyncHandle);
     public void syncDeleteId(long aValue);
     public void beginDeleteId(long aValue, ICpProxyListener aCallback);
     public void endDeleteId(long aAsyncHandle);
@@ -374,6 +380,27 @@ class SyncReadAvOpenhomeOrgPlaylist1 extends SyncProxyAction
     }
 }
 
+class SyncSimpleReadListAvOpenhomeOrgPlaylist1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgPlaylist1 iService;
+    private String iTrackList;
+
+    public SyncSimpleReadListAvOpenhomeOrgPlaylist1(CpProxyAvOpenhomeOrgPlaylist1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getTrackList()
+    {
+        return iTrackList;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        String result = iService.endSimpleReadList(aAsyncHandle);
+        
+        iTrackList = result;
+    }
+}
+
 class SyncReadListAvOpenhomeOrgPlaylist1 extends SyncProxyAction
 {
     private CpProxyAvOpenhomeOrgPlaylist1 iService;
@@ -411,6 +438,27 @@ class SyncInsertAvOpenhomeOrgPlaylist1 extends SyncProxyAction
     protected void completeRequest(long aAsyncHandle)
     {
         long result = iService.endInsert(aAsyncHandle);
+        
+        iNewId = result;
+    }
+}
+
+class SyncBatchInsertAvOpenhomeOrgPlaylist1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgPlaylist1 iService;
+    private long iNewId;
+
+    public SyncBatchInsertAvOpenhomeOrgPlaylist1(CpProxyAvOpenhomeOrgPlaylist1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public long getNewId()
+    {
+        return iNewId;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        long result = iService.endBatchInsert(aAsyncHandle);
         
         iNewId = result;
     }
@@ -604,8 +652,10 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
     private Action iActionTransportState;
     private Action iActionId;
     private Action iActionRead;
+    private Action iActionSimpleReadList;
     private Action iActionReadList;
     private Action iActionInsert;
+    private Action iActionBatchInsert;
     private Action iActionDeleteId;
     private Action iActionDeleteAll;
     private Action iActionTracksMax;
@@ -704,6 +754,12 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
         param = new ParameterString("Metadata", allowedValues);
         iActionRead.addOutputParameter(param);
 
+        iActionSimpleReadList = new Action("SimpleReadList");
+        param = new ParameterString("IdList", allowedValues);
+        iActionSimpleReadList.addInputParameter(param);
+        param = new ParameterString("TrackList", allowedValues);
+        iActionSimpleReadList.addOutputParameter(param);
+
         iActionReadList = new Action("ReadList");
         param = new ParameterString("IdList", allowedValues);
         iActionReadList.addInputParameter(param);
@@ -719,6 +775,14 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
         iActionInsert.addInputParameter(param);
         param = new ParameterUint("NewId");
         iActionInsert.addOutputParameter(param);
+
+        iActionBatchInsert = new Action("BatchInsert");
+        param = new ParameterUint("AfterId");
+        iActionBatchInsert.addInputParameter(param);
+        param = new ParameterString("SongList", allowedValues);
+        iActionBatchInsert.addInputParameter(param);
+        param = new ParameterUint("NewId");
+        iActionBatchInsert.addOutputParameter(param);
 
         iActionDeleteId = new Action("DeleteId");
         param = new ParameterUint("Value");
@@ -1617,6 +1681,64 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
      *
      * @return the result of the invoked action.
      */
+    public String syncSimpleReadList(String aIdList)
+    {
+        SyncSimpleReadListAvOpenhomeOrgPlaylist1 sync = new SyncSimpleReadListAvOpenhomeOrgPlaylist1(this);
+        beginSimpleReadList(aIdList, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getTrackList();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSimpleReadList}.
+     * 
+     * @param aIdList
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSimpleReadList(String aIdList, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSimpleReadList, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionSimpleReadList.getInputParameter(inIndex++), aIdList));
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionSimpleReadList.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSimpleReadList} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSimpleReadList} method.
+     * @return the result of the previously invoked action.
+     */
+    public String endSimpleReadList(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String trackList = Invocation.getOutputString(aAsyncHandle, index++);
+        return trackList;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
     public String syncReadList(String aIdList)
     {
         SyncReadListAvOpenhomeOrgPlaylist1 sync = new SyncReadListAvOpenhomeOrgPlaylist1(this);
@@ -1719,6 +1841,66 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
      * @return the result of the previously invoked action.
      */
     public long endInsert(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        long newId = Invocation.getOutputUint(aAsyncHandle, index++);
+        return newId;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public long syncBatchInsert(long aAfterId, String aSongList)
+    {
+        SyncBatchInsertAvOpenhomeOrgPlaylist1 sync = new SyncBatchInsertAvOpenhomeOrgPlaylist1(this);
+        beginBatchInsert(aAfterId, aSongList, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getNewId();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endBatchInsert}.
+     * 
+     * @param aAfterId
+     * @param aSongList
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginBatchInsert(long aAfterId, String aSongList, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionBatchInsert, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentUint((ParameterUint)iActionBatchInsert.getInputParameter(inIndex++), aAfterId));
+        invocation.addInput(new ArgumentString((ParameterString)iActionBatchInsert.getInputParameter(inIndex++), aSongList));
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentUint((ParameterUint)iActionBatchInsert.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginBatchInsert} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginBatchInsert} method.
+     * @return the result of the previously invoked action.
+     */
+    public long endBatchInsert(long aAsyncHandle)
     {
         ProxyError errObj = Invocation.error(aAsyncHandle);
         if (errObj != null)
@@ -2359,8 +2541,10 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
             iActionTransportState.destroy();
             iActionId.destroy();
             iActionRead.destroy();
+            iActionSimpleReadList.destroy();
             iActionReadList.destroy();
             iActionInsert.destroy();
+            iActionBatchInsert.destroy();
             iActionDeleteId.destroy();
             iActionDeleteAll.destroy();
             iActionTracksMax.destroy();

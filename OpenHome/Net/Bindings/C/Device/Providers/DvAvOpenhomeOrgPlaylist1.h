@@ -209,6 +209,19 @@ typedef int32_t (STDCALL *CallbackPlaylist1Id)(void* aPtr, IDvInvocationC* aInvo
  */
 typedef int32_t (STDCALL *CallbackPlaylist1Read)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aId, char** aUri, char** aMetadata);
 /**
+ * Callback which runs when the SimpleReadList action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgPlaylist1EnableActionSimpleReadList
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aIdList
+ * @param[out] aTrackList
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackPlaylist1SimpleReadList)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aIdList, char** aTrackList);
+/**
  * Callback which runs when the ReadList action is invoked
  *
  * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgPlaylist1EnableActionReadList
@@ -236,6 +249,20 @@ typedef int32_t (STDCALL *CallbackPlaylist1ReadList)(void* aPtr, IDvInvocationC*
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackPlaylist1Insert)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aAfterId, const char* aUri, const char* aMetadata, uint32_t* aNewId);
+/**
+ * Callback which runs when the BatchInsert action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgPlaylist1EnableActionBatchInsert
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aAfterId
+ * @param[in]  aSongList
+ * @param[out] aNewId
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackPlaylist1BatchInsert)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aAfterId, const char* aSongList, uint32_t* aNewId);
 /**
  * Callback which runs when the DeleteId action is invoked
  *
@@ -533,6 +560,17 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionId(THandle aP
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionRead(THandle aProvider, CallbackPlaylist1Read aCallback, void* aPtr);
 /**
+ * Register a callback for the action SimpleReadList
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgPlaylist1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionSimpleReadList(THandle aProvider, CallbackPlaylist1SimpleReadList aCallback, void* aPtr);
+/**
  * Register a callback for the action ReadList
  *
  * If this is called, the action's availability will be published in the device's service.xml.
@@ -554,6 +592,17 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionReadList(THan
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionInsert(THandle aProvider, CallbackPlaylist1Insert aCallback, void* aPtr);
+/**
+ * Register a callback for the action BatchInsert
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgPlaylist1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnableActionBatchInsert(THandle aProvider, CallbackPlaylist1BatchInsert aCallback, void* aPtr);
 /**
  * Register a callback for the action DeleteId
  *
