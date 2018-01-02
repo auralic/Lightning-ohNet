@@ -261,6 +261,12 @@ protected:
      */
     void EnableActionRead();
     /**
+     * Signal that the action SimpleReadList is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SimpleReadList must be overridden if this is called.
+     */
+    void EnableActionSimpleReadList();
+    /**
      * Signal that the action ReadList is supported.
      * The action's availability will be published in the device's service.xml.
      * ReadList must be overridden if this is called.
@@ -272,6 +278,12 @@ protected:
      * Insert must be overridden if this is called.
      */
     void EnableActionInsert();
+    /**
+     * Signal that the action BatchInsert is supported.
+     * The action's availability will be published in the device's service.xml.
+     * BatchInsert must be overridden if this is called.
+     */
+    void EnableActionBatchInsert();
     /**
      * Signal that the action DeleteId is supported.
      * The action's availability will be published in the device's service.xml.
@@ -438,6 +450,14 @@ private:
      */
     virtual void Read(IDvInvocation& aInvocation, TUint aId, IDvInvocationResponseString& aUri, IDvInvocationResponseString& aMetadata);
     /**
+     * SimpleReadList action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SimpleReadList action for the owning device.
+     * Must be implemented iff EnableActionSimpleReadList was called.
+     */
+    virtual void SimpleReadList(IDvInvocation& aInvocation, const Brx& aIdList, IDvInvocationResponseString& aTrackList);
+    /**
      * ReadList action.
      *
      * Will be called when the device stack receives an invocation of the
@@ -453,6 +473,14 @@ private:
      * Must be implemented iff EnableActionInsert was called.
      */
     virtual void Insert(IDvInvocation& aInvocation, TUint aAfterId, const Brx& aUri, const Brx& aMetadata, IDvInvocationResponseUint& aNewId);
+    /**
+     * BatchInsert action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * BatchInsert action for the owning device.
+     * Must be implemented iff EnableActionBatchInsert was called.
+     */
+    virtual void BatchInsert(IDvInvocation& aInvocation, TUint aAfterId, const Brx& aSongList, IDvInvocationResponseUint& aNewId);
     /**
      * DeleteId action.
      *
@@ -520,8 +548,10 @@ private:
     void DoTransportState(IDviInvocation& aInvocation);
     void DoId(IDviInvocation& aInvocation);
     void DoRead(IDviInvocation& aInvocation);
+    void DoSimpleReadList(IDviInvocation& aInvocation);
     void DoReadList(IDviInvocation& aInvocation);
     void DoInsert(IDviInvocation& aInvocation);
+    void DoBatchInsert(IDviInvocation& aInvocation);
     void DoDeleteId(IDviInvocation& aInvocation);
     void DoDeleteAll(IDviInvocation& aInvocation);
     void DoTracksMax(IDviInvocation& aInvocation);

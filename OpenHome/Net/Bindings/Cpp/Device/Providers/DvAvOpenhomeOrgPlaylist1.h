@@ -257,6 +257,12 @@ protected:
      */
     void EnableActionRead();
     /**
+     * Signal that the action SimpleReadList is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SimpleReadList must be overridden if this is called.
+     */
+    void EnableActionSimpleReadList();
+    /**
      * Signal that the action ReadList is supported.
      * The action's availability will be published in the device's service.xml.
      * ReadList must be overridden if this is called.
@@ -268,6 +274,12 @@ protected:
      * Insert must be overridden if this is called.
      */
     void EnableActionInsert();
+    /**
+     * Signal that the action BatchInsert is supported.
+     * The action's availability will be published in the device's service.xml.
+     * BatchInsert must be overridden if this is called.
+     */
+    void EnableActionBatchInsert();
     /**
      * Signal that the action DeleteId is supported.
      * The action's availability will be published in the device's service.xml.
@@ -434,6 +446,14 @@ private:
      */
     virtual void Read(IDvInvocationStd& aInvocation, uint32_t aId, std::string& aUri, std::string& aMetadata);
     /**
+     * SimpleReadList action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SimpleReadList action for the owning device.
+     * Must be implemented iff EnableActionSimpleReadList was called.
+     */
+    virtual void SimpleReadList(IDvInvocationStd& aInvocation, const std::string& aIdList, std::string& aTrackList);
+    /**
      * ReadList action.
      *
      * Will be called when the device stack receives an invocation of the
@@ -449,6 +469,14 @@ private:
      * Must be implemented iff EnableActionInsert was called.
      */
     virtual void Insert(IDvInvocationStd& aInvocation, uint32_t aAfterId, const std::string& aUri, const std::string& aMetadata, uint32_t& aNewId);
+    /**
+     * BatchInsert action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * BatchInsert action for the owning device.
+     * Must be implemented iff EnableActionBatchInsert was called.
+     */
+    virtual void BatchInsert(IDvInvocationStd& aInvocation, uint32_t aAfterId, const std::string& aSongList, uint32_t& aNewId);
     /**
      * DeleteId action.
      *
@@ -515,8 +543,10 @@ private:
     void DoTransportState(IDviInvocation& aInvocation);
     void DoId(IDviInvocation& aInvocation);
     void DoRead(IDviInvocation& aInvocation);
+    void DoSimpleReadList(IDviInvocation& aInvocation);
     void DoReadList(IDviInvocation& aInvocation);
     void DoInsert(IDviInvocation& aInvocation);
+    void DoBatchInsert(IDviInvocation& aInvocation);
     void DoDeleteId(IDviInvocation& aInvocation);
     void DoDeleteAll(IDviInvocation& aInvocation);
     void DoTracksMax(IDviInvocation& aInvocation);

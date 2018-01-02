@@ -100,7 +100,15 @@
             <dataType>boolean</dataType>
         </stateVariable>
         <stateVariable sendEvents="yes">
+            <name>RepeatOne</name>
+            <dataType>boolean</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
             <name>Shuffle</name>
+            <dataType>boolean</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>UpdateCover</name>
             <dataType>boolean</dataType>
         </stateVariable>
         <stateVariable sendEvents="no">

@@ -474,6 +474,28 @@ CpProxyAvOpenhomeOrgPlaylist1.prototype.Read = function(Id, successFunction, err
 
 
 /**
+* A service action to SimpleReadList
+* @method SimpleReadList
+* @param {String} IdList An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgPlaylist1.prototype.SimpleReadList = function(IdList, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SimpleReadList", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("IdList", IdList);
+    request.send(function(result){
+        result["TrackList"] = ohnet.soaprequest.readStringParameter(result["TrackList"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
 * A service action to ReadList
 * @method ReadList
 * @param {String} IdList An action parameter
@@ -509,6 +531,30 @@ CpProxyAvOpenhomeOrgPlaylist1.prototype.Insert = function(AfterId, Uri, Metadata
     request.writeIntParameter("AfterId", AfterId);
     request.writeStringParameter("Uri", Uri);
     request.writeStringParameter("Metadata", Metadata);
+    request.send(function(result){
+        result["NewId"] = ohnet.soaprequest.readIntParameter(result["NewId"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to BatchInsert
+* @method BatchInsert
+* @param {Int} AfterId An action parameter
+* @param {String} SongList An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgPlaylist1.prototype.BatchInsert = function(AfterId, SongList, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("BatchInsert", this.url, this.domain, this.type, this.version);     
+    request.writeIntParameter("AfterId", AfterId);
+    request.writeStringParameter("SongList", SongList);
     request.send(function(result){
         result["NewId"] = ohnet.soaprequest.readIntParameter(result["NewId"]); 
     

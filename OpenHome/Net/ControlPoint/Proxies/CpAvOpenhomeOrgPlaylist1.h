@@ -456,6 +456,34 @@ public:
      * @param[in]  aIdList
      * @param[out] aTrackList
      */
+    void SyncSimpleReadList(const Brx& aIdList, Brh& aTrackList);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSimpleReadList().
+     *
+     * @param[in] aIdList
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSimpleReadList(const Brx& aIdList, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aTrackList
+     */
+    void EndSimpleReadList(IAsync& aAsync, Brh& aTrackList);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aIdList
+     * @param[out] aTrackList
+     */
     void SyncReadList(const Brx& aIdList, Brh& aTrackList);
     /**
      * Invoke the action asynchronously.
@@ -508,6 +536,36 @@ public:
      * @param[out] aNewId
      */
     void EndInsert(IAsync& aAsync, TUint& aNewId);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aAfterId
+     * @param[in]  aSongList
+     * @param[out] aNewId
+     */
+    void SyncBatchInsert(TUint aAfterId, const Brx& aSongList, TUint& aNewId);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndBatchInsert().
+     *
+     * @param[in] aAfterId
+     * @param[in] aSongList
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginBatchInsert(TUint aAfterId, const Brx& aSongList, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aNewId
+     */
+    void EndBatchInsert(IAsync& aAsync, TUint& aNewId);
 
     /**
      * Invoke the action synchronously.  Blocks until the action has been processed
@@ -825,8 +883,10 @@ private:
     Action* iActionTransportState;
     Action* iActionId;
     Action* iActionRead;
+    Action* iActionSimpleReadList;
     Action* iActionReadList;
     Action* iActionInsert;
+    Action* iActionBatchInsert;
     Action* iActionDeleteId;
     Action* iActionDeleteAll;
     Action* iActionTracksMax;

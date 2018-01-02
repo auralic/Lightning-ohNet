@@ -53,8 +53,12 @@ interface ICpProxyAvOpenhomeOrgRoon1 extends ICpProxy
     public String getPropertyTransportState();
     public void setPropertyRepeatChanged(IPropertyChangeListener aRepeatChanged);
     public boolean getPropertyRepeat();
+    public void setPropertyRepeatOneChanged(IPropertyChangeListener aRepeatOneChanged);
+    public boolean getPropertyRepeatOne();
     public void setPropertyShuffleChanged(IPropertyChangeListener aShuffleChanged);
     public boolean getPropertyShuffle();
+    public void setPropertyUpdateCoverChanged(IPropertyChangeListener aUpdateCoverChanged);
+    public boolean getPropertyUpdateCover();
 }
 
 class SyncPlayAvOpenhomeOrgRoon1 extends SyncProxyAction
@@ -291,10 +295,14 @@ public class CpProxyAvOpenhomeOrgRoon1 extends CpProxy implements ICpProxyAvOpen
     private Action iActionTransportState;
     private PropertyString iTransportState;
     private PropertyBool iRepeat;
+    private PropertyBool iRepeatOne;
     private PropertyBool iShuffle;
+    private PropertyBool iUpdateCover;
     private IPropertyChangeListener iTransportStateChanged;
     private IPropertyChangeListener iRepeatChanged;
+    private IPropertyChangeListener iRepeatOneChanged;
     private IPropertyChangeListener iShuffleChanged;
+    private IPropertyChangeListener iUpdateCoverChanged;
     private Object iPropertyLock;
 
     /**
@@ -369,6 +377,15 @@ public class CpProxyAvOpenhomeOrgRoon1 extends CpProxy implements ICpProxyAvOpen
             }
         );
         addProperty(iRepeat);
+        iRepeatOneChanged = new PropertyChangeListener();
+        iRepeatOne = new PropertyBool("RepeatOne",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    repeatOnePropertyChanged();
+                }
+            }
+        );
+        addProperty(iRepeatOne);
         iShuffleChanged = new PropertyChangeListener();
         iShuffle = new PropertyBool("Shuffle",
             new PropertyChangeListener() {
@@ -378,6 +395,15 @@ public class CpProxyAvOpenhomeOrgRoon1 extends CpProxy implements ICpProxyAvOpen
             }
         );
         addProperty(iShuffle);
+        iUpdateCoverChanged = new PropertyChangeListener();
+        iUpdateCover = new PropertyBool("UpdateCover",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    updateCoverPropertyChanged();
+                }
+            }
+        );
+        addProperty(iUpdateCover);
         iPropertyLock = new Object();
     }
     /**
@@ -1048,6 +1074,29 @@ public class CpProxyAvOpenhomeOrgRoon1 extends CpProxy implements ICpProxyAvOpen
         }
     }
     /**
+     * Set a delegate to be run when the RepeatOne state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgRoon1 instance will not overlap.
+     *
+     * @param aRepeatOneChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyRepeatOneChanged(IPropertyChangeListener aRepeatOneChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iRepeatOneChanged = aRepeatOneChanged;
+        }
+    }
+
+    private void repeatOnePropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iRepeatOneChanged);
+        }
+    }
+    /**
      * Set a delegate to be run when the Shuffle state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgRoon1 instance will not overlap.
@@ -1068,6 +1117,29 @@ public class CpProxyAvOpenhomeOrgRoon1 extends CpProxy implements ICpProxyAvOpen
         synchronized (iPropertyLock)
         {
             reportEvent(iShuffleChanged);
+        }
+    }
+    /**
+     * Set a delegate to be run when the UpdateCover state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgRoon1 instance will not overlap.
+     *
+     * @param aUpdateCoverChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyUpdateCoverChanged(IPropertyChangeListener aUpdateCoverChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iUpdateCoverChanged = aUpdateCoverChanged;
+        }
+    }
+
+    private void updateCoverPropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iUpdateCoverChanged);
         }
     }
 
@@ -1104,6 +1176,22 @@ public class CpProxyAvOpenhomeOrgRoon1 extends CpProxy implements ICpProxyAvOpen
     }
     
     /**
+     * Query the value of the RepeatOne property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the RepeatOne property.
+     */
+    public boolean getPropertyRepeatOne()
+    {
+        propertyReadLock();
+        boolean val = iRepeatOne.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
      * Query the value of the Shuffle property.
      * This function is thread-safe and can only be called if {@link 
      * #subscribe} has been called and a first eventing callback received
@@ -1115,6 +1203,22 @@ public class CpProxyAvOpenhomeOrgRoon1 extends CpProxy implements ICpProxyAvOpen
     {
         propertyReadLock();
         boolean val = iShuffle.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
+     * Query the value of the UpdateCover property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the UpdateCover property.
+     */
+    public boolean getPropertyUpdateCover()
+    {
+        propertyReadLock();
+        boolean val = iUpdateCover.getValue();
         propertyReadUnlock();
         return val;
     }
@@ -1149,7 +1253,9 @@ public class CpProxyAvOpenhomeOrgRoon1 extends CpProxy implements ICpProxyAvOpen
             iActionTransportState.destroy();
             iTransportState.destroy();
             iRepeat.destroy();
+            iRepeatOne.destroy();
             iShuffle.destroy();
+            iUpdateCover.destroy();
         }
     }
 }

@@ -516,6 +516,17 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyTransportStateChanged
  */
 DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyRepeatChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
 /**
+ * Set a callback to be run when the RepeatOne state variable changes.
+ *
+ * Callbacks may be run in different threads but callbacks for a
+ * CpProxyAvOpenhomeOrgRoon1 instance will not overlap.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
+ * @param[in]  aCallback The callback to run when the state variable changes
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyRepeatOneChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
+/**
  * Set a callback to be run when the Shuffle state variable changes.
  *
  * Callbacks may be run in different threads but callbacks for a
@@ -526,6 +537,17 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyRepeatChanged(THandle
  * @param[in]  aPtr      Data to be passed to the callback
  */
 DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyShuffleChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
+/**
+ * Set a callback to be run when the UpdateCover state variable changes.
+ *
+ * Callbacks may be run in different threads but callbacks for a
+ * CpProxyAvOpenhomeOrgRoon1 instance will not overlap.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
+ * @param[in]  aCallback The callback to run when the state variable changes
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyUpdateCoverChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
 
 /**
  * Query the value of the TransportState property.
@@ -548,6 +570,16 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyTransportState(THandle a
  */
 DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeat(THandle aHandle, uint32_t* aRepeat);
 /**
+ * Query the value of the RepeatOne property.
+ *
+ * This function is threadsafe and can only be called after the first callback
+ * following a call to CpProxyCSubscribe() and before CpProxyCUnsubscribe().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
+ * @param[out] aRepeatOne
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeatOne(THandle aHandle, uint32_t* aRepeatOne);
+/**
  * Query the value of the Shuffle property.
  *
  * This function is threadsafe and can only be called after the first callback
@@ -557,6 +589,16 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeat(THandle aHandle, 
  * @param[out] aShuffle
  */
 DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyShuffle(THandle aHandle, uint32_t* aShuffle);
+/**
+ * Query the value of the UpdateCover property.
+ *
+ * This function is threadsafe and can only be called after the first callback
+ * following a call to CpProxyCSubscribe() and before CpProxyCUnsubscribe().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
+ * @param[out] aUpdateCover
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyUpdateCover(THandle aHandle, uint32_t* aUpdateCover);
 
 /* @} */
 

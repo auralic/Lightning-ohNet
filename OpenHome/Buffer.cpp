@@ -322,6 +322,8 @@ TBool Bwx::TryAppend(const TByte* aPtr, TUint aBytes)
 
 void Bwx::Append(const TByte* aPtr, TUint aBytes)
 {
+//    if(MaxBytes()< Bytes()+aBytes)
+//        printf("===+++%d\n",MaxBytes());
     ASSERT(Bytes() + aBytes <= MaxBytes());
     const TByte* ptr = Ptr();
     ASSERT(ptr != NULL);

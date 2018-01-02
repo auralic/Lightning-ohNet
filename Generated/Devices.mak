@@ -70,6 +70,12 @@ objects_devices = \
                   $(objdir)DvAvOpenhomeOrgWebProcessorConfig1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgWebProcessorConfig1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgWebProcessorConfig1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebDACConfig1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebDACConfig1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebDACConfig1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebClockConfig1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebClockConfig1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgWebClockConfig1C.$(objext) \
                   $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgDACConfig1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgDACConfig1C.$(objext) \
@@ -155,6 +161,8 @@ device_dotnet_assemblies = \
         DvAvOpenhomeOrgWebRendererConfig1.net.dll \
         DvAvOpenhomeOrgWebDeviceConfig1.net.dll \
         DvAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        DvAvOpenhomeOrgWebDACConfig1.net.dll \
+        DvAvOpenhomeOrgWebClockConfig1.net.dll \
         DvAvOpenhomeOrgDACConfig1.net.dll \
         DvAvOpenhomeOrgServerConfig1.net.dll \
         DvAvOpenhomeOrgMessageCenter1.net.dll \
@@ -197,6 +205,8 @@ device_dotnet_assemblies_with_path = \
         $(objdir)DvAvOpenhomeOrgWebRendererConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgWebDeviceConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        $(objdir)DvAvOpenhomeOrgWebDACConfig1.net.dll \
+        $(objdir)DvAvOpenhomeOrgWebClockConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgDACConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgServerConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgMessageCenter1.net.dll \
@@ -239,6 +249,8 @@ device_java_classes_with_path = \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebRendererConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebDeviceConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebProcessorConfig1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebDACConfig1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebClockConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgDACConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgServerConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgMessageCenter1.class \
@@ -392,6 +404,18 @@ $(objdir)DvAvOpenhomeOrgWebProcessorConfig1Std.$(objext) : $(deviceCppStd)DvAvOp
 	$(compiler)DvAvOpenhomeOrgWebProcessorConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgWebProcessorConfig1Std.cpp
 $(objdir)DvAvOpenhomeOrgWebProcessorConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgWebProcessorConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgWebProcessorConfig1.h
 	$(compiler)DvAvOpenhomeOrgWebProcessorConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgWebProcessorConfig1C.cpp
+$(objdir)DvAvOpenhomeOrgWebDACConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgWebDACConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgWebDACConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebDACConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgWebDACConfig1.cpp
+$(objdir)DvAvOpenhomeOrgWebDACConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgWebDACConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgWebDACConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebDACConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgWebDACConfig1Std.cpp
+$(objdir)DvAvOpenhomeOrgWebDACConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgWebDACConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgWebDACConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebDACConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgWebDACConfig1C.cpp
+$(objdir)DvAvOpenhomeOrgWebClockConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgWebClockConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgWebClockConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebClockConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgWebClockConfig1.cpp
+$(objdir)DvAvOpenhomeOrgWebClockConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgWebClockConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgWebClockConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebClockConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgWebClockConfig1Std.cpp
+$(objdir)DvAvOpenhomeOrgWebClockConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgWebClockConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgWebClockConfig1.h
+	$(compiler)DvAvOpenhomeOrgWebClockConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgWebClockConfig1C.cpp
 $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgDACConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgDACConfig1.h
 	$(compiler)DvAvOpenhomeOrgDACConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgDACConfig1.cpp
 $(objdir)DvAvOpenhomeOrgDACConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgDACConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgDACConfig1.h
@@ -524,6 +548,8 @@ device_dlls = \
              DvAvOpenhomeOrgWebRendererConfig1Dll \
              DvAvOpenhomeOrgWebDeviceConfig1Dll \
              DvAvOpenhomeOrgWebProcessorConfig1Dll \
+             DvAvOpenhomeOrgWebDACConfig1Dll \
+             DvAvOpenhomeOrgWebClockConfig1Dll \
              DvAvOpenhomeOrgDACConfig1Dll \
              DvAvOpenhomeOrgServerConfig1Dll \
              DvAvOpenhomeOrgMessageCenter1Dll \
@@ -610,6 +636,12 @@ $(objdir)$(dllprefix)DvAvOpenhomeOrgWebDeviceConfig1.$(dllext) : ZappUpnpDll $(o
 DvAvOpenhomeOrgWebProcessorConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgWebProcessorConfig1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgWebProcessorConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgWebProcessorConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgWebProcessorConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgWebProcessorConfig1.$(objext)
+DvAvOpenhomeOrgWebDACConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgWebDACConfig1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgWebDACConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgWebDACConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgWebDACConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgWebDACConfig1.$(objext)
+DvAvOpenhomeOrgWebClockConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgWebClockConfig1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgWebClockConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgWebClockConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgWebClockConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgWebClockConfig1.$(objext)
 DvAvOpenhomeOrgDACConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgDACConfig1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgDACConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgDACConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext)
@@ -780,6 +812,16 @@ $(objdir)DvAvOpenhomeOrgWebProcessorConfig1.net.dll: $(objdir)ohNet.net.dll $(de
         /out:$(objdir)DvAvOpenhomeOrgWebProcessorConfig1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(deviceCs)DvAvOpenhomeOrgWebProcessorConfig1.cs
+$(objdir)DvAvOpenhomeOrgWebDACConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgWebDACConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgWebDACConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgWebDACConfig1.cs
+$(objdir)DvAvOpenhomeOrgWebClockConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgWebClockConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgWebClockConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgWebClockConfig1.cs
 $(objdir)DvAvOpenhomeOrgDACConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgDACConfig1.cs
 	$(csharp) /t:library \
         /out:$(objdir)DvAvOpenhomeOrgDACConfig1.net.dll \
@@ -919,6 +961,10 @@ $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebDeviceConfi
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgWebDeviceConfig1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebProcessorConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgWebProcessorConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgWebProcessorConfig1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebDACConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgWebDACConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgWebDACConfig1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebClockConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgWebClockConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgWebClockConfig1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgDACConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgDACConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgDACConfig1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgServerConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgServerConfig1.java

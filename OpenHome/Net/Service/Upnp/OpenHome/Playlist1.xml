@@ -144,6 +144,21 @@
             </argumentList>
         </action>
         <action>
+            <name>SimpleReadList</name>
+            <argumentList>
+                <argument>
+                    <name>IdList</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>IdList</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>TrackList</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>TrackList</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
             <name>ReadList</name>
             <argumentList>
                 <argument>
@@ -175,6 +190,26 @@
                     <name>Metadata</name>
                     <direction>in</direction>
                     <relatedStateVariable>Metadata</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>NewId</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>Id</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>BatchInsert</name>
+            <argumentList>
+                <argument>
+                    <name>AfterId</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Id</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>SongList</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>SongList</relatedStateVariable>
                 </argument>
                 <argument>
                     <name>NewId</name>
@@ -309,6 +344,10 @@
         </stateVariable>
         <stateVariable sendEvents="no">
             <name>Metadata</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>SongList</name>
             <dataType>string</dataType>
         </stateVariable>
         <stateVariable sendEvents="no">

@@ -36,6 +36,19 @@ namespace OpenHome.Net.Device.Providers
         bool PropertyRepeat();
 
         /// <summary>
+        /// Set the value of the RepeatOne property
+        /// </summary>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        bool SetPropertyRepeatOne(bool aValue);
+
+        /// <summary>
+        /// Get a copy of the value of the RepeatOne property
+        /// </summary>
+        /// <returns>Value of the RepeatOne property.</param>
+        bool PropertyRepeatOne();
+
+        /// <summary>
         /// Set the value of the Shuffle property
         /// </summary>
         /// <param name="aValue">New value for the property</param>
@@ -47,6 +60,19 @@ namespace OpenHome.Net.Device.Providers
         /// </summary>
         /// <returns>Value of the Shuffle property.</param>
         bool PropertyShuffle();
+
+        /// <summary>
+        /// Set the value of the UpdateCover property
+        /// </summary>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        bool SetPropertyUpdateCover(bool aValue);
+
+        /// <summary>
+        /// Get a copy of the value of the UpdateCover property
+        /// </summary>
+        /// <returns>Value of the UpdateCover property.</param>
+        bool PropertyUpdateCover();
         
     }
     /// <summary>
@@ -70,7 +96,9 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateTransportState;
         private PropertyString iPropertyTransportState;
         private PropertyBool iPropertyRepeat;
+        private PropertyBool iPropertyRepeatOne;
         private PropertyBool iPropertyShuffle;
+        private PropertyBool iPropertyUpdateCover;
 
         /// <summary>
         /// Constructor
@@ -107,12 +135,30 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Enable the RepeatOne property.
+        /// </summary>
+        public void EnablePropertyRepeatOne()
+        {
+            iPropertyRepeatOne = new PropertyBool(new ParameterBool("RepeatOne"));
+            AddProperty(iPropertyRepeatOne);
+        }
+
+        /// <summary>
         /// Enable the Shuffle property.
         /// </summary>
         public void EnablePropertyShuffle()
         {
             iPropertyShuffle = new PropertyBool(new ParameterBool("Shuffle"));
             AddProperty(iPropertyShuffle);
+        }
+
+        /// <summary>
+        /// Enable the UpdateCover property.
+        /// </summary>
+        public void EnablePropertyUpdateCover()
+        {
+            iPropertyUpdateCover = new PropertyBool(new ParameterBool("UpdateCover"));
+            AddProperty(iPropertyUpdateCover);
         }
 
         /// <summary>
@@ -166,6 +212,31 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Set the value of the RepeatOne property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyRepeatOne has previously been called.</remarks>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        public bool SetPropertyRepeatOne(bool aValue)
+        {
+            if (iPropertyRepeatOne == null)
+                throw new PropertyDisabledError();
+            return SetPropertyBool(iPropertyRepeatOne, aValue);
+        }
+
+        /// <summary>
+        /// Get a copy of the value of the RepeatOne property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyRepeatOne has previously been called.</remarks>
+        /// <returns>Value of the RepeatOne property.</returns>
+        public bool PropertyRepeatOne()
+        {
+            if (iPropertyRepeatOne == null)
+                throw new PropertyDisabledError();
+            return iPropertyRepeatOne.Value();
+        }
+
+        /// <summary>
         /// Set the value of the Shuffle property
         /// </summary>
         /// <remarks>Can only be called if EnablePropertyShuffle has previously been called.</remarks>
@@ -188,6 +259,31 @@ namespace OpenHome.Net.Device.Providers
             if (iPropertyShuffle == null)
                 throw new PropertyDisabledError();
             return iPropertyShuffle.Value();
+        }
+
+        /// <summary>
+        /// Set the value of the UpdateCover property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyUpdateCover has previously been called.</remarks>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        public bool SetPropertyUpdateCover(bool aValue)
+        {
+            if (iPropertyUpdateCover == null)
+                throw new PropertyDisabledError();
+            return SetPropertyBool(iPropertyUpdateCover, aValue);
+        }
+
+        /// <summary>
+        /// Get a copy of the value of the UpdateCover property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyUpdateCover has previously been called.</remarks>
+        /// <returns>Value of the UpdateCover property.</returns>
+        public bool PropertyUpdateCover()
+        {
+            if (iPropertyUpdateCover == null)
+                throw new PropertyDisabledError();
+            return iPropertyUpdateCover.Value();
         }
 
         /// <summary>

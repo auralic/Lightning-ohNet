@@ -53,8 +53,12 @@ namespace OpenHome.Net.ControlPoint.Proxies
         String PropertyTransportState();
         void SetPropertyRepeatChanged(System.Action aRepeatChanged);
         bool PropertyRepeat();
+        void SetPropertyRepeatOneChanged(System.Action aRepeatOneChanged);
+        bool PropertyRepeatOne();
         void SetPropertyShuffleChanged(System.Action aShuffleChanged);
         bool PropertyShuffle();
+        void SetPropertyUpdateCoverChanged(System.Action aUpdateCoverChanged);
+        bool PropertyUpdateCover();
     }
 
     internal class SyncPlayAvOpenhomeOrgRoon1 : SyncProxyAction
@@ -274,10 +278,14 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionTransportState;
         private PropertyString iTransportState;
         private PropertyBool iRepeat;
+        private PropertyBool iRepeatOne;
         private PropertyBool iShuffle;
+        private PropertyBool iUpdateCover;
         private System.Action iTransportStateChanged;
         private System.Action iRepeatChanged;
+        private System.Action iRepeatOneChanged;
         private System.Action iShuffleChanged;
+        private System.Action iUpdateCoverChanged;
         private Mutex iPropertyLock;
 
         /// <summary>
@@ -336,8 +344,12 @@ namespace OpenHome.Net.ControlPoint.Proxies
             AddProperty(iTransportState);
             iRepeat = new PropertyBool("Repeat", RepeatPropertyChanged);
             AddProperty(iRepeat);
+            iRepeatOne = new PropertyBool("RepeatOne", RepeatOnePropertyChanged);
+            AddProperty(iRepeatOne);
             iShuffle = new PropertyBool("Shuffle", ShufflePropertyChanged);
             AddProperty(iShuffle);
+            iUpdateCover = new PropertyBool("UpdateCover", UpdateCoverPropertyChanged);
+            AddProperty(iUpdateCover);
             
             iPropertyLock = new Mutex();
         }
@@ -962,6 +974,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Set a delegate to be run when the RepeatOne state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgRoon1 instance will not overlap.</remarks>
+        /// <param name="aRepeatOneChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyRepeatOneChanged(System.Action aRepeatOneChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iRepeatOneChanged = aRepeatOneChanged;
+            }
+        }
+
+        private void RepeatOnePropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iRepeatOneChanged);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Shuffle state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -980,6 +1014,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
             lock (iPropertyLock)
             {
                 ReportEvent(iShuffleChanged);
+            }
+        }
+
+        /// <summary>
+        /// Set a delegate to be run when the UpdateCover state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgRoon1 instance will not overlap.</remarks>
+        /// <param name="aUpdateCoverChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyUpdateCoverChanged(System.Action aUpdateCoverChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iUpdateCoverChanged = aUpdateCoverChanged;
+            }
+        }
+
+        private void UpdateCoverPropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iUpdateCoverChanged);
             }
         }
 
@@ -1028,6 +1084,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Query the value of the RepeatOne property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the RepeatOne property</returns>
+        public bool PropertyRepeatOne()
+        {
+            PropertyReadLock();
+            bool val;
+            try
+            {
+                val = iRepeatOne.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
+        }
+
+        /// <summary>
         /// Query the value of the Shuffle property.
         /// </summary>
         /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
@@ -1041,6 +1119,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
             try
             {
                 val = iShuffle.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
+        }
+
+        /// <summary>
+        /// Query the value of the UpdateCover property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the UpdateCover property</returns>
+        public bool PropertyUpdateCover()
+        {
+            PropertyReadLock();
+            bool val;
+            try
+            {
+                val = iUpdateCover.Value();
             }
             finally
             {
@@ -1076,7 +1176,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionTransportState.Dispose();
             iTransportState.Dispose();
             iRepeat.Dispose();
+            iRepeatOne.Dispose();
             iShuffle.Dispose();
+            iUpdateCover.Dispose();
         }
     }
 }

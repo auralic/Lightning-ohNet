@@ -378,6 +378,15 @@ public:
      */
     void SetPropertyRepeatChanged(Functor& aFunctor);
     /**
+     * Set a callback to be run when the RepeatOne state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgRoon1Cpp instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyRepeatOneChanged(Functor& aFunctor);
+    /**
      * Set a callback to be run when the Shuffle state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -386,6 +395,15 @@ public:
      * @param[in]  aFunctor  The callback to run when the state variable changes
      */
     void SetPropertyShuffleChanged(Functor& aFunctor);
+    /**
+     * Set a callback to be run when the UpdateCover state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgRoon1Cpp instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyUpdateCoverChanged(Functor& aFunctor);
 
     /**
      * Query the value of the TransportState property.
@@ -408,6 +426,16 @@ public:
      */
     void PropertyRepeat(bool& aRepeat) const;
     /**
+     * Query the value of the RepeatOne property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aRepeatOne
+     */
+    void PropertyRepeatOne(bool& aRepeatOne) const;
+    /**
      * Query the value of the Shuffle property.
      *
      * This function is threadsafe and can only be called if Subscribe() has been
@@ -417,10 +445,22 @@ public:
      * @param[out] aShuffle
      */
     void PropertyShuffle(bool& aShuffle) const;
+    /**
+     * Query the value of the UpdateCover property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aUpdateCover
+     */
+    void PropertyUpdateCover(bool& aUpdateCover) const;
 private:
     void TransportStatePropertyChanged();
     void RepeatPropertyChanged();
+    void RepeatOnePropertyChanged();
     void ShufflePropertyChanged();
+    void UpdateCoverPropertyChanged();
 private:
     Action* iActionPlay;
     Action* iActionPause;
@@ -437,10 +477,14 @@ private:
     Action* iActionTransportState;
     PropertyString* iTransportState;
     PropertyBool* iRepeat;
+    PropertyBool* iRepeatOne;
     PropertyBool* iShuffle;
+    PropertyBool* iUpdateCover;
     Functor iTransportStateChanged;
     Functor iRepeatChanged;
+    Functor iRepeatOneChanged;
     Functor iShuffleChanged;
+    Functor iUpdateCoverChanged;
 };
 
 } // namespace Net

@@ -70,6 +70,12 @@ objects_proxies = \
                   $(objdir)CpAvOpenhomeOrgWebProcessorConfig1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgWebProcessorConfig1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgWebProcessorConfig1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebDACConfig1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebDACConfig1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebDACConfig1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebClockConfig1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebClockConfig1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgWebClockConfig1Std.$(objext) \
                   $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgDACConfig1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgDACConfig1Std.$(objext) \
@@ -161,6 +167,8 @@ proxy_dotnet_assemblies = \
         CpAvOpenhomeOrgWebRendererConfig1.net.dll \
         CpAvOpenhomeOrgWebDeviceConfig1.net.dll \
         CpAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        CpAvOpenhomeOrgWebDACConfig1.net.dll \
+        CpAvOpenhomeOrgWebClockConfig1.net.dll \
         CpAvOpenhomeOrgDACConfig1.net.dll \
         CpAvOpenhomeOrgServerConfig1.net.dll \
         CpAvOpenhomeOrgMessageCenter1.net.dll \
@@ -203,6 +211,8 @@ proxy_dotnet_assemblies_with_path = \
         $(objdir)CpAvOpenhomeOrgWebRendererConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgWebDeviceConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgWebProcessorConfig1.net.dll \
+        $(objdir)CpAvOpenhomeOrgWebDACConfig1.net.dll \
+        $(objdir)CpAvOpenhomeOrgWebClockConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgDACConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgServerConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgMessageCenter1.net.dll \
@@ -245,6 +255,8 @@ proxy_java_classes_with_path = \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebRendererConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebDeviceConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebProcessorConfig1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebDACConfig1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebClockConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgDACConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgServerConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgMessageCenter1.class \
@@ -399,6 +411,18 @@ $(objdir)CpAvOpenhomeOrgWebProcessorConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOr
 	$(compiler)CpAvOpenhomeOrgWebProcessorConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgWebProcessorConfig1C.cpp
 $(objdir)CpAvOpenhomeOrgWebProcessorConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgWebProcessorConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgWebProcessorConfig1.h
 	$(compiler)CpAvOpenhomeOrgWebProcessorConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgWebProcessorConfig1Std.cpp
+$(objdir)CpAvOpenhomeOrgWebDACConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgWebDACConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgWebDACConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebDACConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgWebDACConfig1.cpp
+$(objdir)CpAvOpenhomeOrgWebDACConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgWebDACConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgWebDACConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebDACConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgWebDACConfig1C.cpp
+$(objdir)CpAvOpenhomeOrgWebDACConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgWebDACConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgWebDACConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebDACConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgWebDACConfig1Std.cpp
+$(objdir)CpAvOpenhomeOrgWebClockConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgWebClockConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgWebClockConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebClockConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgWebClockConfig1.cpp
+$(objdir)CpAvOpenhomeOrgWebClockConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgWebClockConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgWebClockConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebClockConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgWebClockConfig1C.cpp
+$(objdir)CpAvOpenhomeOrgWebClockConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgWebClockConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgWebClockConfig1.h
+	$(compiler)CpAvOpenhomeOrgWebClockConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgWebClockConfig1Std.cpp
 $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgDACConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgDACConfig1.h
 	$(compiler)CpAvOpenhomeOrgDACConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgDACConfig1.cpp
 $(objdir)CpAvOpenhomeOrgDACConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgDACConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgDACConfig1.h
@@ -531,6 +555,8 @@ proxy_dlls = \
              CpAvOpenhomeOrgWebRendererConfig1Dll \
              CpAvOpenhomeOrgWebDeviceConfig1Dll \
              CpAvOpenhomeOrgWebProcessorConfig1Dll \
+             CpAvOpenhomeOrgWebDACConfig1Dll \
+             CpAvOpenhomeOrgWebClockConfig1Dll \
              CpAvOpenhomeOrgDACConfig1Dll \
              CpAvOpenhomeOrgServerConfig1Dll \
              CpAvOpenhomeOrgMessageCenter1Dll \
@@ -618,6 +644,12 @@ $(objdir)$(dllprefix)CpAvOpenhomeOrgWebDeviceConfig1.$(dllext) : ZappUpnpDll $(o
 CpAvOpenhomeOrgWebProcessorConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgWebProcessorConfig1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgWebProcessorConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgWebProcessorConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgWebProcessorConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgWebProcessorConfig1.$(objext)
+CpAvOpenhomeOrgWebDACConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgWebDACConfig1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgWebDACConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgWebDACConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgWebDACConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgWebDACConfig1.$(objext)
+CpAvOpenhomeOrgWebClockConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgWebClockConfig1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgWebClockConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgWebClockConfig1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgWebClockConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgWebClockConfig1.$(objext)
 CpAvOpenhomeOrgDACConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgDACConfig1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgDACConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgDACConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext)
@@ -787,6 +819,16 @@ $(objdir)CpAvOpenhomeOrgWebProcessorConfig1.net.dll: $(objdir)ohNet.net.dll $(pr
         /out:$(objdir)CpAvOpenhomeOrgWebProcessorConfig1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(proxyCs)CpAvOpenhomeOrgWebProcessorConfig1.cs
+$(objdir)CpAvOpenhomeOrgWebDACConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgWebDACConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgWebDACConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgWebDACConfig1.cs
+$(objdir)CpAvOpenhomeOrgWebClockConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgWebClockConfig1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgWebClockConfig1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgWebClockConfig1.cs
 $(objdir)CpAvOpenhomeOrgDACConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgDACConfig1.cs
 	$(csharp) /t:library \
         /out:$(objdir)CpAvOpenhomeOrgDACConfig1.net.dll \
@@ -926,6 +968,10 @@ $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebDeviceConf
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgWebDeviceConfig1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebProcessorConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgWebProcessorConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgWebProcessorConfig1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebDACConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgWebDACConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgWebDACConfig1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebClockConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgWebClockConfig1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgWebClockConfig1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgDACConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgDACConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgDACConfig1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgServerConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgServerConfig1.java

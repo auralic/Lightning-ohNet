@@ -32,6 +32,18 @@ void DvProviderAvOpenhomeOrgRoon1::GetPropertyRepeat(TBool& aValue)
     aValue = iPropertyRepeat->Value();
 }
 
+TBool DvProviderAvOpenhomeOrgRoon1::SetPropertyRepeatOne(TBool aValue)
+{
+    ASSERT(iPropertyRepeatOne != NULL);
+    return SetPropertyBool(*iPropertyRepeatOne, aValue);
+}
+
+void DvProviderAvOpenhomeOrgRoon1::GetPropertyRepeatOne(TBool& aValue)
+{
+    ASSERT(iPropertyRepeatOne != NULL);
+    aValue = iPropertyRepeatOne->Value();
+}
+
 TBool DvProviderAvOpenhomeOrgRoon1::SetPropertyShuffle(TBool aValue)
 {
     ASSERT(iPropertyShuffle != NULL);
@@ -42,6 +54,18 @@ void DvProviderAvOpenhomeOrgRoon1::GetPropertyShuffle(TBool& aValue)
 {
     ASSERT(iPropertyShuffle != NULL);
     aValue = iPropertyShuffle->Value();
+}
+
+TBool DvProviderAvOpenhomeOrgRoon1::SetPropertyUpdateCover(TBool aValue)
+{
+    ASSERT(iPropertyUpdateCover != NULL);
+    return SetPropertyBool(*iPropertyUpdateCover, aValue);
+}
+
+void DvProviderAvOpenhomeOrgRoon1::GetPropertyUpdateCover(TBool& aValue)
+{
+    ASSERT(iPropertyUpdateCover != NULL);
+    aValue = iPropertyUpdateCover->Value();
 }
 
 DvProviderAvOpenhomeOrgRoon1::DvProviderAvOpenhomeOrgRoon1(DvDevice& aDevice)
@@ -60,7 +84,9 @@ void DvProviderAvOpenhomeOrgRoon1::Construct()
 {
     iPropertyTransportState = NULL;
     iPropertyRepeat = NULL;
+    iPropertyRepeatOne = NULL;
     iPropertyShuffle = NULL;
+    iPropertyUpdateCover = NULL;
 }
 
 void DvProviderAvOpenhomeOrgRoon1::EnablePropertyTransportState()
@@ -83,10 +109,22 @@ void DvProviderAvOpenhomeOrgRoon1::EnablePropertyRepeat()
     iService->AddProperty(iPropertyRepeat); // passes ownership
 }
 
+void DvProviderAvOpenhomeOrgRoon1::EnablePropertyRepeatOne()
+{
+    iPropertyRepeatOne = new PropertyBool(new ParameterBool("RepeatOne"));
+    iService->AddProperty(iPropertyRepeatOne); // passes ownership
+}
+
 void DvProviderAvOpenhomeOrgRoon1::EnablePropertyShuffle()
 {
     iPropertyShuffle = new PropertyBool(new ParameterBool("Shuffle"));
     iService->AddProperty(iPropertyShuffle); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgRoon1::EnablePropertyUpdateCover()
+{
+    iPropertyUpdateCover = new PropertyBool(new ParameterBool("UpdateCover"));
+    iService->AddProperty(iPropertyUpdateCover); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgRoon1::EnableActionPlay()

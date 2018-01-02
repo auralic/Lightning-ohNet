@@ -191,8 +191,10 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
     private IDvInvocationListener iDelegateTransportState;
     private IDvInvocationListener iDelegateId;
     private IDvInvocationListener iDelegateRead;
+    private IDvInvocationListener iDelegateSimpleReadList;
     private IDvInvocationListener iDelegateReadList;
     private IDvInvocationListener iDelegateInsert;
+    private IDvInvocationListener iDelegateBatchInsert;
     private IDvInvocationListener iDelegateDeleteId;
     private IDvInvocationListener iDelegateDeleteAll;
     private IDvInvocationListener iDelegateTracksMax;
@@ -663,6 +665,21 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
     }
 
     /**
+     * Signal that the action SimpleReadList is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SimpleReadList must be overridden if this is called.
+     */      
+    protected void enableActionSimpleReadList()
+    {
+        Action action = new Action("SimpleReadList");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("IdList", allowedValues));
+        action.addOutputParameter(new ParameterString("TrackList", allowedValues));
+        iDelegateSimpleReadList = new DoSimpleReadList();
+        enableAction(action, iDelegateSimpleReadList);
+    }
+
+    /**
      * Signal that the action ReadList is supported.
      *
      * <p>The action's availability will be published in the device's service.xml.
@@ -692,6 +709,22 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
         action.addOutputParameter(new ParameterRelated("NewId", iPropertyId));
         iDelegateInsert = new DoInsert();
         enableAction(action, iDelegateInsert);
+    }
+
+    /**
+     * Signal that the action BatchInsert is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * BatchInsert must be overridden if this is called.
+     */      
+    protected void enableActionBatchInsert()
+    {
+        Action action = new Action("BatchInsert");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterRelated("AfterId", iPropertyId));
+        action.addInputParameter(new ParameterString("SongList", allowedValues));
+        action.addOutputParameter(new ParameterRelated("NewId", iPropertyId));
+        iDelegateBatchInsert = new DoBatchInsert();
+        enableAction(action, iDelegateBatchInsert);
     }
 
     /**
@@ -1027,6 +1060,22 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
     }
 
     /**
+     * SimpleReadList action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SimpleReadList action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSimpleReadList} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aIdList
+     */
+    protected String simpleReadList(IDvInvocation aInvocation, String aIdList)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
      * ReadList action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -1056,6 +1105,23 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
      * @param aMetadata
      */
     protected long insert(IDvInvocation aInvocation, long aAfterId, String aUri, String aMetadata)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * BatchInsert action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * BatchInsert action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionBatchInsert} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aAfterId
+     * @param aSongList
+     */
+    protected long batchInsert(IDvInvocation aInvocation, long aAfterId, String aSongList)
     {
         throw (new ActionDisabledError());
     }
@@ -1934,6 +2000,56 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
         }
     }
 
+    private class DoSimpleReadList implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String idList;
+            String trackList;
+            try
+            {
+                invocation.readStart();
+                idList = invocation.readString("IdList");
+                invocation.readEnd();
+                 trackList = simpleReadList(invocation, idList);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SimpleReadList");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("TrackList", trackList);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
     private class DoReadList implements IDvInvocationListener
     {
         public void actionInvoked(long aInvocation)
@@ -2005,6 +2121,58 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
             catch (ActionError ae)
             {
                 invocation.reportActionError(ae, "Insert");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeUint("NewId", newId);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoBatchInsert implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            long afterId;
+            String songList;
+            long newId;
+            try
+            {
+                invocation.readStart();
+                afterId = invocation.readUint("AfterId");
+                songList = invocation.readString("SongList");
+                invocation.readEnd();
+                 newId = batchInsert(invocation, afterId, songList);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "BatchInsert");
                 return;
             }
             catch (PropertyUpdateError pue)
