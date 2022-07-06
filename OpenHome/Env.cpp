@@ -9,6 +9,10 @@
 #include <OpenHome/Private/Timer.h>
 #include <OpenHome/Net/Private/Globals.h>
 #include <OpenHome/Private/Debug.h>
+#include <OpenHome/Private/Shell.h>
+#include <OpenHome/Private/InfoProvider.h>
+#include <OpenHome/Private/ShellCommandDebug.h>
+#include <OpenHome/Net/Private/MdnsProvider.h>
 
 #ifdef PLATFORM_MACOSX_GNU
 # include <sys/time.h>
@@ -16,6 +20,7 @@
 # include <time.h>
 #endif // PLATFORM_MACOSX_GNU
 #include <stdlib.h>
+#include <stdint.h>
 
 namespace OpenHome {
 
@@ -60,9 +65,13 @@ Environment::Environment(FunctorMsg& aLogOutput)
     , iInitParams(NULL)
     , iTimerManager(NULL)
     , iNetworkAdapterList(NULL)
+    , iShell(NULL)
+    , iInfoAggregator(NULL)
+    , iShellCommandDebug(NULL)
     , iSequenceNumber(0)
     , iCpStack(NULL)
     , iDvStack(NULL)
+    , iMdns(NULL)
 {
     Construct(aLogOutput);
 }
@@ -76,9 +85,13 @@ Environment::Environment(InitialisationParams* aInitParams)
     : iOsContext(NULL)
     , iInitParams(aInitParams)
     , iNetworkAdapterList(NULL)
+    , iShell(NULL)
+    , iInfoAggregator(NULL)
+    , iShellCommandDebug(NULL)
     , iSequenceNumber(0)
     , iCpStack(NULL)
     , iDvStack(NULL)
+    , iMdns(NULL)
 {
     Construct(aInitParams->LogOutput());
 #ifdef PLATFORM_MACOSX_GNU
@@ -92,24 +105,29 @@ Environment::Environment(InitialisationParams* aInitParams)
 #else
     SetRandomSeed((TUint)(time(NULL) % UINT32_MAX));
 #endif // PLATFORM_MACOSX_GNU
-    iTimerManager = new OpenHome::TimerManager(*this);
+    iTimerManager = new OpenHome::TimerManager(*this, iInitParams->TimerManagerPriority());
     iNetworkAdapterList = new OpenHome::NetworkAdapterList(*this, 0);
     Functor& subnetListChangeListener = iInitParams->SubnetListChangedListener();
     if (subnetListChangeListener) {
-        iNetworkAdapterList->AddSubnetListChangeListener(subnetListChangeListener, false);
+        iNetworkAdapterList->AddSubnetListChangeListener(subnetListChangeListener, "Env", false);
     }
     FunctorNetworkAdapter &subnetAddedListener = iInitParams->SubnetAddedListener();
     if (subnetAddedListener) {
-        iNetworkAdapterList->AddSubnetAddedListener(subnetAddedListener);
+        iNetworkAdapterList->AddSubnetAddedListener(subnetAddedListener, "Env");
     }
     FunctorNetworkAdapter &subnetRemovedListener = iInitParams->SubnetRemovedListener();
     if (subnetRemovedListener) {
-        iNetworkAdapterList->AddSubnetRemovedListener(subnetRemovedListener);
+        iNetworkAdapterList->AddSubnetRemovedListener(subnetRemovedListener, "Env");
     }
     FunctorNetworkAdapter &networkAdapterChangeListener = iInitParams->NetworkAdapterChangedListener();
     if (networkAdapterChangeListener) {
-        iNetworkAdapterList->AddNetworkAdapterChangeListener(networkAdapterChangeListener);
+        iNetworkAdapterList->AddNetworkAdapterChangeListener(networkAdapterChangeListener, "Env");
     }
+
+    CreateShell();
+    CreateMdnsProvider();
+
+    iHttpUserAgent.Replace(iInitParams->HttpUserAgent());
 }
 
 Environment* Environment::Create(InitialisationParams* aInitParams)
@@ -120,11 +138,18 @@ Environment* Environment::Create(InitialisationParams* aInitParams)
 void Environment::Construct(FunctorMsg& aLogOutput)
 {
     gEnv = this;
-    iOsContext = OpenHome::Os::Create();
+    Net::InitialisationParams::EThreadScheduling schedulerPolicy = InitialisationParams::EScheduleDefault;
+    if (iInitParams != NULL) {
+        schedulerPolicy = iInitParams->SchedulingPolicy();
+    }
+    iOsContext = OpenHome::Os::Create(schedulerPolicy);
     if (iOsContext == NULL) {
         throw std::bad_alloc();
     }
     iLogger = new Log(aLogOutput);
+    TUint hostMin, hostMax;
+    Os::ThreadGetPriorityRange(iOsContext, hostMin, hostMax);
+    iThreadPriorityArbitrator = new ThreadPriorityArbitrator(hostMin, hostMax);
     iPublicLock = new OpenHome::Mutex("GMUT");
     iPrivateLock = new OpenHome::Mutex("ENVP");
     iSuspendResumeObserverLock = new OpenHome::Mutex("ENVR");
@@ -134,8 +159,14 @@ Environment::~Environment()
 {
     iPublicLock->Wait();
     iPublicLock->Signal();
+    if (iMdns != NULL) {
+        delete iMdns;
+    }
     delete iCpStack;
     delete iDvStack;
+    delete iShellCommandDebug;
+    delete iInfoAggregator;
+    delete iShell;
     delete iNetworkAdapterList;
     if (iObjectMap.size() != 0) {
         Log::Print("ERROR: destroying stack before some owned objects\n");
@@ -150,8 +181,21 @@ Environment::~Environment()
     ASSERT(iSuspendObservers.size() == 0);
     ASSERT(iResumeObservers.size() == 0);
     delete iSuspendResumeObserverLock;
+    delete iThreadPriorityArbitrator;
     delete iLogger;
     Os::Destroy(iOsContext);
+}
+
+void Environment::CreateMdnsProvider()
+{
+    const TChar* hostName = NULL;
+    TBool reqMdnsCache = false;
+    if (iInitParams->DvIsBonjourEnabled(hostName, reqMdnsCache)) {
+#ifndef DEFINE_WINDOWS_UNIVERSAL
+        ASSERT(iMdns == NULL);
+        iMdns = new OpenHome::Net::MdnsProvider(*this, hostName, reqMdnsCache);
+#endif
+    }
 }
 
 void Environment::GetVersion(TUint& aMajor, TUint& aMinor)
@@ -183,6 +227,26 @@ Log& Environment::Logger()
 NetworkAdapterList& Environment::NetworkAdapterList()
 {
     return *iNetworkAdapterList;
+}
+
+ThreadPriorityArbitrator& Environment::PriorityArbitrator()
+{
+    return *iThreadPriorityArbitrator;
+}
+
+OpenHome::Shell* Environment::Shell()
+{
+    return iShell;
+}
+
+IInfoAggregator* Environment::InfoAggregator()
+{
+    return iInfoAggregator;
+}
+
+OpenHome::ShellCommandDebug* Environment::ShellCommandDebug()
+{
+    return iShellCommandDebug;
 }
 
 Net::SsdpListenerMulticast& Environment::MulticastListenerClaim(TIpAddress aInterface)
@@ -261,7 +325,7 @@ void Environment::RemoveResumeObserver(IResumeObserver& aObserver)
 
 void Environment::NotifySuspended()
 {
-    LOG(kTrace, "NotifySuspended\n");
+    LOG_TRACE(kNetwork, "NotifySuspended\n");
     iSuspendResumeObserverLock->Wait();
     for (TUint i=0; i<iSuspendObservers.size(); i++) {
         iSuspendObservers[i]->NotifySuspended();
@@ -271,7 +335,7 @@ void Environment::NotifySuspended()
 
 void Environment::NotifyResumed()
 {
-    LOG(kTrace, "NotifyResumed\n");
+    LOG_TRACE(kNetwork, "NotifyResumed\n");
     iSuspendResumeObserverLock->Wait();
     for (TUint i=0; i<iResumeObservers.size(); i++) {
         iResumeObservers[i]->NotifyResumed();
@@ -315,6 +379,26 @@ InitialisationParams* Environment::InitParams()
     return iInitParams;
 }
 
+void Environment::SetHttpUserAgent(const Brx& aUserAgent)
+{
+    AutoMutex _(*iPrivateLock);
+    if (aUserAgent.Bytes() < iHttpUserAgent.MaxBytes()) {
+        iHttpUserAgent.Replace(aUserAgent);
+    }
+}
+
+TBool Environment::HasHttpUserAgent() const
+{
+    AutoMutex _(*iPrivateLock);
+    return (iHttpUserAgent.Bytes() > 0);
+}
+
+void Environment::WriteHttpUserAgent(IWriter& aWriter)
+{
+    AutoMutex _(*iPrivateLock);
+    aWriter.Write(iHttpUserAgent);
+}
+
 void Environment::AddObject(IStackObject* aObject)
 {
     iPrivateLock->Wait();
@@ -345,6 +429,20 @@ void Environment::ListObjects()
     iPrivateLock->Signal();
 }
 
+void Environment::CreateShell()
+{
+    if (iShell != NULL) {
+        return;
+    }
+    TUint shellPort, shellSessionPriority;
+    if (!iInitParams->IsShellEnabled(shellPort, shellSessionPriority)) {
+        return;
+    }
+    iShell = new OpenHome::Shell(*this, shellPort, shellSessionPriority);
+    iInfoAggregator = new OpenHome::InfoAggregator(*iShell);
+    iShellCommandDebug = new OpenHome::ShellCommandDebug(*iShell);
+}
+
 void Environment::SetCpStack(IStack* aStack)
 {
     iCpStack = aStack;
@@ -365,10 +463,17 @@ IStack* Environment::DviStack()
     return iDvStack;
 }
 
+IMdnsProvider* Environment::MdnsProvider()
+{
+    return iMdns;
+}
+
 void Environment::SetInitParams(InitialisationParams* aInitParams)
 {
     delete iInitParams;
     iInitParams = aInitParams;
+    CreateShell();
+    CreateMdnsProvider();
 }
 
 

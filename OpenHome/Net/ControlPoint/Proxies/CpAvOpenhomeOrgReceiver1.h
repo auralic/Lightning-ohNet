@@ -18,18 +18,50 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgReceiver1 : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgReceiver1() {}
+    virtual void SyncPlay() = 0;
+    virtual void BeginPlay(FunctorAsync& aFunctor) = 0;
+    virtual void EndPlay(IAsync& aAsync) = 0;
+    virtual void SyncStop() = 0;
+    virtual void BeginStop(FunctorAsync& aFunctor) = 0;
+    virtual void EndStop(IAsync& aAsync) = 0;
+    virtual void SyncSetSender(const Brx& aUri, const Brx& aMetadata) = 0;
+    virtual void BeginSetSender(const Brx& aUri, const Brx& aMetadata, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetSender(IAsync& aAsync) = 0;
+    virtual void SyncSender(Brh& aUri, Brh& aMetadata) = 0;
+    virtual void BeginSender(FunctorAsync& aFunctor) = 0;
+    virtual void EndSender(IAsync& aAsync, Brh& aUri, Brh& aMetadata) = 0;
+    virtual void SyncProtocolInfo(Brh& aValue) = 0;
+    virtual void BeginProtocolInfo(FunctorAsync& aFunctor) = 0;
+    virtual void EndProtocolInfo(IAsync& aAsync, Brh& aValue) = 0;
+    virtual void SyncTransportState(Brh& aValue) = 0;
+    virtual void BeginTransportState(FunctorAsync& aFunctor) = 0;
+    virtual void EndTransportState(IAsync& aAsync, Brh& aValue) = 0;
+    virtual void SetPropertyUriChanged(Functor& aUriChanged) = 0;
+    virtual void PropertyUri(Brhz& aUri) const = 0;
+    virtual void SetPropertyMetadataChanged(Functor& aMetadataChanged) = 0;
+    virtual void PropertyMetadata(Brhz& aMetadata) const = 0;
+    virtual void SetPropertyTransportStateChanged(Functor& aTransportStateChanged) = 0;
+    virtual void PropertyTransportState(Brhz& aTransportState) const = 0;
+    virtual void SetPropertyProtocolInfoChanged(Functor& aProtocolInfoChanged) = 0;
+    virtual void PropertyProtocolInfo(Brhz& aProtocolInfo) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:Receiver:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgReceiver1 : public CpProxy
+class CpProxyAvOpenhomeOrgReceiver1 : public ICpProxyAvOpenhomeOrgReceiver1
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -275,7 +307,40 @@ public:
      * @param[out] aProtocolInfo
      */
     void PropertyProtocolInfo(Brhz& aProtocolInfo) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void UriPropertyChanged();
     void MetadataPropertyChanged();
     void TransportStatePropertyChanged();

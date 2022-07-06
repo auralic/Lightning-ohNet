@@ -28,6 +28,20 @@ class DvProviderAvOpenhomeOrgHardwareConfig1Cpp : public DvProvider
 public:
     virtual ~DvProviderAvOpenhomeOrgHardwareConfig1Cpp() {}
     /**
+     * Set the value of the MessageOut property
+     *
+     * Can only be called if EnablePropertyMessageOut has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    bool SetPropertyMessageOut(const std::string& aValue);
+    /**
+     * Get a copy of the value of the MessageOut property
+     *
+     * Can only be called if EnablePropertyMessageOut has previously been called.
+     */
+    void GetPropertyMessageOut(std::string& aValue);
+    /**
      * Set the value of the Alive property
      *
      * Can only be called if EnablePropertyAlive has previously been called.
@@ -357,6 +371,10 @@ protected:
      */
     DvProviderAvOpenhomeOrgHardwareConfig1Cpp(DvDeviceStd& aDevice);
     /**
+     * Enable the MessageOut property.
+     */
+    void EnablePropertyMessageOut();
+    /**
      * Enable the Alive property.
      */
     void EnablePropertyAlive();
@@ -448,6 +466,24 @@ protected:
      * Enable the VolumeControl property.
      */
     void EnablePropertyVolumeControl();
+    /**
+     * Signal that the action LogIn is supported.
+     * The action's availability will be published in the device's service.xml.
+     * LogIn must be overridden if this is called.
+     */
+    void EnableActionLogIn();
+    /**
+     * Signal that the action LogOut is supported.
+     * The action's availability will be published in the device's service.xml.
+     * LogOut must be overridden if this is called.
+     */
+    void EnableActionLogOut();
+    /**
+     * Signal that the action CancelLogIn is supported.
+     * The action's availability will be published in the device's service.xml.
+     * CancelLogIn must be overridden if this is called.
+     */
+    void EnableActionCancelLogIn();
     /**
      * Signal that the action IsAlive is supported.
      * The action's availability will be published in the device's service.xml.
@@ -706,7 +742,49 @@ protected:
      * SetDACBalance must be overridden if this is called.
      */
     void EnableActionSetDACBalance();
+    /**
+     * Signal that the action SetEnableResampler is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetEnableResampler must be overridden if this is called.
+     */
+    void EnableActionSetEnableResampler();
+    /**
+     * Signal that the action SetEnableSpeaker is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetEnableSpeaker must be overridden if this is called.
+     */
+    void EnableActionSetEnableSpeaker();
+    /**
+     * Signal that the action SetEnableEqualizer is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetEnableEqualizer must be overridden if this is called.
+     */
+    void EnableActionSetEnableEqualizer();
 private:
+    /**
+     * LogIn action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * LogIn action for the owning device.
+     * Must be implemented iff EnableActionLogIn was called.
+     */
+    virtual void LogIn(IDvInvocationStd& aInvocation, const std::string& aServiceName, const std::string& aMessageIn, std::string& aMessageOut);
+    /**
+     * LogOut action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * LogOut action for the owning device.
+     * Must be implemented iff EnableActionLogOut was called.
+     */
+    virtual void LogOut(IDvInvocationStd& aInvocation, const std::string& aServiceName);
+    /**
+     * CancelLogIn action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * CancelLogIn action for the owning device.
+     * Must be implemented iff EnableActionCancelLogIn was called.
+     */
+    virtual void CancelLogIn(IDvInvocationStd& aInvocation, const std::string& aServiceName);
     /**
      * IsAlive action.
      *
@@ -1051,8 +1129,35 @@ private:
      * Must be implemented iff EnableActionSetDACBalance was called.
      */
     virtual void SetDACBalance(IDvInvocationStd& aInvocation, uint32_t aBalance);
+    /**
+     * SetEnableResampler action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetEnableResampler action for the owning device.
+     * Must be implemented iff EnableActionSetEnableResampler was called.
+     */
+    virtual void SetEnableResampler(IDvInvocationStd& aInvocation, bool aEnableResampler);
+    /**
+     * SetEnableSpeaker action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetEnableSpeaker action for the owning device.
+     * Must be implemented iff EnableActionSetEnableSpeaker was called.
+     */
+    virtual void SetEnableSpeaker(IDvInvocationStd& aInvocation, bool aEnableSpeaker);
+    /**
+     * SetEnableEqualizer action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetEnableEqualizer action for the owning device.
+     * Must be implemented iff EnableActionSetEnableEqualizer was called.
+     */
+    virtual void SetEnableEqualizer(IDvInvocationStd& aInvocation, bool aEnableEqualizer);
 private:
     DvProviderAvOpenhomeOrgHardwareConfig1Cpp();
+    void DoLogIn(IDviInvocation& aInvocation);
+    void DoLogOut(IDviInvocation& aInvocation);
+    void DoCancelLogIn(IDviInvocation& aInvocation);
     void DoIsAlive(IDviInvocation& aInvocation);
     void DoUpdate(IDviInvocation& aInvocation);
     void DoActive(IDviInvocation& aInvocation);
@@ -1096,7 +1201,11 @@ private:
     void DoSetDACPhase(IDviInvocation& aInvocation);
     void DoGetDACBalance(IDviInvocation& aInvocation);
     void DoSetDACBalance(IDviInvocation& aInvocation);
+    void DoSetEnableResampler(IDviInvocation& aInvocation);
+    void DoSetEnableSpeaker(IDviInvocation& aInvocation);
+    void DoSetEnableEqualizer(IDviInvocation& aInvocation);
 private:
+    PropertyString* iPropertyMessageOut;
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;
     PropertyBool* iPropertyRestart;

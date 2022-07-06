@@ -4,8 +4,8 @@
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
-MdnsProvider::MdnsProvider(Environment& aStack, const TChar* aHost)
-    : iPlatform(aStack, aHost)
+MdnsProvider::MdnsProvider(Environment& aStack, const TChar* aHost, TBool aRequiresMdnsCache)
+    : iPlatform(aStack, aHost, aRequiresMdnsCache)
 {
 }
 
@@ -20,7 +20,11 @@ void MdnsProvider::MdnsSetHostName(const TChar* aName)
 
 TUint MdnsProvider::MdnsCreateService()
 {
+#ifdef DEFINE_WINDOWS_UNIVERSAL
+    return 0;
+#else
     return iPlatform.CreateService();
+#endif
 }
 
 void MdnsProvider::MdnsDestroyService(TUint aHandle)
@@ -41,4 +45,14 @@ void MdnsProvider::MdnsRegisterService(TUint aHandle, const TChar* aName, const 
 void MdnsProvider::MdnsDeregisterService(TUint aHandle)
 {
     iPlatform.DeregisterService(aHandle);
+}
+
+void MdnsProvider::FindDevices(const TChar* aServiceName)
+{
+    iPlatform.FindDevices(aServiceName);
+}
+
+void MdnsProvider::AddMdnsDeviceListener(IMdnsDeviceListener* aListener)
+{
+    iPlatform.AddMdnsDeviceListener(aListener);
 }

@@ -58,7 +58,7 @@ void SyncSetDACConfigAvOpenhomeOrgWebDACConfig1Cpp::CompleteRequest(IAsync& aAsy
 
 
 CpProxyAvOpenhomeOrgWebDACConfig1Cpp::CpProxyAvOpenhomeOrgWebDACConfig1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "WebDACConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "WebDACConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -98,11 +98,11 @@ void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::SyncGetDACConfig(std::string& aDACCon
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::BeginGetDACConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDACConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDACConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDACConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::EndGetDACConfig(IAsync& aAsync, std::string& aDACConfig)
@@ -133,14 +133,14 @@ void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::SyncSetDACConfig(const std::string& a
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::BeginSetDACConfig(const std::string& aDACConfig, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDACConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDACConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDACConfig->InputParameters();
     {
         Brn buf((const TByte*)aDACConfig.c_str(), (TUint)aDACConfig.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::EndSetDACConfig(IAsync& aAsync)
@@ -159,44 +159,50 @@ void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::EndSetDACConfig(IAsync& aAsync)
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::SetPropertyAliveChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iAliveChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::SetPropertyDACConfigChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iDACConfigChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::SetPropertyCurrentActionChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iCurrentActionChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::PropertyAlive(bool& aAlive) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::PropertyDACConfig(std::string& aDACConfig) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iDACConfig->Value();
     aDACConfig.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::PropertyCurrentAction(uint32_t& aCurrentAction) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -213,5 +219,44 @@ void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::DACConfigPropertyChanged()
 void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::CurrentActionPropertyChanged()
 {
     ReportEvent(iCurrentActionChanged);
+}
+
+void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgWebDACConfig1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgWebDACConfig1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

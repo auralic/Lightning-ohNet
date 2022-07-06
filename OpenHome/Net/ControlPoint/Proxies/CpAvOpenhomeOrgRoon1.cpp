@@ -7,19 +7,138 @@
 #include <OpenHome/Net/Private/Error.h>
 #include <OpenHome/Net/Private/CpiDevice.h>
 
-using namespace OpenHome;
-using namespace OpenHome::Net;
-
+namespace OpenHome {
+namespace Net {
 
 class SyncPlayAvOpenhomeOrgRoon1 : public SyncProxyAction
 {
 public:
     SyncPlayAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
     virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncPlayAvOpenhomeOrgRoon1() {}
 private:
     CpProxyAvOpenhomeOrgRoon1& iService;
 };
+
+class SyncPauseAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncPauseAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+};
+
+class SyncPlayPauseAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncPlayPauseAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+};
+
+class SyncStopAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncStopAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+};
+
+class SyncNextAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncNextAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+};
+
+class SyncPreviousAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncPreviousAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+};
+
+class SyncToggleShuffleAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncToggleShuffleAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+};
+
+class SyncToggleLoopAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncToggleLoopAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+};
+
+class SyncRepeatAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncRepeatAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy, TBool& aValue);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+    TBool& iValue;
+};
+
+class SyncShuffleAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncShuffleAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy, TBool& aValue);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+    TBool& iValue;
+};
+
+class SyncSeekSecondAbsoluteAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncSeekSecondAbsoluteAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+};
+
+class SyncSeekSecondRelativeAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncSeekSecondRelativeAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+};
+
+class SyncTransportStateAvOpenhomeOrgRoon1 : public SyncProxyAction
+{
+public:
+    SyncTransportStateAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy, Brh& aValue);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgRoon1& iService;
+    Brh& iValue;
+};
+
+} // namespace Net
+} // namespace OpenHome
+
+
+using namespace OpenHome;
+using namespace OpenHome::Net;
+
+
+// SyncPlayAvOpenhomeOrgRoon1
 
 SyncPlayAvOpenhomeOrgRoon1::SyncPlayAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -31,16 +150,7 @@ void SyncPlayAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndPlay(aAsync);
 }
 
-
-class SyncPauseAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncPauseAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncPauseAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-};
+// SyncPauseAvOpenhomeOrgRoon1
 
 SyncPauseAvOpenhomeOrgRoon1::SyncPauseAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -52,16 +162,7 @@ void SyncPauseAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndPause(aAsync);
 }
 
-
-class SyncPlayPauseAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncPlayPauseAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncPlayPauseAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-};
+// SyncPlayPauseAvOpenhomeOrgRoon1
 
 SyncPlayPauseAvOpenhomeOrgRoon1::SyncPlayPauseAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -73,16 +174,7 @@ void SyncPlayPauseAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndPlayPause(aAsync);
 }
 
-
-class SyncStopAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncStopAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncStopAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-};
+// SyncStopAvOpenhomeOrgRoon1
 
 SyncStopAvOpenhomeOrgRoon1::SyncStopAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -94,16 +186,7 @@ void SyncStopAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndStop(aAsync);
 }
 
-
-class SyncNextAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncNextAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncNextAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-};
+// SyncNextAvOpenhomeOrgRoon1
 
 SyncNextAvOpenhomeOrgRoon1::SyncNextAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -115,16 +198,7 @@ void SyncNextAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndNext(aAsync);
 }
 
-
-class SyncPreviousAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncPreviousAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncPreviousAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-};
+// SyncPreviousAvOpenhomeOrgRoon1
 
 SyncPreviousAvOpenhomeOrgRoon1::SyncPreviousAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -136,16 +210,7 @@ void SyncPreviousAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndPrevious(aAsync);
 }
 
-
-class SyncToggleShuffleAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncToggleShuffleAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncToggleShuffleAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-};
+// SyncToggleShuffleAvOpenhomeOrgRoon1
 
 SyncToggleShuffleAvOpenhomeOrgRoon1::SyncToggleShuffleAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -157,16 +222,7 @@ void SyncToggleShuffleAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndToggleShuffle(aAsync);
 }
 
-
-class SyncToggleLoopAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncToggleLoopAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncToggleLoopAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-};
+// SyncToggleLoopAvOpenhomeOrgRoon1
 
 SyncToggleLoopAvOpenhomeOrgRoon1::SyncToggleLoopAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -178,17 +234,7 @@ void SyncToggleLoopAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndToggleLoop(aAsync);
 }
 
-
-class SyncRepeatAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncRepeatAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy, TBool& aValue);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncRepeatAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-    TBool& iValue;
-};
+// SyncRepeatAvOpenhomeOrgRoon1
 
 SyncRepeatAvOpenhomeOrgRoon1::SyncRepeatAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy, TBool& aValue)
     : iService(aProxy)
@@ -201,17 +247,7 @@ void SyncRepeatAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndRepeat(aAsync, iValue);
 }
 
-
-class SyncShuffleAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncShuffleAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy, TBool& aValue);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncShuffleAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-    TBool& iValue;
-};
+// SyncShuffleAvOpenhomeOrgRoon1
 
 SyncShuffleAvOpenhomeOrgRoon1::SyncShuffleAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy, TBool& aValue)
     : iService(aProxy)
@@ -224,16 +260,7 @@ void SyncShuffleAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndShuffle(aAsync, iValue);
 }
 
-
-class SyncSeekSecondAbsoluteAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncSeekSecondAbsoluteAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSeekSecondAbsoluteAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-};
+// SyncSeekSecondAbsoluteAvOpenhomeOrgRoon1
 
 SyncSeekSecondAbsoluteAvOpenhomeOrgRoon1::SyncSeekSecondAbsoluteAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -245,16 +272,7 @@ void SyncSeekSecondAbsoluteAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndSeekSecondAbsolute(aAsync);
 }
 
-
-class SyncSeekSecondRelativeAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncSeekSecondRelativeAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSeekSecondRelativeAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-};
+// SyncSeekSecondRelativeAvOpenhomeOrgRoon1
 
 SyncSeekSecondRelativeAvOpenhomeOrgRoon1::SyncSeekSecondRelativeAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy)
     : iService(aProxy)
@@ -266,17 +284,7 @@ void SyncSeekSecondRelativeAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
     iService.EndSeekSecondRelative(aAsync);
 }
 
-
-class SyncTransportStateAvOpenhomeOrgRoon1 : public SyncProxyAction
-{
-public:
-    SyncTransportStateAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy, Brh& aValue);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncTransportStateAvOpenhomeOrgRoon1() {}
-private:
-    CpProxyAvOpenhomeOrgRoon1& iService;
-    Brh& iValue;
-};
+// SyncTransportStateAvOpenhomeOrgRoon1
 
 SyncTransportStateAvOpenhomeOrgRoon1::SyncTransportStateAvOpenhomeOrgRoon1(CpProxyAvOpenhomeOrgRoon1& aProxy, Brh& aValue)
     : iService(aProxy)
@@ -290,8 +298,10 @@ void SyncTransportStateAvOpenhomeOrgRoon1::CompleteRequest(IAsync& aAsync)
 }
 
 
+// CpProxyAvOpenhomeOrgRoon1
+
 CpProxyAvOpenhomeOrgRoon1::CpProxyAvOpenhomeOrgRoon1(CpDevice& aDevice)
-    : CpProxy("av-openhome-org", "Roon", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "Roon", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
     TChar** allowedValues;
@@ -385,8 +395,8 @@ void CpProxyAvOpenhomeOrgRoon1::SyncPlay()
 
 void CpProxyAvOpenhomeOrgRoon1::BeginPlay(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionPlay, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionPlay, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndPlay(IAsync& aAsync)
@@ -412,8 +422,8 @@ void CpProxyAvOpenhomeOrgRoon1::SyncPause()
 
 void CpProxyAvOpenhomeOrgRoon1::BeginPause(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionPause, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionPause, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndPause(IAsync& aAsync)
@@ -439,8 +449,8 @@ void CpProxyAvOpenhomeOrgRoon1::SyncPlayPause()
 
 void CpProxyAvOpenhomeOrgRoon1::BeginPlayPause(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionPlayPause, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionPlayPause, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndPlayPause(IAsync& aAsync)
@@ -466,8 +476,8 @@ void CpProxyAvOpenhomeOrgRoon1::SyncStop()
 
 void CpProxyAvOpenhomeOrgRoon1::BeginStop(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionStop, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionStop, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndStop(IAsync& aAsync)
@@ -493,8 +503,8 @@ void CpProxyAvOpenhomeOrgRoon1::SyncNext()
 
 void CpProxyAvOpenhomeOrgRoon1::BeginNext(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionNext, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionNext, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndNext(IAsync& aAsync)
@@ -520,8 +530,8 @@ void CpProxyAvOpenhomeOrgRoon1::SyncPrevious()
 
 void CpProxyAvOpenhomeOrgRoon1::BeginPrevious(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionPrevious, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionPrevious, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndPrevious(IAsync& aAsync)
@@ -547,8 +557,8 @@ void CpProxyAvOpenhomeOrgRoon1::SyncToggleShuffle()
 
 void CpProxyAvOpenhomeOrgRoon1::BeginToggleShuffle(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionToggleShuffle, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionToggleShuffle, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndToggleShuffle(IAsync& aAsync)
@@ -574,8 +584,8 @@ void CpProxyAvOpenhomeOrgRoon1::SyncToggleLoop()
 
 void CpProxyAvOpenhomeOrgRoon1::BeginToggleLoop(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionToggleLoop, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionToggleLoop, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndToggleLoop(IAsync& aAsync)
@@ -601,11 +611,11 @@ void CpProxyAvOpenhomeOrgRoon1::SyncRepeat(TBool& aValue)
 
 void CpProxyAvOpenhomeOrgRoon1::BeginRepeat(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionRepeat, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionRepeat, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionRepeat->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndRepeat(IAsync& aAsync, TBool& aValue)
@@ -633,11 +643,11 @@ void CpProxyAvOpenhomeOrgRoon1::SyncShuffle(TBool& aValue)
 
 void CpProxyAvOpenhomeOrgRoon1::BeginShuffle(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionShuffle, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionShuffle, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionShuffle->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndShuffle(IAsync& aAsync, TBool& aValue)
@@ -665,11 +675,11 @@ void CpProxyAvOpenhomeOrgRoon1::SyncSeekSecondAbsolute(TUint aValue)
 
 void CpProxyAvOpenhomeOrgRoon1::BeginSeekSecondAbsolute(TUint aValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSeekSecondAbsolute, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSeekSecondAbsolute, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSeekSecondAbsolute->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aValue));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndSeekSecondAbsolute(IAsync& aAsync)
@@ -695,11 +705,11 @@ void CpProxyAvOpenhomeOrgRoon1::SyncSeekSecondRelative(TInt aValue)
 
 void CpProxyAvOpenhomeOrgRoon1::BeginSeekSecondRelative(TInt aValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSeekSecondRelative, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSeekSecondRelative, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSeekSecondRelative->InputParameters();
     invocation->AddInput(new ArgumentInt(*inParams[inIndex++], aValue));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndSeekSecondRelative(IAsync& aAsync)
@@ -725,11 +735,11 @@ void CpProxyAvOpenhomeOrgRoon1::SyncTransportState(Brh& aValue)
 
 void CpProxyAvOpenhomeOrgRoon1::BeginTransportState(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionTransportState, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionTransportState, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionTransportState->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRoon1::EndTransportState(IAsync& aAsync, Brh& aValue)
@@ -750,71 +760,81 @@ void CpProxyAvOpenhomeOrgRoon1::EndTransportState(IAsync& aAsync, Brh& aValue)
 
 void CpProxyAvOpenhomeOrgRoon1::SetPropertyTransportStateChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iTransportStateChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgRoon1::SetPropertyRepeatChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iRepeatChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgRoon1::SetPropertyRepeatOneChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iRepeatOneChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgRoon1::SetPropertyShuffleChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iShuffleChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgRoon1::SetPropertyUpdateCoverChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iUpdateCoverChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgRoon1::PropertyTransportState(Brhz& aTransportState) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aTransportState.Set(iTransportState->Value());
 }
 
 void CpProxyAvOpenhomeOrgRoon1::PropertyRepeat(TBool& aRepeat) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aRepeat = iRepeat->Value();
 }
 
 void CpProxyAvOpenhomeOrgRoon1::PropertyRepeatOne(TBool& aRepeatOne) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aRepeatOne = iRepeatOne->Value();
 }
 
 void CpProxyAvOpenhomeOrgRoon1::PropertyShuffle(TBool& aShuffle) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aShuffle = iShuffle->Value();
 }
 
 void CpProxyAvOpenhomeOrgRoon1::PropertyUpdateCover(TBool& aUpdateCover) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aUpdateCover = iUpdateCover->Value();
 }
 
@@ -842,4 +862,45 @@ void CpProxyAvOpenhomeOrgRoon1::UpdateCoverPropertyChanged()
 {
     ReportEvent(iUpdateCoverChanged);
 }
+
+
+void CpProxyAvOpenhomeOrgRoon1::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgRoon1::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgRoon1::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgRoon1::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgRoon1::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgRoon1::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgRoon1::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgRoon1::Version() const
+{
+  return iCpProxy.Version();
+}
+
 

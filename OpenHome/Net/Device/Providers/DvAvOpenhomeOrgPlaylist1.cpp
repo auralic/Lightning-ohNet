@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgPlaylist1::GetPropertyTransportState(Brhz& aValue)
     aValue.Set(iPropertyTransportState->Value());
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1::WritePropertyTransportState(IWriter& aWriter)
+{
+    iPropertyTransportState->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgPlaylist1::SetPropertyRepeat(TBool aValue)
 {
     ASSERT(iPropertyRepeat != NULL);
@@ -68,6 +73,11 @@ void DvProviderAvOpenhomeOrgPlaylist1::GetPropertyIdArray(Brh& aValue)
     aValue.Set(iPropertyIdArray->Value());
 }
 
+void DvProviderAvOpenhomeOrgPlaylist1::WritePropertyIdArray(IWriter& aWriter)
+{
+    iPropertyIdArray->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgPlaylist1::SetPropertyTracksMax(TUint aValue)
 {
     ASSERT(iPropertyTracksMax != NULL);
@@ -90,6 +100,11 @@ void DvProviderAvOpenhomeOrgPlaylist1::GetPropertyProtocolInfo(Brhz& aValue)
 {
     ASSERT(iPropertyProtocolInfo != NULL);
     aValue.Set(iPropertyProtocolInfo->Value());
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::WritePropertyProtocolInfo(IWriter& aWriter)
+{
+    iPropertyProtocolInfo->Write(aWriter);
 }
 
 DvProviderAvOpenhomeOrgPlaylist1::DvProviderAvOpenhomeOrgPlaylist1(DvDevice& aDevice)

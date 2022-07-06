@@ -108,10 +108,12 @@ private:
     PropertyUpdatesFlattened* FindBySid(const Brx& aSid);
     PropertyUpdatesFlattened* FindBySid(const Brx& aSid, TUint& aIndex);
 private: // IPropertyWriterFactory
-    IPropertyWriter* CreateWriter(const IDviSubscriptionUserData* aUserData, const Brx& aSid, TUint aSequenceNumber);
+    IPropertyWriter* ClaimWriter(const IDviSubscriptionUserData* aUserData, const Brx& aSid, TUint aSequenceNumber);
+    void ReleaseWriter(IPropertyWriter* aWriter);
     void NotifySubscriptionCreated(const Brx& aSid);
     void NotifySubscriptionDeleted(const Brx& aSid);
     void NotifySubscriptionExpired(const Brx& aSid);
+    void LogUserData(IWriter& aWriter, const IDviSubscriptionUserData& aUserData);
 private: // IPropertyUpdateMerger
     PropertyUpdate* MergeUpdate(PropertyUpdate* aUpdate);
 private:

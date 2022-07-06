@@ -18,18 +18,110 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgStreaming1 : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgStreaming1() {}
+    virtual void SyncPlay() = 0;
+    virtual void BeginPlay(FunctorAsync& aFunctor) = 0;
+    virtual void EndPlay(IAsync& aAsync) = 0;
+    virtual void SyncPause() = 0;
+    virtual void BeginPause(FunctorAsync& aFunctor) = 0;
+    virtual void EndPause(IAsync& aAsync) = 0;
+    virtual void SyncStop() = 0;
+    virtual void BeginStop(FunctorAsync& aFunctor) = 0;
+    virtual void EndStop(IAsync& aAsync) = 0;
+    virtual void SyncNext() = 0;
+    virtual void BeginNext(FunctorAsync& aFunctor) = 0;
+    virtual void EndNext(IAsync& aAsync) = 0;
+    virtual void SyncPrevious() = 0;
+    virtual void BeginPrevious(FunctorAsync& aFunctor) = 0;
+    virtual void EndPrevious(IAsync& aAsync) = 0;
+    virtual void SyncSetRepeat(TBool aValue) = 0;
+    virtual void BeginSetRepeat(TBool aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetRepeat(IAsync& aAsync) = 0;
+    virtual void SyncRepeat(TBool& aValue) = 0;
+    virtual void BeginRepeat(FunctorAsync& aFunctor) = 0;
+    virtual void EndRepeat(IAsync& aAsync, TBool& aValue) = 0;
+    virtual void SyncSetShuffle(TBool aValue) = 0;
+    virtual void BeginSetShuffle(TBool aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetShuffle(IAsync& aAsync) = 0;
+    virtual void SyncShuffle(TBool& aValue) = 0;
+    virtual void BeginShuffle(FunctorAsync& aFunctor) = 0;
+    virtual void EndShuffle(IAsync& aAsync, TBool& aValue) = 0;
+    virtual void SyncSeekSecondAbsolute(TUint aValue) = 0;
+    virtual void BeginSeekSecondAbsolute(TUint aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSeekSecondAbsolute(IAsync& aAsync) = 0;
+    virtual void SyncSeekSecondRelative(TInt aValue) = 0;
+    virtual void BeginSeekSecondRelative(TInt aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSeekSecondRelative(IAsync& aAsync) = 0;
+    virtual void SyncSeekId(TUint aValue) = 0;
+    virtual void BeginSeekId(TUint aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSeekId(IAsync& aAsync) = 0;
+    virtual void SyncSeekIndex(TUint aValue) = 0;
+    virtual void BeginSeekIndex(TUint aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSeekIndex(IAsync& aAsync) = 0;
+    virtual void SyncTransportState(Brh& aValue) = 0;
+    virtual void BeginTransportState(FunctorAsync& aFunctor) = 0;
+    virtual void EndTransportState(IAsync& aAsync, Brh& aValue) = 0;
+    virtual void SyncId(TUint& aValue) = 0;
+    virtual void BeginId(FunctorAsync& aFunctor) = 0;
+    virtual void EndId(IAsync& aAsync, TUint& aValue) = 0;
+    virtual void SyncRead(TUint aId, Brh& aUri, Brh& aMetadata) = 0;
+    virtual void BeginRead(TUint aId, FunctorAsync& aFunctor) = 0;
+    virtual void EndRead(IAsync& aAsync, Brh& aUri, Brh& aMetadata) = 0;
+    virtual void SyncReadList(const Brx& aIdList, Brh& aTrackList) = 0;
+    virtual void BeginReadList(const Brx& aIdList, FunctorAsync& aFunctor) = 0;
+    virtual void EndReadList(IAsync& aAsync, Brh& aTrackList) = 0;
+    virtual void SyncInsert(TUint aAfterId, const Brx& aUri, const Brx& aMetadata, TUint& aNewId) = 0;
+    virtual void BeginInsert(TUint aAfterId, const Brx& aUri, const Brx& aMetadata, FunctorAsync& aFunctor) = 0;
+    virtual void EndInsert(IAsync& aAsync, TUint& aNewId) = 0;
+    virtual void SyncDeleteId(TUint aValue) = 0;
+    virtual void BeginDeleteId(TUint aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndDeleteId(IAsync& aAsync) = 0;
+    virtual void SyncDeleteAll() = 0;
+    virtual void BeginDeleteAll(FunctorAsync& aFunctor) = 0;
+    virtual void EndDeleteAll(IAsync& aAsync) = 0;
+    virtual void SyncTracksMax(TUint& aValue) = 0;
+    virtual void BeginTracksMax(FunctorAsync& aFunctor) = 0;
+    virtual void EndTracksMax(IAsync& aAsync, TUint& aValue) = 0;
+    virtual void SyncIdArray(TUint& aToken, Brh& aArray) = 0;
+    virtual void BeginIdArray(FunctorAsync& aFunctor) = 0;
+    virtual void EndIdArray(IAsync& aAsync, TUint& aToken, Brh& aArray) = 0;
+    virtual void SyncIdArrayChanged(TUint aToken, TBool& aValue) = 0;
+    virtual void BeginIdArrayChanged(TUint aToken, FunctorAsync& aFunctor) = 0;
+    virtual void EndIdArrayChanged(IAsync& aAsync, TBool& aValue) = 0;
+    virtual void SyncProtocolInfo(Brh& aValue) = 0;
+    virtual void BeginProtocolInfo(FunctorAsync& aFunctor) = 0;
+    virtual void EndProtocolInfo(IAsync& aAsync, Brh& aValue) = 0;
+    virtual void SetPropertyTransportStateChanged(Functor& aTransportStateChanged) = 0;
+    virtual void PropertyTransportState(Brhz& aTransportState) const = 0;
+    virtual void SetPropertyRepeatChanged(Functor& aRepeatChanged) = 0;
+    virtual void PropertyRepeat(TBool& aRepeat) const = 0;
+    virtual void SetPropertyShuffleChanged(Functor& aShuffleChanged) = 0;
+    virtual void PropertyShuffle(TBool& aShuffle) const = 0;
+    virtual void SetPropertyIdChanged(Functor& aIdChanged) = 0;
+    virtual void PropertyId(TUint& aId) const = 0;
+    virtual void SetPropertyIdArrayChanged(Functor& aIdArrayChanged) = 0;
+    virtual void PropertyIdArray(Brh& aIdArray) const = 0;
+    virtual void SetPropertyTracksMaxChanged(Functor& aTracksMaxChanged) = 0;
+    virtual void PropertyTracksMax(TUint& aTracksMax) const = 0;
+    virtual void SetPropertyProtocolInfoChanged(Functor& aProtocolInfoChanged) = 0;
+    virtual void PropertyProtocolInfo(Brhz& aProtocolInfo) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:Streaming:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgStreaming1 : public CpProxy
+class CpProxyAvOpenhomeOrgStreaming1 : public ICpProxyAvOpenhomeOrgStreaming1
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -800,7 +892,40 @@ public:
      * @param[out] aProtocolInfo
      */
     void PropertyProtocolInfo(Brhz& aProtocolInfo) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void TransportStatePropertyChanged();
     void RepeatPropertyChanged();
     void ShufflePropertyChanged();

@@ -571,7 +571,7 @@ void CpProxyAvOpenhomeOrgDACConfig1C::SetPropertyCurrentActionChanged(Functor& a
 void CpProxyAvOpenhomeOrgDACConfig1C::PropertyCurrentAction(TUint& aCurrentAction) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -928,10 +928,16 @@ void STDCALL CpProxyAvOpenhomeOrgDACConfig1SetPropertyCurrentActionChanged(THand
     proxyC->SetPropertyCurrentActionChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgDACConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
+int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
 {
     CpProxyAvOpenhomeOrgDACConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgDACConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyCurrentAction(*aCurrentAction);
+    try {
+        proxyC->PropertyCurrentAction(*aCurrentAction);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 

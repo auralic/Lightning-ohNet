@@ -109,6 +109,9 @@ public:
     void Append(const Brx& aB);
     void Append(const TChar* aStr);
     void Append(const TByte* aPtr, TUint aBytes);
+    void AppendThrow(const Brx& aBuf);
+    void AppendThrow(const TChar* aStr);
+    void AppendThrow(const TByte* aPtr, TUint aBytes);
     TBool TryAppend(TChar aChar);
     TBool TryAppend(TByte aByte);
     TBool TryAppend(const Brx& aB);
@@ -183,6 +186,7 @@ public:
     void TransferTo(Brhz& aBrh); // reallocates buffer for aBrh
     void TransferTo(Bwh& aBwh);
     virtual const TByte* Ptr() const;
+    void Swap(Bwh& aBwh);
 protected:
     const TByte* iPtr;
 private:

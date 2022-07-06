@@ -10,6 +10,22 @@ interface IDvProviderAvOpenhomeOrgServerConfig1
 {
 
     /**
+     * Set the value of the PlayCD property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyPlayCD(boolean aValue);
+
+    /**
+     * Get a copy of the value of the PlayCD property
+     *
+     * @return value of the PlayCD property.
+     */
+    public boolean getPropertyPlayCD();
+
+    /**
      * Set the value of the Alive property
      *
      * @param aValue    new value for the property.
@@ -176,6 +192,7 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
         }
     }
 
+    private IDvInvocationListener iDelegateSetPlayCD;
     private IDvInvocationListener iDelegateSetServerName;
     private IDvInvocationListener iDelegateGetServerVersion;
     private IDvInvocationListener iDelegateGetProgressInfo;
@@ -201,6 +218,7 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     private IDvInvocationListener iDelegateGetCurrentScanFile;
     private IDvInvocationListener iDelegateGetServerConfig;
     private IDvInvocationListener iDelegateSetServerConfig;
+    private PropertyBool iPropertyPlayCD;
     private PropertyBool iPropertyAlive;
     private PropertyString iPropertySubscriptValue;
 
@@ -212,6 +230,15 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     protected DvProviderAvOpenhomeOrgServerConfig1(DvDevice aDevice)
     {
         super(aDevice, "av.openhome.org", "ServerConfig", 1);
+    }
+
+    /**
+     * Enable the PlayCD property.
+     */
+    public void enablePropertyPlayCD()
+    {
+        iPropertyPlayCD = new PropertyBool(new ParameterBool("PlayCD"));
+        addProperty(iPropertyPlayCD);
     }
 
     /**
@@ -231,6 +258,28 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
         List<String> allowedValues = new LinkedList<String>();
         iPropertySubscriptValue = new PropertyString(new ParameterString("SubscriptValue", allowedValues));
         addProperty(iPropertySubscriptValue);
+    }
+
+    /**
+     * Set the value of the PlayCD property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyPlayCD(boolean aValue)
+    {
+        return setPropertyBool(iPropertyPlayCD, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the PlayCD property
+     *
+     * @return  value of the PlayCD property.
+     */
+    public boolean getPropertyPlayCD()
+    {
+        return iPropertyPlayCD.getValue();
     }
 
     /**
@@ -275,6 +324,20 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
     public String getPropertySubscriptValue()
     {
         return iPropertySubscriptValue.getValue();
+    }
+
+    /**
+     * Signal that the action SetPlayCD is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetPlayCD must be overridden if this is called.
+     */      
+    protected void enableActionSetPlayCD()
+    {
+        Action action = new Action("SetPlayCD");
+        action.addInputParameter(new ParameterRelated("PlayCD", iPropertyPlayCD));
+        iDelegateSetPlayCD = new DoSetPlayCD();
+        enableAction(action, iDelegateSetPlayCD);
     }
 
     /**
@@ -629,6 +692,22 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
         action.addInputParameter(new ParameterString("SetValue", allowedValues));
         iDelegateSetServerConfig = new DoSetServerConfig();
         enableAction(action, iDelegateSetServerConfig);
+    }
+
+    /**
+     * SetPlayCD action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetPlayCD action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetPlayCD} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aPlayCD
+     */
+    protected void setPlayCD(IDvInvocation aInvocation, boolean aPlayCD)
+    {
+        throw (new ActionDisabledError());
     }
 
     /**
@@ -1029,6 +1108,54 @@ public class DvProviderAvOpenhomeOrgServerConfig1 extends DvProvider implements 
         }
     }
 
+
+    private class DoSetPlayCD implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean playCD;
+            try
+            {
+                invocation.readStart();
+                playCD = invocation.readBool("PlayCD");
+                invocation.readEnd();
+                setPlayCD(invocation, playCD);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetPlayCD");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
 
     private class DoSetServerName implements IDvInvocationListener
     {

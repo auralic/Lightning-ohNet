@@ -32,6 +32,11 @@ void DvProviderAvOpenhomeOrgWebProcessorConfig1::GetPropertyProcessorConfig(Brhz
     aValue.Set(iPropertyProcessorConfig->Value());
 }
 
+void DvProviderAvOpenhomeOrgWebProcessorConfig1::WritePropertyProcessorConfig(IWriter& aWriter)
+{
+    iPropertyProcessorConfig->Write(aWriter);
+}
+
 DvProviderAvOpenhomeOrgWebProcessorConfig1::DvProviderAvOpenhomeOrgWebProcessorConfig1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "WebProcessorConfig", 1)
 {

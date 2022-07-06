@@ -39,6 +39,12 @@ public:
      * Can only be called if EnablePropertyInfo has previously been called.
      */
     void GetPropertyInfo(Brhz& aValue);
+    /**
+     * Output the value of the Info property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyInfo has previously been called.
+     */
+    void WritePropertyInfo(IWriter& aWriter);
 protected:
     /**
      * Constructor

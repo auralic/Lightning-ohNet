@@ -83,10 +83,12 @@ public:
     void SubscriptionAdded(DviSubscription& aSubscription);
     void Disable();
 private: // from IPropertyWriterFactory
-    IPropertyWriter* CreateWriter(const IDviSubscriptionUserData* aUserData, const Brx& aSid, TUint aSequenceNumber);
+    IPropertyWriter* ClaimWriter(const IDviSubscriptionUserData* aUserData, const Brx& aSid, TUint aSequenceNumber);
+    void ReleaseWriter(IPropertyWriter* aWriter);
     void NotifySubscriptionCreated(const Brx& aSid);
     void NotifySubscriptionDeleted(const Brx& aSid);
     void NotifySubscriptionExpired(const Brx& aSid);
+    void LogUserData(IWriter& aWriter, const IDviSubscriptionUserData& aUserData);
 private: // from IPropertyWriter
     void PropertyWriteString(const Brx& aName, const Brx& aValue);
     void PropertyWriteInt(const Brx& aName, TInt aValue);
@@ -122,7 +124,7 @@ private:
     void Subscribe();
     void Unsubscribe();
     void ParseDeviceAndService();
-    void DoUnsubscribe(TUint aIndex);
+    void DoUnsubscribe(TUint aIndex, TBool aRespond = true);
     void ReportError(const LpecError& aError);
     void ReportErrorNoThrow(const LpecError& aError);
     void ReportErrorNoThrow(TUint aCode, const Brx& aDescription);
@@ -132,6 +134,7 @@ private: // from IDviInvocation
     TIpAddress Adapter() const;
     const char* ResourceUriPrefix() const;
     Endpoint ClientEndpoint() const;
+    const Brx& ClientUserAgent() const;
     void InvocationReadStart();
     TBool InvocationReadBool(const TChar* aName);
     void InvocationReadString(const TChar* aName, Brhz& aString);
@@ -188,7 +191,6 @@ private:
     static const TUint kMaxSubscriptions = 16; // imposed by public LPEC docs
     static const TUint kMaxReadBytes = 12000;
     static const TUint kWriteBufferBytes = 4000;
-    static const TUint kMaxSubscriptionCount = 16; // FIXME - limitation copied from volkano.  Is it necessary?
     DvStack& iDvStack;
     TIpAddress iAdapter;
     TUint iPort;
@@ -214,20 +216,31 @@ private:
     mutable Bws<128> iResourceUriPrefix;
     std::vector<SubscriptionData> iSubscriptions;
 };
-    
+
 class DvStack;
 
 class DviServerLpec : public DviServer
 {
 public:
     DviServerLpec(DvStack& aDvStack, TUint aPort = 0);
+    ~DviServerLpec();
     void NotifyDeviceDisabled(const Brx& aName, const Brx& aUdn);
     TUint Port() const;
 private: // from DviServerUpnp
     SocketTcpServer* CreateServer(const NetworkAdapter& aNif);
+    void NotifyServerDeleted(TIpAddress aInterface);
+private:
+    class AdapterData
+    {
+    public:
+        AdapterData(TIpAddress aInterface);
+    public:
+        TIpAddress iInterface;
+        std::vector<DviSessionLpec*> iSessions;
+    };
 private:
     TUint iPort;
-    std::vector<DviSessionLpec*> iSessions;
+    std::vector<AdapterData*> iAdapterData;
 };
 
 } // namespace Net

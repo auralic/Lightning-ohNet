@@ -41,14 +41,25 @@ static INLINE uint32_t SwapEndian32(uint32_t aValue)
         |  ((aValue & 0x000000ff) << 24);
 }
 
+typedef enum
+{
+    eScheduleDefault,         /**< Default policy for host platform */
+    eSchedulePriorityEnable,  /**< Enable priority-based scheduling */
+    eScheduleNice,            /**< Enable 'niceness' */
+    eSchedulePriorityDisable, /**< Disable priority-based scheduling */
+} OsThreadSchedulePolicy;
+
+
 /**
  * Called when the UPnP library is initialised.
  *
  * This function will be called before any other function defined in this header.
  *
+ * @param[in] aSchedulerPolicy     Thread scheduling policy
+ *
  * @return  Valid OsContext on success; NULL on failure
  */
-OsContext* OsCreate();
+OsContext* OsCreate(OsThreadSchedulePolicy aSchedulerPolicy);
 
 /**
  * Called when the UPnP library is closed.
@@ -291,15 +302,18 @@ int32_t OsMutexUnlock(THandle aMutex);
 typedef void(*ThreadEntryPoint)(void*);
 
 /**
+ * Read the range of thread priorities supported by teh host platform
+ */
+void OsThreadGetPriorityRange(OsContext* aContext, uint32_t* aHostMin, uint32_t* aHostMax);
+
+/**
  * Create a thread.
  *
  * @param[in] aContext    Returned from OsCreate().
  * @param[in] aName        Name for this thread.  May not be unique.
  *                         Maximum length is 4 characters.
  * @param[in] aPriority    Priority the thread should run at.  Will be in the range
- *                         (50 - 150) which may need to be mapped onto a suitable native
- *                         range.  If thread priorities are not supported, this value
- *                         should be stored and returned by calls to ThreadPriority()
+ *                         reported by OsThreadGetPriorityRange.
  * @param[in] aStackBytes  Size of the thread stack in bytes.  If this is 0 a sensible
  *                         default value should be used.
  * @param[in] aEntryPoint  Pointer to a function which must be called from the native
@@ -312,6 +326,25 @@ typedef void(*ThreadEntryPoint)(void*);
  */
 THandle OsThreadCreate(OsContext* aContext, const char* aName, uint32_t aPriority,
                        uint32_t aStackBytes, ThreadEntryPoint aEntryPoint, void* aArg);
+
+typedef enum
+{
+    eConsumeSingle = 0 /**< When semaphore is non-empty, consume one entry */
+   ,eConsumeAll    = 1 /**< When semaphore is non-empty, consume all entries (reset) */
+} OsThreadSemaphoreConsumePolicy;
+
+/**
+ * Cause calling thread to wait on platform-specific thread-local semaphore.
+ * Will only ever be called when aHandle corresponds to the current thread.
+ *
+ */
+void OsThreadWait(THandle aHandle, uint32_t aConsumePolicy);
+
+/**
+ * Signal the destination thread's platform-specific thread-local semaphore.
+ *
+ */
+void OsThreadSignal(THandle aThread);
 
 /**
  * Allow platform code to install any per-thread signal handlers or equivalent.
@@ -648,10 +681,14 @@ int32_t OsNetworkSocketSetMulticastIf(THandle aHandle, TIpAddress aInterface);
  */
 typedef struct OsNetworkAdapter
 {
-    TIpAddress iAddress;  /**< Address of the interface */
-    char*      iName;     /**< Nul-terminated name of the interface */
-    TIpAddress iNetMask;  /**< netmask for the interface */
-    int32_t    iReserved; /**< for OS-internal use */
+    TIpAddress iAddress;    /**< Address of the interface */
+    char*      iName;       /**< Nul-terminated name of the interface */
+    TIpAddress iNetMask;    /**< netmask for the interface */
+    TIpAddress iDhcpServer; /**< DHCP server address for the interface.
+                                 0 => not supported by this platform */
+    TIpAddress iGateway;    /**< Gateway address for the interface.
+                                  0 => not supported by this platform */
+    int32_t    iReserved;   /**< for OS-internal use */
     struct OsNetworkAdapter* iNext; /**< Pointer to next interface or NULL */
 } OsNetworkAdapter;
 

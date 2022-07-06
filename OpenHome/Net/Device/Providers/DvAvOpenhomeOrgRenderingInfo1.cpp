@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgRenderingInfo1::GetPropertyInfo(Brhz& aValue)
     aValue.Set(iPropertyInfo->Value());
 }
 
+void DvProviderAvOpenhomeOrgRenderingInfo1::WritePropertyInfo(IWriter& aWriter)
+{
+    iPropertyInfo->Write(aWriter);
+}
+
 DvProviderAvOpenhomeOrgRenderingInfo1::DvProviderAvOpenhomeOrgRenderingInfo1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "RenderingInfo", 1)
 {

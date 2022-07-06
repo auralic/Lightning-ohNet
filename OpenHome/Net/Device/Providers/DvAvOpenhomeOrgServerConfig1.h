@@ -26,6 +26,20 @@ class DvProviderAvOpenhomeOrgServerConfig1 : public DvProvider
 public:
     virtual ~DvProviderAvOpenhomeOrgServerConfig1() {}
     /**
+     * Set the value of the PlayCD property
+     *
+     * Can only be called if EnablePropertyPlayCD has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyPlayCD(TBool aValue);
+    /**
+     * Get a copy of the value of the PlayCD property
+     *
+     * Can only be called if EnablePropertyPlayCD has previously been called.
+     */
+    void GetPropertyPlayCD(TBool& aValue);
+    /**
      * Set the value of the Alive property
      *
      * Can only be called if EnablePropertyAlive has previously been called.
@@ -53,6 +67,12 @@ public:
      * Can only be called if EnablePropertySubscriptValue has previously been called.
      */
     void GetPropertySubscriptValue(Brhz& aValue);
+    /**
+     * Output the value of the SubscriptValue property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertySubscriptValue has previously been called.
+     */
+    void WritePropertySubscriptValue(IWriter& aWriter);
 protected:
     /**
      * Constructor
@@ -67,6 +87,10 @@ protected:
      */
     DvProviderAvOpenhomeOrgServerConfig1(DviDevice& aDevice);
     /**
+     * Enable the PlayCD property.
+     */
+    void EnablePropertyPlayCD();
+    /**
      * Enable the Alive property.
      */
     void EnablePropertyAlive();
@@ -74,6 +98,12 @@ protected:
      * Enable the SubscriptValue property.
      */
     void EnablePropertySubscriptValue();
+    /**
+     * Signal that the action SetPlayCD is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetPlayCD must be overridden if this is called.
+     */
+    void EnableActionSetPlayCD();
     /**
      * Signal that the action SetServerName is supported.
      * The action's availability will be published in the device's service.xml.
@@ -225,6 +255,14 @@ protected:
      */
     void EnableActionSetServerConfig();
 private:
+    /**
+     * SetPlayCD action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetPlayCD action for the owning device.
+     * Must be implemented iff EnableActionSetPlayCD was called.
+     */
+    virtual void SetPlayCD(IDvInvocation& aInvocation, TBool aPlayCD);
     /**
      * SetServerName action.
      *
@@ -428,6 +466,7 @@ private:
 private:
     DvProviderAvOpenhomeOrgServerConfig1();
     void Construct();
+    void DoSetPlayCD(IDviInvocation& aInvocation);
     void DoSetServerName(IDviInvocation& aInvocation);
     void DoGetServerVersion(IDviInvocation& aInvocation);
     void DoGetProgressInfo(IDviInvocation& aInvocation);
@@ -454,6 +493,7 @@ private:
     void DoGetServerConfig(IDviInvocation& aInvocation);
     void DoSetServerConfig(IDviInvocation& aInvocation);
 private:
+    PropertyBool* iPropertyPlayCD;
     PropertyBool* iPropertyAlive;
     PropertyString* iPropertySubscriptValue;
 };

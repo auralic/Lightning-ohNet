@@ -60,7 +60,7 @@ public:
     {
     }
 };
-    
+
 const LpecError LpecError::kCommandNotRecognised = LpecErrorMaker(101, "Command not recognised");
 const LpecError LpecError::kServiceNotSpecified = LpecErrorMaker(102, "Service not specified");
 const LpecError LpecError::kServiceNotFound = LpecErrorMaker(103, "Service not found");
@@ -76,7 +76,7 @@ const LpecError LpecError::kInvalidArgBool = LpecErrorMaker(201, "Boolean argume
 const LpecError LpecError::kInvalidArgUint = LpecErrorMaker(203, "Unsigned numeric argument invalid");
 const LpecError LpecError::kInvalidArgInt = LpecErrorMaker(204, "Signed numeric invalid");
 const LpecError LpecError::kAlreadySubscribed = LpecErrorMaker(401, "Already subscribed");
-const LpecError LpecError::kTooManySubscriptions = LpecErrorMaker(402, "Client has too many subscriptions");
+//const LpecError LpecError::kTooManySubscriptions = LpecErrorMaker(402, "Client has too many subscriptions");
 const LpecError LpecError::kSubscriptionNotFound = LpecErrorMaker(404, "Subscription not found");
 const LpecError LpecError::kServiceNotSubscribed = LpecErrorMaker(405, "Service not subscribed");
 
@@ -125,7 +125,7 @@ void PropertyWriterFactoryLpec::Disable()
     RemoveRef();
 }
 
-IPropertyWriter* PropertyWriterFactoryLpec::CreateWriter(const IDviSubscriptionUserData* /*aUserData*/, const Brx& aSid, TUint aSequenceNumber)
+IPropertyWriter* PropertyWriterFactoryLpec::ClaimWriter(const IDviSubscriptionUserData* /*aUserData*/, const Brx& aSid, TUint aSequenceNumber)
 {
     {
         AutoMutex a(iLock);
@@ -153,6 +153,10 @@ IPropertyWriter* PropertyWriterFactoryLpec::CreateWriter(const IDviSubscriptionU
     return this;
 }
 
+void PropertyWriterFactoryLpec::ReleaseWriter(IPropertyWriter* /*aWriter*/)
+{
+}
+
 void PropertyWriterFactoryLpec::NotifySubscriptionCreated(const Brx& /*aSid*/)
 {
 }
@@ -173,6 +177,11 @@ void PropertyWriterFactoryLpec::NotifySubscriptionDeleted(const Brx& aSid)
 
 void PropertyWriterFactoryLpec::NotifySubscriptionExpired(const Brx& /*aSid*/)
 {
+}
+
+void PropertyWriterFactoryLpec::LogUserData(IWriter& aWriter, const IDviSubscriptionUserData& /*aUserData*/)
+{
+    aWriter.Write(Brn(", protocol: LPEC"));
 }
 
 void PropertyWriterFactoryLpec::PropertyWriteString(const Brx& aName, const Brx& aValue)
@@ -375,8 +384,7 @@ void DviSessionLpec::Run()
         iDeviceLock.Wait();
         iDeviceMap = iDvStack.DeviceMap().CopyMap();
         iDeviceLock.Signal();
-        std::map<Brn,DviDevice*,BufferCmp>::iterator it = iDeviceMap.begin();
-        while (it != iDeviceMap.end()) {
+        for (std::map<Brn,DviDevice*,BufferCmp>::iterator it = iDeviceMap.begin() ; it != iDeviceMap.end() ; ++it) {
             if (!it->second->Enabled()) {
                 continue;
             }
@@ -396,8 +404,8 @@ void DviSessionLpec::Run()
             iWriteBuffer->Write(it->second->Udn());
             iWriteBuffer->Write(Lpec::kMsgTerminator);
             iWriteBuffer->WriteFlush();
-            it++;
         }
+        iDvStack.NotifyControlPointUsed(Brn("Lpec/none"));
         for (;;) {
             Brn req = Ascii::Trim(iReaderUntil->ReadUntil(Ascii::kLf));
             iRequestBuf.Set(req);
@@ -414,15 +422,21 @@ void DviSessionLpec::Run()
                 else if (Ascii::CaseInsensitiveEquals(method, Lpec::kMethodUnsubscribe)) {
                     Unsubscribe();
                 }
+                else if (method.Bytes() == 0) {
+                    /* Allow blank lines - these may be entered to make output from
+                       manual LPEC session more readable */
+                    continue;
+                }
                 else {
-                    ReportErrorNoThrow(LpecError::kMethodNotSupported);
+                    ReportErrorNoThrow(LpecError::kCommandNotRecognised);
                 }
             }
             catch (LpecParseError&) {
             }
+            catch (InvocationError&) {
+            }
             if (!iResponseStarted) {
-                iWriteLock.Wait();
-                iResponseStarted = true;
+                ASSERT(!iResponseEnded);
                 ReportErrorNoThrow(LpecError::kMethodExecutionError);
             }
             if (!iResponseEnded) {
@@ -444,6 +458,9 @@ void DviSessionLpec::Run()
     iDeviceMap.clear();
     iDeviceLock.Signal();
     iSubscriptionLock.Wait();
+    while (iSubscriptions.size() != 0) {
+        DoUnsubscribe(0, false);
+    }
     iSubscriptions.clear();
     iSubscriptionLock.Signal();
 
@@ -465,6 +482,9 @@ void DviSessionLpec::Action()
         catch (AsciiError&) {
             ReportError(LpecError::kVersionNotSpecified);
         }
+        if (iVersion > iTargetService->ServiceType().Version()) {
+            ReportError(LpecError::kVersionNotSupported);
+        }
         Invoke();
     }
     catch (LpecParseError&) {
@@ -479,20 +499,8 @@ void DviSessionLpec::Subscribe()
     TUint lpecSid = UINT_MAX;
     {
         AutoMutex a(iSubscriptionLock);
-        if (iSubscriptions.size() == kMaxSubscriptions) {
-            ReportError(LpecError::kTooManySubscriptions);
-        }
-
         AutoMutex b(iDeviceLock);
-        try {
-            ParseDeviceAndService();
-        }
-        catch (LpecParseError&) {
-            iResponseEnded = true;
-            iWriteBuffer->Write(Lpec::kMsgTerminator);
-            iWriteBuffer->WriteFlush();
-            throw;
-        }
+        ParseDeviceAndService();
 
         // check we don't already have a subscription for this service
         for (TUint i=0; i<iSubscriptions.size(); i++) {
@@ -556,15 +564,7 @@ void DviSessionLpec::Unsubscribe()
     }
 
     AutoMutex b(iDeviceLock);
-    try {
-        ParseDeviceAndService();
-    }
-    catch (LpecParseError&) {
-        iResponseEnded = true;
-        iWriteBuffer->Write(Lpec::kMsgTerminator);
-        iWriteBuffer->WriteFlush();
-        throw;
-    }
+    ParseDeviceAndService();
     for (TUint i=0; i<iSubscriptions.size(); i++) {
         if (iSubscriptions[i].Matches(*iTargetDevice, *iTargetService)) {
             DoUnsubscribe(i);
@@ -610,13 +610,13 @@ void DviSessionLpec::ParseDeviceAndService()
     }
 }
 
-void DviSessionLpec::DoUnsubscribe(TUint aIndex)
+void DviSessionLpec::DoUnsubscribe(TUint aIndex, TBool aRespond)
 {
     DviSubscription* subscription = iSubscriptions[aIndex].Subscription();
     ASSERT(subscription != NULL);
     iSubscriptions[aIndex].Service().RemoveSubscription(subscription->Sid());
 
-    {
+    if (aRespond) {
         AutoMutex a(iWriteLock);
         iResponseStarted = true;
         iWriteBuffer->Write(Lpec::kMethodUnsubscribe);
@@ -646,6 +646,8 @@ void DviSessionLpec::ReportErrorNoThrow(const LpecError& aError)
 void DviSessionLpec::ReportErrorNoThrow(TUint aCode, const Brx& aDescription)
 {
     if (!iResponseStarted) {
+        ASSERT(!iResponseEnded);
+        iWriteLock.Wait();
         iWriteBuffer->Write(Lpec::kMethodError);
         iWriteBuffer->Write(' ');
         Bws<Ascii::kMaxUintStringBytes> code;
@@ -662,7 +664,7 @@ void DviSessionLpec::ReportErrorNoThrow(TUint aCode, const Brx& aDescription)
 void DviSessionLpec::Invoke()
 {
     Brn actionName = iParser.Next(' ');
-    iTargetService->Invoke(*this, actionName);
+    iTargetService->InvokeDirect(*this, actionName);
 }
 
 TUint DviSessionLpec::Version() const
@@ -697,6 +699,11 @@ Endpoint DviSessionLpec::ClientEndpoint() const
 {
     Endpoint ep(SocketTcpSession::ClientEndpoint());
     return ep;
+}
+
+const Brx& DviSessionLpec::ClientUserAgent() const
+{
+    return Brx::Empty();
 }
 
 void DviSessionLpec::InvocationReadStart()
@@ -786,12 +793,12 @@ void DviSessionLpec::InvocationWriteStart()
 {
     iWriteLock.Wait();
     iWriteBuffer->Write(Lpec::kMethodResponse);
-    iWriteBuffer->Write(' ');
     iResponseStarted = true;
 }
 
 void DviSessionLpec::InvocationWriteBool(const TChar* /*aName*/, TBool aValue)
 {
+    iWriteBuffer->Write(' ');
     iWriteBuffer->Write(Lpec::kArgumentDelimiter);
     iWriteBuffer->Write(aValue? Lpec::kBoolTrue : Lpec::kBoolFalse);
     iWriteBuffer->Write(Lpec::kArgumentDelimiter);
@@ -799,6 +806,7 @@ void DviSessionLpec::InvocationWriteBool(const TChar* /*aName*/, TBool aValue)
 
 void DviSessionLpec::InvocationWriteInt(const TChar* /*aName*/, TInt aValue)
 {
+    iWriteBuffer->Write(' ');
     iWriteBuffer->Write(Lpec::kArgumentDelimiter);
     Bws<Ascii::kMaxIntStringBytes> val;
     (void)Ascii::AppendDec(val, aValue);
@@ -808,6 +816,7 @@ void DviSessionLpec::InvocationWriteInt(const TChar* /*aName*/, TInt aValue)
 
 void DviSessionLpec::InvocationWriteUint(const TChar* /*aName*/, TUint aValue)
 {
+    iWriteBuffer->Write(' ');
     iWriteBuffer->Write(Lpec::kArgumentDelimiter);
     Bws<Ascii::kMaxUintStringBytes> val;
     (void)Ascii::AppendDec(val, aValue);
@@ -817,6 +826,7 @@ void DviSessionLpec::InvocationWriteUint(const TChar* /*aName*/, TUint aValue)
 
 void DviSessionLpec::InvocationWriteBinaryStart(const TChar* /*aName*/)
 {
+    iWriteBuffer->Write(' ');
     iWriteBuffer->Write(Lpec::kArgumentDelimiter);
 }
 
@@ -837,17 +847,19 @@ void DviSessionLpec::InvocationWriteBinaryEnd(const TChar* /*aName*/)
 
 void DviSessionLpec::InvocationWriteStringStart(const TChar* /*aName*/)
 {
+    iWriteBuffer->Write(' ');
     iWriteBuffer->Write(Lpec::kArgumentDelimiter);
 }
 
 void DviSessionLpec::InvocationWriteString(TByte aValue)
 {
-    iWriteBuffer->Write(aValue);
+    Brn buf(&aValue, 1);
+    InvocationWriteString(buf);
 }
 
 void DviSessionLpec::InvocationWriteString(const Brx& aValue)
 {
-    iWriteBuffer->Write(aValue);
+    Converter::ToXmlEscaped(*iWriteBuffer, aValue);
 }
 
 void DviSessionLpec::InvocationWriteStringEnd(const TChar* /*aName*/)
@@ -857,9 +869,14 @@ void DviSessionLpec::InvocationWriteStringEnd(const TChar* /*aName*/)
 
 void DviSessionLpec::InvocationWriteEnd()
 {
+    ASSERT(iResponseStarted);
     iResponseEnded = true;
-    iWriteBuffer->Write(Lpec::kMsgTerminator);
-    iWriteBuffer->WriteFlush();
+    try {
+        iWriteBuffer->Write(Lpec::kMsgTerminator);
+        iWriteBuffer->WriteFlush();
+    }
+    catch (WriterError&) {
+    }
     iWriteLock.Signal();
 }
 
@@ -906,8 +923,11 @@ DviServerLpec::DviServerLpec(DvStack& aDvStack, TUint aPort)
 
 void DviServerLpec::NotifyDeviceDisabled(const Brx& aName, const Brx& aUdn)
 {
-    for (TUint i=0; i<iSessions.size(); i++) {
-        iSessions[i]->NotifyDeviceDisabled(aName, aUdn);
+    for (TUint i=0; i<iAdapterData.size(); i++) {
+        AdapterData* ad = iAdapterData[i];
+        for (TUint j=0; j<ad->iSessions.size(); j++) {
+            ad->iSessions[j]->NotifyDeviceDisabled(aName, aUdn);
+        }
     }
 }
 
@@ -920,16 +940,44 @@ SocketTcpServer* DviServerLpec::CreateServer(const NetworkAdapter& aNif)
 {
     SocketTcpServer* server = new SocketTcpServer(iDvStack.Env(), "LpecServer", iPort, aNif.Address());
     const TUint numThreads = iDvStack.Env().InitParams()->DvNumLpecThreads();
+    AdapterData* ad = new AdapterData(aNif.Address());
+    iAdapterData.push_back(ad);
     for (TUint i=0; i<numThreads; i++) {
         Bws<Thread::kMaxNameBytes+1> thName;
         thName.AppendPrintf("LpecSession %d", i);
         thName.PtrZ();
         DviSessionLpec* session = new DviSessionLpec(iDvStack, aNif.Address(), iPort);
         server->Add((const TChar*)thName.Ptr(), session);
-        iSessions.push_back(session);
+        ad->iSessions.push_back(session);
     }
     return server;
 }
+
+DviServerLpec::~DviServerLpec()
+{
+    Deinitialise();
+}
+
+void DviServerLpec::NotifyServerDeleted(TIpAddress aInterface)
+{
+    for (TUint i=0; i<iAdapterData.size(); i++) {
+        AdapterData* ad = iAdapterData[i];
+        if (ad->iInterface == aInterface) {
+            iAdapterData.erase(iAdapterData.begin() + i);
+            delete ad;
+            break;
+        }
+    }
+}
+
+
+// DviServerLpec::AdapterData
+
+DviServerLpec::AdapterData::AdapterData(TIpAddress aInterface)
+    : iInterface(aInterface)
+{
+}
+
 
 
 // DviSessionLpec::EventWriterAdapter

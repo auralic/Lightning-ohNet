@@ -8,6 +8,18 @@
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
+TBool DvProviderAvOpenhomeOrgServerConfig1::SetPropertyPlayCD(TBool aValue)
+{
+    ASSERT(iPropertyPlayCD != NULL);
+    return SetPropertyBool(*iPropertyPlayCD, aValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::GetPropertyPlayCD(TBool& aValue)
+{
+    ASSERT(iPropertyPlayCD != NULL);
+    aValue = iPropertyPlayCD->Value();
+}
+
 TBool DvProviderAvOpenhomeOrgServerConfig1::SetPropertyAlive(TBool aValue)
 {
     ASSERT(iPropertyAlive != NULL);
@@ -32,6 +44,11 @@ void DvProviderAvOpenhomeOrgServerConfig1::GetPropertySubscriptValue(Brhz& aValu
     aValue.Set(iPropertySubscriptValue->Value());
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1::WritePropertySubscriptValue(IWriter& aWriter)
+{
+    iPropertySubscriptValue->Write(aWriter);
+}
+
 DvProviderAvOpenhomeOrgServerConfig1::DvProviderAvOpenhomeOrgServerConfig1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "ServerConfig", 1)
 {
@@ -46,8 +63,15 @@ DvProviderAvOpenhomeOrgServerConfig1::DvProviderAvOpenhomeOrgServerConfig1(DviDe
 
 void DvProviderAvOpenhomeOrgServerConfig1::Construct()
 {
+    iPropertyPlayCD = NULL;
     iPropertyAlive = NULL;
     iPropertySubscriptValue = NULL;
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnablePropertyPlayCD()
+{
+    iPropertyPlayCD = new PropertyBool(new ParameterBool("PlayCD"));
+    iService->AddProperty(iPropertyPlayCD); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::EnablePropertyAlive()
@@ -60,6 +84,14 @@ void DvProviderAvOpenhomeOrgServerConfig1::EnablePropertySubscriptValue()
 {
     iPropertySubscriptValue = new PropertyString(new ParameterString("SubscriptValue"));
     iService->AddProperty(iPropertySubscriptValue); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::EnableActionSetPlayCD()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetPlayCD");
+    action->AddInputParameter(new ParameterRelated("PlayCD", *iPropertyPlayCD));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoSetPlayCD);
+    iService->AddAction(action, functor);
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::EnableActionSetServerName()
@@ -264,6 +296,15 @@ void DvProviderAvOpenhomeOrgServerConfig1::EnableActionSetServerConfig()
     action->AddInputParameter(new ParameterString("SetValue"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1::DoSetServerConfig);
     iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::DoSetPlayCD(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TBool PlayCD = aInvocation.InvocationReadBool("PlayCD");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetPlayCD(invocation, PlayCD);
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::DoSetServerName(IDviInvocation& aInvocation)
@@ -500,6 +541,11 @@ void DvProviderAvOpenhomeOrgServerConfig1::DoSetServerConfig(IDviInvocation& aIn
     aInvocation.InvocationReadEnd();
     DviInvocation invocation(aInvocation);
     SetServerConfig(invocation, SetValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1::SetPlayCD(IDvInvocation& /*aResponse*/, TBool /*aPlayCD*/)
+{
+    ASSERTS();
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1::SetServerName(IDvInvocation& /*aResponse*/, const Brx& /*aServerName*/)

@@ -6,6 +6,46 @@
    </specVersion>
    <actionList>
        <action>
+           <name>LogIn</name>
+         <argumentList>
+                <argument>
+                    <name>ServiceName</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>ServiceName</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>MessageIn</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>MessageIn</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>MessageOut</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>MessageOut</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+       <action>
+           <name>LogOut</name>
+         <argumentList>
+                <argument>
+                    <name>ServiceName</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>ServiceName</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+       <action>
+           <name>CancelLogIn</name>
+         <argumentList>
+                <argument>
+                    <name>ServiceName</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>ServiceName</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+       <action>
            <name>IsAlive</name>
          <argumentList>
                 <argument>
@@ -584,8 +624,50 @@
                 </argument>
          </argumentList>
       </action>
+      <action>
+         <name>SetEnableResampler</name>
+         <argumentList>
+                <argument>
+                    <name>EnableResampler</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>EnableResampler</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetEnableSpeaker</name>
+         <argumentList>
+                <argument>
+                    <name>EnableSpeaker</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>EnableSpeaker</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
+      <action>
+         <name>SetEnableEqualizer</name>
+         <argumentList>
+                <argument>
+                    <name>EnableEqualizer</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>EnableEqualizer</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
    </actionList>
    <serviceStateTable>
+      <stateVariable sendEvents="no">
+         <name>ServiceName</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>MessageIn</name>
+         <dataType>string</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="yes">
+         <name>MessageOut</name>
+         <dataType>string</dataType>
+      </stateVariable>
       <stateVariable sendEvents="yes">
          <name>Alive</name>
          <dataType>boolean</dataType>
@@ -765,6 +847,18 @@
       <stateVariable sendEvents="no">
          <name>Balance</name>
          <dataType>ui4</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>EnableResampler</name>
+         <dataType>boolean</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>EnableSpeaker</name>
+         <dataType>boolean</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>EnableEqualizer</name>
+         <dataType>boolean</dataType>
       </stateVariable>
    </serviceStateTable>
 </scpd>

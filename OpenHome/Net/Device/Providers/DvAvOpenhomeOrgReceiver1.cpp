@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgReceiver1::GetPropertyUri(Brhz& aValue)
     aValue.Set(iPropertyUri->Value());
 }
 
+void DvProviderAvOpenhomeOrgReceiver1::WritePropertyUri(IWriter& aWriter)
+{
+    iPropertyUri->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgReceiver1::SetPropertyMetadata(const Brx& aValue)
 {
     ASSERT(iPropertyMetadata != NULL);
@@ -30,6 +35,11 @@ void DvProviderAvOpenhomeOrgReceiver1::GetPropertyMetadata(Brhz& aValue)
 {
     ASSERT(iPropertyMetadata != NULL);
     aValue.Set(iPropertyMetadata->Value());
+}
+
+void DvProviderAvOpenhomeOrgReceiver1::WritePropertyMetadata(IWriter& aWriter)
+{
+    iPropertyMetadata->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgReceiver1::SetPropertyTransportState(const Brx& aValue)
@@ -44,6 +54,11 @@ void DvProviderAvOpenhomeOrgReceiver1::GetPropertyTransportState(Brhz& aValue)
     aValue.Set(iPropertyTransportState->Value());
 }
 
+void DvProviderAvOpenhomeOrgReceiver1::WritePropertyTransportState(IWriter& aWriter)
+{
+    iPropertyTransportState->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgReceiver1::SetPropertyProtocolInfo(const Brx& aValue)
 {
     ASSERT(iPropertyProtocolInfo != NULL);
@@ -54,6 +69,11 @@ void DvProviderAvOpenhomeOrgReceiver1::GetPropertyProtocolInfo(Brhz& aValue)
 {
     ASSERT(iPropertyProtocolInfo != NULL);
     aValue.Set(iPropertyProtocolInfo->Value());
+}
+
+void DvProviderAvOpenhomeOrgReceiver1::WritePropertyProtocolInfo(IWriter& aWriter)
+{
+    iPropertyProtocolInfo->Write(aWriter);
 }
 
 DvProviderAvOpenhomeOrgReceiver1::DvProviderAvOpenhomeOrgReceiver1(DvDevice& aDevice)

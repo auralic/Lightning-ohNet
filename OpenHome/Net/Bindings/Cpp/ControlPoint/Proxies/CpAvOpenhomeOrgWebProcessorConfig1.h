@@ -19,18 +19,34 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgWebProcessorConfig1Cpp : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgWebProcessorConfig1Cpp() {}
+    virtual void SyncGetProcessorConfig(std::string& aProcessorConfig) = 0;
+    virtual void BeginGetProcessorConfig(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetProcessorConfig(IAsync& aAsync, std::string& aProcessorConfig) = 0;
+    virtual void SyncSetProcessorConfig(const std::string& aProcessorConfig) = 0;
+    virtual void BeginSetProcessorConfig(const std::string& aProcessorConfig, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetProcessorConfig(IAsync& aAsync) = 0;
+    virtual void SetPropertyAliveChanged(Functor& aAliveChanged) = 0;
+    virtual void PropertyAlive(bool& aAlive) const = 0;
+    virtual void SetPropertyProcessorConfigChanged(Functor& aProcessorConfigChanged) = 0;
+    virtual void PropertyProcessorConfig(std::string& aProcessorConfig) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:WebProcessorConfig:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp : public CpProxy
+class CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp : public ICpProxyAvOpenhomeOrgWebProcessorConfig1Cpp
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -136,7 +152,40 @@ public:
      * @param[out] aProcessorConfig
      */
     void PropertyProcessorConfig(std::string& aProcessorConfig) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void AlivePropertyChanged();
     void ProcessorConfigPropertyChanged();
 private:

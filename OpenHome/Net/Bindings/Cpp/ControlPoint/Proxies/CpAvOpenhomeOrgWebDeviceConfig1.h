@@ -19,18 +19,45 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgWebDeviceConfig1Cpp : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgWebDeviceConfig1Cpp() {}
+    virtual void SyncGetDeviceConfig(std::string& aDeviceConfig) = 0;
+    virtual void BeginGetDeviceConfig(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDeviceConfig(IAsync& aAsync, std::string& aDeviceConfig) = 0;
+    virtual void SyncSetDeviceConfig(const std::string& aDeviceConfig) = 0;
+    virtual void BeginSetDeviceConfig(const std::string& aDeviceConfig, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetDeviceConfig(IAsync& aAsync) = 0;
+    virtual void SyncGetWiFiList(std::string& aWiFiList) = 0;
+    virtual void BeginGetWiFiList(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetWiFiList(IAsync& aAsync, std::string& aWiFiList) = 0;
+    virtual void SyncSetTimeZone(const std::string& aTimeZone, const std::string& aCurrentTime, const std::string& aTimeStamp) = 0;
+    virtual void BeginSetTimeZone(const std::string& aTimeZone, const std::string& aCurrentTime, const std::string& aTimeStamp, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetTimeZone(IAsync& aAsync) = 0;
+    virtual void SyncGetServiceLocation(std::string& aServiceLoaction) = 0;
+    virtual void BeginGetServiceLocation(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetServiceLocation(IAsync& aAsync, std::string& aServiceLoaction) = 0;
+    virtual void SetPropertyAliveChanged(Functor& aAliveChanged) = 0;
+    virtual void PropertyAlive(bool& aAlive) const = 0;
+    virtual void SetPropertyDeviceConfigChanged(Functor& aDeviceConfigChanged) = 0;
+    virtual void PropertyDeviceConfig(std::string& aDeviceConfig) const = 0;
+    virtual void SetPropertyCurrentActionChanged(Functor& aCurrentActionChanged) = 0;
+    virtual void PropertyCurrentAction(uint32_t& aCurrentAction) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:WebDeviceConfig:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgWebDeviceConfig1Cpp : public CpProxy
+class CpProxyAvOpenhomeOrgWebDeviceConfig1Cpp : public ICpProxyAvOpenhomeOrgWebDeviceConfig1Cpp
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -237,7 +264,40 @@ public:
      * @param[out] aCurrentAction
      */
     void PropertyCurrentAction(uint32_t& aCurrentAction) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void AlivePropertyChanged();
     void DeviceConfigPropertyChanged();
     void CurrentActionPropertyChanged();

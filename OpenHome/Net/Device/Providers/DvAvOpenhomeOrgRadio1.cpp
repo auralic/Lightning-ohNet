@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgRadio1::GetPropertyUri(Brhz& aValue)
     aValue.Set(iPropertyUri->Value());
 }
 
+void DvProviderAvOpenhomeOrgRadio1::WritePropertyUri(IWriter& aWriter)
+{
+    iPropertyUri->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgRadio1::SetPropertyMetadata(const Brx& aValue)
 {
     ASSERT(iPropertyMetadata != NULL);
@@ -32,6 +37,11 @@ void DvProviderAvOpenhomeOrgRadio1::GetPropertyMetadata(Brhz& aValue)
     aValue.Set(iPropertyMetadata->Value());
 }
 
+void DvProviderAvOpenhomeOrgRadio1::WritePropertyMetadata(IWriter& aWriter)
+{
+    iPropertyMetadata->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgRadio1::SetPropertyTransportState(const Brx& aValue)
 {
     ASSERT(iPropertyTransportState != NULL);
@@ -42,6 +52,11 @@ void DvProviderAvOpenhomeOrgRadio1::GetPropertyTransportState(Brhz& aValue)
 {
     ASSERT(iPropertyTransportState != NULL);
     aValue.Set(iPropertyTransportState->Value());
+}
+
+void DvProviderAvOpenhomeOrgRadio1::WritePropertyTransportState(IWriter& aWriter)
+{
+    iPropertyTransportState->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgRadio1::SetPropertyId(TUint aValue)
@@ -68,6 +83,11 @@ void DvProviderAvOpenhomeOrgRadio1::GetPropertyIdArray(Brh& aValue)
     aValue.Set(iPropertyIdArray->Value());
 }
 
+void DvProviderAvOpenhomeOrgRadio1::WritePropertyIdArray(IWriter& aWriter)
+{
+    iPropertyIdArray->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgRadio1::SetPropertyChannelsMax(TUint aValue)
 {
     ASSERT(iPropertyChannelsMax != NULL);
@@ -90,6 +110,11 @@ void DvProviderAvOpenhomeOrgRadio1::GetPropertyProtocolInfo(Brhz& aValue)
 {
     ASSERT(iPropertyProtocolInfo != NULL);
     aValue.Set(iPropertyProtocolInfo->Value());
+}
+
+void DvProviderAvOpenhomeOrgRadio1::WritePropertyProtocolInfo(IWriter& aWriter)
+{
+    iPropertyProtocolInfo->Write(aWriter);
 }
 
 DvProviderAvOpenhomeOrgRadio1::DvProviderAvOpenhomeOrgRadio1(DvDevice& aDevice)

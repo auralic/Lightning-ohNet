@@ -146,7 +146,7 @@ void SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1Cpp::CompleteRequest(IAsync
 
 
 CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "TestResamplerConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "TestResamplerConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -200,14 +200,14 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::SyncSetResamplerConfig(const s
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::BeginSetResamplerConfig(const std::string& aResamplerConfig, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetResamplerConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetResamplerConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetResamplerConfig->InputParameters();
     {
         Brn buf((const TByte*)aResamplerConfig.c_str(), (TUint)aResamplerConfig.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::EndSetResamplerConfig(IAsync& aAsync)
@@ -233,11 +233,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::SyncGetResamplerConfig(std::st
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::BeginGetResamplerConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetResamplerConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetResamplerConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetResamplerConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::EndGetResamplerConfig(IAsync& aAsync, std::string& aResamplerConfig)
@@ -268,11 +268,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::SyncSetPCMAutoDetect(bool aPCM
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::BeginSetPCMAutoDetect(bool aPCMAutoDetect, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetPCMAutoDetect, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetPCMAutoDetect, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetPCMAutoDetect->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aPCMAutoDetect));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::EndSetPCMAutoDetect(IAsync& aAsync)
@@ -298,11 +298,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::SyncGetPCMAutoDetect(bool& aPC
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::BeginGetPCMAutoDetect(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetPCMAutoDetect, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetPCMAutoDetect, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetPCMAutoDetect->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::EndGetPCMAutoDetect(IAsync& aAsync, bool& aPCMAutoDetect)
@@ -330,11 +330,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::SyncSetDSDtoPCM(bool aDSDtoPCM
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::BeginSetDSDtoPCM(bool aDSDtoPCM, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDSDtoPCM, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDSDtoPCM, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDSDtoPCM->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aDSDtoPCM));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::EndSetDSDtoPCM(IAsync& aAsync)
@@ -360,11 +360,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::SyncGetDSDtoPCM(bool& aDSDtoPC
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::BeginGetDSDtoPCM(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDSDtoPCM, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDSDtoPCM, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDSDtoPCM->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::EndGetDSDtoPCM(IAsync& aAsync, bool& aDSDtoPCM)
@@ -385,20 +385,61 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::EndGetDSDtoPCM(IAsync& aAsync,
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::SetPropertyCurrentActionChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iCurrentActionChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::PropertyCurrentAction(uint32_t& aCurrentAction) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aCurrentAction = iCurrentAction->Value();
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::CurrentActionPropertyChanged()
 {
     ReportEvent(iCurrentActionChanged);
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgTestResamplerConfig1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

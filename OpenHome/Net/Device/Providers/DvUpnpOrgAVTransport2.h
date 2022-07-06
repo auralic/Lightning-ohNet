@@ -40,6 +40,12 @@ public:
      */
     void GetPropertyLastChange(Brhz& aValue);
     /**
+     * Output the value of the LastChange property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyLastChange has previously been called.
+     */
+    void WritePropertyLastChange(IWriter& aWriter);
+    /**
      * Set the value of the DRMState property
      *
      * Can only be called if EnablePropertyDRMState has previously been called.
@@ -53,6 +59,12 @@ public:
      * Can only be called if EnablePropertyDRMState has previously been called.
      */
     void GetPropertyDRMState(Brhz& aValue);
+    /**
+     * Output the value of the DRMState property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyDRMState has previously been called.
+     */
+    void WritePropertyDRMState(IWriter& aWriter);
 protected:
     /**
      * Constructor

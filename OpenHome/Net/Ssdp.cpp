@@ -42,6 +42,9 @@ static const Brn kSsdpMaxAge("max-age");
 const Brn kSchemasUpnpOrg("schemas-upnp-org");
 const Brn kUpnpOrg("upnp.org");
 
+const Brn kSchemasTencentCom("schemas-tencent-com");
+const Brn kTencentCom("tencent.com");
+
 const TByte Ssdp::kUrnSeparator = ':';
 const TUint Ssdp::kMulticastPort = 1900;
 const Brn Ssdp::kUrn("urn:");
@@ -74,6 +77,9 @@ void Ssdp::UpnpDomainToCanonical(const Brx& aUpnpDomain, Bwx& aCanonicalDomain) 
     if (aUpnpDomain == kSchemasUpnpOrg) {
         aCanonicalDomain.Replace(kUpnpOrg);
     }
+    else if (aUpnpDomain == kSchemasTencentCom) {
+        aCanonicalDomain.Replace(kTencentCom);
+    }
     else {
         aCanonicalDomain.Replace(aUpnpDomain);
         for (TUint i = 0; i < aCanonicalDomain.Bytes(); i++) {
@@ -88,6 +94,9 @@ void Ssdp::CanonicalDomainToUpnp(const Brx& aCanonicalDomain, Bwx& aUpnpDomain) 
 {
     if (aCanonicalDomain == kUpnpOrg) {
         aUpnpDomain.Replace(kSchemasUpnpOrg);
+    }
+    else if (aCanonicalDomain == kTencentCom) {
+        aUpnpDomain.Replace(kSchemasTencentCom);
     }
     else {
         aUpnpDomain.Replace(aCanonicalDomain);
@@ -221,9 +230,7 @@ void Ssdp::WriteMaxAge(Environment& aEnv, IWriterHttpHeader& aWriter)
 {
     IWriterAscii& stream = aWriter.WriteHeaderField(Ssdp::kHeaderCacheControl);
     stream.Write(kSsdpMaxAge);
-    stream.Write(Ascii::kSp);
     stream.Write(kSsdpMaxAgeSeparator);
-    stream.Write(Ascii::kSp);
     stream.WriteUint(aEnv.InitParams()->DvMaxUpdateTimeSecs());
     stream.WriteFlush();
 }
@@ -471,7 +478,7 @@ void SsdpHeaderSt::Process(const Brx& aValue)
     if (type == kMsearchUrn) {
         Brn domain = parser.Next(':');
         Brn kind = parser.Next(':');
-        Brn type = parser.Next(':');
+        Brn urntype = parser.Next(':');
         if (domain.Bytes() > kMaxDomainBytes) {
             THROW(HttpError);
         }
@@ -485,11 +492,11 @@ void SsdpHeaderSt::Process(const Brx& aValue)
             THROW(HttpError);
         }
 
-        if (type.Bytes() > kMaxTypeBytes) {
+        if (urntype.Bytes() > kMaxTypeBytes) {
             THROW(HttpError);
         }
 
-        iType.Replace(type);
+        iType.Replace(urntype);
 
         if (kind == kMsearchDevice) {
             iTarget = eSsdpDeviceType;
@@ -564,7 +571,7 @@ void SsdpHeaderNt::Process(const Brx& aValue)
     if (type == kMsearchUrn) {
         Brn domain = parser.Next(':');
         Brn kind = parser.Next(':');
-        Brn type = parser.Next(':');
+        Brn urntype = parser.Next(':');
         if (domain.Bytes() > kMaxDomainBytes) {
             THROW(HttpError);
         }
@@ -575,10 +582,10 @@ void SsdpHeaderNt::Process(const Brx& aValue)
         catch (AsciiError&) {
             THROW(HttpError);
         }
-        if (type.Bytes() > kMaxTypeBytes) {
+        if (urntype.Bytes() > kMaxTypeBytes) {
             THROW(HttpError);
         }
-        iType.Replace(type);
+        iType.Replace(urntype);
         if (kind == kMsearchDevice) {
             iTarget = eSsdpDeviceType;
             return;
@@ -654,18 +661,19 @@ void SsdpHeaderUsn::Process(const Brx& aValue)
     }
 
     Brn type = parser.Next(':');
+
     if (type == kMsearchUrn) {
         Brn domain = parser.Next(':');
         Brn kind = parser.Next(':');
-        Brn type = parser.Next(':');
+        Brn urntype = parser.Next(':');
         if (domain.Bytes() > kMaxDomainBytes) {
             THROW(HttpError);
         }
         Ssdp::UpnpDomainToCanonical(domain, iDomain);
-        if (type.Bytes() > kMaxTypeBytes) {
+        if (urntype.Bytes() > kMaxTypeBytes) {
             THROW(HttpError);
         }
-        iType.Replace(type);
+        iType.Replace(urntype);
         try {
             iVersion = Ascii::Uint(parser.Remaining());
         }
@@ -792,6 +800,7 @@ SsdpWriterMsearchRequest::SsdpWriterMsearchRequest(IWriter& aWriter)
 
 void SsdpWriterMsearchRequest::MsearchRoot(TUint aSeconds)
 {
+    //printf("receive msearch root...\n");
     Msearch(aSeconds);
     Ssdp::WriteSearchTypeRoot(iWriter);
     iWriter.WriteFlush();
@@ -806,6 +815,7 @@ void SsdpWriterMsearchRequest::MsearchUuid(const Brx& aUuid, TUint aSeconds)
 
 void SsdpWriterMsearchRequest::MsearchDeviceType(const Brx& aDomain, const Brx& aType, TUint aVersion, TUint aSeconds)
 {
+    //printf("receive msearch device...\n");
     Msearch(aSeconds);
     Ssdp::WriteSearchTypeDeviceType(iWriter, aDomain, aType, aVersion);
     iWriter.WriteFlush();
@@ -813,6 +823,7 @@ void SsdpWriterMsearchRequest::MsearchDeviceType(const Brx& aDomain, const Brx& 
 
 void SsdpWriterMsearchRequest::MsearchServiceType(const Brx& aDomain, const Brx& aType, TUint aVersion, TUint aSeconds)
 {
+    //printf("receive msearch service...\n");
     Msearch(aSeconds);
     Ssdp::WriteSearchTypeServiceType(iWriter, aDomain, aType, aVersion);
     iWriter.WriteFlush();
@@ -820,6 +831,7 @@ void SsdpWriterMsearchRequest::MsearchServiceType(const Brx& aDomain, const Brx&
 
 void SsdpWriterMsearchRequest::MsearchAll(TUint aSeconds)
 {
+    //printf("receive msearch all...\n");
     Msearch(aSeconds);
     Ssdp::WriteSearchTypeAll(iWriter);
     iWriter.WriteFlush();
@@ -827,6 +839,7 @@ void SsdpWriterMsearchRequest::MsearchAll(TUint aSeconds)
 
 void SsdpWriterMsearchRequest::Msearch(TUint aSeconds)
 {
+    //printf("receive msearch...\n");
     ASSERT(aSeconds >= kMinMsearchSeconds);
     ASSERT(aSeconds <= kMaxMsearchSeconds);
 

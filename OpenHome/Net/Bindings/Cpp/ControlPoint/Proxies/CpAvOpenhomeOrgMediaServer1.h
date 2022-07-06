@@ -19,18 +19,77 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgMediaServer1Cpp : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgMediaServer1Cpp() {}
+    virtual void SyncManufacturer(std::string& aName, std::string& aInfo, std::string& aUrl, std::string& aImageUri) = 0;
+    virtual void BeginManufacturer(FunctorAsync& aFunctor) = 0;
+    virtual void EndManufacturer(IAsync& aAsync, std::string& aName, std::string& aInfo, std::string& aUrl, std::string& aImageUri) = 0;
+    virtual void SyncModel(std::string& aName, std::string& aInfo, std::string& aUrl, std::string& aImageUri) = 0;
+    virtual void BeginModel(FunctorAsync& aFunctor) = 0;
+    virtual void EndModel(IAsync& aAsync, std::string& aName, std::string& aInfo, std::string& aUrl, std::string& aImageUri) = 0;
+    virtual void SyncProduct(std::string& aName, std::string& aInfo, std::string& aUrl, std::string& aImageUri) = 0;
+    virtual void BeginProduct(FunctorAsync& aFunctor) = 0;
+    virtual void EndProduct(IAsync& aAsync, std::string& aName, std::string& aInfo, std::string& aUrl, std::string& aImageUri) = 0;
+    virtual void SyncAttributes(std::string& aValue) = 0;
+    virtual void BeginAttributes(FunctorAsync& aFunctor) = 0;
+    virtual void EndAttributes(IAsync& aAsync, std::string& aValue) = 0;
+    virtual void SyncQueryPort(uint32_t& aValue) = 0;
+    virtual void BeginQueryPort(FunctorAsync& aFunctor) = 0;
+    virtual void EndQueryPort(IAsync& aAsync, uint32_t& aValue) = 0;
+    virtual void SyncBrowsePort(uint32_t& aValue) = 0;
+    virtual void BeginBrowsePort(FunctorAsync& aFunctor) = 0;
+    virtual void EndBrowsePort(IAsync& aAsync, uint32_t& aValue) = 0;
+    virtual void SyncUpdateCount(uint32_t& aValue) = 0;
+    virtual void BeginUpdateCount(FunctorAsync& aFunctor) = 0;
+    virtual void EndUpdateCount(IAsync& aAsync, uint32_t& aValue) = 0;
+    virtual void SetPropertyManufacturerNameChanged(Functor& aManufacturerNameChanged) = 0;
+    virtual void PropertyManufacturerName(std::string& aManufacturerName) const = 0;
+    virtual void SetPropertyManufacturerInfoChanged(Functor& aManufacturerInfoChanged) = 0;
+    virtual void PropertyManufacturerInfo(std::string& aManufacturerInfo) const = 0;
+    virtual void SetPropertyManufacturerUrlChanged(Functor& aManufacturerUrlChanged) = 0;
+    virtual void PropertyManufacturerUrl(std::string& aManufacturerUrl) const = 0;
+    virtual void SetPropertyManufacturerImageUriChanged(Functor& aManufacturerImageUriChanged) = 0;
+    virtual void PropertyManufacturerImageUri(std::string& aManufacturerImageUri) const = 0;
+    virtual void SetPropertyModelNameChanged(Functor& aModelNameChanged) = 0;
+    virtual void PropertyModelName(std::string& aModelName) const = 0;
+    virtual void SetPropertyModelInfoChanged(Functor& aModelInfoChanged) = 0;
+    virtual void PropertyModelInfo(std::string& aModelInfo) const = 0;
+    virtual void SetPropertyModelUrlChanged(Functor& aModelUrlChanged) = 0;
+    virtual void PropertyModelUrl(std::string& aModelUrl) const = 0;
+    virtual void SetPropertyModelImageUriChanged(Functor& aModelImageUriChanged) = 0;
+    virtual void PropertyModelImageUri(std::string& aModelImageUri) const = 0;
+    virtual void SetPropertyProductNameChanged(Functor& aProductNameChanged) = 0;
+    virtual void PropertyProductName(std::string& aProductName) const = 0;
+    virtual void SetPropertyProductInfoChanged(Functor& aProductInfoChanged) = 0;
+    virtual void PropertyProductInfo(std::string& aProductInfo) const = 0;
+    virtual void SetPropertyProductUrlChanged(Functor& aProductUrlChanged) = 0;
+    virtual void PropertyProductUrl(std::string& aProductUrl) const = 0;
+    virtual void SetPropertyProductImageUriChanged(Functor& aProductImageUriChanged) = 0;
+    virtual void PropertyProductImageUri(std::string& aProductImageUri) const = 0;
+    virtual void SetPropertyAttributesChanged(Functor& aAttributesChanged) = 0;
+    virtual void PropertyAttributes(std::string& aAttributes) const = 0;
+    virtual void SetPropertyQueryPortChanged(Functor& aQueryPortChanged) = 0;
+    virtual void PropertyQueryPort(uint32_t& aQueryPort) const = 0;
+    virtual void SetPropertyBrowsePortChanged(Functor& aBrowsePortChanged) = 0;
+    virtual void PropertyBrowsePort(uint32_t& aBrowsePort) const = 0;
+    virtual void SetPropertyUpdateCountChanged(Functor& aUpdateCountChanged) = 0;
+    virtual void PropertyUpdateCount(uint32_t& aUpdateCount) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:MediaServer:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgMediaServer1Cpp : public CpProxy
+class CpProxyAvOpenhomeOrgMediaServer1Cpp : public ICpProxyAvOpenhomeOrgMediaServer1Cpp
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -550,7 +609,40 @@ public:
      * @param[out] aUpdateCount
      */
     void PropertyUpdateCount(uint32_t& aUpdateCount) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void ManufacturerNamePropertyChanged();
     void ManufacturerInfoPropertyChanged();
     void ManufacturerUrlPropertyChanged();

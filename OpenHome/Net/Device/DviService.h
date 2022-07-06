@@ -30,6 +30,7 @@ public:
     virtual TIpAddress Adapter() const = 0;
     virtual const char* ResourceUriPrefix() const = 0;
     virtual Endpoint ClientEndpoint() const = 0;
+    virtual const Brx& ClientUserAgent() const = 0;
 
     virtual void InvocationReadStart() = 0;
     virtual TBool InvocationReadBool(const TChar* aName) = 0;
@@ -86,6 +87,7 @@ public:
     DllExport void AddAction(Action* aAction, FunctorDviInvocation aFunctor);
     const std::vector<DvAction>& DvActions() const;
     void Invoke(IDviInvocation& aInvocation, const Brx& aActionName);
+    void InvokeDirect(IDviInvocation& aInvocation, const Brx& aActionName); // intended for CpDeviceDv + LPEC only
 
     void PropertiesLock();
     void PropertiesUnlock();
@@ -97,6 +99,7 @@ public:
     void RemoveSubscription(const Brx& aSid);
 private:
     ~DviService();
+    void Invoke(IDviInvocation& aInvocation, const Brx& aActionName, TBool aIgnoreEnableState);
     void InvocationCompleted();
     TBool AssertPropertiesInitialised() const;
 private: // from IStackObject
@@ -114,6 +117,22 @@ private:
     Semaphore iDisabledSem;
 };
 
+/**
+ * Utility class.
+ *
+ * Create an AutoServiceRef on the stack using a reference to a DviService.
+ * It will automatically call RemoveRef on stack cleanup (ie on return or when
+ * an exception passes up).
+ */
+class AutoServiceRef : public INonCopyable
+{
+public:
+    AutoServiceRef(DviService*& aService);
+    ~AutoServiceRef();
+private:
+    DviService*& iService;
+};
+
 class DllExportClass DviInvocation : public IDvInvocation, private INonCopyable
 {
 public:
@@ -125,6 +144,7 @@ public:
     virtual TIpAddress Adapter() const;
     virtual const char* ResourceUriPrefix() const;
     virtual Endpoint ClientEndpoint() const;
+    virtual const Brx& ClientUserAgent() const;
 private:
     IDviInvocation& iInvocation;
 };

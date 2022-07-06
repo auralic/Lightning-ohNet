@@ -29,11 +29,10 @@ CpiService::CpiService(const TChar* aDomain, const TChar* aName, TUint aVersion,
     iDevice.AddRef();
     iDevice.GetCpStack().Env().AddObject(this);
     if (aVersion != iServiceType.Version()) {
-        LOG(kService, "CpiService: addr=%p, serviceType=", this);
-        LOG(kService, iServiceType.FullName());
-        LOG(kService, ", device=");
-        LOG(kService, iDevice.Udn());
-        LOG(kService, ", presenting proxy v%u as v%u\n", aVersion, iServiceType.Version());
+        const Brx& serviceName = iServiceType.FullName();
+        const Brx& udn = iDevice.Udn();
+        LOG(kService, "CpiService: addr=%p, serviceType=%.*s, device=%.*s, proxy: v%u, device: v%u\n",
+                      this, PBUF(serviceName), PBUF(udn), aVersion, iServiceType.Version());
     }
 }
 
@@ -91,13 +90,11 @@ void CpiService::Unsubscribe()
 
 void CpiService::InvocationCompleted()
 {
-    TBool signal;
     iLock.Wait();
-    signal = (--iPendingInvocations == 0);
-    iLock.Signal();
-    if (signal) {
+    if (--iPendingInvocations == 0) {
         iShutdownSignal.Signal();
     }
+    iLock.Signal();
 }
 
 TBool CpiService::Interrupt() const
@@ -580,6 +577,11 @@ IInvocable& OpenHome::Net::Invocation::Invoker()
     return *iInvoker;
 }
 
+const Brx& OpenHome::Net::Invocation::Udn() const
+{
+    return iDevice->Udn();
+}
+
 TUint OpenHome::Net::Invocation::Type() const
 {
     return eInvocation;
@@ -661,17 +663,14 @@ void Invoker::SetError(Error::ELevel aLevel, TUint aCode, const Brx& aDescriptio
 {
     iInvocation->SetError(aLevel, aCode, aDescription);
     // the above error details might be ignored if an earlier (presumed more detailed) error had been set
-    Error::ELevel level;
-    TUint code;
-    const TChar* desc;
+    Error::ELevel level = Error::eNone;
+    TUint code = 0;
+    const TChar* desc = NULL;
     (void)iInvocation->Error(level, code, desc);
-    LOG3(kService, kError, kTrace, "Error - %s(%s, %d, %s) - from invocation %p, on action ", aLogStr, Error::LevelName(level), code, (desc==NULL? "" : desc), iInvocation);
-    LOG3(kService, kError, kTrace, iInvocation->Action().Name());
-    LOG3(kService, kError, kTrace, ", from device ");
-    LOG3(kService, kError, kTrace, iInvocation->Device().Udn());
-    LOG3(kService, kError, kTrace, "\n");
-
-
+    const Brx& actionName = iInvocation->Action().Name();
+    const Brx& udn = iInvocation->Device().Udn();
+    LOG_ERROR(kService, "Error - %s(%s, %d, %s) - from invocation %p, on action %.*s, from device %.*s\n",
+        aLogStr, Error::LevelName(level), code, (desc==NULL? "" : desc), iInvocation, PBUF(actionName), PBUF(udn));
 }
 
 void Invoker::Run()
@@ -679,14 +678,16 @@ void Invoker::Run()
     for (;;) {
         Wait();
         try {
-            LOG(kService, "Invoker::Run (%s %p) action ",
-                          (const TChar*)Name().Ptr(), iInvocation);
-            LOG(kService, iInvocation->Action().Name());
-            LOG(kService, "\n");
+            const Brx& actionName = iInvocation->Action().Name();
+            LOG(kService, "Invoker::Run (%s %p), action %.*s, device %.*s\n",
+                          (const TChar*)Name().Ptr(), iInvocation, PBUF(actionName), PBUF(iInvocation->Udn()));
             iInvocation->Invoker().InvokeAction(*iInvocation);
         }
         catch (HttpError&) {
             SetError(Error::eHttp, Error::kCodeUnknown, Error::kDescriptionUnknown, "Http");
+        }
+        catch (UriError&) {
+            SetError(Error::eHttp, Error::kCodeUnknown, Error::kDescriptionUnknown, "Uri");
         }
         catch (NetworkError&) {
             SetError(Error::eSocket, Error::kCodeUnknown, Error::kDescriptionUnknown, "Network");

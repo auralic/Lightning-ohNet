@@ -18,18 +18,50 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgDACConfig1 : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgDACConfig1() {}
+    virtual void SyncGetFilterMode(Brh& aFilterMode, Brh& aFilterModeList) = 0;
+    virtual void BeginGetFilterMode(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetFilterMode(IAsync& aAsync, Brh& aFilterMode, Brh& aFilterModeList) = 0;
+    virtual void SyncSetFilterMode(const Brx& aFilterMode) = 0;
+    virtual void BeginSetFilterMode(const Brx& aFilterMode, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetFilterMode(IAsync& aAsync) = 0;
+    virtual void SyncGetDACPhase(TUint& aPhase) = 0;
+    virtual void BeginGetDACPhase(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDACPhase(IAsync& aAsync, TUint& aPhase) = 0;
+    virtual void SyncSetDACPhase(TUint aPhase) = 0;
+    virtual void BeginSetDACPhase(TUint aPhase, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetDACPhase(IAsync& aAsync) = 0;
+    virtual void SyncGetDACBalance(TUint& aBalance) = 0;
+    virtual void BeginGetDACBalance(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDACBalance(IAsync& aAsync, TUint& aBalance) = 0;
+    virtual void SyncSetDACBalance(TUint aBalance) = 0;
+    virtual void BeginSetDACBalance(TUint aBalance, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetDACBalance(IAsync& aAsync) = 0;
+    virtual void SyncGetWaitingTime(Brh& aWaitingTime) = 0;
+    virtual void BeginGetWaitingTime(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetWaitingTime(IAsync& aAsync, Brh& aWaitingTime) = 0;
+    virtual void SyncSetWaitingTime(const Brx& aWaitingTime) = 0;
+    virtual void BeginSetWaitingTime(const Brx& aWaitingTime, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetWaitingTime(IAsync& aAsync) = 0;
+    virtual void SetPropertyCurrentActionChanged(Functor& aCurrentActionChanged) = 0;
+    virtual void PropertyCurrentAction(TUint& aCurrentAction) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:DACConfig:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgDACConfig1 : public CpProxy
+class CpProxyAvOpenhomeOrgDACConfig1 : public ICpProxyAvOpenhomeOrgDACConfig1
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -274,7 +306,40 @@ public:
      * @param[out] aCurrentAction
      */
     void PropertyCurrentAction(TUint& aCurrentAction) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void CurrentActionPropertyChanged();
 private:
     Action* iActionGetFilterMode;

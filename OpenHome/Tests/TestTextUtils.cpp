@@ -2,6 +2,7 @@
 #include <OpenHome/Private/Ascii.h>
 #include <OpenHome/Private/Parser.h>
 #include <OpenHome/Private/Uri.h>
+#include <OpenHome/Private/Converter.h>
 #include <OpenHome/Os.h>
 
 #include <limits>
@@ -1047,6 +1048,9 @@ void SuiteAscii::Test()
     TEST(Ascii::UintHex(Brn("10")) == 16);
     TEST(Ascii::UintHex(Brn("11")) == 17);
 
+    TEST(Ascii::UintHex(Brn("1234abcd")) == 0x1234abcd); // full width hex uint32
+    TEST_THROWS(Ascii::UintHex(Brn("112345678")), AsciiError); // too long
+    TEST_THROWS(Ascii::UintHex(Brn("invalid")), AsciiError); // non-hex chars
 }   
     
 class SuiteParser : public Suite
@@ -1291,6 +1295,35 @@ void SuiteUri::Test()
     delete uriNoPath1;
     delete uriNoPath2;
 
+    // Relative path tests:
+    // Nicked from the examples at http://www.webreference.com/html/tutorial2/3.html
+    Brn root("http://WebReference.com/html/");
+#define REL_TEST(relativeUri,expectedAbsoluteUri) \
+    do { \
+        TEST(Uri(root, Brn(relativeUri)).AbsoluteUri() == Brn(expectedAbsoluteUri)); \
+    } \
+    while(0)
+
+    REL_TEST("about.html",         "http://WebReference.com/html/about.html");
+    REL_TEST("tutorial1/",         "http://WebReference.com/html/tutorial1/");
+    REL_TEST("tutorial1/2.html",   "http://WebReference.com/html/tutorial1/2.html");
+    REL_TEST("/",                  "http://WebReference.com/");
+    REL_TEST("//www.internet.com/", "http://www.internet.com/");
+    REL_TEST("/experts/",          "http://WebReference.com/experts/");
+    REL_TEST("../",                "http://WebReference.com/");
+    REL_TEST("../experts/",        "http://WebReference.com/experts/");
+    REL_TEST("../../../",          "http://WebReference.com/"); // fails, throws UriError
+    REL_TEST("./",                 "http://WebReference.com/html/");
+    REL_TEST("./about.html",       "http://WebReference.com/html/about.html");
+#undef REL_TEST
+
+    {
+        Uri root2(
+            Brn("http://10.2.10.211:31888/foo"),
+            Brn("http://core/bar"));
+        TEST(root2.AbsoluteUri() == Brn("http://core/bar"));
+    }
+
     Bws<128> uriString("testscheme://testhost:123/testpath");
     Bws<32> uriPath("/testpath");
     for(i=0 ; i<128 ; i++) {
@@ -1461,7 +1494,7 @@ void SuiteUri::Test()
     {
     Bws<1100> uriString;
     uriString.Replace("testscheme://testhost:123/testpath?testquery#testfragment");  // 59 (# -> %23)
-    for(TUint i=0 ; i<19 ; i++) {
+    for(TUint j=0 ; j<19 ; j++) {
         uriString.Append("12345678901234567890123456789012345678901234567890"); // + 19*50 = 1009
     }
     uriString.Append("123456789012345");  // + 15 = 1024
@@ -1473,7 +1506,7 @@ void SuiteUri::Test()
 
     // No fragment
     uriString.Replace("testscheme://testhost:123/testpath?testquery");  // 44
-    for(TUint i=0 ; i<19 ; i++) {
+    for(TUint k=0 ; k<19 ; k++) {
         uriString.Append("12345678901234567890123456789012345678901234567890"); // + 19*50 = 994
     }
     uriString.Append("123456789012345678901234567890"); // + 30 = 1024
@@ -1485,7 +1518,7 @@ void SuiteUri::Test()
 
     // No fragment or query
     uriString.Replace("testscheme://testhost:123/testpath");  // 34
-    for(TUint i=0 ; i<19 ; i++) {
+    for(TUint l=0 ; l<19 ; l++) {
         uriString.Append("12345678901234567890123456789012345678901234567890"); // + 19*50 = 984
     }
     uriString.Append("1234567890123456789012345678901234567890"); // + 40 = 1024
@@ -1497,7 +1530,7 @@ void SuiteUri::Test()
 
     // No fragment or query or port
     uriString.Replace("testscheme://testhost/testpath");  // 30
-    for(TUint i=0 ; i<19 ; i++) {
+    for(TUint m=0 ; m<19 ; m++) {
         uriString.Append("12345678901234567890123456789012345678901234567890"); // + 19*50 = 980
     }
     uriString.Append("12345678901234567890123456789012345678901234"); // + 44 = 1024
@@ -1554,6 +1587,91 @@ void SuiteSwap::Test()
     TEST(CheckCalls());
 }
 
+
+class SuiteUnicode : public Suite
+{
+public:
+    SuiteUnicode() : Suite("Test utf8 encoding") {}
+    void Test();
+};
+
+void SuiteUnicode::Test()
+{
+    Bws<6> buf;
+
+    // test the byte count
+    Converter::ToUtf8(0x01, buf); // buffer
+    TEST(buf.Bytes()==1);
+
+    Converter::ToUtf8(0x7f, buf);
+    TEST(buf.Bytes()==1);
+    Converter::ToUtf8(0x80, buf);
+    TEST(buf.Bytes()==2);
+
+    Converter::ToUtf8(0x7ff, buf);
+    TEST(buf.Bytes()==2);
+    Converter::ToUtf8(0x800, buf);
+    TEST(buf.Bytes()==3);
+
+    Converter::ToUtf8(0xffff, buf);
+    TEST(buf.Bytes()==3);
+    Converter::ToUtf8(0x10000, buf);
+    TEST(buf.Bytes()==4);
+
+    Converter::ToUtf8(0x1fffff, buf);
+    TEST(buf.Bytes()==4);
+    Converter::ToUtf8(0x200000, buf);
+    TEST(buf.Bytes()==5);
+
+    Converter::ToUtf8(0x3ffffff, buf);
+    TEST(buf.Bytes()==5);
+    //
+
+    // test the values
+    // 1 byte
+    Converter::ToUtf8(0x01, buf);
+    TEST(buf[0]==0x01);
+    Converter::ToUtf8(0x7f, buf);
+    TEST(buf[0]==0x7f);
+
+    // 2 bytes
+    Converter::ToUtf8(0x577, buf);
+    TEST(buf[0]==0xd5);
+    TEST(buf[1]==0xb7);
+
+    // 3 bytes
+    Converter::ToUtf8(0x1234, buf);
+    TEST(buf[0]==0xe1);
+    TEST(buf[1]==0x88);
+    TEST(buf[2]==0xb4);
+
+
+    //// 4 bytes
+    Converter::ToUtf8(0x15678, buf);
+    TEST(buf[0]==0xf0);
+    TEST(buf[1]==0x95);
+    TEST(buf[2]==0x99);
+    TEST(buf[3]==0xb8);
+
+    // 5 bytes
+    Converter::ToUtf8(0x29abcde, buf);
+    TEST(buf[0]==0xfa);
+    TEST(buf[1]==0xa6);
+    TEST(buf[2]==0xab);
+    TEST(buf[3]==0xb3);
+    TEST(buf[4]==0x9e);
+
+    // 6 bytes
+    Converter::ToUtf8(0x5f012345, buf);
+    TEST(buf[0]==0xfd);
+    TEST(buf[1]==0x9f);
+    TEST(buf[2]==0x80);
+    TEST(buf[3]==0x92);
+    TEST(buf[4]==0x8d);
+    TEST(buf[5]==0x85);
+}
+
+
 void TestTextUtils()
 {
     Runner runner("Ascii System");
@@ -1561,5 +1679,6 @@ void TestTextUtils()
     runner.Add(new SuiteParser());
     runner.Add(new SuiteUri());
     runner.Add(new SuiteSwap());
+    runner.Add(new SuiteUnicode());
     runner.Run();
 }

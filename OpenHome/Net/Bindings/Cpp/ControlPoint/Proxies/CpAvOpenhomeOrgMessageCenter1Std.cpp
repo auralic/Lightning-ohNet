@@ -39,7 +39,7 @@ void SyncGetMessageAvOpenhomeOrgMessageCenter1Cpp::CompleteRequest(IAsync& aAsyn
 
 
 CpProxyAvOpenhomeOrgMessageCenter1Cpp::CpProxyAvOpenhomeOrgMessageCenter1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "MessageCenter", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "MessageCenter", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -73,12 +73,12 @@ void CpProxyAvOpenhomeOrgMessageCenter1Cpp::SyncGetMessage(std::string& aMessage
 
 void CpProxyAvOpenhomeOrgMessageCenter1Cpp::BeginGetMessage(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetMessage, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetMessage, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetMessage->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgMessageCenter1Cpp::EndGetMessage(IAsync& aAsync, std::string& aMessage, uint32_t& aMessageID)
@@ -103,30 +103,34 @@ void CpProxyAvOpenhomeOrgMessageCenter1Cpp::EndGetMessage(IAsync& aAsync, std::s
 
 void CpProxyAvOpenhomeOrgMessageCenter1Cpp::SetPropertyMessageChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iMessageChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgMessageCenter1Cpp::SetPropertyMessageIDChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iMessageIDChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgMessageCenter1Cpp::PropertyMessage(std::string& aMessage) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iMessage->Value();
     aMessage.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgMessageCenter1Cpp::PropertyMessageID(uint32_t& aMessageID) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aMessageID = iMessageID->Value();
 }
 
@@ -138,5 +142,44 @@ void CpProxyAvOpenhomeOrgMessageCenter1Cpp::MessagePropertyChanged()
 void CpProxyAvOpenhomeOrgMessageCenter1Cpp::MessageIDPropertyChanged()
 {
     ReportEvent(iMessageIDChanged);
+}
+
+void CpProxyAvOpenhomeOrgMessageCenter1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgMessageCenter1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgMessageCenter1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgMessageCenter1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgMessageCenter1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgMessageCenter1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgMessageCenter1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgMessageCenter1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

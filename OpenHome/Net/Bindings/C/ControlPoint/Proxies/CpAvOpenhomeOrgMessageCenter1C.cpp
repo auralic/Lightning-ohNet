@@ -147,14 +147,14 @@ void CpProxyAvOpenhomeOrgMessageCenter1C::SetPropertyMessageIDChanged(Functor& a
 void CpProxyAvOpenhomeOrgMessageCenter1C::PropertyMessage(Brhz& aMessage) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aMessage.Set(iMessage->Value());
 }
 
 void CpProxyAvOpenhomeOrgMessageCenter1C::PropertyMessageID(TUint& aMessageID) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aMessageID = iMessageID->Value();
 }
 
@@ -241,19 +241,31 @@ void STDCALL CpProxyAvOpenhomeOrgMessageCenter1SetPropertyMessageIDChanged(THand
     proxyC->SetPropertyMessageIDChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgMessageCenter1PropertyMessage(THandle aHandle, char** aMessage)
+int32_t STDCALL CpProxyAvOpenhomeOrgMessageCenter1PropertyMessage(THandle aHandle, char** aMessage)
 {
     CpProxyAvOpenhomeOrgMessageCenter1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgMessageCenter1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aMessage;
-    proxyC->PropertyMessage(buf_aMessage);
+    try {
+        proxyC->PropertyMessage(buf_aMessage);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aMessage = buf_aMessage.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgMessageCenter1PropertyMessageID(THandle aHandle, uint32_t* aMessageID)
+int32_t STDCALL CpProxyAvOpenhomeOrgMessageCenter1PropertyMessageID(THandle aHandle, uint32_t* aMessageID)
 {
     CpProxyAvOpenhomeOrgMessageCenter1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgMessageCenter1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyMessageID(*aMessageID);
+    try {
+        proxyC->PropertyMessageID(*aMessageID);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 

@@ -50,7 +50,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgDACConfig1Destroy(THandle aHandle);
  * @param[out] aFilterMode
  * @param[out] aFilterModeList
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1SyncGetFilterMode(THandle aHandle, char** aFilterMode, char** aFilterModeList);
@@ -87,7 +87,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1EndGetFilterMode(THandle
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgDACConfig1Create
  * @param[in]  aFilterMode
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1SyncSetFilterMode(THandle aHandle, const char* aFilterMode);
@@ -123,7 +123,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1EndSetFilterMode(THandle
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgDACConfig1Create
  * @param[out] aPhase
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1SyncGetDACPhase(THandle aHandle, uint32_t* aPhase);
@@ -159,7 +159,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1EndGetDACPhase(THandle a
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgDACConfig1Create
  * @param[in]  aPhase
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1SyncSetDACPhase(THandle aHandle, uint32_t aPhase);
@@ -195,7 +195,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1EndSetDACPhase(THandle a
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgDACConfig1Create
  * @param[out] aBalance
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1SyncGetDACBalance(THandle aHandle, uint32_t* aBalance);
@@ -231,7 +231,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1EndGetDACBalance(THandle
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgDACConfig1Create
  * @param[in]  aBalance
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1SyncSetDACBalance(THandle aHandle, uint32_t aBalance);
@@ -267,7 +267,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1EndSetDACBalance(THandle
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgDACConfig1Create
  * @param[out] aWaitingTime
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1SyncGetWaitingTime(THandle aHandle, char** aWaitingTime);
@@ -303,7 +303,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1EndGetWaitingTime(THandl
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgDACConfig1Create
  * @param[in]  aWaitingTime
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1SyncSetWaitingTime(THandle aHandle, const char* aWaitingTime);
@@ -351,8 +351,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgDACConfig1SetPropertyCurrentActionCha
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgDACConfig1Create
  * @param[out] aCurrentAction
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgDACConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgDACConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
 
 /* @} */
 

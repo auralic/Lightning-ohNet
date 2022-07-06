@@ -37,7 +37,7 @@ void SyncGetEntireInfoAvOpenhomeOrgRenderingInfo1Cpp::CompleteRequest(IAsync& aA
 
 
 CpProxyAvOpenhomeOrgRenderingInfo1Cpp::CpProxyAvOpenhomeOrgRenderingInfo1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "RenderingInfo", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "RenderingInfo", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -66,11 +66,11 @@ void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::SyncGetEntireInfo(std::string& aInfo
 
 void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::BeginGetEntireInfo(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetEntireInfo, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetEntireInfo, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetEntireInfo->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::EndGetEntireInfo(IAsync& aAsync, std::string& aInfo)
@@ -94,15 +94,17 @@ void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::EndGetEntireInfo(IAsync& aAsync, std
 
 void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::SetPropertyInfoChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iInfoChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::PropertyInfo(std::string& aInfo) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iInfo->Value();
     aInfo.assign((const char*)val.Ptr(), val.Bytes());
 }
@@ -110,5 +112,44 @@ void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::PropertyInfo(std::string& aInfo) con
 void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::InfoPropertyChanged()
 {
     ReportEvent(iInfoChanged);
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgRenderingInfo1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

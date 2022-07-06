@@ -12,7 +12,7 @@ namespace OpenHome {
 
 class IWriter;
 
-class Uri
+class Uri : private INonCopyable
 {
 public:
     explicit Uri();
@@ -53,8 +53,8 @@ private:
     static TBool IsEscaped(const Brx& aBuffer, TUint aIndex);
 
     Bws<kMaxUriBytes> iAbsoluteUri;
-    Bws<kMaxUriBytes> iBase;
-    Bws<kMaxUriBytes> iRelative;
+    Bws<kMaxUriBytes> iBase;     // only used in Replace() but too large for the stack
+    Bws<kMaxUriBytes> iRelative; // only used in Replace() but too large for the stack
     Brn iScheme;
     Brn iHost;
     TInt iPort;

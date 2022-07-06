@@ -18,18 +18,68 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgGroupConfig1 : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgGroupConfig1() {}
+    virtual void SyncSetGroupMode(const Brx& aGroupMode, const Brx& aGroupID, const Brx& aGroupName) = 0;
+    virtual void BeginSetGroupMode(const Brx& aGroupMode, const Brx& aGroupID, const Brx& aGroupName, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetGroupMode(IAsync& aAsync) = 0;
+    virtual void SyncGetGroupMode(Brh& aGroupMode, Brh& aGroupID, Brh& aGroupName) = 0;
+    virtual void BeginGetGroupMode(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetGroupMode(IAsync& aAsync, Brh& aGroupMode, Brh& aGroupID, Brh& aGroupName) = 0;
+    virtual void SyncSetGroupVolume(TUint aGroupVolume) = 0;
+    virtual void BeginSetGroupVolume(TUint aGroupVolume, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetGroupVolume(IAsync& aAsync) = 0;
+    virtual void SyncGetGroupVolume(TUint& aGroupVolume) = 0;
+    virtual void BeginGetGroupVolume(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetGroupVolume(IAsync& aAsync, TUint& aGroupVolume) = 0;
+    virtual void SyncSetGroupMute(TBool aGroupMute) = 0;
+    virtual void BeginSetGroupMute(TBool aGroupMute, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetGroupMute(IAsync& aAsync) = 0;
+    virtual void SyncGetGroupMute(TBool& aGroupMute) = 0;
+    virtual void BeginGetGroupMute(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetGroupMute(IAsync& aAsync, TBool& aGroupMute) = 0;
+    virtual void SyncGetGroupStatus(Brh& aGroupStatus) = 0;
+    virtual void BeginGetGroupStatus(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetGroupStatus(IAsync& aAsync, Brh& aGroupStatus) = 0;
+    virtual void SyncSetGroupStatus(const Brx& aGroupStatus) = 0;
+    virtual void BeginSetGroupStatus(const Brx& aGroupStatus, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetGroupStatus(IAsync& aAsync) = 0;
+    virtual void SyncGetBitPerfectMode(TBool& aBitPerfectMode) = 0;
+    virtual void BeginGetBitPerfectMode(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetBitPerfectMode(IAsync& aAsync, TBool& aBitPerfectMode) = 0;
+    virtual void SyncSetBitPerfectMode(TBool aBitPerfectMode) = 0;
+    virtual void BeginSetBitPerfectMode(TBool aBitPerfectMode, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetBitPerfectMode(IAsync& aAsync) = 0;
+    virtual void SetPropertyGroupModeChanged(Functor& aGroupModeChanged) = 0;
+    virtual void PropertyGroupMode(Brhz& aGroupMode) const = 0;
+    virtual void SetPropertyGroupNameChanged(Functor& aGroupNameChanged) = 0;
+    virtual void PropertyGroupName(Brhz& aGroupName) const = 0;
+    virtual void SetPropertyGroupIDChanged(Functor& aGroupIDChanged) = 0;
+    virtual void PropertyGroupID(Brhz& aGroupID) const = 0;
+    virtual void SetPropertyGroupVolumeChanged(Functor& aGroupVolumeChanged) = 0;
+    virtual void PropertyGroupVolume(TUint& aGroupVolume) const = 0;
+    virtual void SetPropertyGroupMuteChanged(Functor& aGroupMuteChanged) = 0;
+    virtual void PropertyGroupMute(TBool& aGroupMute) const = 0;
+    virtual void SetPropertyGroupStatusChanged(Functor& aGroupStatusChanged) = 0;
+    virtual void PropertyGroupStatus(Brhz& aGroupStatus) const = 0;
+    virtual void SetPropertyBitPerfectModeChanged(Functor& aBitPerfectModeChanged) = 0;
+    virtual void PropertyBitPerfectMode(TBool& aBitPerfectMode) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:GroupConfig:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgGroupConfig1 : public CpProxy
+class CpProxyAvOpenhomeOrgGroupConfig1 : public ICpProxyAvOpenhomeOrgGroupConfig1
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -446,7 +496,40 @@ public:
      * @param[out] aBitPerfectMode
      */
     void PropertyBitPerfectMode(TBool& aBitPerfectMode) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void GroupModePropertyChanged();
     void GroupNamePropertyChanged();
     void GroupIDPropertyChanged();

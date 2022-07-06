@@ -439,7 +439,7 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1C::SetPropertyCurrentActionChanged(
 void CpProxyAvOpenhomeOrgTestResamplerConfig1C::PropertyCurrentAction(TUint& aCurrentAction) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -714,10 +714,16 @@ void STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1SetPropertyCurrentActionCha
     proxyC->SetPropertyCurrentActionChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
+int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
 {
     CpProxyAvOpenhomeOrgTestResamplerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgTestResamplerConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyCurrentAction(*aCurrentAction);
+    try {
+        proxyC->PropertyCurrentAction(*aCurrentAction);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 

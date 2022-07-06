@@ -12,7 +12,6 @@
 #include <vector>
 
 EXCEPTION(HttpError)
-EXCEPTION(HttpInvalidResponse)
 
 namespace OpenHome {
 
@@ -21,6 +20,7 @@ class WriterHttpHeader;
 class Http
 {
 public:
+    static const TUint kPortDefault = 80;
     // Methods
     static const Brn kMethodOptions;
     static const Brn kMethodGet;
@@ -115,8 +115,8 @@ public:
     static void WriteHeaderContentLength(WriterHttpHeader& aWriter, TUint aLength);
     static void WriteHeaderContentType(WriterHttpHeader& aWriter, const Brx& aType);
     static void WriteHeaderConnectionClose(WriterHttpHeader& aWriter);
+    static void WriteHeaderUserAgent(WriterHttpHeader& aWriter, Environment& aEnv);
     static void WriteHeaderAllowOrigin(WriterHttpHeader& aWriter, const Brx& aType);
-
 };
 
 class HttpStatus
@@ -453,12 +453,25 @@ private:
     Bws<kMaxMethodBytes> iMethod;
 };
 
+class HttpHeaderUserAgent : public HttpHeader
+{
+    static const TUint kMaxUserAgentBytes = 1024;
+public:
+    const Brx& UserAgent() const;
+private:
+    TBool Recognise(const Brx& aHeader);
+    void Process(const Brx& aValue);
+private:
+    Bws<kMaxUserAgentBytes> iUserAgent;
+};
+
 class ReaderHttpChunked : public IReader
 {
     static const TUint kChunkSizeBufBytes = 10;
 public:
     ReaderHttpChunked(IReader& aReader);
     void SetChunked(TBool aChunked);
+    TBool IsChunked() const;
 public: // from IReader
     Brn Read(TUint aBytes);
     void ReadFlush();
@@ -483,59 +496,6 @@ public: // from IWriter
 private:
     Sws<kMaxBufferBytes> iBuffer;
     TBool iChunked;
-};
-
-class IHttpSocket
-{
-public:
-    virtual TUint Connect(const Uri& aUri) = 0; // returns Http status code; 0 if connection error.
-    virtual void Close() = 0;
-    virtual TUint ContentLength() const = 0;
-    virtual ~IHttpSocket() {}
-};
-
-class HttpReader : public IHttpSocket, public IReader
-{
-private:
-    static const TUint kHttpPort = 80;
-    static const TUint kReadBufferBytes = 9 * 1024;
-    static const TUint kWriteBufferBytes = 1024;
-    static const TUint kConnectTimeoutMs = 3000;
-    static const TUint kResponseTimeoutMs = 60 * 1000;
-
-public:
-    HttpReader(Environment& aEnv);
-    HttpReader(Environment& aEnv, const Brx& aUserAgent);
-    ~HttpReader();
-public: // from IHttpSocket
-    TUint Connect(const Uri& aUri);
-    void Close();
-    TUint ContentLength() const;
-public: // from IReader
-    Brn Read(TUint aBytes);
-    void ReadFlush();
-    void ReadInterrupt();
-private:
-    TUint WriteRequest(const Uri& aUri);
-    TUint ConnectAndProcessHeader(const Uri& aUri);
-    TBool Connect(Endpoint aEndpoint);
-    void Open();
-private:
-    Environment& iEnv;
-    Bwh iUserAgent;
-    SocketTcpClient iTcpClient;
-    HttpHeaderContentLength iHeaderContentLength;
-    HttpHeaderLocation iHeaderLocation;
-    HttpHeaderTransferEncoding iHeaderTransferEncoding;
-    Srs<1024> iReadBuffer;
-    ReaderUntilS<1024> iReaderUntil;
-    ReaderHttpResponse iReaderResponse;
-    Sws<kWriteBufferBytes> iWriteBuffer;
-    WriterHttpRequest iWriterRequest;
-    ReaderHttpChunked iDechunker;
-    TBool iSocketIsOpen;
-    TBool iConnected;
-    TUint iTotalBytes;
 };
 
 } // namespace OpenHome

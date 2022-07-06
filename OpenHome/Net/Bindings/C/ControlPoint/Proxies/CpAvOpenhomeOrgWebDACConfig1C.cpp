@@ -217,21 +217,21 @@ void CpProxyAvOpenhomeOrgWebDACConfig1C::SetPropertyCurrentActionChanged(Functor
 void CpProxyAvOpenhomeOrgWebDACConfig1C::PropertyAlive(TBool& aAlive) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebDACConfig1C::PropertyDACConfig(Brhz& aDACConfig) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aDACConfig.Set(iDACConfig->Value());
 }
 
 void CpProxyAvOpenhomeOrgWebDACConfig1C::PropertyCurrentAction(TUint& aCurrentAction) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -370,28 +370,46 @@ void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1SetPropertyCurrentActionChanged(TH
     proxyC->SetPropertyCurrentActionChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
 {
     CpProxyAvOpenhomeOrgWebDACConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebDACConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Alive;
-    proxyC->PropertyAlive(Alive);
+    try {
+        proxyC->PropertyAlive(Alive);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aAlive = Alive? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyDACConfig(THandle aHandle, char** aDACConfig)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyDACConfig(THandle aHandle, char** aDACConfig)
 {
     CpProxyAvOpenhomeOrgWebDACConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebDACConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aDACConfig;
-    proxyC->PropertyDACConfig(buf_aDACConfig);
+    try {
+        proxyC->PropertyDACConfig(buf_aDACConfig);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aDACConfig = buf_aDACConfig.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
 {
     CpProxyAvOpenhomeOrgWebDACConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebDACConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyCurrentAction(*aCurrentAction);
+    try {
+        proxyC->PropertyCurrentAction(*aCurrentAction);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 

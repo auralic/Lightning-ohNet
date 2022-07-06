@@ -13,6 +13,8 @@ EXCEPTION(FileOpenError)
 EXCEPTION(FileReadError)
 EXCEPTION(FileWriteError)
 EXCEPTION(FileSeekError)
+EXCEPTION(MakeDirFailed)
+EXCEPTION(UnlinkFailed)
 
 namespace OpenHome {
 
@@ -25,6 +27,8 @@ typedef enum {
 typedef enum {
     eFileReadOnly,
     eFileReadWrite,
+    eFileWriteOnly,
+    eFileReadWriteCreateIfNotExist,
 } FileMode;
 
 class IFile
@@ -45,6 +49,8 @@ public:
     virtual void Seek(TInt32 aBytes, SeekWhence aWhence = eSeekFromStart) = 0; // Seeks, or throws FileSeekError
     virtual TUint32 Tell() const = 0;                           // Current position in file
     virtual TUint32 Bytes() const = 0;                          // Size of file
+    virtual void Flush() = 0;                                   // Ensure file changes visible to other IFiles (fflush)
+    virtual void Sync() = 0;                                    // Ensure file changes written to disk (fsync/_commit)
 };
 
 // IFileSystem
@@ -52,20 +58,24 @@ class IFileSystem
 {
 public:
     virtual IFile* Open(const TChar* aFilename, FileMode aFileMode) = 0; // throws FileOpenError
+    virtual void MakeDir(const TChar* aDirname) = 0; // throws DirAlreadyExists
+    virtual void Unlink(const TChar* aFilename) = 0;
     virtual ~IFileSystem() {}
 };
 
-class FileSystemAnsii : public IFileSystem
+class FileSystemAnsi : public IFileSystem
 {
 public: // IFileSystem
     IFile* Open(const TChar* aFilename, FileMode aFileMode);
+    void MakeDir(const TChar* aDirname); // throws DirAlreadyExists
+    void Unlink(const TChar* aFilename);
 };
 
-class FileAnsii : public IFile
+class FileAnsi : public IFile
 {
 public:
-    FileAnsii(const TChar* aFilename, FileMode aFileMode);
-    ~FileAnsii();
+    FileAnsi(const TChar* aFilename, FileMode aFileMode);
+    ~FileAnsi();
 public: // from IFile
     void Read(Bwx& aBuffer);
     void Read(Bwx& aBuffer, TUint aBytes);
@@ -74,6 +84,8 @@ public: // from IFile
     void Seek(TInt32 aBytes, SeekWhence aWhence = eSeekFromStart);
     TUint32 Tell() const;
     TUint32 Bytes() const;
+    void Flush();
+    void Sync();
 private:
     FILE* iFilePtr;
 };
@@ -91,6 +103,8 @@ public: // from IFile
     void Seek(TInt32 aBytes, SeekWhence aWhence = eSeekFromStart);
     TUint32 Tell() const;
     TUint32 Bytes() const;
+    void Flush();
+    void Sync();
 private:
     Brn     iBuffer;
     TUint32 iCursor;

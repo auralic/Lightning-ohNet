@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgRoon1::GetPropertyTransportState(Brhz& aValue)
     aValue.Set(iPropertyTransportState->Value());
 }
 
+void DvProviderAvOpenhomeOrgRoon1::WritePropertyTransportState(IWriter& aWriter)
+{
+    iPropertyTransportState->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgRoon1::SetPropertyRepeat(TBool aValue)
 {
     ASSERT(iPropertyRepeat != NULL);

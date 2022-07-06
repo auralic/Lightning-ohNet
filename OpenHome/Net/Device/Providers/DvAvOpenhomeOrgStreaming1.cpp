@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgStreaming1::GetPropertyTransportState(Brhz& aValue)
     aValue.Set(iPropertyTransportState->Value());
 }
 
+void DvProviderAvOpenhomeOrgStreaming1::WritePropertyTransportState(IWriter& aWriter)
+{
+    iPropertyTransportState->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgStreaming1::SetPropertyRepeat(TBool aValue)
 {
     ASSERT(iPropertyRepeat != NULL);
@@ -68,6 +73,11 @@ void DvProviderAvOpenhomeOrgStreaming1::GetPropertyIdArray(Brh& aValue)
     aValue.Set(iPropertyIdArray->Value());
 }
 
+void DvProviderAvOpenhomeOrgStreaming1::WritePropertyIdArray(IWriter& aWriter)
+{
+    iPropertyIdArray->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgStreaming1::SetPropertyTracksMax(TUint aValue)
 {
     ASSERT(iPropertyTracksMax != NULL);
@@ -90,6 +100,11 @@ void DvProviderAvOpenhomeOrgStreaming1::GetPropertyProtocolInfo(Brhz& aValue)
 {
     ASSERT(iPropertyProtocolInfo != NULL);
     aValue.Set(iPropertyProtocolInfo->Value());
+}
+
+void DvProviderAvOpenhomeOrgStreaming1::WritePropertyProtocolInfo(IWriter& aWriter)
+{
+    iPropertyProtocolInfo->Write(aWriter);
 }
 
 DvProviderAvOpenhomeOrgStreaming1::DvProviderAvOpenhomeOrgStreaming1(DvDevice& aDevice)

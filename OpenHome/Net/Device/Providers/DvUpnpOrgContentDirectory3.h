@@ -54,6 +54,12 @@ public:
      */
     void GetPropertyContainerUpdateIDs(Brhz& aValue);
     /**
+     * Output the value of the ContainerUpdateIDs property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyContainerUpdateIDs has previously been called.
+     */
+    void WritePropertyContainerUpdateIDs(IWriter& aWriter);
+    /**
      * Set the value of the LastChange property
      *
      * Can only be called if EnablePropertyLastChange has previously been called.
@@ -68,6 +74,12 @@ public:
      */
     void GetPropertyLastChange(Brhz& aValue);
     /**
+     * Output the value of the LastChange property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyLastChange has previously been called.
+     */
+    void WritePropertyLastChange(IWriter& aWriter);
+    /**
      * Set the value of the TransferIDs property
      *
      * Can only be called if EnablePropertyTransferIDs has previously been called.
@@ -81,6 +93,12 @@ public:
      * Can only be called if EnablePropertyTransferIDs has previously been called.
      */
     void GetPropertyTransferIDs(Brhz& aValue);
+    /**
+     * Output the value of the TransferIDs property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyTransferIDs has previously been called.
+     */
+    void WritePropertyTransferIDs(IWriter& aWriter);
 protected:
     /**
      * Constructor

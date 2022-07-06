@@ -1,6 +1,9 @@
 #include <OpenHome/Private/TestFramework.h>
+#include <OpenHome/Private/OptionParser.h>
 #include <OpenHome/Private/Thread.h>
 #include <OpenHome/OsWrapper.h>
+
+#include <vector>
 
 using namespace OpenHome;
 using namespace OpenHome::TestFramework;
@@ -173,7 +176,7 @@ public:
 const TUint kThreadCounterMaxCount      = 20000000;
 const TUint kThreadDisruptorPeriodMs    = 100;
 const TUint kThreadMonitorPeriodMs      = 1000;
-const TUint kSuitePriority              = 150;
+const TUint kSuitePriority              = kPrioritySystemHighest;
 
 // <ThreadCounter>
 class ThreadCounter : public Thread
@@ -506,7 +509,6 @@ private:
 
 void MutexThread::Run()
 {
-    iCount++;
     iMutex.Wait();
     iCount++;
     iMutex.Signal();
@@ -518,21 +520,18 @@ void SuiteMutex::Test()
     mutex.Wait();
     mutex.Signal();
 
-    // check we can delete a locked mutex
-    Mutex* mutex2 = new Mutex("MUT2");
-    mutex2->Wait();
-    delete mutex2;
-
     // check that another thread will block waiting on this mutex
     TInt count = 0;
     mutex.Wait();
     MutexThread* mutexTh = new MutexThread(mutex, count);
     mutexTh->Start();
     Thread::Sleep(kSleepMs);
-    TEST(count == 1);
+    TEST(count == 0);
     mutex.Signal();
     Thread::Sleep(kSleepMs);
-    TEST(count == 2);
+    mutex.Wait();
+    TEST(count == 1);
+    mutex.Signal();
     delete mutexTh;
 }
 
@@ -616,6 +615,8 @@ void SuiteAutoMutex::Test()
         AutoMutex amB(mB);
     }
     mB.Wait();
+    mB.Signal();
+    mA.Signal();
 }
 
 
@@ -848,11 +849,172 @@ void SuiteThreadFunctorStartDelete::Test()
 }
 
 
+class PriorityArbitratorDummy : public IPriorityArbitrator
+{
+public:
+    PriorityArbitratorDummy(TUint aMin, TUint aMax, TUint aRange)
+        : iMin(aMin)
+        , iMax(aMax)
+        , iRange(aRange)
+    {}
+private: // from IPriorityArbitrator
+    TUint Priority(const TChar* /*aId*/, TUint /*aRequested*/, TUint /*aHostMax*/) { ASSERTS(); return 0; }
+    TUint OpenHomeMin() const { return iMin; }
+    TUint OpenHomeMax() const { return iMax; }
+    TUint HostRange() const { return iRange; }
+private:
+    TUint iMin;
+    TUint iMax;
+    TUint iRange;
+};
+
+class SuitePriorityArbitrator : public Suite, private IPriorityArbitrator
+{
+public:
+    SuitePriorityArbitrator();
+private: // from Suite
+    void Test();
+private: // from IPriorityArbitrator
+    TUint Priority(const TChar* aId, TUint aRequested, TUint aHostMax);
+    TUint OpenHomeMin() const;
+    TUint OpenHomeMax() const;
+    TUint HostRange() const;
+private:
+    TUint iOpenHomeMin;
+    TUint iOpenHomeMax;
+    TUint iHostRange;
+    TUint iHostMax;
+};
+
+SuitePriorityArbitrator::SuitePriorityArbitrator()
+    : Suite("ThreadPriorityArbitrator")
+    , iOpenHomeMin(1000)
+    , iOpenHomeMax(0)
+    , iHostRange(0)
+    , iHostMax(0)
+{
+}
+
+void SuitePriorityArbitrator::Test()
+{
+    // no arbitrators => requested priority delivered
+    {
+        ThreadPriorityArbitrator arb(1, 100);
+        const TUint kPriority = 50;
+        const TUint p = arb.CalculatePriority("foo", kPriority);
+        TEST(p == kPriority);
+    }
+
+    // overlapping ranges asserts
+    {
+        ThreadPriorityArbitrator arb(1, 100);
+        PriorityArbitratorDummy a1(90, 95, 5);
+        arb.Add(a1);
+        PriorityArbitratorDummy a2(90, 95, 5);
+        TEST_THROWS(arb.Add(a2), AssertionFailed);
+        PriorityArbitratorDummy a3(95, 100, 5);
+        TEST_THROWS(arb.Add(a3), AssertionFailed);
+        PriorityArbitratorDummy a4(80, 90, 5);
+        TEST_THROWS(arb.Add(a4), AssertionFailed);
+    }
+
+    // gap between ranges asserts on Validate()
+    {
+        ThreadPriorityArbitrator arb(1, 50);
+        PriorityArbitratorDummy a1(90, 95, 5);
+        arb.Add(a1);
+        TEST_THROWS(arb.Validate(), AssertionFailed);
+        PriorityArbitratorDummy a2(96, 100, 1);
+        arb.Add(a2);
+        PriorityArbitratorDummy a3(1, 30, 10);
+        arb.Add(a3);
+        TEST_THROWS(arb.Validate(), AssertionFailed);
+        PriorityArbitratorDummy a4(31, 89, 10);
+        arb.Add(a4);
+        arb.Validate();
+    }
+
+    // arbitrator or default called when appropriate
+    {
+        ThreadPriorityArbitrator arb(1, 30);
+        PriorityArbitratorDummy a1(100, 100, 1);
+        arb.Add(a1);
+        iOpenHomeMin = 96;
+        iOpenHomeMax = 99;
+        iHostRange = 4;
+        iHostMax = 29;
+        arb.Add(*this); // covers next 4 OpenHome / Host priorities
+        PriorityArbitratorDummy a3(85, 95, 5);
+        arb.Add(a3);
+        TEST_THROWS(arb.CalculatePriority("foo", 100), AssertionFailed);
+        TUint i;
+        for (i=85; i<=95; i++) {
+            TEST_THROWS(arb.CalculatePriority("foo", i), AssertionFailed);
+        }
+        for (i=iOpenHomeMin; i<=iOpenHomeMax; i++) {
+            TUint p = arb.CalculatePriority("foo", i);
+            TEST(p == iHostMax - (iOpenHomeMax - i));
+        }
+        TEST(arb.CalculatePriority("foo", 1) == 1);
+        TEST(arb.CalculatePriority("foo", 20) == 5);
+    }
+}
+
+TUint SuitePriorityArbitrator::Priority(const TChar* /*aId*/, TUint aRequested, TUint aHostMax)
+{
+    return aHostMax - (iOpenHomeMax - aRequested);
+}
+
+TUint SuitePriorityArbitrator::OpenHomeMin() const
+{
+    return iOpenHomeMin;
+}
+
+TUint SuitePriorityArbitrator::OpenHomeMax() const
+{
+    return iOpenHomeMax;
+}
+
+TUint SuitePriorityArbitrator::HostRange() const
+{
+    return iHostRange;
+}
+
+class SuiteNotify : public Suite
+{
+public:
+    SuiteNotify() : Suite("Thread::Notify{Wait,Signal}") {}
+    void Test();
+    void BodySignaller();
+private:
+    Thread* iSignalTargetThread;
+};
+
+void SuiteNotify::BodySignaller()
+{
+    Thread::Sleep(100);
+    iSignalTargetThread->NotifySignal();
+}
+
+void SuiteNotify::Test()
+{
+    iSignalTargetThread = Thread::Current();
+    ASSERT(iSignalTargetThread);
+    ThreadFunctor signaller("sig", MakeFunctor(*this, &SuiteNotify::BodySignaller));
+    signaller.Start();
+    iSignalTargetThread->NotifyWait(); // ourselves
+}
+
 class MainTestThread : public Thread
 {
 public:
-    MainTestThread() : Thread("MAIN") {}
+    MainTestThread(TBool aFull)
+        : Thread("MAIN")
+        , iFull(aFull)
+    {}
     void Run();
+private:
+    TBool iFull;
 };
 
 void MainTestThread::Run()
@@ -862,16 +1024,24 @@ void MainTestThread::Run()
     runner.Add(new SuiteMutex());
     runner.Add(new SuiteAutoMutex());
     runner.Add(new SuiteAutoSemaphore());
-    runner.Add(new SuiteStartStop());
+    runner.Add(new SuiteNotify());
+    if (iFull) {
+        runner.Add(new SuiteStartStop());
+    }
     // Performance tests disabled as they cause intermittent failures for automated tests
     // (which run on servers with variable loads)
     //runner.Add(new SuitePerformance());
     runner.Add(new SuiteThreadKill());
     runner.Add(new SuiteThreadNotStarted());
-    runner.Add(new SuiteThreadStartDelete());
+    if (iFull) {
+        runner.Add(new SuiteThreadStartDelete());
+    }
     runner.Add(new SuiteThreadFunctor());
     runner.Add(new SuiteThreadFunctorNotStarted());
-    runner.Add(new SuiteThreadFunctorStartDelete());
+    if (iFull) {
+        runner.Add(new SuiteThreadFunctorStartDelete());
+    }
+    runner.Add(new SuitePriorityArbitrator());
     if (OpenHome::Thread::SupportsPriorities())
     {
         runner.Add(new SuitePriority());
@@ -882,10 +1052,17 @@ void MainTestThread::Run()
     Signal();
 }
 
-void TestThread()
+void TestThread(const std::vector<Brn>& aArgs)
 {
+    OptionParser parser;
+    OptionBool full("-f", "--full", "Run full (slow) set of test cases");
+    parser.AddOption(&full);
+    if (!parser.Parse(aArgs, true) || parser.HelpDisplayed()) {
+        return;
+    }
+
     gTestStack = new TestStack();
-    Thread* th = new MainTestThread();
+    Thread* th = new MainTestThread(full.Value());
     th->Start();
     th->Wait();
     delete th;

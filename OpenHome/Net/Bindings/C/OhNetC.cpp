@@ -65,6 +65,13 @@ void STDCALL OhNetLibraryRenewSubscriptions(void)
     gCpStack->SubscriptionManager().RenewAll();
 }
 
+void STDCALL OhNetLibrarySetHttpUserAgent(const char* aUserAgent)
+{
+    ASSERT(gEnv != NULL);
+    Brn userAgent(aUserAgent);
+    gEnv->SetHttpUserAgent(userAgent);
+}
+
 void STDCALL OhNetFree(void* aPtr)
 {
     free(aPtr);
@@ -271,10 +278,25 @@ void STDCALL OhNetInitParamsSetDvWebSocketPort(OhNetHandleInitParams aParams, ui
     ip->SetDvWebSocketPort(aPort);
 }
 
-void STDCALL OhNetInitParamsSetDvEnableBonjour(OhNetHandleInitParams aParams)
+void STDCALL OhNetInitParamsSetDvEnableBonjour(OhNetHandleInitParams aParams, const char* aHostName, uint8_t aRequiresMdnsCache)
 {
     InitialisationParams* ip = reinterpret_cast<InitialisationParams*>(aParams);
-    ip->SetDvEnableBonjour();
+    TBool reqCache = (aRequiresMdnsCache == 1);
+    ip->SetDvEnableBonjour(aHostName, reqCache);
+}
+
+void STDCALL OhNetInitParamsSetHttpUserAgent(OhNetHandleInitParams aParams, const char* aUserAgent)
+{
+    InitialisationParams* ip = reinterpret_cast<InitialisationParams*>(aParams);
+    Brn userAgent(aUserAgent);
+    ip->SetHttpUserAgent(userAgent);
+}
+
+void STDCALL OhNetInitParamsSetHostUdpIsLowQuality(OhNetHandleInitParams aParams, int32_t aLowQuality)
+{
+    InitialisationParams* ip = reinterpret_cast<InitialisationParams*>(aParams);
+    const TBool lowQuality = (aLowQuality != 0);
+    ip->SetHostUdpIsLowQuality(lowQuality);
 }
 
 uint32_t STDCALL OhNetInitParamsTcpConnectTimeoutMs(OhNetHandleInitParams aParams)
@@ -382,132 +404,314 @@ uint32_t STDCALL OhNetInitParamsDvWebSocketPort(OhNetHandleInitParams aParams)
 uint32_t STDCALL OhNetInitParamsDvIsBonjourEnabled(OhNetHandleInitParams aParams)
 {
     InitialisationParams* ip = reinterpret_cast<InitialisationParams*>(aParams);
-    return (ip->DvIsBonjourEnabled()? 1 : 0);
+    const TChar* hostIgnore = NULL;
+    TBool cacheIgnore = false;
+    return (ip->DvIsBonjourEnabled(hostIgnore, cacheIgnore)? 1 : 0);
+}
+
+uint32_t STDCALL OhNetInitParamsIsHostUdpLowQuality(OhNetHandleInitParams aParams)
+{
+    InitialisationParams* ip = reinterpret_cast<InitialisationParams*>(aParams);
+    return (ip->IsHostUdpLowQuality()? 1 : 0);
 }
 
 TIpAddress STDCALL OhNetNetworkAdapterAddress(OhNetHandleNetworkAdapter aNif)
 {
-    NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
-    ASSERT(nif != NULL);
-    return nif->Address();
+    try {
+        NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
+        ASSERT(nif != NULL);
+        return nif->Address();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return 0;
 }
 
 TIpAddress STDCALL OhNetNetworkAdapterSubnet(OhNetHandleNetworkAdapter aNif)
 {
-    NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
-    ASSERT(nif != NULL);
-    return nif->Subnet();
+    try {
+        NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
+        ASSERT(nif != NULL);
+        return nif->Subnet();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return 0;
 }
 
 TIpAddress STDCALL OhNetNetworkAdapterMask(OhNetHandleNetworkAdapter aNif)
 {
-    NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
-    ASSERT(nif != NULL);
-    return nif->Mask();
+    try {
+        NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
+        ASSERT(nif != NULL);
+        return nif->Mask();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return 0;
 }
 
 const char* STDCALL OhNetNetworkAdapterName(OhNetHandleNetworkAdapter aNif)
 {
-    NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
-    ASSERT(nif != NULL);
-    return nif->Name();
+    try {
+        NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
+        ASSERT(nif != NULL);
+        return nif->Name();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return NULL;
 }
 
 char* STDCALL OhNetNetworkAdapterFullName(OhNetHandleNetworkAdapter aNif)
 {
-    NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
-    ASSERT(nif != NULL);
-    return nif->FullName();
+    try {
+        NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
+        ASSERT(nif != NULL);
+        return nif->FullName();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return NULL;
 }
 
 void STDCALL OhNetNetworkAdapterAddRef(OhNetHandleNetworkAdapter aNif, const char* aCookie)
 {
-    NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
-    ASSERT(nif != NULL);
-    return nif->AddRef(aCookie);
+    try {
+        NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
+        ASSERT(nif != NULL);
+        nif->AddRef(aCookie);
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
 }
 
 void STDCALL OhNetNetworkAdapterRemoveRef(OhNetHandleNetworkAdapter aNif, const char* aCookie)
 {
-    NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
-    ASSERT(nif != NULL);
-    return nif->RemoveRef(aCookie);
+    try {
+        NetworkAdapter* nif = reinterpret_cast<NetworkAdapter*>(aNif);
+        ASSERT(nif != NULL);
+        nif->RemoveRef(aCookie);
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
 }
 
 OhNetHandleNetworkAdapterList STDCALL OhNetSubnetListCreate()
 {
-    return (OhNetHandleNetworkAdapterList)UpnpLibrary::CreateSubnetList();
+    try {
+        return (OhNetHandleNetworkAdapterList)UpnpLibrary::CreateSubnetList();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return kHandleNull;
 }
 
 uint32_t STDCALL OhNetSubnetListSize(OhNetHandleNetworkAdapterList aList)
 {
-    std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
-    ASSERT(list != NULL);
-    return (TUint)list->size();
+    try {
+        std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
+        ASSERT(list != NULL);
+        return (TUint)list->size();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return 0;
 }
 
 OhNetHandleNetworkAdapter STDCALL OhNetSubnetAt(OhNetHandleNetworkAdapterList aList, uint32_t aIndex)
 {
-    std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
-    ASSERT(list != NULL);
-    return (OhNetHandleNetworkAdapter)(*list)[aIndex];
+    try {
+        std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
+        ASSERT(list != NULL);
+        return (OhNetHandleNetworkAdapter)(*list)[aIndex];
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return kHandleNull;
 }
 
 void STDCALL OhNetSubnetListDestroy(OhNetHandleNetworkAdapterList aList)
 {
-    std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
-    UpnpLibrary::DestroySubnetList(list);
+    try {
+        std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
+        UpnpLibrary::DestroySubnetList(list);
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
 }
 
 OhNetHandleNetworkAdapterList STDCALL OhNetNetworkAdapterListCreate()
 {
-    return (OhNetHandleNetworkAdapterList)UpnpLibrary::CreateNetworkAdapterList();
+    try {
+        return (OhNetHandleNetworkAdapterList)UpnpLibrary::CreateNetworkAdapterList();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return kHandleNull;
 }
 
 uint32_t STDCALL OhNetNetworkAdapterListSize(OhNetHandleNetworkAdapterList aList)
 {
-    std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
-    ASSERT(list != NULL);
-    return (TUint)list->size();
+    try {
+        std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
+        ASSERT(list != NULL);
+        return (TUint)list->size();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return 0;
 }
 
 OhNetHandleNetworkAdapter STDCALL OhNetNetworkAdapterAt(OhNetHandleNetworkAdapterList aList, uint32_t aIndex)
 {
-    std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
-    ASSERT(list != NULL);
-    return (OhNetHandleNetworkAdapter)(*list)[aIndex];
+    try {
+        std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
+        ASSERT(list != NULL);
+        return (OhNetHandleNetworkAdapter)(*list)[aIndex];
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return kHandleNull;
 }
 
 void STDCALL OhNetNetworkAdapterListDestroy(OhNetHandleNetworkAdapterList aList)
 {
-    std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
-    UpnpLibrary::DestroyNetworkAdapterList(list);
+    try {
+        std::vector<NetworkAdapter*>* list = reinterpret_cast<std::vector<NetworkAdapter*>*>(aList);
+        UpnpLibrary::DestroyNetworkAdapterList(list);
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
 }
 
 void STDCALL OhNetSetCurrentSubnet(uint32_t aSubnet)
 {
-    UpnpLibrary::SetCurrentSubnet(aSubnet);
+    try {
+        UpnpLibrary::SetCurrentSubnet(aSubnet);
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
 }
 
 OhNetHandleNetworkAdapter STDCALL OhNetCurrentSubnetAdapter(const char* aCookie)
 {
-    return (OhNetHandleNetworkAdapter)UpnpLibrary::CurrentSubnetAdapter(aCookie);
+    try {
+        return (OhNetHandleNetworkAdapter)UpnpLibrary::CurrentSubnetAdapter(aCookie);
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    return kHandleNull;
+}
+
+void STDCALL OhNetRefreshNetworkAdapterList()
+{
+    try {
+        UpnpLibrary::RefreshNetworkAdapterList();
+    }
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
 }
 
 void STDCALL OhNetFreeExternal(void* aPtr)
 {
-    OhNetCallbackFreeExternal cb = gEnv->InitParams()->FreeExternal();
-    if (cb != NULL) {
-        cb(aPtr);
+    try {
+        OhNetCallbackFreeExternal cb = gEnv->InitParams()->FreeExternal();
+        if (cb != NULL) {
+            cb(aPtr);
+        }
+        else {
+            free(aPtr);
+        }
     }
-    else {
-        free(aPtr);
+    catch (Exception& ex) {
+        UnhandledExceptionHandler(ex);
+    }
+    catch (std::exception& ex) {
+        UnhandledExceptionHandler(ex);
     }
 }
 
-void STDCALL OhNetDebugSetLevel(uint32_t aLevel)
+void STDCALL OhNetDebugSetLevel(uint64_t aLevel)
 {
     Debug::SetLevel(aLevel);
+}
+
+void STDCALL OhNetDebugSetSeverity(uint32_t aSeverity)
+{
+    Debug::SetSeverity(aSeverity);
 }
 
 void STDCALL OhNetAbortProcess()

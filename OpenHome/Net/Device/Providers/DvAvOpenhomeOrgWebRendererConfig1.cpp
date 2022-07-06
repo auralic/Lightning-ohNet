@@ -32,6 +32,11 @@ void DvProviderAvOpenhomeOrgWebRendererConfig1::GetPropertyRendererConfig(Brhz& 
     aValue.Set(iPropertyRendererConfig->Value());
 }
 
+void DvProviderAvOpenhomeOrgWebRendererConfig1::WritePropertyRendererConfig(IWriter& aWriter)
+{
+    iPropertyRendererConfig->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgWebRendererConfig1::SetPropertyCurrentAction(TUint aValue)
 {
     ASSERT(iPropertyCurrentAction != NULL);

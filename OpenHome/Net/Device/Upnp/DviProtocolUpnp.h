@@ -68,7 +68,7 @@ public: // from IUpnpAnnouncementData
     Brn Domain() const;
     Brn Type() const;
     TUint Version() const;
-    void SendByeByes(TIpAddress aAdapter, const Brx& aUriBase, Functor aCompleted);
+    void SendByeByes(TIpAddress aAdapter, const Brx& aUriBase, FunctorGeneric<TBool> aCompleted);
     void SendAlives(TIpAddress aAdapter, const Brx& aUriBase);
 private:
     DviProtocolUpnpAdapterSpecificData* AddInterface(const NetworkAdapter& aAdapter);
@@ -76,8 +76,8 @@ private:
     TInt FindAdapter(TIpAddress aAdapter, const std::vector<NetworkAdapter*>& aAdapterList);
     TInt FindListenerForSubnet(TIpAddress aSubnet);
     TInt FindListenerForInterface(TIpAddress aSubnet);
-    void SubnetDisabled();
-    void SubnetUpdated();
+    void SubnetDisabled(TBool aCancelled);
+    void SubnetUpdated(TBool aCancelled);
     void SendAliveNotifications();
     void QueueAliveTimer();
     void SendUpdateNotifications();
@@ -122,7 +122,8 @@ class DviProtocolUpnpAdapterSpecificData : public ISsdpMsearchHandler, public IN
 //    friend class DviProtocolUpnp;
 public:
     DviProtocolUpnpAdapterSpecificData(DvStack& aDvStack, IUpnpMsearchHandler& aMsearchHandler, const NetworkAdapter& aAdapter, Bwx& aUriBase, TUint aServerPort);
-    void Destroy();
+    void AddRef();
+    TBool RemoveRef(); // returns true if deleted
     TIpAddress Interface() const;
     TIpAddress Subnet() const;
     const Brx& UriBase() const;
@@ -139,7 +140,8 @@ public:
 private:
     ~DviProtocolUpnpAdapterSpecificData();
     IUpnpMsearchHandler* Handler();
-    void ByeByesComplete();
+    void ByeByesComplete(TBool aCancelled);
+    TBool IsLocationReachable(const Endpoint& aEndpoint);
 private: // from ISsdpMsearchHandler
     void SsdpSearchAll(const Endpoint& aEndpoint, TUint aMx);
     void SsdpSearchRoot(const Endpoint& aEndpoint, TUint aMx);
@@ -147,6 +149,7 @@ private: // from ISsdpMsearchHandler
     void SsdpSearchDeviceType(const Endpoint& aEndpoint, TUint aMx, const Brx& aDomain, const Brx& aType, TUint aVersion);
     void SsdpSearchServiceType(const Endpoint& aEndpoint, TUint aMx, const Brx& aDomain, const Brx& aType, TUint aVersion);
 private:
+    Mutex iLock;
     TUint iRefCount;
     DvStack& iDvStack;
     IUpnpMsearchHandler* iMsearchHandler;
@@ -154,10 +157,13 @@ private:
     TInt iId;
     TIpAddress iSubnet;
     TIpAddress iAdapter;
+    TIpAddress iMask;
     Bws<Uri::kMaxUriBytes> iUriBase;
     TUint iServerPort;
     Brh iDeviceXml;
+#ifndef DEFINE_WINDOWS_UNIVERSAL
     BonjourWebPage* iBonjourWebPage;
+#endif
     DviProtocolUpnp* iDevice;
 };
 

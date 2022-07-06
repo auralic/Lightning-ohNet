@@ -54,6 +54,12 @@ public:
      */
     void GetPropertyDeviceConfig(Brhz& aValue);
     /**
+     * Output the value of the DeviceConfig property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyDeviceConfig has previously been called.
+     */
+    void WritePropertyDeviceConfig(IWriter& aWriter);
+    /**
      * Set the value of the CurrentAction property
      *
      * Can only be called if EnablePropertyCurrentAction has previously been called.

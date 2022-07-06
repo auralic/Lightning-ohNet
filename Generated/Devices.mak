@@ -79,6 +79,9 @@ objects_devices = \
                   $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgDACConfig1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgDACConfig1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgCredentials1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgCredentials1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgCredentials1C.$(objext) \
                   $(objdir)DvAvOpenhomeOrgServerConfig1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgServerConfig1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgServerConfig1C.$(objext) \
@@ -94,6 +97,21 @@ objects_devices = \
                   $(objdir)DvAvOpenhomeOrgRoon1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgRoon1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgRoon1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgTidalConnect1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgTidalConnect1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgTidalConnect1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgBluetooth1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgBluetooth1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgBluetooth1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgAirplay1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgAirplay1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgAirplay1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgMusicStation1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgMusicStation1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgMusicStation1C.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgSpotify1.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgSpotify1Std.$(objext) \
+                  $(objdir)DvAvOpenhomeOrgSpotify1C.$(objext) \
                   $(objdir)DvAvOpenhomeOrgInternetRadio1.$(objext) \
                   $(objdir)DvAvOpenhomeOrgInternetRadio1Std.$(objext) \
                   $(objdir)DvAvOpenhomeOrgInternetRadio1C.$(objext) \
@@ -130,6 +148,9 @@ objects_devices = \
                   $(objdir)DvOpenhomeOrgSubscriptionLongPoll1.$(objext) \
                   $(objdir)DvOpenhomeOrgSubscriptionLongPoll1Std.$(objext) \
                   $(objdir)DvOpenhomeOrgSubscriptionLongPoll1C.$(objext) \
+                  $(objdir)DvTencentComQPlay1.$(objext) \
+                  $(objdir)DvTencentComQPlay1Std.$(objext) \
+                  $(objdir)DvTencentComQPlay1C.$(objext) \
 
 # Devices have well controlled dependencies so we can document a more limited set of headers
 headers_device = $(inc_build)/OpenHome/Types.h \
@@ -164,11 +185,17 @@ device_dotnet_assemblies = \
         DvAvOpenhomeOrgWebDACConfig1.net.dll \
         DvAvOpenhomeOrgWebClockConfig1.net.dll \
         DvAvOpenhomeOrgDACConfig1.net.dll \
+        DvAvOpenhomeOrgCredentials1.net.dll \
         DvAvOpenhomeOrgServerConfig1.net.dll \
         DvAvOpenhomeOrgMessageCenter1.net.dll \
         DvAvOpenhomeOrgRenderingInfo1.net.dll \
         DvAvOpenhomeOrgGroupConfig1.net.dll \
         DvAvOpenhomeOrgRoon1.net.dll \
+        DvAvOpenhomeOrgTidalConnect1.net.dll \
+        DvAvOpenhomeOrgBluetooth1.net.dll \
+        DvAvOpenhomeOrgAirplay1.net.dll \
+        DvAvOpenhomeOrgMusicStation1.net.dll \
+        DvAvOpenhomeOrgSpotify1.net.dll \
         DvAvOpenhomeOrgInternetRadio1.net.dll \
         DvAvOpenhomeOrgStreaming1.net.dll \
         DvAvOpenhomeOrgProduct1.net.dll \
@@ -181,6 +208,7 @@ device_dotnet_assemblies = \
         DvOpenhomeOrgTestBasic1.net.dll \
         DvOpenhomeOrgTestLights1.net.dll \
         DvOpenhomeOrgSubscriptionLongPoll1.net.dll \
+        DvTencentComQPlay1.net.dll \
 
 device_dotnet_assemblies_with_path = \
         $(objdir)DvUpnpOrgAVTransport1.net.dll \
@@ -208,11 +236,17 @@ device_dotnet_assemblies_with_path = \
         $(objdir)DvAvOpenhomeOrgWebDACConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgWebClockConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgDACConfig1.net.dll \
+        $(objdir)DvAvOpenhomeOrgCredentials1.net.dll \
         $(objdir)DvAvOpenhomeOrgServerConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgMessageCenter1.net.dll \
         $(objdir)DvAvOpenhomeOrgRenderingInfo1.net.dll \
         $(objdir)DvAvOpenhomeOrgGroupConfig1.net.dll \
         $(objdir)DvAvOpenhomeOrgRoon1.net.dll \
+        $(objdir)DvAvOpenhomeOrgTidalConnect1.net.dll \
+        $(objdir)DvAvOpenhomeOrgBluetooth1.net.dll \
+        $(objdir)DvAvOpenhomeOrgAirplay1.net.dll \
+        $(objdir)DvAvOpenhomeOrgMusicStation1.net.dll \
+        $(objdir)DvAvOpenhomeOrgSpotify1.net.dll \
         $(objdir)DvAvOpenhomeOrgInternetRadio1.net.dll \
         $(objdir)DvAvOpenhomeOrgStreaming1.net.dll \
         $(objdir)DvAvOpenhomeOrgProduct1.net.dll \
@@ -225,6 +259,7 @@ device_dotnet_assemblies_with_path = \
         $(objdir)DvOpenhomeOrgTestBasic1.net.dll \
         $(objdir)DvOpenhomeOrgTestLights1.net.dll \
         $(objdir)DvOpenhomeOrgSubscriptionLongPoll1.net.dll \
+        $(objdir)DvTencentComQPlay1.net.dll \
 
 device_java_classes_with_path = \
         $(objdir)org/openhome/net/device/providers/DvProviderUpnpOrgAVTransport1.class \
@@ -252,11 +287,17 @@ device_java_classes_with_path = \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebDACConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebClockConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgDACConfig1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgCredentials1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgServerConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgMessageCenter1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgRenderingInfo1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgGroupConfig1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgRoon1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgTidalConnect1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgBluetooth1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgAirplay1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgMusicStation1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgSpotify1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgInternetRadio1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgStreaming1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgProduct1.class \
@@ -269,6 +310,7 @@ device_java_classes_with_path = \
         $(objdir)org/openhome/net/device/providers/DvProviderOpenhomeOrgTestBasic1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderOpenhomeOrgTestLights1.class \
         $(objdir)org/openhome/net/device/providers/DvProviderOpenhomeOrgSubscriptionLongPoll1.class \
+        $(objdir)org/openhome/net/device/providers/DvProviderTencentComQPlay1.class \
 
 devices : ohNetCore $(objects_devices)
 	$(ar)$(libprefix)ohNetDevices.$(libext) $(objects_devices)
@@ -422,6 +464,12 @@ $(objdir)DvAvOpenhomeOrgDACConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrg
 	$(compiler)DvAvOpenhomeOrgDACConfig1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgDACConfig1Std.cpp
 $(objdir)DvAvOpenhomeOrgDACConfig1C.$(objext) : $(deviceC)DvAvOpenhomeOrgDACConfig1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgDACConfig1.h
 	$(compiler)DvAvOpenhomeOrgDACConfig1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgDACConfig1C.cpp
+$(objdir)DvAvOpenhomeOrgCredentials1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgCredentials1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgCredentials1.h
+	$(compiler)DvAvOpenhomeOrgCredentials1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgCredentials1.cpp
+$(objdir)DvAvOpenhomeOrgCredentials1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgCredentials1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgCredentials1.h
+	$(compiler)DvAvOpenhomeOrgCredentials1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgCredentials1Std.cpp
+$(objdir)DvAvOpenhomeOrgCredentials1C.$(objext) : $(deviceC)DvAvOpenhomeOrgCredentials1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgCredentials1.h
+	$(compiler)DvAvOpenhomeOrgCredentials1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgCredentials1C.cpp
 $(objdir)DvAvOpenhomeOrgServerConfig1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgServerConfig1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgServerConfig1.h
 	$(compiler)DvAvOpenhomeOrgServerConfig1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgServerConfig1.cpp
 $(objdir)DvAvOpenhomeOrgServerConfig1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgServerConfig1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgServerConfig1.h
@@ -452,6 +500,36 @@ $(objdir)DvAvOpenhomeOrgRoon1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgRoon1
 	$(compiler)DvAvOpenhomeOrgRoon1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgRoon1Std.cpp
 $(objdir)DvAvOpenhomeOrgRoon1C.$(objext) : $(deviceC)DvAvOpenhomeOrgRoon1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgRoon1.h
 	$(compiler)DvAvOpenhomeOrgRoon1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgRoon1C.cpp
+$(objdir)DvAvOpenhomeOrgTidalConnect1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgTidalConnect1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgTidalConnect1.h
+	$(compiler)DvAvOpenhomeOrgTidalConnect1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgTidalConnect1.cpp
+$(objdir)DvAvOpenhomeOrgTidalConnect1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgTidalConnect1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgTidalConnect1.h
+	$(compiler)DvAvOpenhomeOrgTidalConnect1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgTidalConnect1Std.cpp
+$(objdir)DvAvOpenhomeOrgTidalConnect1C.$(objext) : $(deviceC)DvAvOpenhomeOrgTidalConnect1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgTidalConnect1.h
+	$(compiler)DvAvOpenhomeOrgTidalConnect1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgTidalConnect1C.cpp
+$(objdir)DvAvOpenhomeOrgBluetooth1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgBluetooth1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgBluetooth1.h
+	$(compiler)DvAvOpenhomeOrgBluetooth1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgBluetooth1.cpp
+$(objdir)DvAvOpenhomeOrgBluetooth1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgBluetooth1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgBluetooth1.h
+	$(compiler)DvAvOpenhomeOrgBluetooth1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgBluetooth1Std.cpp
+$(objdir)DvAvOpenhomeOrgBluetooth1C.$(objext) : $(deviceC)DvAvOpenhomeOrgBluetooth1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgBluetooth1.h
+	$(compiler)DvAvOpenhomeOrgBluetooth1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgBluetooth1C.cpp
+$(objdir)DvAvOpenhomeOrgAirplay1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgAirplay1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgAirplay1.h
+	$(compiler)DvAvOpenhomeOrgAirplay1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgAirplay1.cpp
+$(objdir)DvAvOpenhomeOrgAirplay1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgAirplay1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgAirplay1.h
+	$(compiler)DvAvOpenhomeOrgAirplay1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgAirplay1Std.cpp
+$(objdir)DvAvOpenhomeOrgAirplay1C.$(objext) : $(deviceC)DvAvOpenhomeOrgAirplay1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgAirplay1.h
+	$(compiler)DvAvOpenhomeOrgAirplay1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgAirplay1C.cpp
+$(objdir)DvAvOpenhomeOrgMusicStation1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgMusicStation1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgMusicStation1.h
+	$(compiler)DvAvOpenhomeOrgMusicStation1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgMusicStation1.cpp
+$(objdir)DvAvOpenhomeOrgMusicStation1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgMusicStation1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgMusicStation1.h
+	$(compiler)DvAvOpenhomeOrgMusicStation1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgMusicStation1Std.cpp
+$(objdir)DvAvOpenhomeOrgMusicStation1C.$(objext) : $(deviceC)DvAvOpenhomeOrgMusicStation1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgMusicStation1.h
+	$(compiler)DvAvOpenhomeOrgMusicStation1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgMusicStation1C.cpp
+$(objdir)DvAvOpenhomeOrgSpotify1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgSpotify1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgSpotify1.h
+	$(compiler)DvAvOpenhomeOrgSpotify1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgSpotify1.cpp
+$(objdir)DvAvOpenhomeOrgSpotify1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgSpotify1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgSpotify1.h
+	$(compiler)DvAvOpenhomeOrgSpotify1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvAvOpenhomeOrgSpotify1Std.cpp
+$(objdir)DvAvOpenhomeOrgSpotify1C.$(objext) : $(deviceC)DvAvOpenhomeOrgSpotify1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvAvOpenhomeOrgSpotify1.h
+	$(compiler)DvAvOpenhomeOrgSpotify1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvAvOpenhomeOrgSpotify1C.cpp
 $(objdir)DvAvOpenhomeOrgInternetRadio1.$(objext) : $(deviceCppCore)DvAvOpenhomeOrgInternetRadio1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvAvOpenhomeOrgInternetRadio1.h
 	$(compiler)DvAvOpenhomeOrgInternetRadio1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvAvOpenhomeOrgInternetRadio1.cpp
 $(objdir)DvAvOpenhomeOrgInternetRadio1Std.$(objext) : $(deviceCppStd)DvAvOpenhomeOrgInternetRadio1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvAvOpenhomeOrgInternetRadio1.h
@@ -524,6 +602,12 @@ $(objdir)DvOpenhomeOrgSubscriptionLongPoll1Std.$(objext) : $(deviceCppStd)DvOpen
 	$(compiler)DvOpenhomeOrgSubscriptionLongPoll1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvOpenhomeOrgSubscriptionLongPoll1Std.cpp
 $(objdir)DvOpenhomeOrgSubscriptionLongPoll1C.$(objext) : $(deviceC)DvOpenhomeOrgSubscriptionLongPoll1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvOpenhomeOrgSubscriptionLongPoll1.h
 	$(compiler)DvOpenhomeOrgSubscriptionLongPoll1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvOpenhomeOrgSubscriptionLongPoll1C.cpp
+$(objdir)DvTencentComQPlay1.$(objext) : $(deviceCppCore)DvTencentComQPlay1.cpp $(headers_device) OpenHome/Net/Device/Providers/DvTencentComQPlay1.h
+	$(compiler)DvTencentComQPlay1.$(objext) -c $(cppflags) $(includes) $(deviceCppCore)DvTencentComQPlay1.cpp
+$(objdir)DvTencentComQPlay1Std.$(objext) : $(deviceCppStd)DvTencentComQPlay1Std.cpp $(headers_device) OpenHome/Net/Bindings/Cpp/Device/Providers/DvTencentComQPlay1.h
+	$(compiler)DvTencentComQPlay1Std.$(objext) -c $(cppflags) $(includes) $(deviceCppStd)DvTencentComQPlay1Std.cpp
+$(objdir)DvTencentComQPlay1C.$(objext) : $(deviceC)DvTencentComQPlay1C.cpp $(headers_device) OpenHome/Net/Bindings/C/Device/Providers/DvTencentComQPlay1.h
+	$(compiler)DvTencentComQPlay1C.$(objext) -c $(cppflags) $(includes) $(deviceC)DvTencentComQPlay1C.cpp
 
 device_dlls = \
              DvUpnpOrgAVTransport1Dll \
@@ -551,11 +635,17 @@ device_dlls = \
              DvAvOpenhomeOrgWebDACConfig1Dll \
              DvAvOpenhomeOrgWebClockConfig1Dll \
              DvAvOpenhomeOrgDACConfig1Dll \
+             DvAvOpenhomeOrgCredentials1Dll \
              DvAvOpenhomeOrgServerConfig1Dll \
              DvAvOpenhomeOrgMessageCenter1Dll \
              DvAvOpenhomeOrgRenderingInfo1Dll \
              DvAvOpenhomeOrgGroupConfig1Dll \
              DvAvOpenhomeOrgRoon1Dll \
+             DvAvOpenhomeOrgTidalConnect1Dll \
+             DvAvOpenhomeOrgBluetooth1Dll \
+             DvAvOpenhomeOrgAirplay1Dll \
+             DvAvOpenhomeOrgMusicStation1Dll \
+             DvAvOpenhomeOrgSpotify1Dll \
              DvAvOpenhomeOrgInternetRadio1Dll \
              DvAvOpenhomeOrgStreaming1Dll \
              DvAvOpenhomeOrgProduct1Dll \
@@ -568,6 +658,7 @@ device_dlls = \
              DvOpenhomeOrgTestBasic1Dll \
              DvOpenhomeOrgTestLights1Dll \
              DvOpenhomeOrgSubscriptionLongPoll1Dll \
+             DvTencentComQPlay1Dll \
 
 DvDeviceDlls: $(device_dlls)
 DvUpnpOrgAVTransport1Dll: $(objdir)$(dllprefix)DvUpnpOrgAVTransport1.$(dllext) 
@@ -645,6 +736,9 @@ $(objdir)$(dllprefix)DvAvOpenhomeOrgWebClockConfig1.$(dllext) : ZappUpnpDll $(ob
 DvAvOpenhomeOrgDACConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgDACConfig1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgDACConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgDACConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgDACConfig1.$(objext)
+DvAvOpenhomeOrgCredentials1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgCredentials1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgCredentials1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgCredentials1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgCredentials1.$(dllext) $(objdir)DvAvOpenhomeOrgCredentials1.$(objext)
 DvAvOpenhomeOrgServerConfig1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgServerConfig1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgServerConfig1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgServerConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgServerConfig1.$(dllext) $(objdir)DvAvOpenhomeOrgServerConfig1.$(objext)
@@ -660,6 +754,21 @@ $(objdir)$(dllprefix)DvAvOpenhomeOrgGroupConfig1.$(dllext) : ZappUpnpDll $(objdi
 DvAvOpenhomeOrgRoon1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgRoon1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgRoon1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgRoon1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgRoon1.$(dllext) $(objdir)DvAvOpenhomeOrgRoon1.$(objext)
+DvAvOpenhomeOrgTidalConnect1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgTidalConnect1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgTidalConnect1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgTidalConnect1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgTidalConnect1.$(dllext) $(objdir)DvAvOpenhomeOrgTidalConnect1.$(objext)
+DvAvOpenhomeOrgBluetooth1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgBluetooth1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgBluetooth1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgBluetooth1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgBluetooth1.$(dllext) $(objdir)DvAvOpenhomeOrgBluetooth1.$(objext)
+DvAvOpenhomeOrgAirplay1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgAirplay1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgAirplay1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgAirplay1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgAirplay1.$(dllext) $(objdir)DvAvOpenhomeOrgAirplay1.$(objext)
+DvAvOpenhomeOrgMusicStation1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgMusicStation1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgMusicStation1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgMusicStation1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgMusicStation1.$(dllext) $(objdir)DvAvOpenhomeOrgMusicStation1.$(objext)
+DvAvOpenhomeOrgSpotify1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgSpotify1.$(dllext) 
+$(objdir)$(dllprefix)DvAvOpenhomeOrgSpotify1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgSpotify1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgSpotify1.$(dllext) $(objdir)DvAvOpenhomeOrgSpotify1.$(objext)
 DvAvOpenhomeOrgInternetRadio1Dll: $(objdir)$(dllprefix)DvAvOpenhomeOrgInternetRadio1.$(dllext) 
 $(objdir)$(dllprefix)DvAvOpenhomeOrgInternetRadio1.$(dllext) : ZappUpnpDll $(objdir)DvAvOpenhomeOrgInternetRadio1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvAvOpenhomeOrgInternetRadio1.$(dllext) $(objdir)DvAvOpenhomeOrgInternetRadio1.$(objext)
@@ -696,6 +805,9 @@ $(objdir)$(dllprefix)DvOpenhomeOrgTestLights1.$(dllext) : ZappUpnpDll $(objdir)D
 DvOpenhomeOrgSubscriptionLongPoll1Dll: $(objdir)$(dllprefix)DvOpenhomeOrgSubscriptionLongPoll1.$(dllext) 
 $(objdir)$(dllprefix)DvOpenhomeOrgSubscriptionLongPoll1.$(dllext) : ZappUpnpDll $(objdir)DvOpenhomeOrgSubscriptionLongPoll1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvOpenhomeOrgSubscriptionLongPoll1.$(dllext) $(objdir)DvOpenhomeOrgSubscriptionLongPoll1.$(objext)
+DvTencentComQPlay1Dll: $(objdir)$(dllprefix)DvTencentComQPlay1.$(dllext) 
+$(objdir)$(dllprefix)DvTencentComQPlay1.$(dllext) : ZappUpnpDll $(objdir)DvTencentComQPlay1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)DvTencentComQPlay1.$(dllext) $(objdir)DvTencentComQPlay1.$(objext)
 
 
 # Device assemblies for .NET:
@@ -827,6 +939,11 @@ $(objdir)DvAvOpenhomeOrgDACConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)Dv
         /out:$(objdir)DvAvOpenhomeOrgDACConfig1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(deviceCs)DvAvOpenhomeOrgDACConfig1.cs
+$(objdir)DvAvOpenhomeOrgCredentials1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgCredentials1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgCredentials1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgCredentials1.cs
 $(objdir)DvAvOpenhomeOrgServerConfig1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgServerConfig1.cs
 	$(csharp) /t:library \
         /out:$(objdir)DvAvOpenhomeOrgServerConfig1.net.dll \
@@ -852,6 +969,31 @@ $(objdir)DvAvOpenhomeOrgRoon1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpe
         /out:$(objdir)DvAvOpenhomeOrgRoon1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(deviceCs)DvAvOpenhomeOrgRoon1.cs
+$(objdir)DvAvOpenhomeOrgTidalConnect1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgTidalConnect1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgTidalConnect1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgTidalConnect1.cs
+$(objdir)DvAvOpenhomeOrgBluetooth1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgBluetooth1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgBluetooth1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgBluetooth1.cs
+$(objdir)DvAvOpenhomeOrgAirplay1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgAirplay1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgAirplay1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgAirplay1.cs
+$(objdir)DvAvOpenhomeOrgMusicStation1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgMusicStation1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgMusicStation1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgMusicStation1.cs
+$(objdir)DvAvOpenhomeOrgSpotify1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgSpotify1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvAvOpenhomeOrgSpotify1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvAvOpenhomeOrgSpotify1.cs
 $(objdir)DvAvOpenhomeOrgInternetRadio1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvAvOpenhomeOrgInternetRadio1.cs
 	$(csharp) /t:library \
         /out:$(objdir)DvAvOpenhomeOrgInternetRadio1.net.dll \
@@ -912,6 +1054,11 @@ $(objdir)DvOpenhomeOrgSubscriptionLongPoll1.net.dll: $(objdir)ohNet.net.dll $(de
         /out:$(objdir)DvOpenhomeOrgSubscriptionLongPoll1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(deviceCs)DvOpenhomeOrgSubscriptionLongPoll1.cs
+$(objdir)DvTencentComQPlay1.net.dll: $(objdir)ohNet.net.dll $(deviceCs)DvTencentComQPlay1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)DvTencentComQPlay1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(deviceCs)DvTencentComQPlay1.cs
 
 # Device classes for Java:
 
@@ -967,6 +1114,8 @@ $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgWebClockConfig
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgWebClockConfig1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgDACConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgDACConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgDACConfig1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgCredentials1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgCredentials1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgCredentials1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgServerConfig1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgServerConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgServerConfig1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgMessageCenter1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgMessageCenter1.java
@@ -977,6 +1126,16 @@ $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgGroupConfig1.c
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgGroupConfig1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgRoon1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgRoon1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgRoon1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgTidalConnect1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgTidalConnect1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgTidalConnect1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgBluetooth1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgBluetooth1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgBluetooth1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgAirplay1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgAirplay1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgAirplay1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgMusicStation1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgMusicStation1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgMusicStation1.java
+$(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgSpotify1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgSpotify1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgSpotify1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgInternetRadio1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgInternetRadio1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderAvOpenhomeOrgInternetRadio1.java
 $(objdir)org/openhome/net/device/providers/DvProviderAvOpenhomeOrgStreaming1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderAvOpenhomeOrgStreaming1.java
@@ -1001,5 +1160,7 @@ $(objdir)org/openhome/net/device/providers/DvProviderOpenhomeOrgTestLights1.clas
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderOpenhomeOrgTestLights1.java
 $(objdir)org/openhome/net/device/providers/DvProviderOpenhomeOrgSubscriptionLongPoll1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderOpenhomeOrgSubscriptionLongPoll1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderOpenhomeOrgSubscriptionLongPoll1.java
+$(objdir)org/openhome/net/device/providers/DvProviderTencentComQPlay1.class : $(objdir)ohnet.jar $(deviceJava)DvProviderTencentComQPlay1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(deviceJava)DvProviderTencentComQPlay1.java
 
 

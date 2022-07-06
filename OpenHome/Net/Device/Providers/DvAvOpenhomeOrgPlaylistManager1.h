@@ -40,6 +40,12 @@ public:
      */
     void GetPropertyMetadata(Brhz& aValue);
     /**
+     * Output the value of the Metadata property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyMetadata has previously been called.
+     */
+    void WritePropertyMetadata(IWriter& aWriter);
+    /**
      * Set the value of the ImagesXml property
      *
      * Can only be called if EnablePropertyImagesXml has previously been called.
@@ -53,6 +59,12 @@ public:
      * Can only be called if EnablePropertyImagesXml has previously been called.
      */
     void GetPropertyImagesXml(Brhz& aValue);
+    /**
+     * Output the value of the ImagesXml property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyImagesXml has previously been called.
+     */
+    void WritePropertyImagesXml(IWriter& aWriter);
     /**
      * Set the value of the IdArray property
      *
@@ -68,6 +80,12 @@ public:
      */
     void GetPropertyIdArray(Brh& aValue);
     /**
+     * Output the value of the IdArray property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyIdArray has previously been called.
+     */
+    void WritePropertyIdArray(IWriter& aWriter);
+    /**
      * Set the value of the TokenArray property
      *
      * Can only be called if EnablePropertyTokenArray has previously been called.
@@ -81,6 +99,12 @@ public:
      * Can only be called if EnablePropertyTokenArray has previously been called.
      */
     void GetPropertyTokenArray(Brh& aValue);
+    /**
+     * Output the value of the TokenArray property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyTokenArray has previously been called.
+     */
+    void WritePropertyTokenArray(IWriter& aWriter);
     /**
      * Set the value of the PlaylistsMax property
      *

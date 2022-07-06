@@ -29,16 +29,27 @@ private: // ICpiProtocol
     TUint Subscribe(CpiSubscription& aSubscription, const OpenHome::Uri& aSubscriber);
     TUint Renew(CpiSubscription& aSubscription);
     void Unsubscribe(CpiSubscription& aSubscription, const Brx& aSid);
+    TBool OrphanSubscriptionsOnSubnetChange() const;
     void NotifyRemovedBeforeReady();
     TUint Version(const TChar* aDomain, const TChar* aName, TUint aProxyVersion) const;
 private: // ICpiDeviceObserver
     void Release();
 private: // IPropertyWriterFactory
-    IPropertyWriter* CreateWriter(const IDviSubscriptionUserData* aUserData, const Brx& aSid, TUint aSequenceNumber);
+    IPropertyWriter* ClaimWriter(const IDviSubscriptionUserData* aUserData, const Brx& aSid, TUint aSequenceNumber);
+    void ReleaseWriter(IPropertyWriter* aWriter);
     void NotifySubscriptionCreated(const Brx& aSid);
     void NotifySubscriptionDeleted(const Brx& aSid);
     void NotifySubscriptionExpired(const Brx& aSid);
+    void LogUserData(IWriter& aWriter, const IDviSubscriptionUserData& aUserData);
 private:
+    class Invocable : public IInvocable, private INonCopyable
+    {
+    public:
+        Invocable(CpiDeviceDv& aDevice);
+        virtual void InvokeAction(Invocation& aInvocation);
+    private:
+        CpiDeviceDv& iDevice;
+    };
     class Subscription
     {
     public:
@@ -57,6 +68,8 @@ private:
     SubscriptionMap iSubscriptions;
     Mutex iLock;
     Semaphore iShutdownSem;
+    Invocable* iInvocable;
+    friend class Invocable;
 };
 
 class Argument;
@@ -73,6 +86,7 @@ private: // IDviInvocation
     TIpAddress Adapter() const;
     const char* ResourceUriPrefix() const;
     Endpoint ClientEndpoint() const;
+    const Brx& ClientUserAgent() const;
 
     void InvocationReadStart();
     TBool InvocationReadBool(const TChar* aName);

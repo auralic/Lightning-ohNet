@@ -19,18 +19,45 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyOpenhomeOrgTestLights1Cpp : public ICpProxy
+{
+public:
+    virtual ~ICpProxyOpenhomeOrgTestLights1Cpp() {}
+    virtual void SyncGetCount(uint32_t& aCount) = 0;
+    virtual void BeginGetCount(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetCount(IAsync& aAsync, uint32_t& aCount) = 0;
+    virtual void SyncGetRoom(uint32_t aIndex, std::string& aRoomName) = 0;
+    virtual void BeginGetRoom(uint32_t aIndex, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetRoom(IAsync& aAsync, std::string& aRoomName) = 0;
+    virtual void SyncGetName(uint32_t aIndex, std::string& aFriendlyName) = 0;
+    virtual void BeginGetName(uint32_t aIndex, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetName(IAsync& aAsync, std::string& aFriendlyName) = 0;
+    virtual void SyncGetPosition(uint32_t aIndex, uint32_t& aX, uint32_t& aY, uint32_t& aZ) = 0;
+    virtual void BeginGetPosition(uint32_t aIndex, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetPosition(IAsync& aAsync, uint32_t& aX, uint32_t& aY, uint32_t& aZ) = 0;
+    virtual void SyncSetColor(uint32_t aIndex, uint32_t aColor) = 0;
+    virtual void BeginSetColor(uint32_t aIndex, uint32_t aColor, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetColor(IAsync& aAsync) = 0;
+    virtual void SyncGetColor(uint32_t aIndex, uint32_t& aColor) = 0;
+    virtual void BeginGetColor(uint32_t aIndex, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetColor(IAsync& aAsync, uint32_t& aColor) = 0;
+    virtual void SyncGetColorComponents(uint32_t aColor, uint32_t& aBrightness, uint32_t& aRed, uint32_t& aGreen, uint32_t& aBlue) = 0;
+    virtual void BeginGetColorComponents(uint32_t aColor, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetColorComponents(IAsync& aAsync, uint32_t& aBrightness, uint32_t& aRed, uint32_t& aGreen, uint32_t& aBlue) = 0;
+};
 
 /**
  * Proxy for openhome.org:TestLights:1
  * @ingroup Proxies
  */
-class CpProxyOpenhomeOrgTestLights1Cpp : public CpProxy
+class CpProxyOpenhomeOrgTestLights1Cpp : public ICpProxyOpenhomeOrgTestLights1Cpp
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -250,7 +277,40 @@ public:
     void EndGetColorComponents(IAsync& aAsync, uint32_t& aBrightness, uint32_t& aRed, uint32_t& aGreen, uint32_t& aBlue);
 
 
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
 private:
     Action* iActionGetCount;
     Action* iActionGetRoom;

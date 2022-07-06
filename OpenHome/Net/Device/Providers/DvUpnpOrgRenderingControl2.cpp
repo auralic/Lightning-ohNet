@@ -20,6 +20,11 @@ void DvProviderUpnpOrgRenderingControl2::GetPropertyLastChange(Brhz& aValue)
     aValue.Set(iPropertyLastChange->Value());
 }
 
+void DvProviderUpnpOrgRenderingControl2::WritePropertyLastChange(IWriter& aWriter)
+{
+    iPropertyLastChange->Write(aWriter);
+}
+
 DvProviderUpnpOrgRenderingControl2::DvProviderUpnpOrgRenderingControl2(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "upnp.org", "RenderingControl", 2)
 {

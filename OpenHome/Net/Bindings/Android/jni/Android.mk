@@ -14,6 +14,8 @@ LOCAL_SRC_FILES := $(ohroot)OpenHome/Ascii.cpp \
                    $(ohroot)OpenHome/Net/Device/Bonjour/Bonjour.cpp \
                    $(ohroot)OpenHome/Buffer.cpp \
                    $(ohroot)OpenHome/Converter.cpp \
+                   $(ohroot)thirdparty/libb64/cencode.c \
+                   $(ohroot)thirdparty/libb64/cdecode.c \
                    $(ohroot)OpenHome/Net/Discovery.cpp \
                    $(ohroot)OpenHome/Debug.cpp \
                    $(ohroot)OpenHome/Net/ControlPoint/CpDeviceCore.cpp \
@@ -63,7 +65,7 @@ LOCAL_SRC_FILES := $(ohroot)OpenHome/Ascii.cpp \
                    $(ohroot)OpenHome/Net/ControlPoint/Upnp/EventUpnp.cpp \
                    $(ohroot)OpenHome/Exception.cpp \
                    $(ohroot)OpenHome/Fifo.cpp \
-                   $(ohroot)OpenHome/FileAnsii.cpp \
+                   $(ohroot)OpenHome/FileAnsi.cpp \
                    $(ohroot)OpenHome/FileBrx.cpp \
                    $(ohroot)OpenHome/FileStream.cpp \
                    $(ohroot)OpenHome/Net/Globals.cpp \
@@ -72,6 +74,7 @@ LOCAL_SRC_FILES := $(ohroot)OpenHome/Ascii.cpp \
                    $(ohroot)OpenHome/Net/Device/Bonjour/mDNSCore/DNSDigest.c \
                    $(ohroot)OpenHome/Net/Device/Bonjour/mDNSCore/mDNS.c \
                    $(ohroot)OpenHome/Net/Device/Bonjour/mDNSCore/uDNS.c \
+                   $(ohroot)OpenHome/Net/Device/Bonjour/mDNSShared/dnssd_clientshim.c \
                    $(ohroot)OpenHome/Net/Device/Bonjour/MdnsPlatform.cpp \
                    $(ohroot)OpenHome/Net/Device/Bonjour/MdnsProvider.cpp \
                    $(ohroot)OpenHome/md5.c \
@@ -108,6 +111,9 @@ LOCAL_SRC_FILES := $(ohroot)OpenHome/Ascii.cpp \
                    $(ohroot)Os/Posix/TerminalOs.cpp \
                    $(ohroot)Os/Posix/Os.c \
                    $(ohroot)Os/Posix/SignalHandlers.cpp \
+                   $(ohroot)OpenHome/Shell/Shell.cpp \
+                   $(ohroot)OpenHome/Shell/InfoProvider.cpp \
+                   $(ohroot)OpenHome/Shell/ShellCommandDebug.cpp \
                    ifaddrs-android.cpp
 
 include $(BUILD_SHARED_LIBRARY)

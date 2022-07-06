@@ -47,9 +47,121 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1Destroy(THandle aHandl
  * on the device and sets any output arguments.
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
- * @param[out] aAlive
+ * @param[in]  aServiceName
+ * @param[in]  aMessageIn
+ * @param[out] aMessageOut
+ *
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncLogIn(THandle aHandle, const char* aServiceName, const char* aMessageIn, char** aMessageOut);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aServiceName
+ * @param[in]  aMessageIn
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginLogIn(THandle aHandle, const char* aServiceName, const char* aMessageIn, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ * @param[out] aMessageOut
  *
  * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndLogIn(THandle aHandle, OhNetHandleAsync aAsync, char** aMessageOut);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aServiceName
+ *
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncLogOut(THandle aHandle, const char* aServiceName);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aServiceName
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginLogOut(THandle aHandle, const char* aServiceName, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndLogOut(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aServiceName
+ *
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncCancelLogIn(THandle aHandle, const char* aServiceName);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aServiceName
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginCancelLogIn(THandle aHandle, const char* aServiceName, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndCancelLogIn(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[out] aAlive
+ *
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncIsAlive(THandle aHandle, uint32_t* aAlive);
@@ -84,7 +196,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndIsAlive(THandle 
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncUpdate(THandle aHandle);
@@ -121,7 +233,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndUpdate(THandle a
  * @param[in]  aRealName
  * @param[in]  aEmail
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncActive(THandle aHandle, uint32_t aIsSubscribe, const char* aRealName, const char* aEmail);
@@ -159,7 +271,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndActive(THandle a
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aActiveStatus
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetActiveStatus(THandle aHandle, char** aActiveStatus);
@@ -194,7 +306,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetActiveStatus(
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncCheckUpdate(THandle aHandle);
@@ -228,7 +340,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndCheckUpdate(THan
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncResetDisplay(THandle aHandle);
@@ -263,7 +375,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndResetDisplay(THa
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aHardWareInfo
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetHardWareInfo(THandle aHandle, char** aHardWareInfo);
@@ -299,7 +411,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetHardWareInfo(
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aRoomName
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetRoomName(THandle aHandle, const char* aRoomName);
@@ -335,7 +447,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetRoomName(THan
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aVolumeControl
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetVolumeControl(THandle aHandle, uint32_t* aVolumeControl);
@@ -371,7 +483,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetVolumeControl
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aVolumeControl
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetVolumeControl(THandle aHandle, uint32_t aVolumeControl);
@@ -407,7 +519,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetVolumeControl
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aWaitingTime
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetWaitingTime(THandle aHandle, char** aWaitingTime);
@@ -443,7 +555,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetWaitingTime(T
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aWaitingTime
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetWaitingTime(THandle aHandle, const char* aWaitingTime);
@@ -481,7 +593,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetWaitingTime(T
  * @param[out] aCurrentChannel
  * @param[out] aOutChannel
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetOutChannel(THandle aHandle, uint32_t* aChannelNum, char** aCurrentChannel, char** aOutChannel);
@@ -519,7 +631,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetOutChannel(TH
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aChannel
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetOutChannel(THandle aHandle, const char* aChannel);
@@ -555,7 +667,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetOutChannel(TH
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aUpnpType
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetUpnpType(THandle aHandle, const char* aUpnpType);
@@ -591,7 +703,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetUpnpType(THan
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aUpnpType
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetUpnpType(THandle aHandle, char** aUpnpType);
@@ -628,7 +740,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetUpnpType(THan
  * @param[in]  aStatus
  * @param[in]  aSampleFormat
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetDsdNativeStatus(THandle aHandle, const char* aStatus, const char* aSampleFormat);
@@ -666,7 +778,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetDsdNativeStat
  * @param[out] aStatus
  * @param[out] aSampleFormat
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetDsdNativeStatus(THandle aHandle, char** aStatus, char** aSampleFormat);
@@ -704,7 +816,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetDsdNativeStat
  * @param[in]  aProtect
  * @param[in]  aProtectPassword
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetPasswordProtect(THandle aHandle, const char* aProtect, const char* aProtectPassword);
@@ -742,7 +854,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetPasswordProte
  * @param[out] aProtect
  * @param[out] aProtectPassword
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetPasswordProtect(THandle aHandle, char** aProtect, char** aProtectPassword);
@@ -780,7 +892,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetPasswordProte
  * @param[out] aVersion
  * @param[out] aProgress
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetUpdateInfo(THandle aHandle, char** aVersion, char** aProgress);
@@ -820,7 +932,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetUpdateInfo(TH
  * @param[out] aCurrentUse
  * @param[out] aWirelessList
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetWirelessList(THandle aHandle, const char* aInterFace, uint32_t* aNumber, char** aCurrentUse, char** aWirelessList);
@@ -864,7 +976,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetWirelessList(
  * @param[out] aDNS
  * @param[out] aDHCP
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetIpAddress(THandle aHandle, const char* aInterFace, char** aIpAddress, char** aNetMask, char** aGateWay, char** aDNS, char** aDHCP);
@@ -912,7 +1024,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetIpAddress(THa
  * @param[in]  aPassWord
  * @param[in]  aEncrypType
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetNetWork(THandle aHandle, const char* aInterFace, const char* aIpAddress, const char* aNetMask, const char* aGateWay, const char* aDNS, const char* aSsid, const char* aPassWord, const char* aEncrypType);
@@ -957,7 +1069,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetNetWork(THand
  * @param[out] aCurrentUse
  * @param[out] aInterfaceList
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetNetInterface(THandle aHandle, uint32_t* aInterfaceNum, char** aCurrentUse, char** aInterfaceList);
@@ -995,7 +1107,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetNetInterface(
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aHaltStatus
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetHaltStatus(THandle aHandle, uint32_t* aHaltStatus);
@@ -1031,7 +1143,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetHaltStatus(TH
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aHaltStatus
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetHaltStatus(THandle aHandle, uint32_t aHaltStatus);
@@ -1068,7 +1180,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetHaltStatus(TH
  * @param[out] aFilterMode
  * @param[out] aFilterModeList
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetFilterMode(THandle aHandle, char** aFilterMode, char** aFilterModeList);
@@ -1105,7 +1217,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetFilterMode(TH
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aFilterMode
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetFilterMode(THandle aHandle, const char* aFilterMode);
@@ -1142,7 +1254,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetFilterMode(TH
  * @param[in]  aSourceName
  * @param[in]  aVisible
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetSourceVisible(THandle aHandle, const char* aSourceName, uint32_t aVisible);
@@ -1179,7 +1291,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetSourceVisible
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aVisibleInfo
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetSourceVisible(THandle aHandle, char** aVisibleInfo);
@@ -1215,7 +1327,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetSourceVisible
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aLEDMode
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetLEDMode(THandle aHandle, const char* aLEDMode);
@@ -1252,7 +1364,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetLEDMode(THand
  * @param[out] aLEDMode
  * @param[out] aLEDModeList
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetLEDMode(THandle aHandle, char** aLEDMode, char** aLEDModeList);
@@ -1290,7 +1402,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetLEDMode(THand
  * @param[in]  aKeyName
  * @param[in]  aKeyMode
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetKeyMode(THandle aHandle, const char* aKeyName, const char* aKeyMode);
@@ -1329,7 +1441,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetKeyMode(THand
  * @param[out] aMiddleKeyMode
  * @param[out] aKeyModeList
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetKeyMode(THandle aHandle, char** aSideKeyMode, char** aMiddleKeyMode, char** aKeyModeList);
@@ -1367,7 +1479,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetKeyMode(THand
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aBrightness
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetBrightness(THandle aHandle, const char* aBrightness);
@@ -1404,7 +1516,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetBrightness(TH
  * @param[out] aBrightness
  * @param[out] aList
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetBrightness(THandle aHandle, char** aBrightness, char** aList);
@@ -1441,7 +1553,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetBrightness(TH
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aDisplayMode
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetDisplayMode(THandle aHandle, const char* aDisplayMode);
@@ -1478,7 +1590,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetDisplayMode(T
  * @param[out] aDisplayMode
  * @param[out] aDisplayModeList
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetDisplayMode(THandle aHandle, char** aDisplayMode, char** aDisplayModeList);
@@ -1515,7 +1627,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetDisplayMode(T
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aPhase
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetDACPhase(THandle aHandle, uint32_t* aPhase);
@@ -1551,7 +1663,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetDACPhase(THan
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aPhase
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetDACPhase(THandle aHandle, uint32_t aPhase);
@@ -1587,7 +1699,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetDACPhase(THan
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aBalance
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncGetDACBalance(THandle aHandle, uint32_t* aBalance);
@@ -1623,7 +1735,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndGetDACBalance(TH
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[in]  aBalance
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetDACBalance(THandle aHandle, uint32_t aBalance);
@@ -1651,6 +1763,125 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetDACBalance(THa
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetDACBalance(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aEnableResampler
+ *
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetEnableResampler(THandle aHandle, uint32_t aEnableResampler);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aEnableResampler
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetEnableResampler(THandle aHandle, uint32_t aEnableResampler, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetEnableResampler(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aEnableSpeaker
+ *
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetEnableSpeaker(THandle aHandle, uint32_t aEnableSpeaker);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aEnableSpeaker
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetEnableSpeaker(THandle aHandle, uint32_t aEnableSpeaker, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetEnableSpeaker(THandle aHandle, OhNetHandleAsync aAsync);
+
+/**
+ * Invoke the action synchronously.  Blocks until the action has been processed
+ * on the device and sets any output arguments.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aEnableEqualizer
+ *
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SyncSetEnableEqualizer(THandle aHandle, uint32_t aEnableEqualizer);
+/**
+ * Invoke the action asynchronously.
+ * Returns immediately and will run the client-specified callback when the action
+ * later completes.  Any output arguments can then be retrieved by calling
+ * EndGetProtocolInfo().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aEnableEqualizer
+ * @param[in]  aCallback Callback to run when the action completes.
+ *                       This is guaranteed to be run but may indicate an error
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1BeginSetEnableEqualizer(THandle aHandle, uint32_t aEnableEqualizer, OhNetCallbackAsync aCallback, void* aPtr);
+/**
+ * Retrieve the output arguments from an asynchronously invoked action.
+ * This may only be called from the callback set in the above Begin function.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aAsync    Argument passed to the callback set in the above Begin function
+ *
+ * @return  0 if the function succedded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1EndSetEnableEqualizer(THandle aHandle, OhNetHandleAsync aAsync);
+/**
+ * Set a callback to be run when the MessageOut state variable changes.
+ *
+ * Callbacks may be run in different threads but callbacks for a
+ * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aCallback The callback to run when the state variable changes
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SetPropertyMessageOutChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
 /**
  * Set a callback to be run when the Alive state variable changes.
  *
@@ -1906,6 +2137,18 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SetPropertyTimeChanged
 DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SetPropertyVolumeControlChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
 
 /**
+ * Query the value of the MessageOut property.
+ *
+ * This function is threadsafe and can only be called after the first callback
+ * following a call to CpProxyCSubscribe() and before CpProxyCUnsubscribe().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
+ * @param[out] aMessageOut
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyMessageOut(THandle aHandle, char** aMessageOut);
+/**
  * Query the value of the Alive property.
  *
  * This function is threadsafe and can only be called after the first callback
@@ -1913,8 +2156,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1SetPropertyVolumeContr
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aAlive
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
 /**
  * Query the value of the CurrentAction property.
  *
@@ -1923,8 +2168,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyAlive(THandle 
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aCurrentAction
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
 /**
  * Query the value of the Restart property.
  *
@@ -1933,8 +2180,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyCurrentAction(
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aRestart
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyRestart(THandle aHandle, uint32_t* aRestart);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyRestart(THandle aHandle, uint32_t* aRestart);
 /**
  * Query the value of the Number property.
  *
@@ -1943,8 +2192,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyRestart(THandl
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aNumber
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyNumber(THandle aHandle, uint32_t* aNumber);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyNumber(THandle aHandle, uint32_t* aNumber);
 /**
  * Query the value of the RoomName property.
  *
@@ -1953,8 +2204,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyNumber(THandle
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aRoomName
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyRoomName(THandle aHandle, char** aRoomName);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyRoomName(THandle aHandle, char** aRoomName);
 /**
  * Query the value of the InterFace property.
  *
@@ -1963,8 +2216,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyRoomName(THand
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aInterFace
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyInterFace(THandle aHandle, char** aInterFace);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyInterFace(THandle aHandle, char** aInterFace);
 /**
  * Query the value of the NetMask property.
  *
@@ -1973,8 +2228,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyInterFace(THan
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aNetMask
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyNetMask(THandle aHandle, char** aNetMask);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyNetMask(THandle aHandle, char** aNetMask);
 /**
  * Query the value of the GateWay property.
  *
@@ -1983,8 +2240,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyNetMask(THandl
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aGateWay
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyGateWay(THandle aHandle, char** aGateWay);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyGateWay(THandle aHandle, char** aGateWay);
 /**
  * Query the value of the DNS property.
  *
@@ -1993,8 +2252,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyGateWay(THandl
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aDNS
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyDNS(THandle aHandle, char** aDNS);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyDNS(THandle aHandle, char** aDNS);
 /**
  * Query the value of the DHCP property.
  *
@@ -2003,8 +2264,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyDNS(THandle aH
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aDHCP
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyDHCP(THandle aHandle, char** aDHCP);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyDHCP(THandle aHandle, char** aDHCP);
 /**
  * Query the value of the Ssid property.
  *
@@ -2013,8 +2276,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyDHCP(THandle a
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aSsid
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertySsid(THandle aHandle, char** aSsid);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertySsid(THandle aHandle, char** aSsid);
 /**
  * Query the value of the PassWord property.
  *
@@ -2023,8 +2288,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertySsid(THandle a
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aPassWord
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyPassWord(THandle aHandle, char** aPassWord);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyPassWord(THandle aHandle, char** aPassWord);
 /**
  * Query the value of the EncrypType property.
  *
@@ -2033,8 +2300,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyPassWord(THand
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aEncrypType
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyEncrypType(THandle aHandle, char** aEncrypType);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyEncrypType(THandle aHandle, char** aEncrypType);
 /**
  * Query the value of the Channel property.
  *
@@ -2043,8 +2312,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyEncrypType(THa
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aChannel
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyChannel(THandle aHandle, char** aChannel);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyChannel(THandle aHandle, char** aChannel);
 /**
  * Query the value of the UpnpType property.
  *
@@ -2053,8 +2324,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyChannel(THandl
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aUpnpType
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyUpnpType(THandle aHandle, char** aUpnpType);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyUpnpType(THandle aHandle, char** aUpnpType);
 /**
  * Query the value of the Status property.
  *
@@ -2063,8 +2336,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyUpnpType(THand
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aStatus
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyStatus(THandle aHandle, char** aStatus);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyStatus(THandle aHandle, char** aStatus);
 /**
  * Query the value of the SampleFormat property.
  *
@@ -2073,8 +2348,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyStatus(THandle
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aSampleFormat
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertySampleFormat(THandle aHandle, char** aSampleFormat);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertySampleFormat(THandle aHandle, char** aSampleFormat);
 /**
  * Query the value of the IpAddress property.
  *
@@ -2083,8 +2360,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertySampleFormat(T
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aIpAddress
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyIpAddress(THandle aHandle, char** aIpAddress);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyIpAddress(THandle aHandle, char** aIpAddress);
 /**
  * Query the value of the Protect property.
  *
@@ -2093,8 +2372,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyIpAddress(THan
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aProtect
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyProtect(THandle aHandle, char** aProtect);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyProtect(THandle aHandle, char** aProtect);
 /**
  * Query the value of the ProtectPassword property.
  *
@@ -2103,8 +2384,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyProtect(THandl
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aProtectPassword
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyProtectPassword(THandle aHandle, char** aProtectPassword);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyProtectPassword(THandle aHandle, char** aProtectPassword);
 /**
  * Query the value of the ActiveStatus property.
  *
@@ -2113,8 +2396,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyProtectPasswor
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aActiveStatus
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyActiveStatus(THandle aHandle, char** aActiveStatus);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyActiveStatus(THandle aHandle, char** aActiveStatus);
 /**
  * Query the value of the Time property.
  *
@@ -2123,8 +2408,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyActiveStatus(T
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aTime
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyTime(THandle aHandle, char** aTime);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyTime(THandle aHandle, char** aTime);
 /**
  * Query the value of the VolumeControl property.
  *
@@ -2133,8 +2420,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyTime(THandle a
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgHardwareConfig1Create
  * @param[out] aVolumeControl
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyVolumeControl(THandle aHandle, uint32_t* aVolumeControl);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgHardwareConfig1PropertyVolumeControl(THandle aHandle, uint32_t* aVolumeControl);
 
 /* @} */
 

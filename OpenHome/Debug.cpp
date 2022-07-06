@@ -5,50 +5,41 @@
 
 using namespace OpenHome;
 
-TUint Debug::iLevel = Debug::kNone;
-TBool Debug::iBreak = false;
+TUint64 Debug::iLevel = Debug::kNone;
+TUint Debug::iSeverity = Debug::kSeverityError;
 
-TUint Debug::Level()
+void Debug::SetSeverity(TUint aSeverity)
+{
+    iSeverity = aSeverity;
+}
+
+TUint Debug::Severity()
+{
+    return iSeverity;
+}
+
+TUint64 Debug::Level()
 {
     return iLevel;
 }
 
-void Debug::SetLevel(TUint aLevel)
+void Debug::SetLevel(TUint64 aLevel)
 {
     iLevel = aLevel;
 }
 
-void Debug::AddLevel(TUint aLevel)
+void Debug::AddLevel(TUint64 aLevel)
 {
     iLevel |= aLevel;
 }
 
-void Debug::RemoveLevel(TUint aLevel)
+void Debug::RemoveLevel(TUint64 aLevel)
 {
     iLevel &= ~aLevel;
 }
 
-TBool Debug::TestLevel(TUint aLevel)
-{
-    if ((iLevel & aLevel) != 0) 
-    {
-        return true;
-    }
-    
-    return false;   
-}
 
-TBool Debug::BreakBeforeThrow()
-{
-    return iBreak;
-}
-
-void Debug::SetBreakBeforeThrow(TBool aBreak)
-{
-    iBreak = aBreak;
-}
-
-AutoLog::AutoLog(TUint aLevel, const TChar* aString)
+AutoLog::AutoLog(TUint64 aLevel, const TChar* aString)
     : iLevel(aLevel)
     , iString(aString)
 {

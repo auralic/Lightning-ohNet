@@ -1,7 +1,7 @@
-Copyright 2011-14, Linn Products Ltd. All rights reserved.
+Copyright 2011-16, OpenHome Ltd. All rights reserved.
 
-Unless otherwise stated, all code in this project is licensed under the 2-clause
-(Simplified) BSD license.  See BsdLicense.txt for details.
+Unless otherwise stated, all code in this project is licensed under the
+MIT license.  See MitLicense.txt for details.
 
 Files at the following locations are licensed under separate terms:
   OpenHome/Functor.h
@@ -11,6 +11,6 @@ Files at the following locations are licensed under separate terms:
   OpenHome/Net/Bindings/Android/jni/ifaddrs.*
   OpenHome/Net/Bindings/Android/jni/LocalArray.h
   OpenHome/Net/Bindings/Js/ControlPoint/lib/ohnet.base64.js
+  OpenHome/Net/ServiceGen/xmltodict.py
   JsDoc/*
   thirdparty/fop-1.0/*
-

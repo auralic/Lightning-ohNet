@@ -64,7 +64,7 @@ void CpDevices::Test()
     CpProxyOpenhomeOrgTestBasic1* proxy = new CpProxyOpenhomeOrgTestBasic1(*(iList[0]));
     TUint i;
 
-    Print("Unsigned integer arguments...\n");
+    Print("  Unsigned integer arguments...\n");
     TUint valUint = 15;
     for (i=0; i<kTestIterations; i++) {
         TUint result;
@@ -91,7 +91,7 @@ void CpDevices::Test()
     catch (ProxyError&) {}
 #endif
 
-    Print("Integer arguments...\n");
+    Print("  Integer arguments...\n");
     TInt valInt = 3;
     for (i=0; i<kTestIterations; i++) {
         TInt result;
@@ -100,7 +100,7 @@ void CpDevices::Test()
         valInt = result;
     }
 
-    Print("Boolean arguments...\n");
+    Print("  Boolean arguments...\n");
     TBool valBool = true;
     for (i=0; i<kTestIterations; i++) {
         TBool result;
@@ -109,7 +109,7 @@ void CpDevices::Test()
         valBool = result;
     }
 
-    Print("String arguments...\n");
+    Print("  String arguments...\n");
     Brn valStr("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
                "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco "
                "laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in "
@@ -119,6 +119,47 @@ void CpDevices::Test()
         Brh result;
         proxy->SyncEchoString(valStr, result);
         ASSERT(result == valStr);
+    }
+    // Test some end-of-line conversions.
+    // '\n', '\r', and '\r\n' should all be returned as a single '\n'.
+    Brn valLf("<tag>some\ntext</<tag>");
+    for (i=0; i<kTestIterations; i++) {
+        Brh result;
+        proxy->SyncEchoString(valLf, result);
+        ASSERT(result == valLf);
+    }
+    Brn valCr("<tag>some\rtext</<tag>");
+    for (i=0; i<kTestIterations; i++) {
+        Brh result;
+        proxy->SyncEchoString(valCr, result);
+        ASSERT(result == valLf);
+    }
+    Brn valCrLf("<tag>some\r\ntext</<tag>");
+    for (i=0; i<kTestIterations; i++) {
+        Brh result;
+        proxy->SyncEchoString(valCrLf, result);
+        ASSERT(result == valLf);
+    }
+    Brn valCrLfMultiple("<tag>some\r\n\r\ntext</<tag>");
+    Brn valCrLfMultipleExpected("<tag>some\n\ntext</<tag>");
+    for (i=0; i<kTestIterations; i++) {
+        Brh result;
+        proxy->SyncEchoString(valCrLfMultiple, result);
+        ASSERT(result == valCrLfMultipleExpected);
+    }
+    Brn valCrLfSplit("<tag>some\r\nmore\r\ntext</<tag>");
+    Brn valCrLfSplitExpected("<tag>some\nmore\ntext</<tag>");
+    for (i=0; i<kTestIterations; i++) {
+        Brh result;
+        proxy->SyncEchoString(valCrLfSplit, result);
+        ASSERT(result == valCrLfSplitExpected);
+    }
+    Brn valMixed("<tag>some\r\rmore\n\ntext</tag>");
+    Brn valMixedExpected("<tag>some\n\nmore\n\ntext</tag>");
+    for (i=0; i<kTestIterations; i++) {
+        Brh result;
+        proxy->SyncEchoString(valMixed, result);
+        ASSERT(result == valMixedExpected);
     }
 
     Brh resStr;
@@ -140,7 +181,7 @@ void CpDevices::Test()
     catch (ProxyError&) {}
 #endif
 
-    Print("Binary arguments...\n");
+    Print("  Binary arguments...\n");
     char bin[256];
     for (i=0; i<256; i++) {
         bin[i] = (char)i;
@@ -157,13 +198,12 @@ void CpDevices::Test()
 
 void CpDevices::Added(CpDevice& aDevice)
 {
-    iLock.Wait();
+    AutoMutex _(iLock);
     if (aDevice.Udn() == iTargetUdn) {
         iList.push_back(&aDevice);
         aDevice.AddRef();
         iAddedSem.Signal();
     }
-    iLock.Signal();
 }
 
 void CpDevices::Removed(CpDevice& /*aDevice*/)
@@ -189,10 +229,20 @@ void TestDvInvocation(CpStack& aCpStack, DvStack& aDvStack)
     CpDeviceListUpnpServiceType* list =
                 new CpDeviceListUpnpServiceType(aCpStack, domainName, serviceType, ver, added, removed);
     sem->Wait(30*1000); // allow up to 30 seconds to find our one device
-    delete sem;
     deviceList->Test();
     delete list;
     delete deviceList;
+    delete sem;
+
+    // validate fixes for hangs/crashes with overlapping calls to SetDisabled
+    Print("  Overlapping calls to SetDisabled...\n");
+    Semaphore sem2("SEM2", 0);
+    Semaphore sem3("SEM3", 0);
+    device->Device().SetDisabled(MakeFunctor(sem2, &Semaphore::Signal));
+    device->Device().SetDisabled(MakeFunctor(sem3, &Semaphore::Signal));
+    sem2.Wait();
+    sem3.Wait();
+
     delete device;
 
     Print("TestDvInvocation - completed\n");

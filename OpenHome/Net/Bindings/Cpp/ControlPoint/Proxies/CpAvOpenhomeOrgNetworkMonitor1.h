@@ -19,18 +19,38 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgNetworkMonitor1Cpp : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgNetworkMonitor1Cpp() {}
+    virtual void SyncName(std::string& aName) = 0;
+    virtual void BeginName(FunctorAsync& aFunctor) = 0;
+    virtual void EndName(IAsync& aAsync, std::string& aName) = 0;
+    virtual void SyncPorts(uint32_t& aSender, uint32_t& aReceiver, uint32_t& aResults) = 0;
+    virtual void BeginPorts(FunctorAsync& aFunctor) = 0;
+    virtual void EndPorts(IAsync& aAsync, uint32_t& aSender, uint32_t& aReceiver, uint32_t& aResults) = 0;
+    virtual void SetPropertyNameChanged(Functor& aNameChanged) = 0;
+    virtual void PropertyName(std::string& aName) const = 0;
+    virtual void SetPropertySenderChanged(Functor& aSenderChanged) = 0;
+    virtual void PropertySender(uint32_t& aSender) const = 0;
+    virtual void SetPropertyReceiverChanged(Functor& aReceiverChanged) = 0;
+    virtual void PropertyReceiver(uint32_t& aReceiver) const = 0;
+    virtual void SetPropertyResultsChanged(Functor& aResultsChanged) = 0;
+    virtual void PropertyResults(uint32_t& aResults) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:NetworkMonitor:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgNetworkMonitor1Cpp : public CpProxy
+class CpProxyAvOpenhomeOrgNetworkMonitor1Cpp : public ICpProxyAvOpenhomeOrgNetworkMonitor1Cpp
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -178,7 +198,40 @@ public:
      * @param[out] aResults
      */
     void PropertyResults(uint32_t& aResults) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void NamePropertyChanged();
     void SenderPropertyChanged();
     void ReceiverPropertyChanged();

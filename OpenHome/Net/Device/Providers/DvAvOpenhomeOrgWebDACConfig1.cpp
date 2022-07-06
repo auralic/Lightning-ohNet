@@ -32,6 +32,11 @@ void DvProviderAvOpenhomeOrgWebDACConfig1::GetPropertyDACConfig(Brhz& aValue)
     aValue.Set(iPropertyDACConfig->Value());
 }
 
+void DvProviderAvOpenhomeOrgWebDACConfig1::WritePropertyDACConfig(IWriter& aWriter)
+{
+    iPropertyDACConfig->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgWebDACConfig1::SetPropertyCurrentAction(TUint aValue)
 {
     ASSERT(iPropertyCurrentAction != NULL);

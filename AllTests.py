@@ -19,6 +19,8 @@ def objPath():
             plat = 'iOs-arm64'
         elif giOsx86 == 1:
             plat = 'iOs-x86'
+        elif giOsx64 == 1:
+            plat = 'iOs-x64'
         else:
             plat = 'Mac-x86'
     variant = 'Release'
@@ -32,6 +34,10 @@ def buildArgs():
     buildArgs = ''
     if gDebugBuild == 1:
         buildArgs += ' debug=1'
+    if gWindows81 == 1:
+        buildArgs += ' windows_store_81=1'
+    if gWindows10 == 1:
+        buildArgs += ' windows_store_10=1'
     if gMac64 == 1:
         buildArgs += ' mac-64=1'
     if giOsArmv7 == 1:
@@ -40,13 +46,13 @@ def buildArgs():
         buildArgs += ' iOs-arm64=1'
     if giOsx86 == 1:
         buildArgs += ' iOs-x86=1'
+    if giOsx64 == 1:
+        buildArgs += ' iOs-x64=1'
     if gAndroid == 1:
         buildArgs += ' Android-anycpu=1'
-    if gQnap == 1:
-        buildArgs += ' Qnap-anycpu=1'
-    if gCore == 1:
+    if gCore == 1 or gQnap == 1:
         buildArgs += ' platform=' + gPlatform
-    if gNativeTestsOnly == 1:
+    if gNativeBuildsOnly == 1:
         buildArgs += ' native_only=yes'
     return buildArgs
 
@@ -80,7 +86,9 @@ def runBuilds():
     if gParallel:
         build('copy_build_includes')
     if gCore == 1:
-        build('ohNet TestFramework Shell', gParallel)
+        build('ohNet TestFramework', gParallel)
+    elif gWindows81 == 1 or gWindows10 == 1:
+        build('ohNet.net.dll', gParallel)
     else:
         build('all', gParallel)
     if (gRunJavaTests == 1):
@@ -174,6 +182,7 @@ def runTestsHelgrind():
         cmdLine = []
         cmdLine.append('valgrind')
         cmdLine.append('--tool=helgrind')
+        cmdLine.append('--suppressions=HelgrindSuppressions.txt')
         cmdLine.append('--xml=yes')
         cmdLine.append('--xml-file=' + os.path.join(outputDir, test.name) + '.xml')
         cmdLine.append(test.Path())
@@ -194,6 +203,7 @@ gBuildOnly = 0
 gFullTests = 0
 gIncremental = 0
 gNativeTestsOnly = 0
+gNativeBuildsOnly = 0
 gSilent = 0
 gTestsOnly = 0
 gValgrind = 0
@@ -205,8 +215,11 @@ gMac64 = 0
 giOsArmv7 = 0
 giOsArm64 = 0
 giOsx86 = 0
+giOsx64 = 0
 gAndroid = 0
 gQnap = 0
+gWindows81 = 0
+gWindows10 = 0
 try:
     gPlatform = os.environ['PLATFORM']
 except KeyError:
@@ -214,7 +227,11 @@ except KeyError:
 gCore = 0
 gParallel = False
 for arg in sys.argv[1:]:
-    if arg == '-b' or arg == '--buildonly':
+    if arg == '--Windows81':
+        gWindows81 = 1
+    elif arg == '--Windows10':
+        gWindows10 = 1
+    elif arg == '-b' or arg == '--buildonly':
         gBuildOnly = 1
     elif arg == '--debug':
         gDebugBuild = 1
@@ -226,8 +243,10 @@ for arg in sys.argv[1:]:
         gRunJavaTests = 1
     elif arg == '--js':
         gJsTests = 1
-    elif arg == '-n' or arg == '--native':
+    elif arg == '-n' or arg == '--native-tests':
         gNativeTestsOnly = 1
+    elif                arg == '--native-builds':
+        gNativeBuildsOnly = 1
     elif arg == '-s' or arg == '--silent':
         gSilent = 1
     elif arg == '-t' or arg == '--testsonly':
@@ -262,13 +281,18 @@ for arg in sys.argv[1:]:
         if platform.system() != 'Darwin':
             print 'ERROR - --iOs-x86 only applicable on Darwin'
             sys.exit(1)
+    elif arg == '--iOs-x64':
+        giOsx64 = 1
+        if platform.system() != 'Darwin':
+            print 'ERROR - --iOs-x64 only applicable on Darwin'
+            sys.exit(1)
     elif arg == '--parallel':
         gParallel = True
     elif arg == '--core':
         gCore = 1
     elif arg == '--Android-anycpu':
         gAndroid = 1
-    elif arg == '--Qnap-anycpu':
+    elif arg == '--qnap':
         gQnap = 1;
     else:
         print 'Unrecognised argument - ' + arg
@@ -296,7 +320,7 @@ class TestCase(object):
 
 gAllTests = [ TestCase('TestBuffer', [], True)
              ,TestCase('TestStream', [], True)
-             ,TestCase('TestThread', [], True)
+             ,TestCase('TestThread', ['--full'], False)
              ,TestCase('TestFunctorGeneric', [], True)
              ,TestCase('TestFifo', [], True)
              ,TestCase('TestFile', [], True)
@@ -304,7 +328,8 @@ gAllTests = [ TestCase('TestBuffer', [], True)
              ,TestCase('TestTextUtils', [], True)
              ,TestCase('TestNetwork', [], True)
              #,TestCase('TestTimer', [])
-             ,TestCase('TestHttpReader', [], True)
+             ,TestCase('TestTimerMock', [], True)
+             #,TestCase('TestHttpReader', [], True)
              ,TestCase('TestSsdpMListen', ['-d', '10'], True)
              ,TestCase('TestXmlParser', [], True)
              ,TestCase('TestSsdpUListen', ['-t', 'av.openhome.org:service:Radio:1'], True)
@@ -321,9 +346,9 @@ gAllTests = [ TestCase('TestBuffer', [], True)
              ,TestCase('TestDvSubscription', ['-l'], True)
              ,TestCase('TestDvDeviceStd', ['-l'], True)
              ,TestCase('TestDvDeviceC', [], True)
-             ,TestCase('TestCpDeviceDv', [], True)
-             ,TestCase('TestCpDeviceDvStd', [], True)
-             ,TestCase('TestCpDeviceDvC', [], True)
+             #,TestCase('TestCpDeviceDv', [], True)
+             #,TestCase('TestCpDeviceDvStd', [], True)
+             #,TestCase('TestCpDeviceDvC', [], True)
              ,TestCase('TestDvLpec', [], True)
              ,TestCase('TestProxyCs', [], False, False)
              ,TestCase('TestDvDeviceCs', [], True, False)

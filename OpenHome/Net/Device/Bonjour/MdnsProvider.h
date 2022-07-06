@@ -14,7 +14,7 @@ namespace Net {
 class MdnsProvider : public IMdnsProvider
 {
 public:
-    MdnsProvider(Environment& aStack, const TChar* aHost);
+    MdnsProvider(Environment& aStack, const TChar* aHost, TBool aRequiresMdnsCache);
     virtual ~MdnsProvider();
     virtual void MdnsSetHostName(const TChar* aName);
     virtual TUint MdnsCreateService();
@@ -22,6 +22,8 @@ public:
     virtual void MdnsAppendTxtRecord(Bwx& aBuffer, const TChar* aKey, const TChar* aValue);
     virtual void MdnsRegisterService(TUint aHandle, const TChar* aName, const TChar* aType, TIpAddress aInterface, TUint aPort, const TChar* aInfo);
     virtual void MdnsDeregisterService(TUint aHandle);
+    virtual void AddMdnsDeviceListener(IMdnsDeviceListener* aListener);
+    virtual void FindDevices(const TChar* aServiceName);
 private:
     MdnsPlatform iPlatform;
 };

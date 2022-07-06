@@ -51,7 +51,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1Destroy(THandle aHandle);
  * @param[in]  aGroupID
  * @param[in]  aGroupName
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncSetGroupMode(THandle aHandle, const char* aGroupMode, const char* aGroupID, const char* aGroupName);
@@ -91,7 +91,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndSetGroupMode(THandl
  * @param[out] aGroupID
  * @param[out] aGroupName
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncGetGroupMode(THandle aHandle, char** aGroupMode, char** aGroupID, char** aGroupName);
@@ -129,7 +129,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndGetGroupMode(THandl
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[in]  aGroupVolume
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncSetGroupVolume(THandle aHandle, uint32_t aGroupVolume);
@@ -165,7 +165,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndSetGroupVolume(THan
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aGroupVolume
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncGetGroupVolume(THandle aHandle, uint32_t* aGroupVolume);
@@ -201,7 +201,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndGetGroupVolume(THan
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[in]  aGroupMute
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncSetGroupMute(THandle aHandle, uint32_t aGroupMute);
@@ -237,7 +237,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndSetGroupMute(THandl
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aGroupMute
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncGetGroupMute(THandle aHandle, uint32_t* aGroupMute);
@@ -273,7 +273,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndGetGroupMute(THandl
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aGroupStatus
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncGetGroupStatus(THandle aHandle, char** aGroupStatus);
@@ -309,7 +309,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndGetGroupStatus(THan
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[in]  aGroupStatus
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncSetGroupStatus(THandle aHandle, const char* aGroupStatus);
@@ -345,7 +345,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndSetGroupStatus(THan
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aBitPerfectMode
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncGetBitPerfectMode(THandle aHandle, uint32_t* aBitPerfectMode);
@@ -381,7 +381,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1EndGetBitPerfectMode(T
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[in]  aBitPerfectMode
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1SyncSetBitPerfectMode(THandle aHandle, uint32_t aBitPerfectMode);
@@ -495,8 +495,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1SetPropertyBitPerfectMode
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aGroupMode
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMode(THandle aHandle, char** aGroupMode);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMode(THandle aHandle, char** aGroupMode);
 /**
  * Query the value of the GroupName property.
  *
@@ -505,8 +507,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMode(THandle
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aGroupName
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupName(THandle aHandle, char** aGroupName);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupName(THandle aHandle, char** aGroupName);
 /**
  * Query the value of the GroupID property.
  *
@@ -515,8 +519,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupName(THandle
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aGroupID
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupID(THandle aHandle, char** aGroupID);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupID(THandle aHandle, char** aGroupID);
 /**
  * Query the value of the GroupVolume property.
  *
@@ -525,8 +531,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupID(THandle a
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aGroupVolume
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupVolume(THandle aHandle, uint32_t* aGroupVolume);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupVolume(THandle aHandle, uint32_t* aGroupVolume);
 /**
  * Query the value of the GroupMute property.
  *
@@ -535,8 +543,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupVolume(THand
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aGroupMute
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMute(THandle aHandle, uint32_t* aGroupMute);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMute(THandle aHandle, uint32_t* aGroupMute);
 /**
  * Query the value of the GroupStatus property.
  *
@@ -545,8 +555,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMute(THandle
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aGroupStatus
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupStatus(THandle aHandle, char** aGroupStatus);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupStatus(THandle aHandle, char** aGroupStatus);
 /**
  * Query the value of the BitPerfectMode property.
  *
@@ -555,8 +567,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupStatus(THand
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgGroupConfig1Create
  * @param[out] aBitPerfectMode
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyBitPerfectMode(THandle aHandle, uint32_t* aBitPerfectMode);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyBitPerfectMode(THandle aHandle, uint32_t* aBitPerfectMode);
 
 /* @} */
 

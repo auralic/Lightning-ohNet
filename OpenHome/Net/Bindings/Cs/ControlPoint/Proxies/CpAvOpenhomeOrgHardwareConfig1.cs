@@ -10,6 +10,15 @@ namespace OpenHome.Net.ControlPoint.Proxies
 {
     public interface ICpProxyAvOpenhomeOrgHardwareConfig1 : ICpProxy, IDisposable
     {
+        void SyncLogIn(String aServiceName, String aMessageIn, out String aMessageOut);
+        void BeginLogIn(String aServiceName, String aMessageIn, CpProxy.CallbackAsyncComplete aCallback);
+        void EndLogIn(IntPtr aAsyncHandle, out String aMessageOut);
+        void SyncLogOut(String aServiceName);
+        void BeginLogOut(String aServiceName, CpProxy.CallbackAsyncComplete aCallback);
+        void EndLogOut(IntPtr aAsyncHandle);
+        void SyncCancelLogIn(String aServiceName);
+        void BeginCancelLogIn(String aServiceName, CpProxy.CallbackAsyncComplete aCallback);
+        void EndCancelLogIn(IntPtr aAsyncHandle);
         void SyncIsAlive(out bool aAlive);
         void BeginIsAlive(CpProxy.CallbackAsyncComplete aCallback);
         void EndIsAlive(IntPtr aAsyncHandle, out bool aAlive);
@@ -139,6 +148,17 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncSetDACBalance(uint aBalance);
         void BeginSetDACBalance(uint aBalance, CpProxy.CallbackAsyncComplete aCallback);
         void EndSetDACBalance(IntPtr aAsyncHandle);
+        void SyncSetEnableResampler(bool aEnableResampler);
+        void BeginSetEnableResampler(bool aEnableResampler, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetEnableResampler(IntPtr aAsyncHandle);
+        void SyncSetEnableSpeaker(bool aEnableSpeaker);
+        void BeginSetEnableSpeaker(bool aEnableSpeaker, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetEnableSpeaker(IntPtr aAsyncHandle);
+        void SyncSetEnableEqualizer(bool aEnableEqualizer);
+        void BeginSetEnableEqualizer(bool aEnableEqualizer, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetEnableEqualizer(IntPtr aAsyncHandle);
+        void SetPropertyMessageOutChanged(System.Action aMessageOutChanged);
+        String PropertyMessageOut();
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
         void SetPropertyCurrentActionChanged(System.Action aCurrentActionChanged);
@@ -186,6 +206,53 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SetPropertyVolumeControlChanged(System.Action aVolumeControlChanged);
         bool PropertyVolumeControl();
     }
+
+    internal class SyncLogInAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+        private String iMessageOut;
+
+        public SyncLogInAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        public String MessageOut()
+        {
+            return iMessageOut;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndLogIn(aAsyncHandle, out iMessageOut);
+        }
+    };
+
+    internal class SyncLogOutAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncLogOutAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndLogOut(aAsyncHandle);
+        }
+    };
+
+    internal class SyncCancelLogInAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncCancelLogInAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndCancelLogIn(aAsyncHandle);
+        }
+    };
 
     internal class SyncIsAliveAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
     {
@@ -994,11 +1061,56 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetEnableResampler(aAsyncHandle);
+        }
+    };
+
+    internal class SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetEnableSpeaker(aAsyncHandle);
+        }
+    };
+
+    internal class SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetEnableEqualizer(aAsyncHandle);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
     /// </summary>
     public class CpProxyAvOpenhomeOrgHardwareConfig1 : CpProxy, IDisposable, ICpProxyAvOpenhomeOrgHardwareConfig1
     {
+        private OpenHome.Net.Core.Action iActionLogIn;
+        private OpenHome.Net.Core.Action iActionLogOut;
+        private OpenHome.Net.Core.Action iActionCancelLogIn;
         private OpenHome.Net.Core.Action iActionIsAlive;
         private OpenHome.Net.Core.Action iActionUpdate;
         private OpenHome.Net.Core.Action iActionActive;
@@ -1042,6 +1154,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionSetDACPhase;
         private OpenHome.Net.Core.Action iActionGetDACBalance;
         private OpenHome.Net.Core.Action iActionSetDACBalance;
+        private OpenHome.Net.Core.Action iActionSetEnableResampler;
+        private OpenHome.Net.Core.Action iActionSetEnableSpeaker;
+        private OpenHome.Net.Core.Action iActionSetEnableEqualizer;
+        private PropertyString iMessageOut;
         private PropertyBool iAlive;
         private PropertyUint iCurrentAction;
         private PropertyBool iRestart;
@@ -1065,6 +1181,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private PropertyString iActiveStatus;
         private PropertyString iTime;
         private PropertyBool iVolumeControl;
+        private System.Action iMessageOutChanged;
         private System.Action iAliveChanged;
         private System.Action iCurrentActionChanged;
         private System.Action iRestartChanged;
@@ -1095,11 +1212,27 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// </summary>
         /// <remarks>Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable and reporting of their changes.</remarks>
         /// <param name="aDevice">The device to use</param>
-        public CpProxyAvOpenhomeOrgHardwareConfig1(CpDevice aDevice)
+        public CpProxyAvOpenhomeOrgHardwareConfig1(ICpDevice aDevice)
             : base("av-openhome-org", "HardwareConfig", 1, aDevice)
         {
             OpenHome.Net.Core.Parameter param;
             List<String> allowedValues = new List<String>();
+
+            iActionLogIn = new OpenHome.Net.Core.Action("LogIn");
+            param = new ParameterString("ServiceName", allowedValues);
+            iActionLogIn.AddInputParameter(param);
+            param = new ParameterString("MessageIn", allowedValues);
+            iActionLogIn.AddInputParameter(param);
+            param = new ParameterString("MessageOut", allowedValues);
+            iActionLogIn.AddOutputParameter(param);
+
+            iActionLogOut = new OpenHome.Net.Core.Action("LogOut");
+            param = new ParameterString("ServiceName", allowedValues);
+            iActionLogOut.AddInputParameter(param);
+
+            iActionCancelLogIn = new OpenHome.Net.Core.Action("CancelLogIn");
+            param = new ParameterString("ServiceName", allowedValues);
+            iActionCancelLogIn.AddInputParameter(param);
 
             iActionIsAlive = new OpenHome.Net.Core.Action("IsAlive");
             param = new ParameterBool("Alive");
@@ -1335,6 +1468,20 @@ namespace OpenHome.Net.ControlPoint.Proxies
             param = new ParameterUint("Balance");
             iActionSetDACBalance.AddInputParameter(param);
 
+            iActionSetEnableResampler = new OpenHome.Net.Core.Action("SetEnableResampler");
+            param = new ParameterBool("EnableResampler");
+            iActionSetEnableResampler.AddInputParameter(param);
+
+            iActionSetEnableSpeaker = new OpenHome.Net.Core.Action("SetEnableSpeaker");
+            param = new ParameterBool("EnableSpeaker");
+            iActionSetEnableSpeaker.AddInputParameter(param);
+
+            iActionSetEnableEqualizer = new OpenHome.Net.Core.Action("SetEnableEqualizer");
+            param = new ParameterBool("EnableEqualizer");
+            iActionSetEnableEqualizer.AddInputParameter(param);
+
+            iMessageOut = new PropertyString("MessageOut", MessageOutPropertyChanged);
+            AddProperty(iMessageOut);
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
             iCurrentAction = new PropertyUint("CurrentAction", CurrentActionPropertyChanged);
@@ -1383,6 +1530,154 @@ namespace OpenHome.Net.ControlPoint.Proxies
             AddProperty(iVolumeControl);
             
             iPropertyLock = new Mutex();
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aServiceName"></param>
+        /// <param name="aMessageIn"></param>
+        /// <param name="aMessageOut"></param>
+        public void SyncLogIn(String aServiceName, String aMessageIn, out String aMessageOut)
+        {
+            SyncLogInAvOpenhomeOrgHardwareConfig1 sync = new SyncLogInAvOpenhomeOrgHardwareConfig1(this);
+            BeginLogIn(aServiceName, aMessageIn, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+            aMessageOut = sync.MessageOut();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndLogIn().</remarks>
+        /// <param name="aServiceName"></param>
+        /// <param name="aMessageIn"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginLogIn(String aServiceName, String aMessageIn, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionLogIn, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionLogIn.InputParameter(inIndex++), aServiceName));
+            invocation.AddInput(new ArgumentString((ParameterString)iActionLogIn.InputParameter(inIndex++), aMessageIn));
+            int outIndex = 0;
+            invocation.AddOutput(new ArgumentString((ParameterString)iActionLogIn.OutputParameter(outIndex++)));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        /// <param name="aMessageOut"></param>
+        public void EndLogIn(IntPtr aAsyncHandle, out String aMessageOut)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+            uint index = 0;
+            aMessageOut = Invocation.OutputString(aAsyncHandle, index++);
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aServiceName"></param>
+        public void SyncLogOut(String aServiceName)
+        {
+            SyncLogOutAvOpenhomeOrgHardwareConfig1 sync = new SyncLogOutAvOpenhomeOrgHardwareConfig1(this);
+            BeginLogOut(aServiceName, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndLogOut().</remarks>
+        /// <param name="aServiceName"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginLogOut(String aServiceName, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionLogOut, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionLogOut.InputParameter(inIndex++), aServiceName));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndLogOut(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aServiceName"></param>
+        public void SyncCancelLogIn(String aServiceName)
+        {
+            SyncCancelLogInAvOpenhomeOrgHardwareConfig1 sync = new SyncCancelLogInAvOpenhomeOrgHardwareConfig1(this);
+            BeginCancelLogIn(aServiceName, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndCancelLogIn().</remarks>
+        /// <param name="aServiceName"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginCancelLogIn(String aServiceName, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionCancelLogIn, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentString((ParameterString)iActionCancelLogIn.InputParameter(inIndex++), aServiceName));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndCancelLogIn(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
         }
 
         /// <summary>
@@ -3560,6 +3855,166 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aEnableResampler"></param>
+        public void SyncSetEnableResampler(bool aEnableResampler)
+        {
+            SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1 sync = new SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetEnableResampler(aEnableResampler, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetEnableResampler().</remarks>
+        /// <param name="aEnableResampler"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetEnableResampler(bool aEnableResampler, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetEnableResampler, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionSetEnableResampler.InputParameter(inIndex++), aEnableResampler));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetEnableResampler(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aEnableSpeaker"></param>
+        public void SyncSetEnableSpeaker(bool aEnableSpeaker)
+        {
+            SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1 sync = new SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetEnableSpeaker(aEnableSpeaker, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetEnableSpeaker().</remarks>
+        /// <param name="aEnableSpeaker"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetEnableSpeaker(bool aEnableSpeaker, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetEnableSpeaker, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionSetEnableSpeaker.InputParameter(inIndex++), aEnableSpeaker));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetEnableSpeaker(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aEnableEqualizer"></param>
+        public void SyncSetEnableEqualizer(bool aEnableEqualizer)
+        {
+            SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1 sync = new SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetEnableEqualizer(aEnableEqualizer, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetEnableEqualizer().</remarks>
+        /// <param name="aEnableEqualizer"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetEnableEqualizer(bool aEnableEqualizer, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetEnableEqualizer, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionSetEnableEqualizer.InputParameter(inIndex++), aEnableEqualizer));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetEnableEqualizer(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
+        /// Set a delegate to be run when the MessageOut state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.</remarks>
+        /// <param name="aMessageOutChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyMessageOutChanged(System.Action aMessageOutChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iMessageOutChanged = aMessageOutChanged;
+            }
+        }
+
+        private void MessageOutPropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iMessageOutChanged);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -4063,6 +4518,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
             {
                 ReportEvent(iVolumeControlChanged);
             }
+        }
+
+        /// <summary>
+        /// Query the value of the MessageOut property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the MessageOut property</returns>
+        public String PropertyMessageOut()
+        {
+            PropertyReadLock();
+            String val;
+            try
+            {
+                val = iMessageOut.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
         }
 
         /// <summary>
@@ -4583,6 +5060,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
                 DisposeProxy();
                 iHandle = IntPtr.Zero;
             }
+            iActionLogIn.Dispose();
+            iActionLogOut.Dispose();
+            iActionCancelLogIn.Dispose();
             iActionIsAlive.Dispose();
             iActionUpdate.Dispose();
             iActionActive.Dispose();
@@ -4626,6 +5106,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionSetDACPhase.Dispose();
             iActionGetDACBalance.Dispose();
             iActionSetDACBalance.Dispose();
+            iActionSetEnableResampler.Dispose();
+            iActionSetEnableSpeaker.Dispose();
+            iActionSetEnableEqualizer.Dispose();
+            iMessageOut.Dispose();
             iAlive.Dispose();
             iCurrentAction.Dispose();
             iRestart.Dispose();

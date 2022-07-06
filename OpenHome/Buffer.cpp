@@ -16,6 +16,15 @@ const Brn kBrnEmpty((TByte*)"EMPTY", 0);
 
 #define OhNetStrlen(s) (TUint)strlen(s)
 
+// malloc is allowed to return NULL when allocating 0 bytes, which
+// could cause trouble for some buffer classes.
+// OhNetMalloc is guaranteed to return a non-null ptr if possible,
+// by allocating a minimum of 1 byte.
+static void* OhNetMalloc(size_t aBytes)
+{
+    return malloc(aBytes ? aBytes : 1);
+}
+
 // Brx
 
 const Brn& Brx::Empty()
@@ -25,12 +34,16 @@ const Brn& Brx::Empty()
 
 TBool Brx::Equals(const Brx& aBrx) const
 {
-    if(Bytes() == aBrx.Bytes()) {
+    if (Bytes() == aBrx.Bytes()) {
         const TByte* dest = Ptr();
-        ASSERT(dest != NULL);
+        if (dest == NULL) {
+            return (aBrx.Bytes() == 0);
+        }
         const TByte* src = aBrx.Ptr();
-        ASSERT(src != NULL);
-        return(memcmp(dest, src, Bytes()) == 0);
+        if (src == NULL) {
+            return false;
+        }
+        return (memcmp(dest, src, Bytes()) == 0);
     }
     return false;
 }
@@ -115,7 +128,7 @@ Brh::Brh(const TChar* aPtr)
 void Brh::Set(const TByte* aPtr, TUint aBytes)
 {
     free((void*)iPtr);
-    iPtr = (TByte*)malloc(aBytes);
+    iPtr = (TByte*)OhNetMalloc(aBytes);
     ASSERT(iPtr != NULL);
     memcpy((void*)iPtr, aPtr, aBytes);
     iBytes = aBytes;
@@ -225,8 +238,12 @@ void Bwx::Replace(const Brx& aBuf)
 
 void Bwx::ReplaceThrow(const Brx& aBuf)
 {
-    if (aBuf.Bytes() > MaxBytes()) {
+    const TUint bytes = aBuf.Bytes();
+    if (bytes > MaxBytes()) {
         THROW(BufferOverflow);
+    }
+    else if (bytes == 0) {
+        iBytes = 0;
     }
     else
     {
@@ -234,8 +251,8 @@ void Bwx::ReplaceThrow(const Brx& aBuf)
         ASSERT(dest != NULL);
         const TByte* src = aBuf.Ptr();
         ASSERT(src != NULL);
-        (void)memmove(const_cast<TByte*>(dest), src, aBuf.Bytes());
-        iBytes = aBuf.Bytes();
+        (void)memmove(const_cast<TByte*>(dest), src, bytes);
+        iBytes = bytes;
     }
 }
 
@@ -256,6 +273,23 @@ void Bwx::Replace(const TChar* aStr)
     ASSERT(ptr != NULL);
     memcpy(const_cast<TByte*>(ptr), aStr, bytes);
     iBytes = bytes;
+}
+
+void OpenHome::Bwx::AppendThrow(const Brx& aBuf)
+{
+    if (!TryAppend(aBuf)) {
+        THROW(BufferOverflow);
+    }
+}
+
+void OpenHome::Bwx::AppendThrow(const TChar* aStr)
+{
+    AppendThrow(Brn(aStr));
+}
+
+void OpenHome::Bwx::AppendThrow(const TByte* aPtr, TUint aBytes)
+{
+    AppendThrow(Brn(aPtr, aBytes));
 }
 
 TBool OpenHome::Bwx::TryAppend(TChar aChar)
@@ -306,8 +340,9 @@ TBool Bwx::TryAppend(const Brx& aB)
 void Bwx::Append(const Brx& aB)
 {
     const TByte* ptr = aB.Ptr();
-    ASSERT(ptr != NULL);
-    Append(ptr, aB.Bytes());
+    if (ptr != NULL) {
+        Append(ptr, aB.Bytes());
+    }
 }
 
 TBool Bwx::TryAppend(const TByte* aPtr, TUint aBytes)
@@ -322,8 +357,6 @@ TBool Bwx::TryAppend(const TByte* aPtr, TUint aBytes)
 
 void Bwx::Append(const TByte* aPtr, TUint aBytes)
 {
-//    if(MaxBytes()< Bytes()+aBytes)
-//        printf("===+++%d\n",MaxBytes());
     ASSERT(Bytes() + aBytes <= MaxBytes());
     const TByte* ptr = Ptr();
     ASSERT(ptr != NULL);
@@ -457,13 +490,13 @@ Bwh::Bwh() : Bwx(0,0), iPtr(0)
 
 Bwh::Bwh(TUint aMaxBytes) : Bwx(0, aMaxBytes)
 {
-    iPtr = (TByte*)malloc(aMaxBytes);
+    iPtr = (TByte*)OhNetMalloc(aMaxBytes);
     ASSERT(iPtr != NULL);
 }
 
 Bwh::Bwh(TUint aBytes, TUint aMaxBytes) : Bwx(aBytes, aMaxBytes)
 {
-    iPtr = (TByte*)malloc(aMaxBytes);
+    iPtr = (TByte*)OhNetMalloc(aMaxBytes);
     ASSERT(iPtr != NULL);
 }
 
@@ -474,34 +507,33 @@ Bwh::~Bwh()
 
 const TByte* Bwh::Ptr() const
 {
-    ASSERT(iPtr);
     return iPtr;
 }
 
 Bwh::Bwh(const TChar* aStr) : Bwx(0, OhNetStrlen(aStr))
 {
-    iPtr = (TByte*)malloc(iMaxBytes);
+    iPtr = (TByte*)OhNetMalloc(iMaxBytes);
     ASSERT(iPtr != NULL);
     Replace(aStr);
 }
 
 Bwh::Bwh(const TByte* aPtr, TUint aBytes) : Bwx(aBytes, aBytes)
 {
-    iPtr = (TByte*)malloc(aBytes);
+    iPtr = (TByte*)OhNetMalloc(aBytes);
     ASSERT(iPtr != NULL);
     Replace(aPtr, aBytes);
 }
 
 Bwh::Bwh(const Brx& aBrx) : Bwx(aBrx.Bytes(), aBrx.Bytes())
 {
-    iPtr = (TByte*)malloc(aBrx.Bytes());
+    iPtr = (TByte*)OhNetMalloc(aBrx.Bytes());
     ASSERT(iPtr != NULL);
     Replace(aBrx);
 }
 
 Bwh::Bwh(const Bwh& aBuf) : Bwx(aBuf.Bytes(), aBuf.Bytes())
 {
-    iPtr = (TByte*)malloc(aBuf.Bytes());
+    iPtr = (TByte*)OhNetMalloc(aBuf.Bytes());
     ASSERT(iPtr != NULL);
     Replace(aBuf);
 }
@@ -514,7 +546,7 @@ void Bwh::Grow(TUint aMaxBytes)
     if(iPtr) {
         if(aMaxBytes > iMaxBytes) {
             const TByte* oldPtr = iPtr;
-            iPtr = (TByte*)malloc(aMaxBytes);
+            iPtr = (TByte*)OhNetMalloc(aMaxBytes);
             ASSERT(iPtr != NULL);
             Replace(oldPtr, Bytes());
             free((void*)oldPtr);
@@ -522,7 +554,7 @@ void Bwh::Grow(TUint aMaxBytes)
         }
     }
     else {
-        iPtr = (TByte*)malloc(aMaxBytes);
+        iPtr = (TByte*)OhNetMalloc(aMaxBytes);
         ASSERT(iPtr != NULL);
         iMaxBytes = aMaxBytes;
     }
@@ -557,6 +589,14 @@ void Bwh::TransferTo(Bwh& aBwh)
     aBwh.iBytes = iBytes;
     iPtr = NULL;
     iBytes = 0;
+}
+
+void Bwh::Swap(Bwh& aBwh)
+{
+    if (this != &aBwh) {
+        std::swap(iPtr, aBwh.iPtr);
+        std::swap(iBytes, aBwh.iBytes);
+    }
 }
 
 // BufferCmp

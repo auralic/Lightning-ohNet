@@ -1,8 +1,5 @@
 // Implementation of Os.h APIs for Posix
 
-#undef ATTEMPT_THREAD_PRIORITIES
-#undef ATTEMPT_THREAD_NICENESS
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -10,13 +7,8 @@
 #include <pthread.h>
 #include <errno.h>
 #include <assert.h>
-#ifdef ATTEMPT_THREAD_PRIORITIES
-# include <sys/capability.h>
-#endif
-#ifdef ATTEMPT_THREAD_NICENESS
-#include <sys/time.h>
-#include <sys/resource.h>
-#endif
+#include <sys/time.h> // eScheduleNice only
+#include <sys/resource.h> // eScheduleNice only
 #include <string.h>
 #include <sys/types.h>
 #include <sys/select.h>
@@ -26,9 +18,14 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD)
-# include <linux/netlink.h>
-# include <linux/rtnetlink.h>
+#include <linux/netlink.h>
+#include <linux/rtnetlink.h>
 #endif /* !PLATFORM_MACOSX_GNU && !PLATFORM_FREEBSD */
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD) && !defined(__ANDROID__)
+#include <sys/inotify.h>
+#include <arpa/nameser.h>
+#include <resolv.h>
+#endif /* !PLATFORM_MACOSX_GNU && !PLATFORM_FREEBSD && !defined(__ANDROID__) */
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
@@ -41,10 +38,15 @@
 #include <execinfo.h>
 #endif
 
+#ifdef POSIX_STACK_TRACE
+#include <execinfo.h>
+#endif
+
 #include <OpenHome/Os.h>
 
 #define kMinStackBytes (1024 * 512)
 #define kThreadSchedPolicy (SCHED_RR)
+#define kMaxThreadNameChars 16
 
 #define TEMP_FAILURE_RETRY_2(expression, handle)                            \
     (__extension__                                                          \
@@ -69,20 +71,40 @@
 # define MAX_FILE_DESCRIPTOR __FD_SETSIZE
 #endif
 
+typedef struct OsNetworkHandle
+{
+    int32_t    iSocket;
+    int32_t    iPipe[2];
+    int32_t    iInterrupted;
+    OsContext* iCtx;
+} OsNetworkHandle;
+
 struct OsContext {
     struct timeval iStartTime; /* Time OsCreate was called */
     struct timeval iPrevTime; /* Last time OsTimeInUs() was called */
     struct timeval iTimeAdjustment; /* Amount to adjust return for OsTimeInUs() by. 
                                        Will be 0 unless time ever jumps backwards. */
     THandle iMutex;
+    OsThreadSchedulePolicy iSchedulerPolicy;
     pthread_key_t iThreadArgKey;
     struct InterfaceChangedObserver* iInterfaceChangedObserver;
+    int32_t iThreadPriorityMin;
+
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD) && !defined(__ANDROID__)
+    OsNetworkHandle* iDnsRefreshHandle;
+    THandle iDnsRefreshThread;
+#endif /* !PLATFORM_MACOSX_GNU && !PLATFORM_FREEBSD && !defined(__ANDROID__) */
 };
 
+
 static void DestroyInterfaceChangedObserver(OsContext* aContext);
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD) && !defined(__ANDROID__)
+static void InitDnsRefreshThread(OsContext* aContext);
+static void DestroyDnsRefreshThread(OsContext* aContext);
+#endif /* !PLATFORM_MACOSX_GNU && !PLATFORM_FREEBSD && !defined(__ANDROID__) */
 
 
-OsContext* OsCreate()
+OsContext* OsCreate(OsThreadSchedulePolicy aSchedulerPolicy)
 {
     OsContext* ctx = malloc(sizeof(*ctx));
     gettimeofday(&ctx->iStartTime, NULL);
@@ -93,18 +115,32 @@ OsContext* OsCreate()
         free(ctx);
         return NULL;
     }
+    ctx->iSchedulerPolicy = aSchedulerPolicy;
     if (pthread_key_create(&ctx->iThreadArgKey, NULL) != 0) {
         OsMutexDestroy(ctx->iMutex);
         free(ctx);
         return NULL;
     }
     ctx->iInterfaceChangedObserver = NULL;
+    ctx->iThreadPriorityMin = 0;
+
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD) && !defined(__ANDROID__)
+    ctx->iDnsRefreshHandle = NULL;
+    ctx->iDnsRefreshThread = NULL;
+    InitDnsRefreshThread(ctx);
+#endif /* !PLATFORM_MACOSX_GNU && !PLATFORM_FREEBSD && !defined(__ANDROID__) */
+
     return ctx;
 }
 
 void OsDestroy(OsContext* aContext)
 {
     if (aContext != NULL) {
+
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD) && !defined(__ANDROID__)
+        DestroyDnsRefreshThread(aContext);
+#endif /* !PLATFORM_MACOSX_GNU && !PLATFORM_FREEBSD && !defined(__ANDROID__) */
+
         DestroyInterfaceChangedObserver(aContext);
         pthread_key_delete(aContext->iThreadArgKey);
         OsMutexDestroy(aContext->iMutex);
@@ -117,7 +153,7 @@ void OsQuit(OsContext* aContext)
     abort();
 }
 
-#if defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_IOS)
+#if (defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_IOS)) || defined(POSIX_STACK_TRACE)
 # define STACK_TRACE_ENABLE
 #else
 # undef  STACK_TRACE_ENABLE
@@ -459,6 +495,26 @@ int32_t OsMutexUnlock(THandle aMutex)
     return (status==0? 0 : -1);
 }
 
+void OsThreadGetPriorityRange(OsContext* aContext, uint32_t* aHostMin, uint32_t* aHostMax)
+{
+    if (aContext->iSchedulerPolicy == eSchedulePriorityEnable) {
+        const int32_t platMin = sched_get_priority_min(kThreadSchedPolicy);
+        const int32_t platMax = sched_get_priority_max(kThreadSchedPolicy);
+        aContext->iThreadPriorityMin = platMin;
+        *aHostMin = 0;
+        *aHostMax = platMax - platMin;
+    }
+    else if (aContext->iSchedulerPolicy == eScheduleNice) {
+        // FIXME - 50/150 copied from previous expectations of threadEntrypoint
+        *aHostMin = 50;
+        *aHostMax = 150;
+    }
+    else {
+        *aHostMin = 1;
+        *aHostMax = 100;
+    }
+}
+
 typedef struct
 {
     pthread_t        iThread;
@@ -466,6 +522,7 @@ typedef struct
     void*            iArg;
     uint32_t         iPriority;
     OsContext*       iCtx;
+    THandle          iSemaHandle;
 } ThreadData;
 
 /* __thread void* tlsThreadArg; */
@@ -479,23 +536,24 @@ static void* threadEntrypoint(void* aArg)
     ThreadData* data = (ThreadData*)aArg;
     assert(data != NULL);
 
-#if defined(ATTEMPT_THREAD_PRIORITIES)
-    {
-        TInt platMin = sched_get_priority_min(kThreadSchedPolicy);
-        TInt platMax = sched_get_priority_max(kThreadSchedPolicy);
-        // convert the UPnP library's 50 - 150 priority range into
-        // an equivalent posix priority
-        // ...calculate priority as percentage of library range
-        int32_t percent = (((int32_t )data->iPriority - 50) * 100) / (150 - 50);
-        // ...calculate native priority as 'percent' through the dest range
-        int32_t priority = platMin + ((percent * (platMax - platMin))/100);
-        sched_param param;
+    if (data->iCtx->iSchedulerPolicy == eSchedulePriorityEnable) {
+        int32_t priority = ((int32_t)data->iPriority) + data->iCtx->iThreadPriorityMin;
+        struct sched_param param;
+        memset(&param, 0, sizeof(param));
+        //printf("thread priority %u mapped to %d\n", data->iPriority, priority);
         param.sched_priority = priority;
         int status = pthread_setschedparam(data->iThread, kThreadSchedPolicy, &param);
-        assert(status == 0);
+        if (status != 0) {
+            char name[kMaxThreadNameChars] = {0};
+#if defined(SET_PTHREAD_NAMES)
+            pthread_getname_np(data->iThread, name, sizeof(name));
+#else
+            strncpy(name, "UNKNOWN", kMaxThreadNameChars-1);
+#endif
+            printf("Attempt to set thread priority for '%s' to %d failed with %d(%d)\n", name, priority, status, errno);
+        }
     }
-#elif defined(ATTEMPT_THREAD_NICENESS) // ATTEMPT_THREAD_PRIORITIES
-    {
+    else if (data->iCtx->iSchedulerPolicy == eScheduleNice) {
         static const int kMinimumNice = 5; // set MIN
         // Map all prios > 105 -> nice 0 (default), anything else to MIN
         //int nice_value = (data->iPriority > 105 ? 0 : kMinimumNice);
@@ -504,11 +562,10 @@ static void* threadEntrypoint(void* aArg)
         if ( nice_value < 0 )
             nice_value = 0;
         //printf("Thread of priority %d asking for niceness %d (current niceness is %d)\n", data->iPriority, nice_value, getpriority(PRIO_PROCESS, 0));
-        int result = setpriority(PRIO_PROCESS, 0, nice_value);
+        /*int result = */setpriority(PRIO_PROCESS, 0, nice_value);
         //if ( result == -1 )
         //    perror("Warning: Could not renice this thread");
     }
-#endif
 
     // Disable cancellation - we're in a C++ environment, and
     // don't want to rely on pthreads to mess things up for us.
@@ -536,6 +593,12 @@ static THandle DoThreadCreate(OsContext* aContext, const char* aName, uint32_t a
     data->iArg        = aArg;
     data->iPriority   = aPriority;
     data->iCtx        = aContext;
+    data->iSemaHandle = OsSemaphoreCreate(aContext, "tls_sem", 0);
+
+    if (data->iSemaHandle == kHandleNull) {
+        free(data);
+        return kHandleNull;
+    }
 
     pthread_attr_t attr;
     (void)pthread_attr_init(&attr);
@@ -550,7 +613,34 @@ static THandle DoThreadCreate(OsContext* aContext, const char* aName, uint32_t a
         return kHandleNull;
     }
     (void)pthread_attr_destroy(&attr);
+
+#if defined(SET_PTHREAD_NAMES)
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_IOS) && !defined(__ANDROID__)
+    char name[kMaxThreadNameChars] = {0};
+    strncpy(name, aName, kMaxThreadNameChars-1); // leave trailing \0
+    (void)pthread_setname_np(data->iThread, name);
+#endif /* !PLATFORM_MACOSX_GNU && !PLATFORM_IOS && !__ANDROID__ */
+#endif
+
     return (THandle)data;
+}
+
+void OsThreadWait(THandle aThread, uint32_t aConsumePolicy)
+{
+    THandle sema = ((ThreadData*) aThread)->iSemaHandle;
+
+    OsSemaphoreWait(sema);
+
+    if (aConsumePolicy == eConsumeAll) {
+        OsSemaphoreClear(sema);
+    }
+}
+
+void OsThreadSignal(THandle aThread)
+{
+    THandle sema = ((ThreadData*) aThread)->iSemaHandle;
+
+    OsSemaphoreSignal(sema);
 }
 
 THandle OsThreadCreate(OsContext* aContext, const char* aName, uint32_t aPriority, uint32_t aStackBytes, ThreadEntryPoint aEntryPoint, void* aArg)
@@ -566,26 +656,19 @@ void* OsThreadTls(OsContext* aContext)
 
 void OsThreadDestroy(THandle aThread)
 {
+    ThreadData* data = (ThreadData*) aThread;
+    OsSemaphoreDestroy(data->iSemaHandle);
     // no call to pthread_exit as it will have been implicitly called when the thread exited
-    free((ThreadData*)aThread);
+    free(data);
 }
 
 int32_t OsThreadSupportsPriorities(OsContext* aContext)
 {
-#ifdef ATTEMPT_THREAD_PRIORITIES
-    return 1;
-#else
+    if (aContext->iSchedulerPolicy == eSchedulePriorityEnable) {
+        return 1;
+    }
     return 0;
-#endif
 }
-
-typedef struct OsNetworkHandle
-{
-    int32_t    iSocket;
-    int32_t    iPipe[2];
-    int32_t    iInterrupted;
-    OsContext* iCtx;
-}OsNetworkHandle;
 
 static int nfds(const OsNetworkHandle* aHandle)
 {
@@ -971,21 +1054,34 @@ THandle OsNetworkAccept(THandle aHandle, TIpAddress* aClientAddress, uint32_t* a
 
 int32_t OsNetworkGetHostByName(const char* aAddress, TIpAddress* aHost)
 {
-    int32_t ret = 0;
     struct addrinfo *res;
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
-    if (0 != getaddrinfo(aAddress, NULL, &hints, &res)) {
-        ret = -1;
-        *aHost = 0;
-    }
-    else {
+
+    if (getaddrinfo(aAddress, NULL, &hints, &res) == 0) {
         struct sockaddr_in* s = (struct sockaddr_in*)res->ai_addr;
         *aHost = s->sin_addr.s_addr;
         freeaddrinfo(res);
-    }    
-    return ret;
+        return 0;
+    }
+
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD) && !defined(__ANDROID__)
+    // getaddinfo() failed, possibly because configuration is stale and configuration files need to be re-read.
+    // Try re-read configuration files.
+    if (res_init() == 0) {
+        // Configuration files were re-read. Try getaddrinfo() again.
+        if (getaddrinfo(aAddress, NULL, &hints, &res) == 0) {
+            struct sockaddr_in* s = (struct sockaddr_in*)res->ai_addr;
+            *aHost = s->sin_addr.s_addr;
+            freeaddrinfo(res);
+            return 0;
+        }
+    }
+#endif /* !PLATFORM_MACOSX_GNU && !PLATFORM_FREEBSD && !defined(__ANDROID__) */
+
+    *aHost = 0;
+    return -1;
 }
 
 int32_t OsNetworkSocketSetSendBufBytes(THandle aHandle, uint32_t aBytes)
@@ -1119,15 +1215,14 @@ int32_t OsNetworkListAdapters(OsContext* aContext, OsNetworkAdapter** aAdapters,
         }
     }
     /* ...then allocate/populate the list */
-    iter = networkIf;
     OsNetworkAdapter* head = NULL;
     OsNetworkAdapter* tail = NULL;
-    while (iter != NULL) {
+
+    for (iter = networkIf; iter != NULL; iter = iter->ifa_next) {
         if (iter->ifa_addr == NULL || iter->ifa_addr->sa_family != AF_INET ||
             (iter->ifa_flags & IFF_RUNNING) == 0 ||
             (includeLoopback == 0 && ((struct sockaddr_in*)iter->ifa_addr)->sin_addr.s_addr == loopbackAddr) ||
             (aUseLoopback == 1 && ((struct sockaddr_in*)iter->ifa_addr)->sin_addr.s_addr != loopbackAddr)) {
-            iter = iter->ifa_next;
             continue;
         }
 
@@ -1151,7 +1246,45 @@ int32_t OsNetworkListAdapters(OsContext* aContext, OsNetworkAdapter** aAdapters,
             tail->iNext = iface;
         }
         tail = iface;
-        iter = iter->ifa_next;
+    }
+
+    // Check for multiple entries with same address and different netmasks and
+    // remove all these except for the least specific (largest superset) netmask.
+    // This code would also work if there are repeated identical address/netmask pairs.
+    OsNetworkAdapter* ifacePrevious = NULL;
+    // outer loop: for each adapter, remove it if another adapter takes priority
+    OsNetworkAdapter* ifaceIter = head;
+    while (ifaceIter != NULL) {
+        int removeIface = 1; // false
+        // inner loop: check other adapters (not ifaceIter) for priority
+        OsNetworkAdapter* addrsIter = head;
+        while (addrsIter != NULL) {
+            if (addrsIter != ifaceIter &&
+                addrsIter->iAddress == ifaceIter->iAddress &&
+                (addrsIter->iNetMask & ifaceIter->iNetMask) == addrsIter->iNetMask) {
+                // found another adapter with same address and same or less specific netmask
+                removeIface = 0; // true
+                break;
+            }
+            addrsIter = addrsIter->iNext;
+        }
+        if (removeIface == 0) {
+            OsNetworkAdapter* ifaceNext = ifaceIter->iNext;
+            if (ifaceIter == head) {
+                head = ifaceNext;
+            }
+            else {
+                ifacePrevious->iNext = ifaceNext;
+            }
+            free(ifaceIter->iName);
+            free(ifaceIter);
+            ifaceIter = ifaceNext;
+            // don't update ifacePrevious
+        }
+        else {
+            ifacePrevious = ifaceIter;
+            ifaceIter = ifaceIter->iNext;
+        }
     }
     ret = 0;
     *aAdapters = head;
@@ -1328,9 +1461,16 @@ void adapterChangeObserverThread(void* aPtr)
                 while (NLMSG_OK(nlh, len) && (nlh->nlmsg_type != NLMSG_DONE)) {
                     if (nlh->nlmsg_type == RTM_NEWADDR || 
                         nlh->nlmsg_type == RTM_DELADDR || 
-                        nlh->nlmsg_type == RTM_NEWLINK) {              
+                        nlh->nlmsg_type == RTM_NEWLINK) {
+
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD) && !defined(__ANDROID__)
+                        // Adapter change; speculatively attempt to reload resolver configuration.
+                        (void)res_init();
+#endif /* !PLATFORM_MACOSX_GNU  && !PLATFORM_FREEBSD && !defined(__ANDROID__) */
+
                         observer->iCallback(observer->iArg);
                     }
+
                     nlh = NLMSG_NEXT(nlh, len);
                 }
             }
@@ -1353,7 +1493,6 @@ static void DestroyInterfaceChangedObserver_Linux(OsContext* aContext)
             ThreadJoin(aContext->iInterfaceChangedObserver->iThread);
             OsThreadDestroy(aContext->iInterfaceChangedObserver->iThread);
         }
-                   
         OsNetworkClose(aContext->iInterfaceChangedObserver->netHnd);
 
         free(aContext->iInterfaceChangedObserver);
@@ -1365,6 +1504,7 @@ static void SetInterfaceChangedObserver_Linux(OsContext* aContext, InterfaceList
 {
     struct sockaddr_nl addr;
     int sock = 0;
+    uint32_t minPrio, maxPrio;
 
     aContext->iInterfaceChangedObserver = (InterfaceChangedObserver*) calloc(1, sizeof(InterfaceChangedObserver));
     if (aContext->iInterfaceChangedObserver == NULL) {
@@ -1388,11 +1528,13 @@ static void SetInterfaceChangedObserver_Linux(OsContext* aContext, InterfaceList
         goto Error;
     }
 
+    OsThreadGetPriorityRange(aContext, &minPrio, &maxPrio);
+
     aContext->iInterfaceChangedObserver->iCallback = aCallback;
     aContext->iInterfaceChangedObserver->iArg = aArg;
     if ((aContext->iInterfaceChangedObserver->iThread = DoThreadCreate(aContext,
                                                             "AdapterChangeObserverThread",
-                                                            100, 16 * 1024, 1,
+                                                            (maxPrio - minPrio) / 2, 16 * 1024, 1,
                                                             adapterChangeObserverThread,
                                                             aContext->iInterfaceChangedObserver)) == NULL) {
         goto Error;
@@ -1405,6 +1547,102 @@ Error:
 }
 
 #endif /* !PLATFORM_MACOSX_GNU  && !PLATFORM_FREEBSD */
+
+
+#if !defined(PLATFORM_MACOSX_GNU) && !defined(PLATFORM_FREEBSD) && !defined(__ANDROID__)
+
+void DnsRefreshThread(void* aPtr)
+{
+    /*
+     * glibc prior to 2.26 only reads in resolv.conf at startup.
+     *
+     * The result is that a resolv.conf which does not contain suitable entries
+     * for ohNet's use may be read in and will persist for the lifetime of the
+     * ohNet stack.
+     *
+     * This will manifest itself as calls to getaddrinfo() failing.
+     *
+     * To work around the above issue, manually watch for changes in
+     * resolv.conf and trigger res_init() to force glibc to reload resolv.conf.
+     */
+    OsNetworkHandle* handle = (OsNetworkHandle*) aPtr;
+    const int watchDesc = inotify_add_watch(handle->iSocket, "/etc/resolv.conf", IN_CLOSE_WRITE);
+
+    if (watchDesc != -1) {
+        // Watch descriptor was successfully created; start reading events.
+        const size_t bytesToRead = sizeof(struct inotify_event) + NAME_MAX + 1;
+        int32_t ret;
+        fd_set rfds, errfds;
+
+        for (;;) {
+            if (SocketInterrupted(handle)) {
+                // Quitting. Remove watcher.
+                (void)inotify_rm_watch(handle->iSocket, watchDesc);
+                return;
+            }
+
+            FD_ZERO(&rfds);
+            FD_SET(handle->iPipe[0], &rfds);
+            FD_SET(handle->iSocket, &rfds);
+
+            FD_ZERO(&errfds);
+            FD_SET(handle->iSocket, &errfds);
+
+            ret = TEMP_FAILURE_RETRY_2(select(nfds(handle), &rfds, NULL, &errfds, NULL), handle);
+            if ((ret > 0) && FD_ISSET(handle->iSocket, &rfds)) {
+                char* buffer[bytesToRead];
+                int32_t len = read(handle->iSocket, buffer, bytesToRead);
+                if (len > 0) {
+                    // Only one watcher. If len > 0, assume message is from that single watcher.
+                    res_init();
+                }
+            }
+        }
+    }
+}
+
+static void InitDnsRefreshThread(OsContext* aContext)
+{
+    assert(aContext != NULL);
+    uint32_t minPrio, maxPrio;
+    OsThreadGetPriorityRange(aContext, &minPrio, &maxPrio);
+
+    assert(aContext->iDnsRefreshHandle == NULL);
+    assert(aContext->iDnsRefreshThread == NULL);
+
+    const int32_t fd = inotify_init();
+    if (fd != -1) {
+        OsNetworkHandle* handle = aContext->iDnsRefreshHandle = CreateHandle(aContext, fd);
+        if (handle != NULL) {
+            aContext->iDnsRefreshHandle = handle;
+            aContext->iDnsRefreshThread = DoThreadCreate(aContext,
+                                                         "DnsRefreshThread",
+                                                         (maxPrio - minPrio) / 2,   // Same as adapterChangeObserverThread
+                                                         16 * 1024,                 // Same as adapterChangeObserverThread
+                                                         1,                         // Joinable
+                                                         DnsRefreshThread,
+                                                         handle);
+        }
+        else {
+            close(fd);
+        }
+    }
+}
+
+static void DestroyDnsRefreshThread(OsContext* aContext)
+{
+    assert(aContext != NULL);
+    if (aContext->iDnsRefreshThread != NULL) {
+        OsNetworkInterrupt(aContext->iDnsRefreshHandle, 1);
+        ThreadJoin(aContext->iDnsRefreshThread);
+        OsThreadDestroy(aContext->iDnsRefreshThread);
+    }
+    OsNetworkClose(aContext->iDnsRefreshHandle);
+    aContext->iDnsRefreshHandle = NULL;
+    aContext->iDnsRefreshThread = NULL;
+}
+
+#endif /* !PLATFORM_MACOSX_GNU  && !PLATFORM_FREEBSD && !defined(__ANDROID__) */
 
 static void DestroyInterfaceChangedObserver(OsContext* aContext)
 {
@@ -1426,10 +1664,7 @@ void OsNetworkSetInterfaceChangedObserver(OsContext* aContext, InterfaceListChan
     SetInterfaceChangedObserver_MacDesktop(aContext, aCallback, aArg);
 # endif /* !PLATFORM_IOS */
 #elif defined(PLATFORM_FREEBSD)
-#else /* !PLATFOTM_MACOSX_GNU */
+#else /* !PLATFORM_MACOSX_GNU */
     SetInterfaceChangedObserver_Linux(aContext, aCallback, aArg);
-#endif /* PLATFOTM_MACOSX_GNU */
+#endif /* PLATFORM_MACOSX_GNU */
 }
-
-
-

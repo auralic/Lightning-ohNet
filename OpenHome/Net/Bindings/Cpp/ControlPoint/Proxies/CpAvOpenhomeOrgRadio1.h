@@ -19,18 +19,86 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgRadio1Cpp : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgRadio1Cpp() {}
+    virtual void SyncPlay() = 0;
+    virtual void BeginPlay(FunctorAsync& aFunctor) = 0;
+    virtual void EndPlay(IAsync& aAsync) = 0;
+    virtual void SyncPause() = 0;
+    virtual void BeginPause(FunctorAsync& aFunctor) = 0;
+    virtual void EndPause(IAsync& aAsync) = 0;
+    virtual void SyncStop() = 0;
+    virtual void BeginStop(FunctorAsync& aFunctor) = 0;
+    virtual void EndStop(IAsync& aAsync) = 0;
+    virtual void SyncSeekSecondAbsolute(uint32_t aValue) = 0;
+    virtual void BeginSeekSecondAbsolute(uint32_t aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSeekSecondAbsolute(IAsync& aAsync) = 0;
+    virtual void SyncSeekSecondRelative(int32_t aValue) = 0;
+    virtual void BeginSeekSecondRelative(int32_t aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSeekSecondRelative(IAsync& aAsync) = 0;
+    virtual void SyncChannel(std::string& aUri, std::string& aMetadata) = 0;
+    virtual void BeginChannel(FunctorAsync& aFunctor) = 0;
+    virtual void EndChannel(IAsync& aAsync, std::string& aUri, std::string& aMetadata) = 0;
+    virtual void SyncSetChannel(const std::string& aUri, const std::string& aMetadata) = 0;
+    virtual void BeginSetChannel(const std::string& aUri, const std::string& aMetadata, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetChannel(IAsync& aAsync) = 0;
+    virtual void SyncTransportState(std::string& aValue) = 0;
+    virtual void BeginTransportState(FunctorAsync& aFunctor) = 0;
+    virtual void EndTransportState(IAsync& aAsync, std::string& aValue) = 0;
+    virtual void SyncId(uint32_t& aValue) = 0;
+    virtual void BeginId(FunctorAsync& aFunctor) = 0;
+    virtual void EndId(IAsync& aAsync, uint32_t& aValue) = 0;
+    virtual void SyncSetId(uint32_t aValue, const std::string& aUri) = 0;
+    virtual void BeginSetId(uint32_t aValue, const std::string& aUri, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetId(IAsync& aAsync) = 0;
+    virtual void SyncRead(uint32_t aId, std::string& aMetadata) = 0;
+    virtual void BeginRead(uint32_t aId, FunctorAsync& aFunctor) = 0;
+    virtual void EndRead(IAsync& aAsync, std::string& aMetadata) = 0;
+    virtual void SyncReadList(const std::string& aIdList, std::string& aChannelList) = 0;
+    virtual void BeginReadList(const std::string& aIdList, FunctorAsync& aFunctor) = 0;
+    virtual void EndReadList(IAsync& aAsync, std::string& aChannelList) = 0;
+    virtual void SyncIdArray(uint32_t& aToken, std::string& aArray) = 0;
+    virtual void BeginIdArray(FunctorAsync& aFunctor) = 0;
+    virtual void EndIdArray(IAsync& aAsync, uint32_t& aToken, std::string& aArray) = 0;
+    virtual void SyncIdArrayChanged(uint32_t aToken, bool& aValue) = 0;
+    virtual void BeginIdArrayChanged(uint32_t aToken, FunctorAsync& aFunctor) = 0;
+    virtual void EndIdArrayChanged(IAsync& aAsync, bool& aValue) = 0;
+    virtual void SyncChannelsMax(uint32_t& aValue) = 0;
+    virtual void BeginChannelsMax(FunctorAsync& aFunctor) = 0;
+    virtual void EndChannelsMax(IAsync& aAsync, uint32_t& aValue) = 0;
+    virtual void SyncProtocolInfo(std::string& aValue) = 0;
+    virtual void BeginProtocolInfo(FunctorAsync& aFunctor) = 0;
+    virtual void EndProtocolInfo(IAsync& aAsync, std::string& aValue) = 0;
+    virtual void SetPropertyUriChanged(Functor& aUriChanged) = 0;
+    virtual void PropertyUri(std::string& aUri) const = 0;
+    virtual void SetPropertyMetadataChanged(Functor& aMetadataChanged) = 0;
+    virtual void PropertyMetadata(std::string& aMetadata) const = 0;
+    virtual void SetPropertyTransportStateChanged(Functor& aTransportStateChanged) = 0;
+    virtual void PropertyTransportState(std::string& aTransportState) const = 0;
+    virtual void SetPropertyIdChanged(Functor& aIdChanged) = 0;
+    virtual void PropertyId(uint32_t& aId) const = 0;
+    virtual void SetPropertyIdArrayChanged(Functor& aIdArrayChanged) = 0;
+    virtual void PropertyIdArray(std::string& aIdArray) const = 0;
+    virtual void SetPropertyChannelsMaxChanged(Functor& aChannelsMaxChanged) = 0;
+    virtual void PropertyChannelsMax(uint32_t& aChannelsMax) const = 0;
+    virtual void SetPropertyProtocolInfoChanged(Functor& aProtocolInfoChanged) = 0;
+    virtual void PropertyProtocolInfo(std::string& aProtocolInfo) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:Radio:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgRadio1Cpp : public CpProxy
+class CpProxyAvOpenhomeOrgRadio1Cpp : public ICpProxyAvOpenhomeOrgRadio1Cpp
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -600,7 +668,40 @@ public:
      * @param[out] aProtocolInfo
      */
     void PropertyProtocolInfo(std::string& aProtocolInfo) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void UriPropertyChanged();
     void MetadataPropertyChanged();
     void TransportStatePropertyChanged();

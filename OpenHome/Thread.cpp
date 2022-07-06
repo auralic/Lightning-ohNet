@@ -34,7 +34,8 @@ void Semaphore::Wait()
 void Semaphore::Wait(TUint aTimeoutMs)
 {
     if (aTimeoutMs == 0) {
-        return (Wait());
+        Wait();
+        return;
     }
     ASSERT(iHandle != kHandleNull);
     if (!OpenHome::Os::SemaphoreTimedWait(iHandle, aTimeoutMs)) {
@@ -103,16 +104,34 @@ const TUint OpenHome::Thread::kDefaultStackBytes = 32 * 1024;
 Thread::Thread(const TChar* aName, TUint aPriority, TUint aStackBytes)
     : iHandle(kHandleNull)
     , iSema("TSEM", 0)
-    , iTerminated(aName, 1)
+    , iProceedSema("proceed", 0)
+    , iRunningSema("running", 0)
+    , iTerminated(aName, 0)
     , iKill(false)
-    , iStackBytes(aStackBytes)
-    , iPriority(aPriority)
     , iKillMutex("KMTX")
 {
     ASSERT(aName != NULL);
     const TUint bytes = std::min(iName.MaxBytes(), (TUint)strlen(aName));
     iName.Replace((TByte*)aName, bytes);
     iName.PtrZ();
+    const TUint priority = OpenHome::gEnv->PriorityArbitrator().CalculatePriority(aName, aPriority);
+    iHandle = OpenHome::Os::ThreadCreate(OpenHome::gEnv->OsCtx(), (TChar*)iName.Ptr(), priority, aStackBytes, &Thread::EntryPoint, this);
+    ASSERT(iHandle != kHandleNull);
+}
+
+void Thread::NotifyWait()
+{
+    Os::ThreadWait(iHandle, false);
+}
+
+void Thread::NotifyWaitAll()
+{
+    Os::ThreadWait(iHandle, true);
+}
+
+void Thread::NotifySignal()
+{
+    Os::ThreadSignal(iHandle);
 }
 
 void Thread::Run()
@@ -129,24 +148,25 @@ Thread::~Thread()
     LOG(kThread, "> Thread::~Thread() called for thread: %p\n", this);
     Kill();
     Join();
-    if ( iHandle != kHandleNull ) {
-        OpenHome::Os::ThreadDestroy(iHandle);
-    }
+    OpenHome::Os::ThreadDestroy(iHandle);
     LOG(kThread, "< Thread::~Thread() called for thread: %p\n", this);
 }
 
 void Thread::Start()
 {
-    iTerminated.Wait();
-    ASSERT(iHandle == kHandleNull);
-    iHandle = OpenHome::Os::ThreadCreate(OpenHome::gEnv->OsCtx(), (TChar*)iName.Ptr(), iPriority, iStackBytes, &Thread::EntryPoint, this);
+    iProceedSema.Signal();
+    iRunningSema.Wait();
 }
 
 void Thread::EntryPoint(void* aArg)
 { // static
     Thread* self = (Thread*)aArg;
     Os::ThreadInstallSignalHandlers();
+
     try {
+        self->iProceedSema.Wait();
+        self->CheckForKill();
+        self->iRunningSema.Signal();
         self->Run();
     }
     catch(ThreadKill&) {
@@ -171,6 +191,8 @@ void Thread::EntryPoint(void* aArg)
             }
         }
     }
+
+    self->iRunningSema.Signal();
     self->iTerminated.Signal();
 }
 
@@ -188,7 +210,7 @@ void Thread::Signal()
 TBool Thread::TryWait()
 {
     CheckForKill();
-    return (iSema.Clear());
+    return iSema.Clear();
 }
 
 void Thread::Sleep(TUint aMilliSecs)
@@ -237,8 +259,7 @@ void Thread::CheckCurrentForKill()
 void Thread::CheckForKill() const
 {
     AutoMutex _amtx(iKillMutex);
-    TBool kill = iKill;
-    if (kill) {
+    if (iKill) {
         THROW(ThreadKill);
     }
 }
@@ -248,6 +269,7 @@ void Thread::Kill()
     LOG(kThread, "Thread::Kill() called for thread: %p\n", this);
     AutoMutex _amtx(iKillMutex);
     iKill = true;
+    iProceedSema.Signal();
     Signal();
 }
 
@@ -293,6 +315,82 @@ void ThreadFunctor::Run()
 }
 
 
+// ThreadPriorityArbitrator
+
+ThreadPriorityArbitrator::ThreadPriorityArbitrator(TUint aHostMin, TUint aHostMax)
+    : iHostMin(aHostMin)
+    , iHostMax(aHostMax)
+{
+}
+
+void ThreadPriorityArbitrator::Add(IPriorityArbitrator& aArbitrator)
+{
+    std::vector<IPriorityArbitrator*>::iterator it=iArbitrators.begin();
+    for (; it!=iArbitrators.end(); ++it) {
+        const TUint itMin = (*it)->OpenHomeMin();
+        const TUint itMax = (*it)->OpenHomeMax();
+        const TUint arbMin = aArbitrator.OpenHomeMin();
+        const TUint arbMax = aArbitrator.OpenHomeMax();
+        if (itMin <= arbMax && arbMin <= itMax) {
+            LOG_ERROR(kThread, "ERROR: ThreadPriorityArbitrator ranges overlap: [%u..%u], [%u..%u]\n",
+                                  itMin, itMax, arbMax, arbMin);
+            ASSERTS();
+        }
+        if (arbMax > itMax) {
+            break;
+        }
+    }
+
+    (void)iArbitrators.insert(it, &aArbitrator);
+}
+
+void ThreadPriorityArbitrator::Validate()
+{
+    TUint max = kPrioritySystemHighest + 1;
+    for (std::vector<IPriorityArbitrator*>::const_iterator it=iArbitrators.begin(); it!=iArbitrators.end(); ++it) {
+        if ((*it)->OpenHomeMax() != max-1) {
+            LOG_ERROR(kThread, "ERROR: gaps between thread priority arbitrators are not supported\n");
+            ASSERTS();
+        }
+        max = (*it)->OpenHomeMin();
+    }
+}
+
+TUint ThreadPriorityArbitrator::CalculatePriority(const char* aId, TUint aRequested) const
+{
+    /* look for arbitrator that handles aRequested, ask it for priority
+       ...or if aRequested is below all arbitrators, use linear division of remaining range */
+    TUint hostMin = iHostMin;
+    TUint hostMax = iHostMax;
+    TUint min = kPrioritySystemLowest;
+    TUint max = kPrioritySystemHighest;
+    for (std::vector<IPriorityArbitrator*>::const_iterator it=iArbitrators.begin(); it!=iArbitrators.end(); ++it) {
+        if ((*it)->OpenHomeMax() < aRequested) {
+            ASSERTS();
+        }
+        else if ((*it)->OpenHomeMin() <= aRequested) {
+            return (*it)->Priority(aId, aRequested, hostMax);
+        }
+        max = (*it)->OpenHomeMin() - 1;
+        hostMax -= (*it)->HostRange();
+    }
+    return DoCalculatePriority(aRequested, min, max, hostMin, hostMax);
+}
+
+TUint ThreadPriorityArbitrator::DoCalculatePriority(TUint aRequested, TUint aOpenHomeMin, TUint aOpenHomeMax, TUint aHostMin, TUint aHostMax)
+{ // static
+    ASSERT(aRequested >= aOpenHomeMin);
+    ASSERT(aRequested <= aOpenHomeMax);
+    ASSERT(aOpenHomeMin <= aOpenHomeMax);
+    ASSERT(aHostMin <= aHostMax);
+
+    const TUint openhomeRange = aOpenHomeMax - aOpenHomeMin;
+    const TUint hostRange = aHostMax - aHostMin;
+    const TUint priority = aHostMin + ((((aRequested - aOpenHomeMin) * hostRange) + (openhomeRange/2)) / openhomeRange);
+    return priority;
+}
+
+
 // AutoMutex
 
 AutoMutex::AutoMutex(Mutex& aMutex)
@@ -316,6 +414,19 @@ AutoSemaphore::AutoSemaphore(Semaphore& aSemaphore)
 }
 
 AutoSemaphore::~AutoSemaphore()
+{
+    iSem.Signal();
+}
+
+
+// AutoSemaphoreSignal
+
+AutoSemaphoreSignal::AutoSemaphoreSignal(Semaphore& aSemaphore)
+    : iSem(aSemaphore)
+{
+}
+
+AutoSemaphoreSignal::~AutoSemaphoreSignal()
 {
     iSem.Signal();
 }

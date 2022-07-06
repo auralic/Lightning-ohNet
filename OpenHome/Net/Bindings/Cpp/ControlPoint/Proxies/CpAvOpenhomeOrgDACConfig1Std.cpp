@@ -192,7 +192,7 @@ void SyncSetWaitingTimeAvOpenhomeOrgDACConfig1Cpp::CompleteRequest(IAsync& aAsyn
 
 
 CpProxyAvOpenhomeOrgDACConfig1Cpp::CpProxyAvOpenhomeOrgDACConfig1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "DACConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "DACConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -258,12 +258,12 @@ void CpProxyAvOpenhomeOrgDACConfig1Cpp::SyncGetFilterMode(std::string& aFilterMo
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::BeginGetFilterMode(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetFilterMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetFilterMode, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetFilterMode->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::EndGetFilterMode(IAsync& aAsync, std::string& aFilterMode, std::string& aFilterModeList)
@@ -298,14 +298,14 @@ void CpProxyAvOpenhomeOrgDACConfig1Cpp::SyncSetFilterMode(const std::string& aFi
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::BeginSetFilterMode(const std::string& aFilterMode, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetFilterMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetFilterMode, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetFilterMode->InputParameters();
     {
         Brn buf((const TByte*)aFilterMode.c_str(), (TUint)aFilterMode.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::EndSetFilterMode(IAsync& aAsync)
@@ -331,11 +331,11 @@ void CpProxyAvOpenhomeOrgDACConfig1Cpp::SyncGetDACPhase(uint32_t& aPhase)
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::BeginGetDACPhase(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDACPhase, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDACPhase, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDACPhase->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::EndGetDACPhase(IAsync& aAsync, uint32_t& aPhase)
@@ -363,11 +363,11 @@ void CpProxyAvOpenhomeOrgDACConfig1Cpp::SyncSetDACPhase(uint32_t aPhase)
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::BeginSetDACPhase(uint32_t aPhase, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDACPhase, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDACPhase, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDACPhase->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aPhase));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::EndSetDACPhase(IAsync& aAsync)
@@ -393,11 +393,11 @@ void CpProxyAvOpenhomeOrgDACConfig1Cpp::SyncGetDACBalance(uint32_t& aBalance)
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::BeginGetDACBalance(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDACBalance, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDACBalance, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDACBalance->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::EndGetDACBalance(IAsync& aAsync, uint32_t& aBalance)
@@ -425,11 +425,11 @@ void CpProxyAvOpenhomeOrgDACConfig1Cpp::SyncSetDACBalance(uint32_t aBalance)
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::BeginSetDACBalance(uint32_t aBalance, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDACBalance, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDACBalance, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDACBalance->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aBalance));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::EndSetDACBalance(IAsync& aAsync)
@@ -455,11 +455,11 @@ void CpProxyAvOpenhomeOrgDACConfig1Cpp::SyncGetWaitingTime(std::string& aWaiting
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::BeginGetWaitingTime(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetWaitingTime, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetWaitingTime, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetWaitingTime->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::EndGetWaitingTime(IAsync& aAsync, std::string& aWaitingTime)
@@ -490,14 +490,14 @@ void CpProxyAvOpenhomeOrgDACConfig1Cpp::SyncSetWaitingTime(const std::string& aW
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::BeginSetWaitingTime(const std::string& aWaitingTime, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetWaitingTime, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetWaitingTime, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetWaitingTime->InputParameters();
     {
         Brn buf((const TByte*)aWaitingTime.c_str(), (TUint)aWaitingTime.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::EndSetWaitingTime(IAsync& aAsync)
@@ -516,20 +516,61 @@ void CpProxyAvOpenhomeOrgDACConfig1Cpp::EndSetWaitingTime(IAsync& aAsync)
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::SetPropertyCurrentActionChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iCurrentActionChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::PropertyCurrentAction(uint32_t& aCurrentAction) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aCurrentAction = iCurrentAction->Value();
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1Cpp::CurrentActionPropertyChanged()
 {
     ReportEvent(iCurrentActionChanged);
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgDACConfig1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgDACConfig1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

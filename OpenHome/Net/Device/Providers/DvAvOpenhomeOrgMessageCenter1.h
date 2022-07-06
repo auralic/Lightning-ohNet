@@ -40,6 +40,12 @@ public:
      */
     void GetPropertyMessage(Brhz& aValue);
     /**
+     * Output the value of the Message property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyMessage has previously been called.
+     */
+    void WritePropertyMessage(IWriter& aWriter);
+    /**
      * Set the value of the MessageID property
      *
      * Can only be called if EnablePropertyMessageID has previously been called.

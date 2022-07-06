@@ -1,5 +1,7 @@
 #include <OpenHome/Private/Printer.h>
 #include <OpenHome/OsWrapper.h>
+#include <OpenHome/Private/Timer.h>
+#include <OpenHome/Net/Private/Globals.h>
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -28,8 +30,10 @@ TChar hexChar(TUint8 aNum)
 
 FunctorMsg Log::SwapOutput(FunctorMsg& aLogOutput)
 { // static
+    Lock();
     FunctorMsg old = gLogger->iLogOutput;
     gLogger->iLogOutput = aLogOutput;
+    Unlock();
     return old;
 }
 
@@ -38,15 +42,37 @@ inline FunctorMsg& Log::LogOutput()
     return gLogger? gLogger->iLogOutput : gDefaultPrinter;
 }
 
+inline void Log::Lock()
+{ // static
+    Log* self = gLogger;
+    if (self) {
+        self->iLockFunctor.Wait();
+    }
+}
+
+inline void Log::Unlock()
+{ // static
+    Log* self = gLogger;
+    if (self) {
+        self->iLockFunctor.Signal();
+    }
+}
+
 #define Min(a, b) ((a)<(b)? (a) : (b))
 TInt Log::Print(const Brx& aMessage)
 {
-    return Print(LogOutput(), aMessage);
+    Lock();
+    const TInt ret = Print(LogOutput(), aMessage);
+    Unlock();
+    return ret;
 }
 
 TInt Log::PrintHex(const Brx& aBrx)
 {
-    return PrintHex(LogOutput(), aBrx);
+    Lock();
+    const TInt ret = PrintHex(LogOutput(), aBrx);
+    Unlock();
+    return ret;
 }
 
 TInt Log::Print(const TChar* aFormat, ...)
@@ -60,7 +86,10 @@ TInt Log::Print(const TChar* aFormat, ...)
 
 TInt Log::PrintVA(const TChar* aFormat, va_list aArgs)
 {
-    return Print(LogOutput(), aFormat, aArgs);
+    Lock();
+    const TInt ret = Print(LogOutput(), aFormat, aArgs);
+    Unlock();
+    return ret;
 }
 
 TInt Log::PrintHex(FunctorMsg& aOutput, const Brx& aBrx)
@@ -139,19 +168,14 @@ void Log::Flush()
 
 TInt Log::DoPrint(FunctorMsg& aOutput, const TByte* aMessage)
 { // static
-    Log* self = gLogger;
-    if (self) {
-        self->iLockFunctor.Wait();
-    }
+
     if (aOutput) {
         try {
             aOutput((const char*)aMessage);
         }
         catch (...) { }
     }
-    if (self) {
-        self->iLockFunctor.Signal();
-    }
+
     return (TUint)strlen((const char*)aMessage);
 }
 
@@ -257,3 +281,62 @@ TUint RamLogger::Chunk::BytesRemaining() const
 {
     return kDataBytes - iUsed;
 }
+
+// RingBufferLogger
+
+RingBufferLogger::RingBufferLogger(TUint aBytes)
+    : iMutex("RingBufferLogger")
+    , iBytes(aBytes)
+    , iRingBuffer(aBytes)
+    , iTimestampEnable(false)
+    , iTimestampDue(false)
+{
+    // interpose our own handler, store old handler
+    FunctorMsg functor = MakeFunctorMsg(*this, &RingBufferLogger::LogFunctor);
+    iDownstreamFunctorMsg = Log::SwapOutput(functor);
+}
+
+RingBufferLogger::~RingBufferLogger()
+{
+    // restore old handler
+    Log::SwapOutput(iDownstreamFunctorMsg);
+}
+
+void RingBufferLogger::PrefixTimestamp(TBool aEnable)
+{
+    iTimestampEnable = aEnable;
+    iTimestampDue = true;
+}
+
+void RingBufferLogger::LogFunctor(const TChar* aMsg)
+{
+    AutoMutex amx(iMutex);
+
+    if (iTimestampDue) {
+#ifdef _WIN32
+# define snprintf _snprintf_s
+#endif
+        char ts[20];
+        snprintf(ts, sizeof(ts), "%010lu: ", (unsigned long)Time::Now(*gEnv));
+        iDownstreamFunctorMsg(ts);
+        Brn tsBuf(ts);
+        iRingBuffer.Write(tsBuf);
+        iTimestampDue = false;
+    }
+    Brn msg(aMsg);
+    iTimestampDue = (iTimestampEnable && msg.Bytes() > 0 && msg[msg.Bytes()-1] == '\n');
+    iRingBuffer.Write(msg);
+    iDownstreamFunctorMsg(aMsg);
+}
+
+void RingBufferLogger::Read(IWriter& aWriter)
+{
+    Bwh temp(iBytes);
+    {
+        WriterBuffer writerBuffer(temp);
+        AutoMutex amx(iMutex);
+        iRingBuffer.Read(aWriter);
+    }
+    aWriter.Write(temp);
+}
+

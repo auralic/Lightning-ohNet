@@ -6,9 +6,8 @@
 #include <OpenHome/Private/Printer.h>
 #include <OpenHome/Net/Private/DviServerWebSocket.h>
 #include <OpenHome/Net/Private/Bonjour.h>
-#include <OpenHome/Net/Private/MdnsProvider.h> // replace this to allow clients to set an alternative Bonjour implementation
 #include <OpenHome/Net/Private/DviPropertyUpdateCollection.h>
-#include <OpenHome/Net/Private/DviServerLpec.h>
+#include <OpenHome/Net/Private/DviProtocolLpec.h>
 
 using namespace OpenHome;
 using namespace OpenHome::Net;
@@ -19,39 +18,36 @@ DvStack::DvStack(OpenHome::Environment& aEnv)
     : iEnv(aEnv)
     , iBootId(1)
     , iNextBootId(2)
-    , iMdns(NULL)
+    , iControlPoint(OpenHome::Brx::Empty())
 {
     iEnv.SetDvStack(this);
     iSsdpNotifierManager = new DviSsdpNotifierManager(*this);
     iPropertyUpdateCollection = new DviPropertyUpdateCollection(*this);
     InitialisationParams* initParams = iEnv.InitParams();
     TUint port = initParams->DvUpnpServerPort();
-    iDviServerUpnp = new DviServerUpnp(*this, port);
     iDviDeviceMap = new DviDeviceMap;
-    iSubscriptionManager = new DviSubscriptionManager(*this);
+    iDviServerUpnp = new DviServerUpnp(*this, port);
+    const TUint pubThPriority = initParams->DvPublisherThreadPriority();
+    iSubscriptionManager = new DviSubscriptionManager(*this, pubThPriority);
     iDviServerWebSocket = new DviServerWebSocket(*this);
-    if (initParams->DvIsBonjourEnabled()) {
-        iMdns = new OpenHome::Net::MdnsProvider(iEnv, ""); // replace this to allow clients to set an alternative Bonjour implementation
-    }
-    if (initParams->DvNumLpecThreads() == 0) {
-        iLpecServer = NULL;
-    }
-    else {
+    if (initParams->DvNumLpecThreads() > 0) {
         port = initParams->DvLpecServerPort();
-        iLpecServer = new DviServerLpec(*this, port);
+        AddProtocolFactory(new DviProtocolFactoryLpec(*this, port));
     }
 }
 
 DvStack::~DvStack()
 {
-    delete iLpecServer;
-    delete iMdns;
+    for (TUint i=0; i<iProtocolFactories.size(); i++) {
+        delete iProtocolFactories[i];
+    }
     delete iDviServerWebSocket;
     delete iDviServerUpnp;
     delete iDviDeviceMap;
     delete iSubscriptionManager;
     delete iPropertyUpdateCollection;
     delete iSsdpNotifierManager;
+    ASSERT(iControlPointObservers.size() == 0);
 }
 
 TUint DvStack::BootId()
@@ -81,6 +77,29 @@ void DvStack::UpdateBootId()
     lock.Signal();
 }
 
+void DvStack::AddControlPointObserver(IControlPointObserver& aObserver)
+{
+    iControlPointObservers.push_back(&aObserver);
+}
+
+void DvStack::RemoveControlPointObserver(IControlPointObserver& aObserver)
+{
+    for (TUint i=0; i<iControlPointObservers.size(); i++) {
+        if (iControlPointObservers[i] == &aObserver) {
+            iControlPointObservers.erase(iControlPointObservers.begin() + i);
+            break;
+        }
+    }
+}
+
+void DvStack::NotifyControlPointUsed(const OpenHome::Brx& aControlPoint)
+{
+    iControlPoint.Replace(aControlPoint);
+    for (TUint i=0; i<iControlPointObservers.size(); i++) {
+        iControlPointObservers[i]->NotifyControlPoint(aControlPoint);
+    }
+}
+
 DviServerUpnp& DvStack::ServerUpnp()
 {
     return *iDviServerUpnp;
@@ -96,11 +115,6 @@ DviSubscriptionManager& DvStack::SubscriptionManager()
     return *iSubscriptionManager;
 }
 
-IMdnsProvider* DvStack::MdnsProvider()
-{
-    return iMdns;
-}
-
 DviPropertyUpdateCollection& DvStack::PropertyUpdateCollection()
 {
     return *iPropertyUpdateCollection;
@@ -111,8 +125,12 @@ DviSsdpNotifierManager& DvStack::SsdpNotifierManager()
     return *iSsdpNotifierManager;
 }
 
-DviServerLpec& DvStack::LpecServer()
+void DvStack::AddProtocolFactory(IDvProtocolFactory* aProtocolFactory)
 {
-    ASSERT(iLpecServer != NULL);
-    return *iLpecServer;
+    iProtocolFactories.push_back(aProtocolFactory);
+}
+
+std::vector<IDvProtocolFactory*>& DvStack::ProtocolFactories()
+{
+    return iProtocolFactories;
 }

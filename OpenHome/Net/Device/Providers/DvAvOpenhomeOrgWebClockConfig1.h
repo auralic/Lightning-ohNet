@@ -53,6 +53,12 @@ public:
      * Can only be called if EnablePropertyClockConfig has previously been called.
      */
     void GetPropertyClockConfig(Brhz& aValue);
+    /**
+     * Output the value of the ClockConfig property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyClockConfig has previously been called.
+     */
+    void WritePropertyClockConfig(IWriter& aWriter);
 protected:
     /**
      * Constructor

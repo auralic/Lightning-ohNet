@@ -15,14 +15,20 @@ using namespace OpenHome::Net;
 
 DviServer::~DviServer()
 {
+}
+
+void DviServer::Deinitialise()
+{
     iLock.Wait();
     iDvStack.Env().NetworkAdapterList().RemoveCurrentChangeListener(iCurrentAdapterChangeListenerId);
     iDvStack.Env().NetworkAdapterList().RemoveSubnetListChangeListener(iSubnetListChangeListenerId);
+    iLock.Signal();
     for (TUint i=0; i<iServers.size(); i++) {
-        delete iServers[i];
+        DviServer::Server* server = iServers[i];
+        NotifyServerDeleted(server->Interface());
+        delete server;
     }
     iServers.clear();
-    iLock.Signal();
 }
 
 TUint DviServer::Port(TIpAddress aInterface)
@@ -47,23 +53,30 @@ DviServer::DviServer(DvStack& aDvStack)
 
 void DviServer::Initialise()
 {
+    const TIpAddress kLoopbackAddr = MakeIpAddress(127, 0, 0, 1);
+    AutoMutex a(iLock); // ensure initialisation completes before change listeners are run
     Functor functor = MakeFunctor(*this, &DviServer::SubnetListChanged);
     NetworkAdapterList& nifList = iDvStack.Env().NetworkAdapterList();
-    iCurrentAdapterChangeListenerId = nifList.AddCurrentChangeListener(functor);
-    iSubnetListChangeListenerId = nifList.AddSubnetListChangeListener(functor);
-    AutoMutex a(iLock);
+    iCurrentAdapterChangeListenerId = nifList.AddCurrentChangeListener(functor, "DviServer-current");
+    iSubnetListChangeListenerId = nifList.AddSubnetListChangeListener(functor, "DviServer-subnet");
     AutoNetworkAdapterRef ref(iDvStack.Env(), "DviServer::Initialise");
     NetworkAdapter* current = ref.Adapter();
-    if (current != NULL) {
-        AddServer(*current);
-    }
-    else {
-        std::vector<NetworkAdapter*>* subnetList = nifList.CreateSubnetList();
-        for (TUint i=0; i<subnetList->size(); i++) {
-            AddServer(*(*subnetList)[i]);
+    std::vector<NetworkAdapter*>* subnetList = nifList.CreateSubnetList();
+    for (TUint i=0; i<subnetList->size(); i++) {
+        NetworkAdapter* subnet = (*subnetList)[i];
+        if (current == NULL || subnet->Address() == current->Address() || subnet->Address() == kLoopbackAddr) {
+            AddServer(*subnet);
         }
-        NetworkAdapterList::DestroySubnetList(subnetList);
     }
+    NetworkAdapterList::DestroySubnetList(subnetList);
+}
+
+void DviServer::NotifyServerDeleted(TIpAddress /*aInterface*/)
+{
+}
+
+void DviServer::NotifyServerCreated(TIpAddress /*aInterface*/)
+{
 }
 
 void DviServer::AddServer(NetworkAdapter& aNif)
@@ -71,6 +84,7 @@ void DviServer::AddServer(NetworkAdapter& aNif)
     SocketTcpServer* tcpServer = CreateServer(aNif);
     DviServer::Server* server = new DviServer::Server(tcpServer, aNif);
     iServers.push_back(server);
+    NotifyServerCreated(aNif.Address());
 }
 
 void DviServer::SubnetListChanged()
@@ -81,47 +95,38 @@ void DviServer::SubnetListChanged()
        always runs its listeners in the order they registered, we'll have updated before
        any device listeners are run. */
 
+    const TIpAddress kLoopbackAddr = MakeIpAddress(127, 0, 0, 1);
     AutoMutex a(iLock);
     NetworkAdapterList& adapterList = iDvStack.Env().NetworkAdapterList();
     AutoNetworkAdapterRef ref(iDvStack.Env(), "DviServer::SubnetListChanged");
     NetworkAdapter* current = ref.Adapter();
-    if (adapterList.SingleSubnetModeEnabled()) {
-        TInt i;
-        // remove servers whose interface is no longer available
-        for (i = (TInt)iServers.size() - 1; i >= 0; i--) {
-            DviServer::Server* server = iServers[i];
-            if (current == NULL || server->Interface() != current->Address()) {
-                delete server;
-                iServers.erase(iServers.begin() + i);
-            }
-        }
-        // add server if 'current' is a new subnet
-        if (current != NULL && iServers.size() == 0) {
-            AddServer(*current);
+    std::vector<NetworkAdapter*>* subnetList = adapterList.CreateSubnetList();
+    std::vector<NetworkAdapter*>* nifList = adapterList.CreateNetworkAdapterList();
+    TInt i;
+    // remove servers whose interface is no longer available
+    for (i = (TInt)iServers.size() - 1; i >= 0; i--) {
+        DviServer::Server* server = iServers[i];
+        if (FindInterface(server->Interface(), *nifList) == -1
+            || (adapterList.SingleSubnetModeEnabled()
+            && (current == NULL || server->Interface() != current->Address())
+            && server->Interface() != kLoopbackAddr)) {
+            NotifyServerDeleted(server->Interface());
+            delete server;
+            iServers.erase(iServers.begin() + i);
         }
     }
-    else {
-        std::vector<NetworkAdapter*>* subnetList = adapterList.CreateSubnetList();
-        std::vector<NetworkAdapter*>* nifList = adapterList.CreateNetworkAdapterList();
-        TInt i;
-        // remove servers whose interface is no longer available
-        for (i = (TInt)iServers.size() - 1; i >= 0; i--) {
-            DviServer::Server* server = iServers[i];
-            if (FindInterface(server->Interface(), *nifList) == -1) {
-                delete server;
-                iServers.erase(iServers.begin() + i);
-            }
-        }
-        // add servers for new subnets
-        for (i = 0; i < (TInt)subnetList->size(); i++) {
-            NetworkAdapter* subnet = (*subnetList)[i];
-            if (FindServer(subnet->Subnet()) == -1) {
+    // add servers for new subnets
+    for (i = 0; i < (TInt)subnetList->size(); i++) {
+        NetworkAdapter* subnet = (*subnetList)[i];
+        if (FindServer(subnet->Subnet()) == -1
+            && (!adapterList.SingleSubnetModeEnabled() ||
+               (current != NULL && subnet->Address() == current->Address()) ||
+                subnet->Address() == kLoopbackAddr)) {
                 AddServer(*subnet);
-            }
         }
-        NetworkAdapterList::DestroyNetworkAdapterList(nifList);
-        NetworkAdapterList::DestroySubnetList(subnetList);
     }
+    NetworkAdapterList::DestroyNetworkAdapterList(nifList);
+    NetworkAdapterList::DestroySubnetList(subnetList);
 }
 
 TInt DviServer::FindInterface(TIpAddress aInterface, const std::vector<NetworkAdapter*>& aNifList)

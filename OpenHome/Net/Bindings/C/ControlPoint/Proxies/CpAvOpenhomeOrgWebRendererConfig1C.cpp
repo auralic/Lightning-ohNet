@@ -217,21 +217,21 @@ void CpProxyAvOpenhomeOrgWebRendererConfig1C::SetPropertyCurrentActionChanged(Fu
 void CpProxyAvOpenhomeOrgWebRendererConfig1C::PropertyAlive(TBool& aAlive) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1C::PropertyRendererConfig(Brhz& aRendererConfig) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aRendererConfig.Set(iRendererConfig->Value());
 }
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1C::PropertyCurrentAction(TUint& aCurrentAction) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -370,28 +370,46 @@ void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1SetPropertyCurrentActionChang
     proxyC->SetPropertyCurrentActionChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
 {
     CpProxyAvOpenhomeOrgWebRendererConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebRendererConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Alive;
-    proxyC->PropertyAlive(Alive);
+    try {
+        proxyC->PropertyAlive(Alive);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aAlive = Alive? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyRendererConfig(THandle aHandle, char** aRendererConfig)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyRendererConfig(THandle aHandle, char** aRendererConfig)
 {
     CpProxyAvOpenhomeOrgWebRendererConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebRendererConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aRendererConfig;
-    proxyC->PropertyRendererConfig(buf_aRendererConfig);
+    try {
+        proxyC->PropertyRendererConfig(buf_aRendererConfig);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aRendererConfig = buf_aRendererConfig.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
 {
     CpProxyAvOpenhomeOrgWebRendererConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebRendererConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyCurrentAction(*aCurrentAction);
+    try {
+        proxyC->PropertyCurrentAction(*aCurrentAction);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 

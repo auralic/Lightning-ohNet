@@ -2,7 +2,6 @@
 #include <OpenHome/Types.h>
 #include <OpenHome/Buffer.h>
 #include <OpenHome/Private/Stream.h>
-
 using namespace OpenHome;
 
 FileStream::FileStream()
@@ -93,7 +92,8 @@ void FileStream::Write(const Brx& aBuffer)
 
 void FileStream::WriteFlush()
 {
-    ASSERTS();
+    iFile->Flush();
+    iFile->Sync();
 }
 
 void FileStream::Read(Bwx& aBuffer)

@@ -51,7 +51,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// </summary>
         /// <remarks>Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable and reporting of their changes.</remarks>
         /// <param name="aDevice">The device to use</param>
-        public CpProxyAvOpenhomeOrgRenderingInfo1(CpDevice aDevice)
+        public CpProxyAvOpenhomeOrgRenderingInfo1(ICpDevice aDevice)
             : base("av-openhome-org", "RenderingInfo", 1, aDevice)
         {
             OpenHome.Net.Core.Parameter param;

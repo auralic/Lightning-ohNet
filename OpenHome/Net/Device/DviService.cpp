@@ -2,6 +2,7 @@
 #include <OpenHome/Net/Private/Service.h>
 #include <OpenHome/Types.h>
 #include <OpenHome/Buffer.h>
+#include <OpenHome/Private/Debug.h>
 #include <OpenHome/Private/Http.h>
 #include <OpenHome/Private/Printer.h>
 #include <OpenHome/Net/Private/DviSubscription.h>
@@ -97,15 +98,20 @@ DviService::~DviService()
 
 void DviService::StopSubscriptions()
 {
-    iLock.Wait();
-    for (TUint i=0; i<iSubscriptions.size(); i++) {
-        DviSubscription* subscription = iSubscriptions[i];
+    for (;;) {
+        DviSubscription* subscription = NULL;
+        {
+            AutoMutex _(iLock);
+            if (iSubscriptions.size() == 0) {
+                break;
+            }
+            subscription = iSubscriptions[0];
+            iSubscriptions.erase(iSubscriptions.begin());
+        }
         subscription->Stop();
         iDvStack.SubscriptionManager().RemoveSubscription(*subscription);
         subscription->RemoveRef();
     }
-    iSubscriptions.clear();
-    iLock.Signal();
 }
 
 void DviService::AddRef()
@@ -159,19 +165,20 @@ const std::vector<DvAction>& DviService::DvActions() const
 
 void DviService::Invoke(IDviInvocation& aInvocation, const Brx& aActionName)
 {
+    Invoke(aInvocation, aActionName, false);
+}
+
+void DviService::InvokeDirect(IDviInvocation& aInvocation, const Brx& aActionName)
+{
+    Invoke(aInvocation, aActionName, true);
+}
+
+void DviService::Invoke(IDviInvocation& aInvocation, const Brx& aActionName, TBool aIgnoreEnableState)
+{
     iLock.Wait();
-#if 0 // debug logging
-    {
-        Bws<512> debugBuf("Service: ");
-        debugBuf.Append(iServiceType.Name());
-        debugBuf.Append(", Action: ");
-        debugBuf.Append(aActionName);
-        debugBuf.Append("\n");
-        Log::Print(debugBuf);
-    }
-#endif
-    TBool disabled = iDisabled;
-    if (disabled) {
+    LOG(kDvInvocation, "Service: %.*s, Action: %.*s\n",
+                       PBUF(iServiceType.Name()), PBUF(aActionName));
+    if (!aIgnoreEnableState && iDisabled) {
         iLock.Signal();
         aInvocation.InvocationReportError(502, Brn("Action not available"));
     }
@@ -188,6 +195,9 @@ void DviService::Invoke(IDviInvocation& aInvocation, const Brx& aActionName)
                 }
                 catch (InvocationError&) {
                     // avoid calls to aInvocation.InvocationReportError in other catch blocks
+                    throw;
+                }
+                catch (AssertionFailed&) {
                     throw;
                 }
                 catch (Exception& e) {
@@ -268,6 +278,7 @@ void DviService::RemoveSubscription(const Brx& aSid)
         }
     }
     iLock.Signal();
+    LOG(kDvEvent, "DviService::RemoveSubscription - failed to find sid %.*s\n", PBUF(aSid));
 }
 
 TBool DviService::AssertPropertiesInitialised() const
@@ -290,6 +301,22 @@ void DviService::ListObjectDetails() const
     Log::Print("  DviService: addr=%p, serviceType=", this);
     Log::Print(ServiceType().FullName());
     Log::Print(", refCount=%u, subscriptions=%u\n", iRefCount, iSubscriptions.size());
+}
+
+
+// AutoServiceRef
+
+AutoServiceRef::AutoServiceRef(DviService*& aService)
+    : iService(aService)
+{
+}
+
+AutoServiceRef::~AutoServiceRef()
+{
+    if (iService != NULL) {
+        iService->RemoveRef();
+        iService = NULL;
+    }
 }
 
 
@@ -333,6 +360,11 @@ const char* DviInvocation::ResourceUriPrefix() const
 Endpoint DviInvocation::ClientEndpoint() const
 {
     return iInvocation.ClientEndpoint();
+}
+
+const Brx& DviInvocation::ClientUserAgent() const
+{
+    return iInvocation.ClientUserAgent();
 }
 
 

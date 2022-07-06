@@ -19,18 +19,108 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgServerConfig1Cpp : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgServerConfig1Cpp() {}
+    virtual void SyncSetPlayCD(bool aPlayCD) = 0;
+    virtual void BeginSetPlayCD(bool aPlayCD, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetPlayCD(IAsync& aAsync) = 0;
+    virtual void SyncSetServerName(const std::string& aServerName) = 0;
+    virtual void BeginSetServerName(const std::string& aServerName, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetServerName(IAsync& aAsync) = 0;
+    virtual void SyncGetServerVersion(std::string& aServerVersion) = 0;
+    virtual void BeginGetServerVersion(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetServerVersion(IAsync& aAsync, std::string& aServerVersion) = 0;
+    virtual void SyncGetProgressInfo(std::string& aProgress) = 0;
+    virtual void BeginGetProgressInfo(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetProgressInfo(IAsync& aAsync, std::string& aProgress) = 0;
+    virtual void SyncGetScanVersion(std::string& aScanVersion) = 0;
+    virtual void BeginGetScanVersion(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetScanVersion(IAsync& aAsync, std::string& aScanVersion) = 0;
+    virtual void SyncGetWorkMode(std::string& aWorkMode, std::string& aWorkModeList) = 0;
+    virtual void BeginGetWorkMode(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetWorkMode(IAsync& aAsync, std::string& aWorkMode, std::string& aWorkModeList) = 0;
+    virtual void SyncSetWorkMode(const std::string& aWorkMode) = 0;
+    virtual void BeginSetWorkMode(const std::string& aWorkMode, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetWorkMode(IAsync& aAsync) = 0;
+    virtual void SyncDelAllLocalDB() = 0;
+    virtual void BeginDelAllLocalDB(FunctorAsync& aFunctor) = 0;
+    virtual void EndDelAllLocalDB(IAsync& aAsync) = 0;
+    virtual void SyncInitHDD() = 0;
+    virtual void BeginInitHDD(FunctorAsync& aFunctor) = 0;
+    virtual void EndInitHDD(IAsync& aAsync) = 0;
+    virtual void SyncRescan() = 0;
+    virtual void BeginRescan(FunctorAsync& aFunctor) = 0;
+    virtual void EndRescan(IAsync& aAsync) = 0;
+    virtual void SyncHandMount() = 0;
+    virtual void BeginHandMount(FunctorAsync& aFunctor) = 0;
+    virtual void EndHandMount(IAsync& aAsync) = 0;
+    virtual void SyncHandUMount() = 0;
+    virtual void BeginHandUMount(FunctorAsync& aFunctor) = 0;
+    virtual void EndHandUMount(IAsync& aAsync) = 0;
+    virtual void SyncGetDiskInfo(bool& aIsConnected, std::string& aStatusCode, std::string& aStatusInfo, std::string& aCapacity, std::string& aFileCount) = 0;
+    virtual void BeginGetDiskInfo(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDiskInfo(IAsync& aAsync, bool& aIsConnected, std::string& aStatusCode, std::string& aStatusInfo, std::string& aCapacity, std::string& aFileCount) = 0;
+    virtual void SyncGetSMBConfig(std::string& aSMBAddr, std::string& aSMBUserName, std::string& aSMBPassWord) = 0;
+    virtual void BeginGetSMBConfig(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetSMBConfig(IAsync& aAsync, std::string& aSMBAddr, std::string& aSMBUserName, std::string& aSMBPassWord) = 0;
+    virtual void SyncSetSMBConfig(const std::string& aSMBAddr, const std::string& aSMBUserName, const std::string& aSMBPassWord) = 0;
+    virtual void BeginSetSMBConfig(const std::string& aSMBAddr, const std::string& aSMBUserName, const std::string& aSMBPassWord, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetSMBConfig(IAsync& aAsync) = 0;
+    virtual void SyncGetDriveMountResult(bool& aDriveMountResult) = 0;
+    virtual void BeginGetDriveMountResult(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDriveMountResult(IAsync& aAsync, bool& aDriveMountResult) = 0;
+    virtual void SyncEditTrack(const std::string& aEditValue) = 0;
+    virtual void BeginEditTrack(const std::string& aEditValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndEditTrack(IAsync& aAsync) = 0;
+    virtual void SyncScanVersionDiff(std::string& aScanVersionDiffValue) = 0;
+    virtual void BeginScanVersionDiff(FunctorAsync& aFunctor) = 0;
+    virtual void EndScanVersionDiff(IAsync& aAsync, std::string& aScanVersionDiffValue) = 0;
+    virtual void SyncGetInitHDDResult(bool& aInitHDDResult) = 0;
+    virtual void BeginGetInitHDDResult(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetInitHDDResult(IAsync& aAsync, bool& aInitHDDResult) = 0;
+    virtual void SyncGetHDDHasInited(bool& aHDDHasInited) = 0;
+    virtual void BeginGetHDDHasInited(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetHDDHasInited(IAsync& aAsync, bool& aHDDHasInited) = 0;
+    virtual void SyncUSBImport() = 0;
+    virtual void BeginUSBImport(FunctorAsync& aFunctor) = 0;
+    virtual void EndUSBImport(IAsync& aAsync) = 0;
+    virtual void SyncGetDISKCapacity(std::string& aDISKTotal, std::string& aDISKUsed, std::string& aDISKAvailable) = 0;
+    virtual void BeginGetDISKCapacity(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDISKCapacity(IAsync& aAsync, std::string& aDISKTotal, std::string& aDISKUsed, std::string& aDISKAvailable) = 0;
+    virtual void SyncForceRescan() = 0;
+    virtual void BeginForceRescan(FunctorAsync& aFunctor) = 0;
+    virtual void EndForceRescan(IAsync& aAsync) = 0;
+    virtual void SyncGetCurrentScanFile(std::string& aScanFile) = 0;
+    virtual void BeginGetCurrentScanFile(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetCurrentScanFile(IAsync& aAsync, std::string& aScanFile) = 0;
+    virtual void SyncGetServerConfig(std::string& aGetValue) = 0;
+    virtual void BeginGetServerConfig(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetServerConfig(IAsync& aAsync, std::string& aGetValue) = 0;
+    virtual void SyncSetServerConfig(const std::string& aSetValue) = 0;
+    virtual void BeginSetServerConfig(const std::string& aSetValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetServerConfig(IAsync& aAsync) = 0;
+    virtual void SetPropertyPlayCDChanged(Functor& aPlayCDChanged) = 0;
+    virtual void PropertyPlayCD(bool& aPlayCD) const = 0;
+    virtual void SetPropertyAliveChanged(Functor& aAliveChanged) = 0;
+    virtual void PropertyAlive(bool& aAlive) const = 0;
+    virtual void SetPropertySubscriptValueChanged(Functor& aSubscriptValueChanged) = 0;
+    virtual void PropertySubscriptValue(std::string& aSubscriptValue) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:ServerConfig:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgServerConfig1Cpp : public CpProxy
+class CpProxyAvOpenhomeOrgServerConfig1Cpp : public ICpProxyAvOpenhomeOrgServerConfig1Cpp
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -44,6 +134,32 @@ public:
      * calling delete.  An unsubscribe will be triggered automatically when required.
      */
     ~CpProxyAvOpenhomeOrgServerConfig1Cpp();
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aPlayCD
+     */
+    void SyncSetPlayCD(bool aPlayCD);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetPlayCD().
+     *
+     * @param[in] aPlayCD
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetPlayCD(bool aPlayCD, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetPlayCD(IAsync& aAsync);
 
     /**
      * Invoke the action synchronously.  Blocks until the action has been processed
@@ -697,6 +813,15 @@ public:
     void EndSetServerConfig(IAsync& aAsync);
 
     /**
+     * Set a callback to be run when the PlayCD state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgServerConfig1Cpp instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyPlayCDChanged(Functor& aFunctor);
+    /**
      * Set a callback to be run when the Alive state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -715,6 +840,16 @@ public:
      */
     void SetPropertySubscriptValueChanged(Functor& aFunctor);
 
+    /**
+     * Query the value of the PlayCD property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aPlayCD
+     */
+    void PropertyPlayCD(bool& aPlayCD) const;
     /**
      * Query the value of the Alive property.
      *
@@ -735,10 +870,45 @@ public:
      * @param[out] aSubscriptValue
      */
     void PropertySubscriptValue(std::string& aSubscriptValue) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
+    void PlayCDPropertyChanged();
     void AlivePropertyChanged();
     void SubscriptValuePropertyChanged();
 private:
+    Action* iActionSetPlayCD;
     Action* iActionSetServerName;
     Action* iActionGetServerVersion;
     Action* iActionGetProgressInfo;
@@ -764,8 +934,10 @@ private:
     Action* iActionGetCurrentScanFile;
     Action* iActionGetServerConfig;
     Action* iActionSetServerConfig;
+    PropertyBool* iPlayCD;
     PropertyBool* iAlive;
     PropertyString* iSubscriptValue;
+    Functor iPlayCDChanged;
     Functor iAliveChanged;
     Functor iSubscriptValueChanged;
 };

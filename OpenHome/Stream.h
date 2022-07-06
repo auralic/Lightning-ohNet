@@ -150,6 +150,7 @@ public: // from IReader
 private:
     Brn iBuffer;
     TUint iOffset;
+    TBool iEnd;
 };
 
 class ReaderBinary : private INonCopyable
@@ -174,6 +175,7 @@ private:
 class ReaderProtocol : public ReaderBinary
 {
 public:
+    static void Read(IReader& aReader, TUint aBytes, Bwx& aBuf);
     virtual ~ReaderProtocol();
     Brn Read(TUint aBytes); // reads exactly aBytes or throws
 protected:
@@ -191,6 +193,16 @@ private: // from ReaderUntil
     TByte* Ptr() { return iBuf; }
 private:
     TByte iBuf[T];
+};
+
+class ReaderProtocolN : public ReaderProtocol
+{
+public:
+    ReaderProtocolN(IReader& aReader, Bwx& aBuf) : ReaderProtocol(aBuf.MaxBytes(), aReader), iBuf(aBuf) {}
+private: // from ReaderUntil
+    TByte* Ptr() { return const_cast<TByte*>(iBuf.Ptr()); }
+private:
+    Bwx& iBuf;
 };
 
 class Swx : public Sxx, public IWriter
@@ -238,8 +250,10 @@ class WriterBwh : public IWriter
 {
 public:
     WriterBwh(TInt aGranularity);
+    void Reset();
     void TransferTo(Bwh& aDest);
     void TransferTo(Brh& aDest);
+    const Brx& Buffer() const;
     void Write(const TChar* aBuffer);
 public: // from IWriter
     void Write(TByte aValue);
@@ -276,6 +290,29 @@ public:
 private:
     IWriter& iWriter;
 };
+
+class WriterRingBuffer
+    : public IWriter
+    , private INonCopyable
+{
+public:
+    WriterRingBuffer(TUint aBytes);
+    ~WriterRingBuffer();
+    void Read(IWriter& aWriter) const;
+    Brn MakeContiguous();
+public: // IWriter
+    void Write(TByte aValue);
+    void Write(const Brx& aBuffer);
+    void WriteFlush();
+private:
+    static Brn Tail(const Brx& aBuffer, TUint aMaxBytes);
+private:
+    TByte* iData;
+    TUint iBytes;
+    TUint iCursor; // next unwritten
+    TBool iWrapped;
+};
+
 
 } // namespace OpenHome
 

@@ -58,7 +58,7 @@ void SyncSetRendererConfigAvOpenhomeOrgWebRendererConfig1Cpp::CompleteRequest(IA
 
 
 CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::CpProxyAvOpenhomeOrgWebRendererConfig1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "WebRendererConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "WebRendererConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -98,11 +98,11 @@ void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::SyncGetRendererConfig(std::strin
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::BeginGetRendererConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetRendererConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetRendererConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetRendererConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::EndGetRendererConfig(IAsync& aAsync, std::string& aRendererConfig)
@@ -133,14 +133,14 @@ void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::SyncSetRendererConfig(const std:
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::BeginSetRendererConfig(const std::string& aRendererConfig, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetRendererConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetRendererConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetRendererConfig->InputParameters();
     {
         Brn buf((const TByte*)aRendererConfig.c_str(), (TUint)aRendererConfig.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::EndSetRendererConfig(IAsync& aAsync)
@@ -159,44 +159,50 @@ void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::EndSetRendererConfig(IAsync& aAs
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::SetPropertyAliveChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iAliveChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::SetPropertyRendererConfigChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iRendererConfigChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::SetPropertyCurrentActionChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iCurrentActionChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::PropertyAlive(bool& aAlive) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::PropertyRendererConfig(std::string& aRendererConfig) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iRendererConfig->Value();
     aRendererConfig.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::PropertyCurrentAction(uint32_t& aCurrentAction) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -213,5 +219,44 @@ void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::RendererConfigPropertyChanged()
 void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::CurrentActionPropertyChanged()
 {
     ReportEvent(iCurrentActionChanged);
+}
+
+void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgWebRendererConfig1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

@@ -20,6 +20,11 @@ void DvProviderUpnpOrgAVTransport2::GetPropertyLastChange(Brhz& aValue)
     aValue.Set(iPropertyLastChange->Value());
 }
 
+void DvProviderUpnpOrgAVTransport2::WritePropertyLastChange(IWriter& aWriter)
+{
+    iPropertyLastChange->Write(aWriter);
+}
+
 TBool DvProviderUpnpOrgAVTransport2::SetPropertyDRMState(const Brx& aValue)
 {
     ASSERT(iPropertyDRMState != NULL);
@@ -30,6 +35,11 @@ void DvProviderUpnpOrgAVTransport2::GetPropertyDRMState(Brhz& aValue)
 {
     ASSERT(iPropertyDRMState != NULL);
     aValue.Set(iPropertyDRMState->Value());
+}
+
+void DvProviderUpnpOrgAVTransport2::WritePropertyDRMState(IWriter& aWriter)
+{
+    iPropertyDRMState->Write(aWriter);
 }
 
 DvProviderUpnpOrgAVTransport2::DvProviderUpnpOrgAVTransport2(DvDevice& aDevice)

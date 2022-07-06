@@ -126,7 +126,7 @@ void CpProxyAvOpenhomeOrgRenderingInfo1C::SetPropertyInfoChanged(Functor& aFunct
 void CpProxyAvOpenhomeOrgRenderingInfo1C::PropertyInfo(Brhz& aInfo) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aInfo.Set(iInfo->Value());
 }
 
@@ -199,12 +199,18 @@ void STDCALL CpProxyAvOpenhomeOrgRenderingInfo1SetPropertyInfoChanged(THandle aH
     proxyC->SetPropertyInfoChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgRenderingInfo1PropertyInfo(THandle aHandle, char** aInfo)
+int32_t STDCALL CpProxyAvOpenhomeOrgRenderingInfo1PropertyInfo(THandle aHandle, char** aInfo)
 {
     CpProxyAvOpenhomeOrgRenderingInfo1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRenderingInfo1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aInfo;
-    proxyC->PropertyInfo(buf_aInfo);
+    try {
+        proxyC->PropertyInfo(buf_aInfo);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aInfo = buf_aInfo.Transfer();
+    return 0;
 }
 

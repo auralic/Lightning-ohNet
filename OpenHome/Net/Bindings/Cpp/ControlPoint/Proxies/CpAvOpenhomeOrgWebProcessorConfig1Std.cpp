@@ -58,7 +58,7 @@ void SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1Cpp::CompleteRequest(
 
 
 CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "WebProcessorConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "WebProcessorConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -95,11 +95,11 @@ void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::SyncGetProcessorConfig(std::str
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::BeginGetProcessorConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetProcessorConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetProcessorConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetProcessorConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::EndGetProcessorConfig(IAsync& aAsync, std::string& aProcessorConfig)
@@ -130,14 +130,14 @@ void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::SyncSetProcessorConfig(const st
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::BeginSetProcessorConfig(const std::string& aProcessorConfig, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetProcessorConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetProcessorConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetProcessorConfig->InputParameters();
     {
         Brn buf((const TByte*)aProcessorConfig.c_str(), (TUint)aProcessorConfig.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::EndSetProcessorConfig(IAsync& aAsync)
@@ -156,29 +156,33 @@ void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::EndSetProcessorConfig(IAsync& a
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::SetPropertyAliveChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iAliveChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::SetPropertyProcessorConfigChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iProcessorConfigChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::PropertyAlive(bool& aAlive) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::PropertyProcessorConfig(std::string& aProcessorConfig) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iProcessorConfig->Value();
     aProcessorConfig.assign((const char*)val.Ptr(), val.Bytes());
 }
@@ -191,5 +195,44 @@ void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::AlivePropertyChanged()
 void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::ProcessorConfigPropertyChanged()
 {
     ReportEvent(iProcessorConfigChanged);
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgWebProcessorConfig1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

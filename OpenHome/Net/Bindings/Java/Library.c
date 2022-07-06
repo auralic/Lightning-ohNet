@@ -156,12 +156,26 @@ JNIEXPORT void JNICALL Java_org_openhome_net_core_Library_OhNetLibraryNotifyResu
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_openhome_net_core_Library_OhNetDebugSetLevel
-  (JNIEnv *aEnv, jclass aClass, jint aLevel)
+  (JNIEnv *aEnv, jclass aClass, jlong aLevel)
 {
-   aEnv = aEnv;
-   aClass = aClass;
+    aEnv = aEnv;
+    aClass = aClass;
 
-   OhNetDebugSetLevel((uint32_t)aLevel);
+    OhNetDebugSetLevel((uint64_t)aLevel);
+}
+
+/*
+ * Class:     org_openhome_net_core_Library
+ * Method:    OhNetDebugSetLevel
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_openhome_net_core_Library_OhNetDebugSetSeverity
+  (JNIEnv *aEnv, jclass aClass, jint aSeverity)
+{
+    aEnv = aEnv;
+    aClass = aClass;
+
+    OhNetDebugSetSeverity((uint32_t)aSeverity);
 }
 
 /*
@@ -176,6 +190,20 @@ JNIEXPORT jlong JNICALL Java_org_openhome_net_core_Library_OhNetCurrentSubnetAda
     aClass = aClass;
 
     return (jlong) (size_t)OhNetCurrentSubnetAdapter("Java client");
+}
+
+/*
+* Class:     org_openhome_net_core_Library
+* Method:    OhNetRefreshNetworkAdapterList
+* Signature: ()V
+*/
+JNIEXPORT void JNICALL Java_org_openhome_net_core_Library_OhNetRefreshNetworkAdapterList
+(JNIEnv *aEnv, jclass aClass)
+{
+    aEnv = aEnv;
+    aClass = aClass;
+
+    OhNetRefreshNetworkAdapterList();
 }
 
 /*

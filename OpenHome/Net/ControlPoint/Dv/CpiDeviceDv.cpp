@@ -10,6 +10,7 @@
 #include <OpenHome/Private/Printer.h>
 #include <OpenHome/Net/Private/CpiStack.h>
 #include <OpenHome/Net/Private/DviStack.h>
+#include <OpenHome/Private/Debug.h>
 #include <OpenHome/Private/Env.h>
 
 using namespace OpenHome;
@@ -25,11 +26,13 @@ CpiDeviceDv::CpiDeviceDv(CpStack& aCpStack, DviDevice& aDevice)
     iDeviceDv.AddWeakRef();
     iDeviceCp = new CpiDevice(aCpStack, iDeviceDv.Udn(), *this, *this, NULL);
     iDeviceCp->SetReady();
+    iInvocable = new Invocable(*this);
 }
 
 CpiDeviceDv::~CpiDeviceDv()
 {
     iShutdownSem.Wait(); // blocks until all DviSubscriptions are deleted
+    delete iInvocable;
 }
 
 CpiDevice& CpiDeviceDv::Device()
@@ -39,18 +42,9 @@ CpiDevice& CpiDeviceDv::Device()
 
 void CpiDeviceDv::InvokeAction(Invocation& aInvocation)
 {
-    const OpenHome::Net::ServiceType& serviceType = aInvocation.ServiceType();
-    DviService* service = iDeviceDv.ServiceReference(serviceType);
-    if (service == NULL) {
-        const HttpStatus& err = HttpStatus::kNotFound;
-        aInvocation.SetError(Error::eUpnp, err.Code(), err.Reason());
-    }
-    else {
-        InvocationDv stream(aInvocation, *service);
-        stream.Start();
-        service->RemoveRef();
-    }
-    aInvocation.SignalCompleted();
+    iDeviceDv.GetDvStack().NotifyControlPointUsed(Brn("Device/local"));
+    aInvocation.SetInvoker(*iInvocable);
+    iDeviceCp->GetCpStack().InvocationManager().Invoke(&aInvocation);
 }
 
 TBool CpiDeviceDv::GetAttribute(const char* aKey, Brh& aValue) const
@@ -59,6 +53,7 @@ TBool CpiDeviceDv::GetAttribute(const char* aKey, Brh& aValue) const
     iDeviceDv.GetAttribute(aKey, &value);
     if (value != NULL) {
         aValue.Set(value);
+        return true;
     }
     return false;
 }
@@ -127,6 +122,11 @@ void CpiDeviceDv::Unsubscribe(CpiSubscription& aSubscription, const Brx& aSid)
     // can't safely access subscription now - RemoveRef() above may have resulted in it being deleted
 }
 
+TBool CpiDeviceDv::OrphanSubscriptionsOnSubnetChange() const
+{
+    return false;
+}
+
 void CpiDeviceDv::NotifyRemovedBeforeReady()
 {
 }
@@ -145,23 +145,28 @@ void CpiDeviceDv::Release()
     delete this;
 }
 
-IPropertyWriter* CpiDeviceDv::CreateWriter(const IDviSubscriptionUserData* /*aUserData*/,
-                                           const Brx& aSid, TUint aSequenceNumber)
+IPropertyWriter* CpiDeviceDv::ClaimWriter(const IDviSubscriptionUserData* /*aUserData*/,
+                                          const Brx& aSid, TUint aSequenceNumber)
 {
     Brn sid(aSid);
     SubscriptionMap::iterator it = iSubscriptions.find(sid);
     if (it == iSubscriptions.end()) {
-        Log::Print("!!! CpiDeviceDv::CreateWriter failed to find subscription\n");
+        Log::Print("!!! CpiDeviceDv::ClaimWriter failed to find subscription\n");
         return NULL;
     }
     Subscription* subscription = it->second;
+    ASSERT(subscription->iCp != NULL);
     if (!subscription->iCp->UpdateSequenceNumber(aSequenceNumber)) {
         subscription->iCp->SetNotificationError();
         return NULL;
     }
     subscription->iCp->Unlock();
-    ASSERT(subscription->iCp != NULL);
     return new PropertyWriterDv(*(subscription->iCp));
+}
+
+void CpiDeviceDv::ReleaseWriter(IPropertyWriter* aWriter)
+{
+    delete aWriter;
 }
 
 void CpiDeviceDv::NotifySubscriptionCreated(const Brx& /*aSid*/)
@@ -186,6 +191,36 @@ void CpiDeviceDv::NotifySubscriptionExpired(const Brx& /*aSid*/)
 {
 }
 
+void CpiDeviceDv::LogUserData(IWriter& aWriter, const IDviSubscriptionUserData& /*aUserData*/)
+{
+    aWriter.Write(Brn(", protocol: Dv"));
+}
+
+
+// class CpiDeviceDv::Invocable
+
+CpiDeviceDv::Invocable::Invocable(CpiDeviceDv& aDevice)
+    : iDevice(aDevice)
+{
+}
+
+void CpiDeviceDv::Invocable::InvokeAction(Invocation& aInvocation)
+{
+    const OpenHome::Net::ServiceType& serviceType = aInvocation.ServiceType();
+    DviService* service = iDevice.iDeviceDv.ServiceReference(serviceType);
+    if (service == NULL) {
+        LOG_ERROR(kCpDeviceDv, "CpiDeviceDv::Invocable::InvokeAction failed lookup for service %.*s:%.*s:%u\n",
+                                  PBUF(serviceType.Domain()), PBUF(serviceType.Name()), serviceType.Version());
+        const HttpStatus& err = HttpStatus::kNotFound;
+        aInvocation.SetError(Error::eUpnp, err.Code(), err.Reason());
+    }
+    else {
+        InvocationDv stream(aInvocation, *service);
+        stream.Start();
+        service->RemoveRef();
+    }
+}
+
 
 // InvocationDv
 
@@ -205,7 +240,7 @@ void InvocationDv::Invoke()
 {
     const Brx& actionName = iInvocation.Action().Name();
     try {
-        iService.Invoke(*this, actionName);
+        iService.InvokeDirect(*this, actionName);
     }
     catch (InvocationError&) {}
     catch (ParameterValidationError&) {
@@ -231,6 +266,11 @@ const char* InvocationDv::ResourceUriPrefix() const
 Endpoint InvocationDv::ClientEndpoint() const
 {
     return Endpoint(0, 0);
+}
+
+const Brx& InvocationDv::ClientUserAgent() const
+{
+    return Brx::Empty();
 }
 
 void InvocationDv::InvocationReadStart()
@@ -453,8 +493,9 @@ void PropertyWriterDv::Release()
 
 void OutputProcessorDv::ProcessString(const Brx& aBuffer, Brhz& aVal)
 {
-    TUint bytes = aBuffer.Bytes();
+    TUint bytes = aVal.Bytes() + aBuffer.Bytes();
     Bwh tmp(bytes + 1);
+    tmp.Append(aVal);
     tmp.Append(aBuffer);
     tmp.Append((TByte)0);
     tmp.SetBytes(bytes);
@@ -481,9 +522,8 @@ void OutputProcessorDv::ProcessBool(const Brx& aBuffer, TBool& aVal)
 
 void OutputProcessorDv::ProcessBinary(const Brx& aBuffer, Brh& aVal)
 {
-    Bwh tmp(aBuffer.Bytes());
-    if (aBuffer.Bytes() > 0) {
-        tmp.Append(aBuffer);
-    }
+    Bwh tmp(aVal.Bytes() + aBuffer.Bytes());
+    tmp.Append(aVal);
+    tmp.Append(aBuffer);
     tmp.TransferTo(aVal);
 }

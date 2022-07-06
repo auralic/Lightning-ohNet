@@ -7,21 +7,95 @@
 #include <OpenHome/Net/Private/Error.h>
 #include <OpenHome/Net/Private/CpiDevice.h>
 
-using namespace OpenHome;
-using namespace OpenHome::Net;
-
+namespace OpenHome {
+namespace Net {
 
 class SyncGetFilterModeAvOpenhomeOrgDACConfig1 : public SyncProxyAction
 {
 public:
     SyncGetFilterModeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, Brh& aFilterMode, Brh& aFilterModeList);
     virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetFilterModeAvOpenhomeOrgDACConfig1() {}
 private:
     CpProxyAvOpenhomeOrgDACConfig1& iService;
     Brh& iFilterMode;
     Brh& iFilterModeList;
 };
+
+class SyncSetFilterModeAvOpenhomeOrgDACConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetFilterModeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgDACConfig1& iService;
+};
+
+class SyncGetDACPhaseAvOpenhomeOrgDACConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetDACPhaseAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, TUint& aPhase);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgDACConfig1& iService;
+    TUint& iPhase;
+};
+
+class SyncSetDACPhaseAvOpenhomeOrgDACConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetDACPhaseAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgDACConfig1& iService;
+};
+
+class SyncGetDACBalanceAvOpenhomeOrgDACConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetDACBalanceAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, TUint& aBalance);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgDACConfig1& iService;
+    TUint& iBalance;
+};
+
+class SyncSetDACBalanceAvOpenhomeOrgDACConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetDACBalanceAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgDACConfig1& iService;
+};
+
+class SyncGetWaitingTimeAvOpenhomeOrgDACConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetWaitingTimeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, Brh& aWaitingTime);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgDACConfig1& iService;
+    Brh& iWaitingTime;
+};
+
+class SyncSetWaitingTimeAvOpenhomeOrgDACConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetWaitingTimeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgDACConfig1& iService;
+};
+
+} // namespace Net
+} // namespace OpenHome
+
+
+using namespace OpenHome;
+using namespace OpenHome::Net;
+
+
+// SyncGetFilterModeAvOpenhomeOrgDACConfig1
 
 SyncGetFilterModeAvOpenhomeOrgDACConfig1::SyncGetFilterModeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, Brh& aFilterMode, Brh& aFilterModeList)
     : iService(aProxy)
@@ -35,16 +109,7 @@ void SyncGetFilterModeAvOpenhomeOrgDACConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndGetFilterMode(aAsync, iFilterMode, iFilterModeList);
 }
 
-
-class SyncSetFilterModeAvOpenhomeOrgDACConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetFilterModeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetFilterModeAvOpenhomeOrgDACConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgDACConfig1& iService;
-};
+// SyncSetFilterModeAvOpenhomeOrgDACConfig1
 
 SyncSetFilterModeAvOpenhomeOrgDACConfig1::SyncSetFilterModeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy)
     : iService(aProxy)
@@ -56,17 +121,7 @@ void SyncSetFilterModeAvOpenhomeOrgDACConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndSetFilterMode(aAsync);
 }
 
-
-class SyncGetDACPhaseAvOpenhomeOrgDACConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetDACPhaseAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, TUint& aPhase);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetDACPhaseAvOpenhomeOrgDACConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgDACConfig1& iService;
-    TUint& iPhase;
-};
+// SyncGetDACPhaseAvOpenhomeOrgDACConfig1
 
 SyncGetDACPhaseAvOpenhomeOrgDACConfig1::SyncGetDACPhaseAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, TUint& aPhase)
     : iService(aProxy)
@@ -79,16 +134,7 @@ void SyncGetDACPhaseAvOpenhomeOrgDACConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndGetDACPhase(aAsync, iPhase);
 }
 
-
-class SyncSetDACPhaseAvOpenhomeOrgDACConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetDACPhaseAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetDACPhaseAvOpenhomeOrgDACConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgDACConfig1& iService;
-};
+// SyncSetDACPhaseAvOpenhomeOrgDACConfig1
 
 SyncSetDACPhaseAvOpenhomeOrgDACConfig1::SyncSetDACPhaseAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy)
     : iService(aProxy)
@@ -100,17 +146,7 @@ void SyncSetDACPhaseAvOpenhomeOrgDACConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndSetDACPhase(aAsync);
 }
 
-
-class SyncGetDACBalanceAvOpenhomeOrgDACConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetDACBalanceAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, TUint& aBalance);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetDACBalanceAvOpenhomeOrgDACConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgDACConfig1& iService;
-    TUint& iBalance;
-};
+// SyncGetDACBalanceAvOpenhomeOrgDACConfig1
 
 SyncGetDACBalanceAvOpenhomeOrgDACConfig1::SyncGetDACBalanceAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, TUint& aBalance)
     : iService(aProxy)
@@ -123,16 +159,7 @@ void SyncGetDACBalanceAvOpenhomeOrgDACConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndGetDACBalance(aAsync, iBalance);
 }
 
-
-class SyncSetDACBalanceAvOpenhomeOrgDACConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetDACBalanceAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetDACBalanceAvOpenhomeOrgDACConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgDACConfig1& iService;
-};
+// SyncSetDACBalanceAvOpenhomeOrgDACConfig1
 
 SyncSetDACBalanceAvOpenhomeOrgDACConfig1::SyncSetDACBalanceAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy)
     : iService(aProxy)
@@ -144,17 +171,7 @@ void SyncSetDACBalanceAvOpenhomeOrgDACConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndSetDACBalance(aAsync);
 }
 
-
-class SyncGetWaitingTimeAvOpenhomeOrgDACConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetWaitingTimeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, Brh& aWaitingTime);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetWaitingTimeAvOpenhomeOrgDACConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgDACConfig1& iService;
-    Brh& iWaitingTime;
-};
+// SyncGetWaitingTimeAvOpenhomeOrgDACConfig1
 
 SyncGetWaitingTimeAvOpenhomeOrgDACConfig1::SyncGetWaitingTimeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy, Brh& aWaitingTime)
     : iService(aProxy)
@@ -167,16 +184,7 @@ void SyncGetWaitingTimeAvOpenhomeOrgDACConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndGetWaitingTime(aAsync, iWaitingTime);
 }
 
-
-class SyncSetWaitingTimeAvOpenhomeOrgDACConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetWaitingTimeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetWaitingTimeAvOpenhomeOrgDACConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgDACConfig1& iService;
-};
+// SyncSetWaitingTimeAvOpenhomeOrgDACConfig1
 
 SyncSetWaitingTimeAvOpenhomeOrgDACConfig1::SyncSetWaitingTimeAvOpenhomeOrgDACConfig1(CpProxyAvOpenhomeOrgDACConfig1& aProxy)
     : iService(aProxy)
@@ -189,8 +197,10 @@ void SyncSetWaitingTimeAvOpenhomeOrgDACConfig1::CompleteRequest(IAsync& aAsync)
 }
 
 
+// CpProxyAvOpenhomeOrgDACConfig1
+
 CpProxyAvOpenhomeOrgDACConfig1::CpProxyAvOpenhomeOrgDACConfig1(CpDevice& aDevice)
-    : CpProxy("av-openhome-org", "DACConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "DACConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -256,12 +266,12 @@ void CpProxyAvOpenhomeOrgDACConfig1::SyncGetFilterMode(Brh& aFilterMode, Brh& aF
 
 void CpProxyAvOpenhomeOrgDACConfig1::BeginGetFilterMode(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetFilterMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetFilterMode, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetFilterMode->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1::EndGetFilterMode(IAsync& aAsync, Brh& aFilterMode, Brh& aFilterModeList)
@@ -290,11 +300,11 @@ void CpProxyAvOpenhomeOrgDACConfig1::SyncSetFilterMode(const Brx& aFilterMode)
 
 void CpProxyAvOpenhomeOrgDACConfig1::BeginSetFilterMode(const Brx& aFilterMode, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetFilterMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetFilterMode, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetFilterMode->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aFilterMode));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1::EndSetFilterMode(IAsync& aAsync)
@@ -320,11 +330,11 @@ void CpProxyAvOpenhomeOrgDACConfig1::SyncGetDACPhase(TUint& aPhase)
 
 void CpProxyAvOpenhomeOrgDACConfig1::BeginGetDACPhase(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDACPhase, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDACPhase, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDACPhase->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1::EndGetDACPhase(IAsync& aAsync, TUint& aPhase)
@@ -352,11 +362,11 @@ void CpProxyAvOpenhomeOrgDACConfig1::SyncSetDACPhase(TUint aPhase)
 
 void CpProxyAvOpenhomeOrgDACConfig1::BeginSetDACPhase(TUint aPhase, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDACPhase, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDACPhase, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDACPhase->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aPhase));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1::EndSetDACPhase(IAsync& aAsync)
@@ -382,11 +392,11 @@ void CpProxyAvOpenhomeOrgDACConfig1::SyncGetDACBalance(TUint& aBalance)
 
 void CpProxyAvOpenhomeOrgDACConfig1::BeginGetDACBalance(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDACBalance, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDACBalance, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDACBalance->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1::EndGetDACBalance(IAsync& aAsync, TUint& aBalance)
@@ -414,11 +424,11 @@ void CpProxyAvOpenhomeOrgDACConfig1::SyncSetDACBalance(TUint aBalance)
 
 void CpProxyAvOpenhomeOrgDACConfig1::BeginSetDACBalance(TUint aBalance, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDACBalance, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDACBalance, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDACBalance->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aBalance));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1::EndSetDACBalance(IAsync& aAsync)
@@ -444,11 +454,11 @@ void CpProxyAvOpenhomeOrgDACConfig1::SyncGetWaitingTime(Brh& aWaitingTime)
 
 void CpProxyAvOpenhomeOrgDACConfig1::BeginGetWaitingTime(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetWaitingTime, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetWaitingTime, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetWaitingTime->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1::EndGetWaitingTime(IAsync& aAsync, Brh& aWaitingTime)
@@ -476,11 +486,11 @@ void CpProxyAvOpenhomeOrgDACConfig1::SyncSetWaitingTime(const Brx& aWaitingTime)
 
 void CpProxyAvOpenhomeOrgDACConfig1::BeginSetWaitingTime(const Brx& aWaitingTime, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetWaitingTime, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetWaitingTime, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetWaitingTime->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aWaitingTime));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1::EndSetWaitingTime(IAsync& aAsync)
@@ -499,15 +509,17 @@ void CpProxyAvOpenhomeOrgDACConfig1::EndSetWaitingTime(IAsync& aAsync)
 
 void CpProxyAvOpenhomeOrgDACConfig1::SetPropertyCurrentActionChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iCurrentActionChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgDACConfig1::PropertyCurrentAction(TUint& aCurrentAction) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -515,4 +527,45 @@ void CpProxyAvOpenhomeOrgDACConfig1::CurrentActionPropertyChanged()
 {
     ReportEvent(iCurrentActionChanged);
 }
+
+
+void CpProxyAvOpenhomeOrgDACConfig1::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgDACConfig1::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgDACConfig1::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgDACConfig1::Version() const
+{
+  return iCpProxy.Version();
+}
+
 

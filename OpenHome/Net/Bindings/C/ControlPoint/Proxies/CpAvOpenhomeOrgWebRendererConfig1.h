@@ -49,7 +49,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1Destroy(THandle aHa
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebRendererConfig1Create
  * @param[out] aRendererConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1SyncGetRendererConfig(THandle aHandle, char** aRendererConfig);
@@ -85,7 +85,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1EndGetRendererCo
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebRendererConfig1Create
  * @param[in]  aRendererConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1SyncSetRendererConfig(THandle aHandle, const char* aRendererConfig);
@@ -155,8 +155,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1SetPropertyCurrentA
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebRendererConfig1Create
  * @param[out] aAlive
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
 /**
  * Query the value of the RendererConfig property.
  *
@@ -165,8 +167,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyAlive(THand
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebRendererConfig1Create
  * @param[out] aRendererConfig
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyRendererConfig(THandle aHandle, char** aRendererConfig);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyRendererConfig(THandle aHandle, char** aRendererConfig);
 /**
  * Query the value of the CurrentAction property.
  *
@@ -175,8 +179,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyRendererCon
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebRendererConfig1Create
  * @param[out] aCurrentAction
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebRendererConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
 
 /* @} */
 

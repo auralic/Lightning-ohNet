@@ -32,6 +32,11 @@ void DvProviderUpnpOrgContentDirectory3::GetPropertyContainerUpdateIDs(Brhz& aVa
     aValue.Set(iPropertyContainerUpdateIDs->Value());
 }
 
+void DvProviderUpnpOrgContentDirectory3::WritePropertyContainerUpdateIDs(IWriter& aWriter)
+{
+    iPropertyContainerUpdateIDs->Write(aWriter);
+}
+
 TBool DvProviderUpnpOrgContentDirectory3::SetPropertyLastChange(const Brx& aValue)
 {
     ASSERT(iPropertyLastChange != NULL);
@@ -44,6 +49,11 @@ void DvProviderUpnpOrgContentDirectory3::GetPropertyLastChange(Brhz& aValue)
     aValue.Set(iPropertyLastChange->Value());
 }
 
+void DvProviderUpnpOrgContentDirectory3::WritePropertyLastChange(IWriter& aWriter)
+{
+    iPropertyLastChange->Write(aWriter);
+}
+
 TBool DvProviderUpnpOrgContentDirectory3::SetPropertyTransferIDs(const Brx& aValue)
 {
     ASSERT(iPropertyTransferIDs != NULL);
@@ -54,6 +64,11 @@ void DvProviderUpnpOrgContentDirectory3::GetPropertyTransferIDs(Brhz& aValue)
 {
     ASSERT(iPropertyTransferIDs != NULL);
     aValue.Set(iPropertyTransferIDs->Value());
+}
+
+void DvProviderUpnpOrgContentDirectory3::WritePropertyTransferIDs(IWriter& aWriter)
+{
+    iPropertyTransferIDs->Write(aWriter);
 }
 
 DvProviderUpnpOrgContentDirectory3::DvProviderUpnpOrgContentDirectory3(DvDevice& aDevice)

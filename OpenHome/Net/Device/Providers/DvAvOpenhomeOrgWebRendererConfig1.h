@@ -54,6 +54,12 @@ public:
      */
     void GetPropertyRendererConfig(Brhz& aValue);
     /**
+     * Output the value of the RendererConfig property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyRendererConfig has previously been called.
+     */
+    void WritePropertyRendererConfig(IWriter& aWriter);
+    /**
      * Set the value of the CurrentAction property
      *
      * Can only be called if EnablePropertyCurrentAction has previously been called.

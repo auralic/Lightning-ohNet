@@ -20,6 +20,44 @@ extern "C" {
  */
 
 /**
+ * Callback which runs when the LogIn action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionLogIn
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aServiceName
+ * @param[in]  aMessageIn
+ * @param[out] aMessageOut
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1LogIn)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aServiceName, const char* aMessageIn, char** aMessageOut);
+/**
+ * Callback which runs when the LogOut action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionLogOut
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aServiceName
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1LogOut)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aServiceName);
+/**
+ * Callback which runs when the CancelLogIn action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionCancelLogIn
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aServiceName
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1CancelLogIn)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, const char* aServiceName);
+/**
  * Callback which runs when the IsAlive action is invoked
  *
  * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionIsAlive
@@ -566,6 +604,42 @@ typedef int32_t (STDCALL *CallbackHardwareConfig1GetDACBalance)(void* aPtr, IDvI
  * @return  0 if the action succeeded; non-zero if the action failed
  */
 typedef int32_t (STDCALL *CallbackHardwareConfig1SetDACBalance)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aBalance);
+/**
+ * Callback which runs when the SetEnableResampler action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableResampler
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aEnableResampler
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1SetEnableResampler)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aEnableResampler);
+/**
+ * Callback which runs when the SetEnableSpeaker action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableSpeaker
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aEnableSpeaker
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1SetEnableSpeaker)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aEnableSpeaker);
+/**
+ * Callback which runs when the SetEnableEqualizer action is invoked
+ *
+ * @param[in]  aPtr           Opaque data passed to DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableEqualizer
+ * @param[in]  aInvocation    Table of function pointers allowing access to the version of the service being used
+ *                            and other queries.
+ * @param[in] aInvocationPtr  aPtr argument to all functions contained in aInvocation.
+ * @param[in]  aEnableEqualizer
+ *
+ * @return  0 if the action succeeded; non-zero if the action failed
+ */
+typedef int32_t (STDCALL *CallbackHardwareConfig1SetEnableEqualizer)(void* aPtr, IDvInvocationC* aInvocation, void* aInvocationPtr, uint32_t aEnableEqualizer);
 
 /**
  * Provider constructor
@@ -583,6 +657,10 @@ DllExport THandle STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Create(DvDeviceC
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Destroy(THandle aProvider);
 
+/**
+ * Enable the MessageOut property.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyMessageOut(THandle aProvider);
 /**
  * Enable the Alive property.
  */
@@ -676,6 +754,39 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyTime(
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyVolumeControl(THandle aProvider);
 
+/**
+ * Register a callback for the action LogIn
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionLogIn(THandle aProvider, CallbackHardwareConfig1LogIn aCallback, void* aPtr);
+/**
+ * Register a callback for the action LogOut
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionLogOut(THandle aProvider, CallbackHardwareConfig1LogOut aCallback, void* aPtr);
+/**
+ * Register a callback for the action CancelLogIn
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionCancelLogIn(THandle aProvider, CallbackHardwareConfig1CancelLogIn aCallback, void* aPtr);
 /**
  * Register a callback for the action IsAlive
  *
@@ -1149,7 +1260,62 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetDACB
  * @param[in] aPtr       Client-specified data which will be passed to the callback
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetDACBalance(THandle aProvider, CallbackHardwareConfig1SetDACBalance aCallback, void* aPtr);
+/**
+ * Register a callback for the action SetEnableResampler
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableResampler(THandle aProvider, CallbackHardwareConfig1SetEnableResampler aCallback, void* aPtr);
+/**
+ * Register a callback for the action SetEnableSpeaker
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableSpeaker(THandle aProvider, CallbackHardwareConfig1SetEnableSpeaker aCallback, void* aPtr);
+/**
+ * Register a callback for the action SetEnableEqualizer
+ *
+ * If this is called, the action's availability will be published in the device's service.xml.
+ * If this is not called, any attempt to invoke the action on a control point will fail.
+ *
+ * @param[in] aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in] aCallback  Callback which will be run when the action is invoked
+ * @param[in] aPtr       Client-specified data which will be passed to the callback
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableEqualizer(THandle aProvider, CallbackHardwareConfig1SetEnableEqualizer aCallback, void* aPtr);
 
+/**
+ * Set the value of the MessageOut property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyMessageOut has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[in]  aValue     New value for the property (will be copied)
+ * @param[out] aChanged   1 if the value has been updated; 0 if it was the same as the previous value
+ *
+ * @return  0 if the property was successfully set; non-zero if there was an error (including
+ *          an attempt to set a property to a value not in its allowed range/set)
+ */
+DllExport int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyMessageOut(THandle aProvider, const char* aValue, uint32_t* aChanged);
+/**
+ * Get a copy of the value of the MessageOut property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyMessageOut has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgHardwareConfig1Create
+ * @param[out] aValue     Value for the property.  Caller is responsible for freeing this.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1GetPropertyMessageOut(THandle aProvider, char** aValue);
 /**
  * Set the value of the Alive property
  *

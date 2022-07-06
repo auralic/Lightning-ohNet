@@ -1,12 +1,43 @@
 #!/usr/bin/env python
 #
-import os, subprocess
+import os
+import subprocess
 import shutil
+import sys
 from optparse import OptionParser
 from Helpers.valgrind_parser import *
 from Helpers.remote import *
-import sys
 from os import path
+
+try:
+    import boto3
+    import boto3.s3.transfer
+except:
+    print('\nAWS fetch requires boto3 module')
+    print("Please install this using 'pip install boto3'\n")
+else:
+    # create AWS credentials file (if not already present)
+    home = None
+    if 'HOMEPATH' in os.environ and 'HOMEDRIVE' in os.environ:
+        home = os.path.join(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'])
+    elif 'HOME' in os.environ:
+        home = os.environ['HOME']
+    if home:
+        awsCreds = os.path.join(home, '.aws', 'credentials')
+        if not os.path.exists(awsCreds):
+            if sys.version_info[0] == 2:
+                from urllib2 import urlopen
+            else:
+                from urllib.request import urlopen
+            try:
+                os.mkdir(os.path.join(home, '.aws'))
+            except:
+                pass
+            credsFile = urlopen('http://core.linn.co.uk/~artifacts/artifacts/aws-credentials' )
+            creds = credsFile.read()
+            with open(awsCreds, 'wt') as f:
+                f.write(creds)
+
 
 class PostActions():
     def valgrind_parse(self):
@@ -18,47 +49,35 @@ class PostActions():
         val = valgrindParser()
         val.put_dummy('vgout')
 
-    def do_release(self,platform):
-        rem = remote()
+    def do_release(self, platform):
         release_targets = []
         release_targets.append('release')
         release_targets.append('debug')
 
     def gen_docs(self):
-        rem = remote()
         ret = subprocess.check_call('make docs', shell=True)
         if ret != 0:
             print ret
             sys.exit(10)
-        ret = rem.rsync_gc('hudson-rsync','openhome.org','Build/Docs/','~/build/nightly/docs')
-        if ret != 0:
-            print ret
-            sys.exit(10)
+        print 'WARNING: publication of API docs disabled'
 
-    def armel_tests(self,type,release):
+    def armel_tests(self, type, release):
         self.__remote_tests('sheeva010.linn.co.uk', 'root', type, release)
 
-    def armhf_tests(self,type,release):
-        self.__remote_tests('test-rpi.linn.co.uk', 'test', type, release)
-
-    # TODO
-    def mipsel_tests(self,type,release):
-        pass
-
-    def __remote_tests(self, host, user, type,release):
+    def __remote_tests(self, host, user, type, release):
         # type will be either 'nightly' or 'commit'
         # release will be either '0' or '1'
         rem = remote()
-        ret = rem.rsync(user, host,'Build','~/', excludes=['*.o', '*.a', 'Bundles'])
+        ret = rem.rsync(user, host, 'Build', '~/', excludes=['*.o', '*.a', 'Bundles'])
         if ret != 0:
             print ret
             sys.exit(10)
-        ret = rem.rsync(user, host,'AllTests.py','~/')
+        ret = rem.rsync(user, host, 'AllTests.py', '~/')
         if ret != 0:
             print ret
             sys.exit(10)
 
-        alltests_cmd = 'python AllTests.py -t' # Setup AllTests cmd line to run tests only.
+        alltests_cmd = 'python AllTests.py -t --native'  # Setup AllTests cmd line to run tests only.
 
         if type == 'nightly':
             alltests_cmd += ' -f'        # Add 'full test' flag if in nightly-mode
@@ -69,7 +88,8 @@ class PostActions():
         if ret != 0:
             print ret
             sys.exit(10)
-    
+
+
 class JenkinsBuild():
     def get_options(self):
         env_platform = os.environ.get('PLATFORM')
@@ -79,7 +99,7 @@ class JenkinsBuild():
 
         parser = OptionParser()
         parser.add_option("-p", "--platform", dest="platform",
-            help="Linux-x86, Linux-x64, Windows-x86, Windows-x64, Linux-ARM, Linux-armhf, Linux-mipsel, Linux-ppc32, Mac-x64, Core-ppc32, Core-armv5, Core-armv6, iOs-armv7, iOs-arm64, iOs-x86, Qnap-x86, Qnap-armel")
+            help="Linux-x86, Linux-x64, Windows-x86, Windows-x64, Linux-ARM, Linux-armhf, Linux-mipsel, Linux-ppc32, Linux-rpi, Mac-x64, Core-ppc32, Core-armv6, iOs-armv7, iOs-arm64, iOs-x86, iOs-x64, Qnap-x86, Qnap-x19")
         parser.add_option("-n", "--nightly",
                   action="store_true", dest="nightly", default=False,
                   help="Perform a nightly build")
@@ -96,44 +116,51 @@ class JenkinsBuild():
         # check if env variables are set
         # if they are, ignore what is on the command line.
 
-        if env_platform != None:
+        if env_platform is not None:
             self.options.platform = env_platform
-        if env_version != None:
+        if env_version is not None:
             self.options.version = env_version
-        if env_nightly == 'true' or self.options.nightly == True:
-             self.options.nightly = '1'
+        if env_nightly == 'true' or self.options.nightly:
+            self.options.nightly = '1'
         else:
             self.options.nightly = '0'
-        if env_release == 'true' or self.options.release == True:
+        if env_release == 'true' or self.options.release:
             self.options.release = '1'
         else:
             self.options.release = '0'
 
-        print "options for build are nightly:%s and release:%s on platform %s" %(self.options.nightly,self.options.release,self.options.platform)
+        print "options for build are nightly:%s and release:%s on platform %s" % (self.options.nightly, self.options.release, self.options.platform)
 
     def get_platform(self):
-        platforms = { 
-                'Linux-x86': { 'os':'linux', 'arch':'x86', 'publish':True, 'system':'Linux'},
-                'Linux-x64': { 'os':'linux', 'arch':'x64', 'publish':True, 'system':'Linux'},
-                'Linux-ppc32': { 'os':'linux', 'arch':'ppc32', 'publish':True, 'system':'Linux'},
-                'Windows-x86': { 'os': 'windows', 'arch':'x86', 'publish':True, 'system':'Windows'},
-                'Windows-x64': { 'os': 'windows', 'arch':'x64', 'publish':True, 'system':'Windows'},
-                'Macos-x64': { 'os': 'macos', 'arch':'x86', 'publish':False, 'system':'Mac'}, # Old Jenkins label
-                'Mac-x64': { 'os': 'macos', 'arch':'x64', 'publish':True, 'system':'Mac'}, # New Jenkins label, matches downstream builds
-                'Mac-x86': { 'os': 'macos', 'arch':'x86', 'publish':True, 'system':'Mac'}, # New Jenkins label, matches downstream builds
-                'Linux-ARM': { 'os': 'linux', 'arch': 'armel', 'publish':True, 'system':'Linux'},
-                'Linux-armhf': { 'os': 'linux', 'arch': 'armhf', 'publish':True, 'system':'Linux'},
-                'Linux-mipsel': { 'os': 'linux', 'arch': 'mipsel', 'publish':True, 'system':'Linux'},
-                'iOs-ARM': { 'os': 'iOs', 'arch':'armv7', 'publish':True, 'system':'iOs'}, # Old Jenkins label
-                'iOs-x86': { 'os': 'iOs', 'arch':'x86', 'publish':True, 'system':'iOs'},
-                'iOs-armv7': { 'os': 'iOs', 'arch':'armv7', 'publish':True, 'system':'iOs'},
-                'iOs-arm64': { 'os': 'iOs', 'arch':'arm64', 'publish':True, 'system':'iOs'},
-                'Core-ppc32': { 'os': 'Core', 'arch':'ppc32', 'publish':True, 'system':'Core'},
-                'Core-armv5': { 'os': 'Core', 'arch':'armv5', 'publish':True, 'system':'Core'},
-                'Core-armv6': { 'os': 'Core', 'arch':'armv6', 'publish':True, 'system':'Core'},
-                'Android-anycpu': { 'os': 'Android', 'arch':'anycpu', 'publish':True, 'system':'Android'},
-                'Qnap-x86': { 'os':'Qnap', 'arch':'x86', 'publish':True, 'system':'Qnap'},
-                'Qnap-armel': {'os':'Qnap', 'arch':'armel', 'publish':True, 'system':'Qnap'}
+        platforms = {
+            'Linux-x86': { 'os': 'linux', 'arch': 'x86', 'publish': True, 'system': 'Linux'},
+            'Linux-x64': { 'os': 'linux', 'arch': 'x64', 'publish': True, 'system': 'Linux'},
+            'Linux-ppc32': { 'os': 'linux', 'arch': 'ppc32', 'publish': True, 'system': 'Linux'},
+            'Windows-x86': { 'os': 'windows', 'arch': 'x86', 'publish': True, 'system': 'Windows'},
+            'Windows-x64': { 'os': 'windows', 'arch': 'x64', 'publish': True, 'system': 'Windows'},
+            'Windows81-x86': { 'os': 'Windows81', 'arch': 'x86', 'publish': True, 'system': 'Windows81'},
+            'Windows81-x64': { 'os': 'Windows81', 'arch': 'x64', 'publish': True, 'system': 'Windows81'},
+            'Windows81-arm': { 'os': 'Windows81', 'arch': 'arm', 'publish': True, 'system': 'Windows81'},
+            'Windows10-x86': { 'os': 'Windows10', 'arch': 'x86', 'publish': True, 'system': 'Windows10'},
+            'Windows10-x64': { 'os': 'Windows10', 'arch': 'x64', 'publish': True, 'system': 'Windows10'},
+            'Windows10-arm': { 'os': 'Windows10', 'arch': 'arm', 'publish': True, 'system': 'Windows10'},
+            'Macos-x64': { 'os': 'macos', 'arch': 'x86', 'publish': False, 'system': 'Mac'},  # Old Jenkins label
+            'Mac-x64': { 'os': 'macos', 'arch': 'x64', 'publish': True, 'system': 'Mac'},     # New Jenkins label, matches downstream builds
+            'Mac-x86': { 'os': 'macos', 'arch': 'x86', 'publish': True, 'system': 'Mac'},     # New Jenkins label, matches downstream builds
+            'Linux-ARM': { 'os': 'linux', 'arch': 'armel', 'publish': True, 'system': 'Linux'},
+            'Linux-armhf': { 'os': 'linux', 'arch': 'armhf', 'publish': True, 'system': 'Linux'},
+            'Linux-rpi': { 'os': 'linux', 'arch': 'rpi', 'publish': True, 'system': 'Linux'},
+            'Linux-mipsel': { 'os': 'linux', 'arch': 'mipsel', 'publish': True, 'system': 'Linux'},
+            'iOs-ARM': { 'os': 'iOs', 'arch': 'armv7', 'publish': True, 'system': 'iOs'},  # Old Jenkins label
+            'iOs-x86': { 'os': 'iOs', 'arch': 'x86', 'publish': True, 'system': 'iOs'},
+            'iOs-x64': { 'os': 'iOs', 'arch': 'x64', 'publish': True, 'system': 'iOs'},
+            'iOs-armv7': { 'os': 'iOs', 'arch': 'armv7', 'publish': True, 'system': 'iOs'},
+            'iOs-arm64': { 'os': 'iOs', 'arch': 'arm64', 'publish': True, 'system': 'iOs'},
+            'Core-ppc32': { 'os': 'Core', 'arch': 'ppc32', 'publish': True, 'system': 'Core'},
+            'Core-armv6': { 'os': 'Core', 'arch': 'armv6', 'publish': True, 'system': 'Core'},
+            'Android-anycpu': { 'os': 'Android', 'arch': 'anycpu', 'publish': True, 'system': 'Android'},
+            'Qnap-x86': { 'os': 'Qnap', 'arch': 'x86', 'publish': True, 'system': 'Qnap'},
+            'Qnap-x19': {'os': 'Qnap', 'arch': 'x19', 'publish': True, 'system': 'Qnap'}
         }
         current_platform = self.options.platform
         self.platform = platforms[current_platform]
@@ -141,26 +168,52 @@ class JenkinsBuild():
     def set_platform_args(self):
         os_platform = self.platform['os']
         arch = self.platform['arch']
-        args=[]
+        args = []
 
         if os_platform == 'windows' and arch == 'x86':
-            args.append('vcvarsall.bat')
+            args.append('C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\VC\\Auxiliary\\Build\\vcvarsall.bat')
+            args.append('x86')
         if os_platform == 'windows' and arch == 'x64':
-            args.append('vcvarsall.bat')
+            args.append('C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\VC\\Auxiliary\\Build\\vcvarsall.bat')
             args.append('amd64')
             os.environ['CS_PLATFORM'] = 'x64'
+        if os_platform == 'Windows81' and arch == 'x86':
+            args.append('C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\\vcvarsall.bat')
+            args.append('amd64_x86')
+        if os_platform == 'Windows81' and arch == 'x64':
+            args.append('C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\\vcvarsall.bat')
+            args.append('amd64')
+        if os_platform == 'Windows81' and arch == 'arm':
+            args.append('C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\\vcvarsall.bat')
+            args.append('amd64_arm')
+        if os_platform == 'Windows10' and arch == 'x86':
+            args.append('C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\\vcvarsall.bat')
+            args.append('amd64_x86')
+            args.append('store')
+        if os_platform == 'Windows10' and arch == 'x64':
+            args.append('C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\\vcvarsall.bat')
+            args.append('amd64')
+            args.append('store')
+        if os_platform == 'Windows10' and arch == 'arm':
+            args.append('C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\\vcvarsall.bat')
+            args.append('amd64_arm')
+            args.append('store')
         if os_platform == 'linux' and arch == 'armel':
             os.environ['CROSS_COMPILE'] = '/usr/local/arm-2011.09/bin/arm-none-linux-gnueabi-'
         if os_platform == 'linux' and arch == 'armhf':
-	        os.environ['CROSS_COMPILE'] = '/opt/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-'
+            os.environ['CROSS_COMPILE'] = '/opt/gcc-linaro-5.3.1-2016.05-i686_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-'
+        if os_platform == 'linux' and arch == 'rpi':
+            os.environ['CROSS_COMPILE'] = '/opt/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-'
         if os_platform == 'linux' and arch == 'mipsel':
-            os.environ['CROSS_COMPILE'] = 'mipsel-cros-linux-gnu-'
+            os.environ['CROSS_COMPILE'] = '/opt/mips-2015.05-18/bin/mips-linux-gnu-'
+        if os_platform == 'linux' and arch == 'ppc32':
+            os.environ['CROSS_COMPILE'] = 'powerpc-linux-gnu-'
         if os_platform == 'Core' and arch == 'ppc32':
-            os.environ['CROSS_COMPILE'] = '/opt/rtems-4.11/bin/powerpc-rtems4.11-'
+            os.environ['CROSS_COMPILE'] = '/opt/rtems-4.11-rsb/bin/powerpc-rtems4.11-'
         if os_platform == 'Core' and (arch == 'armv5' or arch == 'armv6'):
-            os.environ['CROSS_COMPILE'] = '/opt/rtems-4.11/bin/arm-rtemseabi4.11-'
-        if os_platform == 'Qnap' and arch == 'armel':
-            os.environ['CROSS_COMPILE'] = '/home/hudson-smarties/qnap-gcc/cross-project/arm/marvell/bin/arm-none-linux-gnueabi-'
+            os.environ['CROSS_COMPILE'] = '/opt/rtems-4.11-rsb/bin/arm-rtems4.11-'
+        if os_platform == 'Qnap' and arch == 'x19':
+            os.environ['CROSS_COMPILE'] = '/home/bldslv/qnap-gcc/cross-project/arm/marvell/bin/arm-none-linux-gnueabi-'
 
         self.platform_args = args
 
@@ -168,17 +221,20 @@ class JenkinsBuild():
         nightly = self.options.nightly
         arch = self.platform['arch']
         os_platform = self.platform['os']
-        args=[]
+        args = []
         args.append('python')
         args.append('AllTests.py')
         args.append('--silent')
 
         self.platform_make_args = []
 
-        if (arch in ['armel', 'armhf', 'armv7', 'arm64', 'armv5', 'armv6', 'mipsel']) or (arch == 'ppc32' and os_platform == 'Core') or (os_platform == 'Android'):
+        if (arch in ['armel', 'armhf', 'armv7', 'arm64', 'armv5', 'armv6', 'mipsel', 'ppc32', 'rpi']) or (os_platform in ['iOs', 'Android', 'Windows81', 'Windows10']):
             args.append('--buildonly')
-        elif arch == 'x64' and not os_platform in ['windows', 'linux']:
-            args.append('--native')
+        elif arch == 'x64':
+            if os_platform  == 'macos':
+                args.append('--native-tests')
+            elif os_platform not in ['windows', 'linux', 'iOs']:
+                args.append('--native-builds')
         if os_platform == 'windows' and arch == 'x86':
             args.append('--js')
             args.append('--java')
@@ -192,12 +248,19 @@ class JenkinsBuild():
             if arch == 'x86':
                 args.append('--iOs-x86')
                 self.platform_make_args.append('iOs-x86=1')
+            elif arch == 'x64':
+                args.append('--iOs-x64')
+                self.platform_make_args.append('iOs-x64=1')
             elif arch == 'armv7':
                 args.append('--iOs-armv7')
                 self.platform_make_args.append('iOs-armv7=1')
             elif arch == 'arm64':
                 args.append('--iOs-arm64')
                 self.platform_make_args.append('iOs-arm64=1')
+        if os_platform == 'Linux':
+            if arch == 'rpi':
+                args.append('--Linux-rpi')
+                self.platform_make_args.append('Linux-rpi=1')
             # 32 and 64-bit builds run in parallel on the same slave.
             # Overlapping test instances interfere with each other so only run tests for the (assumed more useful) 32-bit build.
             # Temporarily disable all tests on mac as publish jobs hang otherwise
@@ -206,33 +269,34 @@ class JenkinsBuild():
             args.append('--Android-anycpu')
             self.platform_make_args.append('Android-anycpu=1')
         if os_platform == 'Qnap':
-            args.append('--Qnap-anycpu')
-            self.platform_make_args.append('Qnap-anycpu=1')
+            args.extend(['--qnap', '--buildonly'])
         if os_platform == 'Core':
             args.append('--core')
+        if os_platform == 'Windows81':
+            args.append('--Windows81')
+        if os_platform == 'Windows10':
+            args.append('--Windows10')
         if nightly == '1':
             args.append('--full')
             if os_platform == 'linux' and arch == 'x86':
-                args.append('--valgrind')    
+                args.append('--valgrind')
         if self.options.parallel:
             args.append('--parallel')
         self.build_args = args
 
     def do_build(self):
-        nightly = self.options.nightly
         release = self.options.release
-        os_platform = self.platform['os']
         build_args = self.build_args
         platform_args = self.platform_args
         common_args = []
-            
+
         if platform_args == []:
             common_args.extend(build_args)
         else:
             common_args.extend(platform_args)
             common_args.append('&&')
             common_args.extend(build_args)
-            
+
         build_targets = []
         build_targets.append('debug')
 
@@ -246,31 +310,28 @@ class JenkinsBuild():
             if build_t == 'release':
                 build.append('--incremental')
 
-            print 'running build with %s' %(build,)
+            print 'running build with %s' % (build,)
 
-            ret = subprocess.check_call(build)            
+            ret = subprocess.check_call(build)
             if ret != 0:
                 print ret
                 sys.exit(10)
 
     def do_release(self):
-        rem = remote()
-
-        nightly = self.options.nightly
         release = self.options.release
         platform_args = self.platform_args
         platform = self.options.platform
         version = self.options.version
         openhome_system = self.platform['system']
         openhome_architecture = self.platform['arch']
-        
+
         release_targets = []
         release_targets.append('release')
         release_targets.append('debug')
 
         # clean slate so as not to upload random junk inadvertently
         shutil.rmtree(os.path.join('Build', 'Bundles'), ignore_errors=True)
-        
+
         for release in release_targets:
             openhome_configuration = release.title()
             build = []
@@ -280,6 +341,8 @@ class JenkinsBuild():
             build.append('make')
             build.append('tt')
             build.append('uset4=yes')
+            if self.platform['os'] == 'Qnap':
+                build.append('platform=' + platform)
             ret = subprocess.check_call(build)
             if ret != 0:
                 print ret
@@ -292,29 +355,37 @@ class JenkinsBuild():
 
             build.append('make')
             build.append('bundle')
-            #build.append('targetplatform=%s' %(platform,))
-            #build.append('releasetype=%s' %(release,))
             build.append('uset4=yes')
+            if self.platform['os'] == 'Qnap':
+                build.append('platform=' + platform)
             build.append('openhome_system=' + openhome_system)
             build.append('openhome_architecture=' + openhome_architecture)
             build.append('openhome_configuration=' + openhome_configuration)
             build.extend(self.platform_make_args)
-
-            print "doing release with bundle %s" %(build,)
+            print "doing release with bundle %s" % (build,)
 
             ret = subprocess.check_call(build)
             if ret != 0:
                 print ret
                 sys.exit(10)
 
-            native_bundle_name = os.path.join('Build/Bundles',"ohNet-%s-%s-%s.tar.gz" %(openhome_system, openhome_architecture, openhome_configuration))
-            native_dest = os.path.join('Build/Bundles',"ohNet-%s-%s-%s-%s.tar.gz" %(version, openhome_system, openhome_architecture, openhome_configuration))
+            native_bundle_name = os.path.join('Build/Bundles', "ohNet-%s-%s-%s.tar.gz" % (openhome_system, openhome_architecture, openhome_configuration))
+            native_dest = os.path.join('Build/Bundles', "ohNet-%s-%s-%s-%s.tar.gz" % (version, openhome_system, openhome_architecture, openhome_configuration))
             if os.path.exists(native_dest):
                 os.remove(native_dest)
             os.rename(native_bundle_name, native_dest)
-        rem.check_rsync('releases','www.openhome.org','Build/Bundles/','~/www/artifacts/ohNet/')
-                        
-    
+
+        entries = os.listdir('Build/Bundles/')
+        for entry in entries:
+            src = 'Build/Bundles/' + entry
+            dst = 's3://linn-artifacts-public/artifacts/ohNet/' + entry.split('/')[-1]
+            print ('Publish %s --> %s' % (src, dst))
+            resource = boto3.resource('s3')
+            bucket = resource.Bucket(dst.split('/')[2])
+            key = '/'.join(dst.split('/')[3:])
+            with open( src, 'rb' ) as data:
+                bucket.upload_fileobj(data, key)
+
     def do_postAction(self):
         nightly = self.options.nightly
         release = self.options.release
@@ -333,24 +404,19 @@ class JenkinsBuild():
             if os_platform == 'linux':
                 if arch == 'armel':
                     postAction.armel_tests('nightly', release)
-                if arch == 'armhf':
-                    postAction.armhf_tests('nightly', release)
-                if arch == 'mipsel':
-                    postAction.mipsel_tests('nightly', release)
         else:
             if os_platform == 'linux':
                 if arch == 'armel':
                     postAction.armel_tests('commit', release)
-                if arch == 'armhf':
-                    postAction.armhf_tests('commit', release)
-                if arch == 'mipsel':
-                    postAction.mipsel_tests('commit', release)
+
         if self.platform['publish'] and release == '1':
             self.do_release()
+
 
 def switch_to_script_directory():
     ohnet_dir = path.split(path.realpath(__file__))[0]
     os.chdir(ohnet_dir)
+
 
 def main():
     switch_to_script_directory()
@@ -362,6 +428,6 @@ def main():
     Build.do_build()
     Build.do_postAction()
 
+
 if __name__ == "__main__":
     main()
-

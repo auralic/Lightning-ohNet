@@ -7,6 +7,8 @@
 #include <OpenHome/Functor.h>
 #include <OpenHome/OsTypes.h>
 
+#include <vector>
+
 EXCEPTION(ThreadKill)
 EXCEPTION(Timeout)
 
@@ -18,17 +20,17 @@ enum ThreadPriority {
    ,kPriorityLess = -2
    ,kPriorityMuchLess = -4
 
-   ,kPrioritySystemLowest = 51
-   ,kPriorityLowest = 60
-   ,kPriorityVeryLow = 70
-   ,kPriorityLower = 80
-   ,kPriorityLow = 90
-   ,kPriorityNormal = 100
-   ,kPriorityHigh = 110
-   ,kPriorityHigher = 120
-   ,kPriorityVeryHigh = 130
-   ,kPriorityHighest = 140
-   ,kPrioritySystemHighest = 150
+   ,kPrioritySystemLowest = 1
+   ,kPriorityLowest = 10
+   ,kPriorityVeryLow = 20
+   ,kPriorityLower = 30
+   ,kPriorityLow = 40
+   ,kPriorityNormal = 50
+   ,kPriorityHigh = 60
+   ,kPriorityHigher = 70
+   ,kPriorityVeryHigh = 80
+   ,kPriorityHighest = 90
+   ,kPrioritySystemHighest = 100
 };
 
 class Semaphore : public INonCopyable
@@ -106,6 +108,26 @@ public:
     TBool TryWait();
 
     /**
+     * Wait on the per-thread high-performance semaphore.
+     * Does _not_ check for kill.
+     * May only be called on the Thread object associated with the current thread.
+     */
+    void NotifyWait();
+
+    /**
+     * Wait on the per-thread high-performance semaphore.
+     * Clears semaphore before returning.
+     * Does _not_ check for kill.
+     * May only be called on the Thread object associated with the current thread.
+     */
+    void NotifyWaitAll();
+
+    /**
+     * Completes one (current or future) caller to NotifyWait() or NotifyWaitAll().
+     */
+    void NotifySignal();
+
+    /**
      * Pause the current thread.  Won't automatically block other threads but may
      * block some if this thread holds resources they are waiting for.
      *
@@ -178,10 +200,10 @@ protected:
     Bws<kMaxNameBytes+1> iName;
     Semaphore iSema;
 private:
+    Semaphore iProceedSema;
+    Semaphore iRunningSema;
     Semaphore iTerminated;
     TBool     iKill;
-    TUint     iStackBytes;
-    TUint     iPriority;
     mutable Mutex iKillMutex;
 };
 
@@ -207,6 +229,31 @@ private:
     Functor iFunctor;
 };
 
+class IPriorityArbitrator
+{
+public:
+    virtual ~IPriorityArbitrator() {}
+    virtual TUint Priority(const TChar* aId, TUint aRequested, TUint aHostMax) = 0;
+    virtual TUint OpenHomeMin() const = 0;
+    virtual TUint OpenHomeMax() const = 0;
+    virtual TUint HostRange() const = 0;
+};
+
+class ThreadPriorityArbitrator
+{
+    friend class Environment;
+public:
+    ThreadPriorityArbitrator(TUint aHostMin, TUint aHostMax);
+    void Add(IPriorityArbitrator& aArbitrator);
+    void Validate();
+    TUint CalculatePriority(const char* aId, TUint aRequested) const;
+    static TUint DoCalculatePriority(TUint aRequested, TUint aOpenHomeMin, TUint aOpenHomeMax, TUint aHostMin, TUint aHostMax);
+private:
+    std::vector<IPriorityArbitrator*> iArbitrators;
+    TUint iHostMin;
+    TUint iHostMax;
+};
+
 /**
  * Utility class.
  *
@@ -226,15 +273,31 @@ private:
 /**
  * Utility class.
  *
- * Create an AutoSemaphore on the stack using a reference to a Semaphore. It will
- * automatically be signalled on stack cleanup (ie on return or when an
- * exception passes up).
+ * Create an AutoSemaphore on the stack using a reference to a Semaphore.
+ * Acquire (Wait() for) the semaphore on construction, release (Signal())
+ * automatically on stack cleanup (ie on return or when an exception passes up).
  */
 class DllExportClass AutoSemaphore : public INonCopyable
 {
 public:
     DllExport AutoSemaphore(Semaphore& aSemaphore);
     DllExport ~AutoSemaphore();
+private:
+    Semaphore& iSem;
+};
+
+/**
+ * Utility class.
+ *
+ * Create an AutoSemaphore on the stack using a reference to a Semaphore.
+ * Does not acquire (Wait() for) the semaphore on construction, releases (Signal())
+ * automatically on stack cleanup (ie on return or when an exception passes up).
+ */
+class DllExportClass AutoSemaphoreSignal : public INonCopyable
+{
+public:
+    DllExport AutoSemaphoreSignal(Semaphore& aSemaphore);
+    DllExport ~AutoSemaphoreSignal();
 private:
     Semaphore& iSem;
 };
