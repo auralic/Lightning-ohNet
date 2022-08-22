@@ -102,6 +102,10 @@ interface ICpProxyAvOpenhomeOrgPlaylist1 extends ICpProxy
     public long getPropertyTracksMax();
     public void setPropertyProtocolInfoChanged(IPropertyChangeListener aProtocolInfoChanged);
     public String getPropertyProtocolInfo();
+    public void setPropertyAutoPlayChanged(IPropertyChangeListener aAutoPlayChanged);
+    public boolean getPropertyAutoPlay();
+    public void setPropertyQobuzTracksChanged(IPropertyChangeListener aQobuzTracksChanged);
+    public String getPropertyQobuzTracks();
 }
 
 class SyncPlayAvOpenhomeOrgPlaylist1 extends SyncProxyAction
@@ -669,6 +673,8 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
     private PropertyBinary iIdArray;
     private PropertyUint iTracksMax;
     private PropertyString iProtocolInfo;
+    private PropertyBool iAutoPlay;
+    private PropertyString iQobuzTracks;
     private IPropertyChangeListener iTransportStateChanged;
     private IPropertyChangeListener iRepeatChanged;
     private IPropertyChangeListener iShuffleChanged;
@@ -676,6 +682,8 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
     private IPropertyChangeListener iIdArrayChanged;
     private IPropertyChangeListener iTracksMaxChanged;
     private IPropertyChangeListener iProtocolInfoChanged;
+    private IPropertyChangeListener iAutoPlayChanged;
+    private IPropertyChangeListener iQobuzTracksChanged;
     private Object iPropertyLock;
 
     /**
@@ -873,6 +881,24 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
             }
         );
         addProperty(iProtocolInfo);
+        iAutoPlayChanged = new PropertyChangeListener();
+        iAutoPlay = new PropertyBool("AutoPlay",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    autoPlayPropertyChanged();
+                }
+            }
+        );
+        addProperty(iAutoPlay);
+        iQobuzTracksChanged = new PropertyChangeListener();
+        iQobuzTracks = new PropertyString("QobuzTracks",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    qobuzTracksPropertyChanged();
+                }
+            }
+        );
+        addProperty(iQobuzTracks);
         iPropertyLock = new Object();
     }
     /**
@@ -2397,6 +2423,52 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
             reportEvent(iProtocolInfoChanged);
         }
     }
+    /**
+     * Set a delegate to be run when the AutoPlay state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.
+     *
+     * @param aAutoPlayChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyAutoPlayChanged(IPropertyChangeListener aAutoPlayChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iAutoPlayChanged = aAutoPlayChanged;
+        }
+    }
+
+    private void autoPlayPropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iAutoPlayChanged);
+        }
+    }
+    /**
+     * Set a delegate to be run when the QobuzTracks state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.
+     *
+     * @param aQobuzTracksChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyQobuzTracksChanged(IPropertyChangeListener aQobuzTracksChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iQobuzTracksChanged = aQobuzTracksChanged;
+        }
+    }
+
+    private void qobuzTracksPropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iQobuzTracksChanged);
+        }
+    }
 
     /**
      * Query the value of the TransportState property.
@@ -2511,6 +2583,38 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
     }
     
     /**
+     * Query the value of the AutoPlay property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the AutoPlay property.
+     */
+    public boolean getPropertyAutoPlay()
+    {
+        propertyReadLock();
+        boolean val = iAutoPlay.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
+     * Query the value of the QobuzTracks property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the QobuzTracks property.
+     */
+    public String getPropertyQobuzTracks()
+    {
+        propertyReadLock();
+        String val = iQobuzTracks.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
      * Dispose of this control point proxy.
      * Must be called for each class instance.
      * Must be called before <tt>Library.close()</tt>.
@@ -2558,6 +2662,8 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
             iIdArray.destroy();
             iTracksMax.destroy();
             iProtocolInfo.destroy();
+            iAutoPlay.destroy();
+            iQobuzTracks.destroy();
         }
     }
 }

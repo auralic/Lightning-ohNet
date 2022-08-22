@@ -739,6 +739,12 @@ CpProxyAvOpenhomeOrgPlaylist1Cpp::CpProxyAvOpenhomeOrgPlaylist1Cpp(CpDeviceCpp& 
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1Cpp::ProtocolInfoPropertyChanged);
     iProtocolInfo = new PropertyString("ProtocolInfo", functor);
     AddProperty(iProtocolInfo);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1Cpp::AutoPlayPropertyChanged);
+    iAutoPlay = new PropertyBool("AutoPlay", functor);
+    AddProperty(iAutoPlay);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1Cpp::QobuzTracksPropertyChanged);
+    iQobuzTracks = new PropertyString("QobuzTracks", functor);
+    AddProperty(iQobuzTracks);
 }
 
 CpProxyAvOpenhomeOrgPlaylist1Cpp::~CpProxyAvOpenhomeOrgPlaylist1Cpp()
@@ -1670,6 +1676,20 @@ void CpProxyAvOpenhomeOrgPlaylist1Cpp::SetPropertyProtocolInfoChanged(Functor& a
     iCpProxy.GetLock().Signal();
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1Cpp::SetPropertyAutoPlayChanged(Functor& aFunctor)
+{
+    iCpProxy.GetLock().Wait();
+    iAutoPlayChanged = aFunctor;
+    iCpProxy.GetLock().Signal();
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1Cpp::SetPropertyQobuzTracksChanged(Functor& aFunctor)
+{
+    iCpProxy.GetLock().Wait();
+    iQobuzTracksChanged = aFunctor;
+    iCpProxy.GetLock().Signal();
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1Cpp::PropertyTransportState(std::string& aTransportState) const
 {
     AutoMutex a(iCpProxy.PropertyReadLock());
@@ -1736,6 +1756,25 @@ void CpProxyAvOpenhomeOrgPlaylist1Cpp::PropertyProtocolInfo(std::string& aProtoc
     aProtocolInfo.assign((const char*)val.Ptr(), val.Bytes());
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1Cpp::PropertyAutoPlay(bool& aAutoPlay) const
+{
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
+    aAutoPlay = iAutoPlay->Value();
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1Cpp::PropertyQobuzTracks(std::string& aQobuzTracks) const
+{
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
+    const Brx& val = iQobuzTracks->Value();
+    aQobuzTracks.assign((const char*)val.Ptr(), val.Bytes());
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1Cpp::TransportStatePropertyChanged()
 {
     ReportEvent(iTransportStateChanged);
@@ -1769,6 +1808,16 @@ void CpProxyAvOpenhomeOrgPlaylist1Cpp::TracksMaxPropertyChanged()
 void CpProxyAvOpenhomeOrgPlaylist1Cpp::ProtocolInfoPropertyChanged()
 {
     ReportEvent(iProtocolInfoChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1Cpp::AutoPlayPropertyChanged()
+{
+    ReportEvent(iAutoPlayChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1Cpp::QobuzTracksPropertyChanged()
+{
+    ReportEvent(iQobuzTracksChanged);
 }
 
 void CpProxyAvOpenhomeOrgPlaylist1Cpp::Subscribe()

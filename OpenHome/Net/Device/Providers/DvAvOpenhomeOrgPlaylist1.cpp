@@ -107,6 +107,35 @@ void DvProviderAvOpenhomeOrgPlaylist1::WritePropertyProtocolInfo(IWriter& aWrite
     iPropertyProtocolInfo->Write(aWriter);
 }
 
+TBool DvProviderAvOpenhomeOrgPlaylist1::SetPropertyAutoPlay(TBool aValue)
+{
+    ASSERT(iPropertyAutoPlay != NULL);
+    return SetPropertyBool(*iPropertyAutoPlay, aValue);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::GetPropertyAutoPlay(TBool& aValue)
+{
+    ASSERT(iPropertyAutoPlay != NULL);
+    aValue = iPropertyAutoPlay->Value();
+}
+
+TBool DvProviderAvOpenhomeOrgPlaylist1::SetPropertyQobuzTracks(const Brx& aValue)
+{
+    ASSERT(iPropertyQobuzTracks != NULL);
+    return SetPropertyString(*iPropertyQobuzTracks, aValue);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::GetPropertyQobuzTracks(Brhz& aValue)
+{
+    ASSERT(iPropertyQobuzTracks != NULL);
+    aValue.Set(iPropertyQobuzTracks->Value());
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::WritePropertyQobuzTracks(IWriter& aWriter)
+{
+    iPropertyQobuzTracks->Write(aWriter);
+}
+
 DvProviderAvOpenhomeOrgPlaylist1::DvProviderAvOpenhomeOrgPlaylist1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "Playlist", 1)
 {
@@ -128,6 +157,8 @@ void DvProviderAvOpenhomeOrgPlaylist1::Construct()
     iPropertyIdArray = NULL;
     iPropertyTracksMax = NULL;
     iPropertyProtocolInfo = NULL;
+    iPropertyAutoPlay = NULL;
+    iPropertyQobuzTracks = NULL;
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1::EnablePropertyTransportState()
@@ -178,6 +209,18 @@ void DvProviderAvOpenhomeOrgPlaylist1::EnablePropertyProtocolInfo()
 {
     iPropertyProtocolInfo = new PropertyString(new ParameterString("ProtocolInfo"));
     iService->AddProperty(iPropertyProtocolInfo); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::EnablePropertyAutoPlay()
+{
+    iPropertyAutoPlay = new PropertyBool(new ParameterBool("AutoPlay"));
+    iService->AddProperty(iPropertyAutoPlay); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::EnablePropertyQobuzTracks()
+{
+    iPropertyQobuzTracks = new PropertyString(new ParameterString("QobuzTracks"));
+    iService->AddProperty(iPropertyQobuzTracks); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1::EnableActionPlay()

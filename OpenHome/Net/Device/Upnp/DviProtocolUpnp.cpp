@@ -934,7 +934,7 @@ void DviProtocolUpnpDeviceXmlWriter::Write(TIpAddress aAdapter)
 {
     if (iDeviceUpnp.iDevice.IsRoot()) { // root device header
         iWriter.Write("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-        iWriter.Write("<root xmlns=\"urn:schemas-upnp-org:device-1-0\">");
+        iWriter.Write("<root xmlns=\"urn:schemas-upnp-org:device-1-0\" xmlns:qq=\"urn:schemas-tencent-com:service-1-0\">");
         writeSpecVersion(iWriter, iDeviceUpnp);
     }
 

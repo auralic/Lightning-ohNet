@@ -134,6 +134,8 @@ public:
     void SetPropertyIdArrayChanged(Functor& aFunctor);
     void SetPropertyTracksMaxChanged(Functor& aFunctor);
     void SetPropertyProtocolInfoChanged(Functor& aFunctor);
+    void SetPropertyAutoPlayChanged(Functor& aFunctor);
+    void SetPropertyQobuzTracksChanged(Functor& aFunctor);
 
     void PropertyTransportState(Brhz& aTransportState) const;
     void PropertyRepeat(TBool& aRepeat) const;
@@ -142,6 +144,8 @@ public:
     void PropertyIdArray(Brh& aIdArray) const;
     void PropertyTracksMax(TUint& aTracksMax) const;
     void PropertyProtocolInfo(Brhz& aProtocolInfo) const;
+    void PropertyAutoPlay(TBool& aAutoPlay) const;
+    void PropertyQobuzTracks(Brhz& aQobuzTracks) const;
 private:
     void TransportStatePropertyChanged();
     void RepeatPropertyChanged();
@@ -150,6 +154,8 @@ private:
     void IdArrayPropertyChanged();
     void TracksMaxPropertyChanged();
     void ProtocolInfoPropertyChanged();
+    void AutoPlayPropertyChanged();
+    void QobuzTracksPropertyChanged();
 private:
     Mutex iLock;
     Action* iActionPlay;
@@ -185,6 +191,8 @@ private:
     PropertyBinary* iIdArray;
     PropertyUint* iTracksMax;
     PropertyString* iProtocolInfo;
+    PropertyBool* iAutoPlay;
+    PropertyString* iQobuzTracks;
     Functor iTransportStateChanged;
     Functor iRepeatChanged;
     Functor iShuffleChanged;
@@ -192,6 +200,8 @@ private:
     Functor iIdArrayChanged;
     Functor iTracksMaxChanged;
     Functor iProtocolInfoChanged;
+    Functor iAutoPlayChanged;
+    Functor iQobuzTracksChanged;
 };
 
 
@@ -921,6 +931,12 @@ CpProxyAvOpenhomeOrgPlaylist1C::CpProxyAvOpenhomeOrgPlaylist1C(CpDeviceC aDevice
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1C::ProtocolInfoPropertyChanged);
     iProtocolInfo = new PropertyString("ProtocolInfo", functor);
     AddProperty(iProtocolInfo);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1C::AutoPlayPropertyChanged);
+    iAutoPlay = new PropertyBool("AutoPlay", functor);
+    AddProperty(iAutoPlay);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1C::QobuzTracksPropertyChanged);
+    iQobuzTracks = new PropertyString("QobuzTracks", functor);
+    AddProperty(iQobuzTracks);
 }
 
 CpProxyAvOpenhomeOrgPlaylist1C::~CpProxyAvOpenhomeOrgPlaylist1C()
@@ -1816,6 +1832,20 @@ void CpProxyAvOpenhomeOrgPlaylist1C::SetPropertyProtocolInfoChanged(Functor& aFu
     iLock.Signal();
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1C::SetPropertyAutoPlayChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iAutoPlayChanged = aFunctor;
+    iLock.Signal();
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::SetPropertyQobuzTracksChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iQobuzTracksChanged = aFunctor;
+    iLock.Signal();
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1C::PropertyTransportState(Brhz& aTransportState) const
 {
     AutoMutex a(GetPropertyReadLock());
@@ -1865,6 +1895,20 @@ void CpProxyAvOpenhomeOrgPlaylist1C::PropertyProtocolInfo(Brhz& aProtocolInfo) c
     aProtocolInfo.Set(iProtocolInfo->Value());
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1C::PropertyAutoPlay(TBool& aAutoPlay) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    CheckSubscribed();
+    aAutoPlay = iAutoPlay->Value();
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::PropertyQobuzTracks(Brhz& aQobuzTracks) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    CheckSubscribed();
+    aQobuzTracks.Set(iQobuzTracks->Value());
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1C::TransportStatePropertyChanged()
 {
     ReportEvent(iTransportStateChanged);
@@ -1898,6 +1942,16 @@ void CpProxyAvOpenhomeOrgPlaylist1C::TracksMaxPropertyChanged()
 void CpProxyAvOpenhomeOrgPlaylist1C::ProtocolInfoPropertyChanged()
 {
     ReportEvent(iProtocolInfoChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::AutoPlayPropertyChanged()
+{
+    ReportEvent(iAutoPlayChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::QobuzTracksPropertyChanged()
+{
+    ReportEvent(iQobuzTracksChanged);
 }
 
 
@@ -3032,6 +3086,22 @@ void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyProtocolInfoChanged(THandle
     proxyC->SetPropertyProtocolInfoChanged(functor);
 }
 
+void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyAutoPlayChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyAutoPlayChanged(functor);
+}
+
+void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyQobuzTracksChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyQobuzTracksChanged(functor);
+}
+
 int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyTransportState(THandle aHandle, char** aTransportState)
 {
     CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
@@ -3131,6 +3201,36 @@ int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyProtocolInfo(THandle aHandl
         return -1;
     }
     *aProtocolInfo = buf_aProtocolInfo.Transfer();
+    return 0;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyAutoPlay(THandle aHandle, uint32_t* aAutoPlay)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    TBool AutoPlay;
+    try {
+        proxyC->PropertyAutoPlay(AutoPlay);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    *aAutoPlay = AutoPlay? 1 : 0;
+    return 0;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyQobuzTracks(THandle aHandle, char** aQobuzTracks)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brhz buf_aQobuzTracks;
+    try {
+        proxyC->PropertyQobuzTracks(buf_aQobuzTracks);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    *aQobuzTracks = buf_aQobuzTracks.Transfer();
     return 0;
 }
 

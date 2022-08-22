@@ -1066,6 +1066,28 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyTracksMaxChanged(
  * @param[in]  aPtr      Data to be passed to the callback
  */
 DllExport void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyProtocolInfoChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
+/**
+ * Set a callback to be run when the AutoPlay state variable changes.
+ *
+ * Callbacks may be run in different threads but callbacks for a
+ * CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgPlaylist1Create
+ * @param[in]  aCallback The callback to run when the state variable changes
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyAutoPlayChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
+/**
+ * Set a callback to be run when the QobuzTracks state variable changes.
+ *
+ * Callbacks may be run in different threads but callbacks for a
+ * CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgPlaylist1Create
+ * @param[in]  aCallback The callback to run when the state variable changes
+ * @param[in]  aPtr      Data to be passed to the callback
+ */
+DllExport void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyQobuzTracksChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr);
 
 /**
  * Query the value of the TransportState property.
@@ -1153,6 +1175,30 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyTracksMax(THandle
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyProtocolInfo(THandle aHandle, char** aProtocolInfo);
+/**
+ * Query the value of the AutoPlay property.
+ *
+ * This function is threadsafe and can only be called after the first callback
+ * following a call to CpProxyCSubscribe() and before CpProxyCUnsubscribe().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgPlaylist1Create
+ * @param[out] aAutoPlay
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyAutoPlay(THandle aHandle, uint32_t* aAutoPlay);
+/**
+ * Query the value of the QobuzTracks property.
+ *
+ * This function is threadsafe and can only be called after the first callback
+ * following a call to CpProxyCSubscribe() and before CpProxyCUnsubscribe().
+ *
+ * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgPlaylist1Create
+ * @param[out] aQobuzTracks
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
+ */
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyQobuzTracks(THandle aHandle, char** aQobuzTracks);
 
 /* @} */
 

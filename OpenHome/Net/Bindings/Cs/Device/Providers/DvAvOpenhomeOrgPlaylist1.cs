@@ -99,6 +99,32 @@ namespace OpenHome.Net.Device.Providers
         /// </summary>
         /// <returns>Value of the ProtocolInfo property.</param>
         string PropertyProtocolInfo();
+
+        /// <summary>
+        /// Set the value of the AutoPlay property
+        /// </summary>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        bool SetPropertyAutoPlay(bool aValue);
+
+        /// <summary>
+        /// Get a copy of the value of the AutoPlay property
+        /// </summary>
+        /// <returns>Value of the AutoPlay property.</param>
+        bool PropertyAutoPlay();
+
+        /// <summary>
+        /// Set the value of the QobuzTracks property
+        /// </summary>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        bool SetPropertyQobuzTracks(string aValue);
+
+        /// <summary>
+        /// Get a copy of the value of the QobuzTracks property
+        /// </summary>
+        /// <returns>Value of the QobuzTracks property.</param>
+        string PropertyQobuzTracks();
     }
     /// <summary>
     /// Provider for the av.openhome.org:Playlist:1 UPnP service
@@ -139,6 +165,8 @@ namespace OpenHome.Net.Device.Providers
         private PropertyBinary iPropertyIdArray;
         private PropertyUint iPropertyTracksMax;
         private PropertyString iPropertyProtocolInfo;
+        private PropertyBool iPropertyAutoPlay;
+        private PropertyString iPropertyQobuzTracks;
 
         /// <summary>
         /// Constructor
@@ -218,6 +246,25 @@ namespace OpenHome.Net.Device.Providers
             List<String> allowedValues = new List<String>();
             iPropertyProtocolInfo = new PropertyString(new ParameterString("ProtocolInfo", allowedValues));
             AddProperty(iPropertyProtocolInfo);
+        }
+
+        /// <summary>
+        /// Enable the AutoPlay property.
+        /// </summary>
+        public void EnablePropertyAutoPlay()
+        {
+            iPropertyAutoPlay = new PropertyBool(new ParameterBool("AutoPlay"));
+            AddProperty(iPropertyAutoPlay);
+        }
+
+        /// <summary>
+        /// Enable the QobuzTracks property.
+        /// </summary>
+        public void EnablePropertyQobuzTracks()
+        {
+            List<String> allowedValues = new List<String>();
+            iPropertyQobuzTracks = new PropertyString(new ParameterString("QobuzTracks", allowedValues));
+            AddProperty(iPropertyQobuzTracks);
         }
 
         /// <summary>
@@ -393,6 +440,56 @@ namespace OpenHome.Net.Device.Providers
             if (iPropertyProtocolInfo == null)
                 throw new PropertyDisabledError();
             return iPropertyProtocolInfo.Value();
+        }
+
+        /// <summary>
+        /// Set the value of the AutoPlay property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyAutoPlay has previously been called.</remarks>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        public bool SetPropertyAutoPlay(bool aValue)
+        {
+            if (iPropertyAutoPlay == null)
+                throw new PropertyDisabledError();
+            return SetPropertyBool(iPropertyAutoPlay, aValue);
+        }
+
+        /// <summary>
+        /// Get a copy of the value of the AutoPlay property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyAutoPlay has previously been called.</remarks>
+        /// <returns>Value of the AutoPlay property.</returns>
+        public bool PropertyAutoPlay()
+        {
+            if (iPropertyAutoPlay == null)
+                throw new PropertyDisabledError();
+            return iPropertyAutoPlay.Value();
+        }
+
+        /// <summary>
+        /// Set the value of the QobuzTracks property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyQobuzTracks has previously been called.</remarks>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        public bool SetPropertyQobuzTracks(string aValue)
+        {
+            if (iPropertyQobuzTracks == null)
+                throw new PropertyDisabledError();
+            return SetPropertyString(iPropertyQobuzTracks, aValue);
+        }
+
+        /// <summary>
+        /// Get a copy of the value of the QobuzTracks property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyQobuzTracks has previously been called.</remarks>
+        /// <returns>Value of the QobuzTracks property.</returns>
+        public string PropertyQobuzTracks()
+        {
+            if (iPropertyQobuzTracks == null)
+                throw new PropertyDisabledError();
+            return iPropertyQobuzTracks.Value();
         }
 
         /// <summary>

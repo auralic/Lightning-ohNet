@@ -358,6 +358,14 @@
             <name>IdArrayChanged</name>
             <dataType>boolean</dataType>
         </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>AutoPlay</name>
+            <dataType>boolean</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>QobuzTracks</name>
+            <dataType>string</dataType>
+        </stateVariable>
     </serviceStateTable>
 </scpd>
 

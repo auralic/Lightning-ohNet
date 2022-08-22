@@ -115,6 +115,10 @@ public:
     virtual void PropertyTracksMax(TUint& aTracksMax) const = 0;
     virtual void SetPropertyProtocolInfoChanged(Functor& aProtocolInfoChanged) = 0;
     virtual void PropertyProtocolInfo(Brhz& aProtocolInfo) const = 0;
+    virtual void SetPropertyAutoPlayChanged(Functor& aAutoPlayChanged) = 0;
+    virtual void PropertyAutoPlay(TBool& aAutoPlay) const = 0;
+    virtual void SetPropertyQobuzTracksChanged(Functor& aQobuzTracksChanged) = 0;
+    virtual void PropertyQobuzTracks(Brhz& aQobuzTracks) const = 0;
 };
 
 /**
@@ -885,6 +889,24 @@ public:
      * @param[in]  aFunctor  The callback to run when the state variable changes
      */
     void SetPropertyProtocolInfoChanged(Functor& aFunctor);
+    /**
+     * Set a callback to be run when the AutoPlay state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyAutoPlayChanged(Functor& aFunctor);
+    /**
+     * Set a callback to be run when the QobuzTracks state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyQobuzTracksChanged(Functor& aFunctor);
 
     /**
      * Query the value of the TransportState property.
@@ -957,6 +979,26 @@ public:
      */
     void PropertyProtocolInfo(Brhz& aProtocolInfo) const;
     /**
+     * Query the value of the AutoPlay property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aAutoPlay
+     */
+    void PropertyAutoPlay(TBool& aAutoPlay) const;
+    /**
+     * Query the value of the QobuzTracks property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aQobuzTracks
+     */
+    void PropertyQobuzTracks(Brhz& aQobuzTracks) const;
+    /**
     * This function exposes the Subscribe() function of the iCpProxy member variable
     */
     void Subscribe();
@@ -997,6 +1039,8 @@ private:
     void IdArrayPropertyChanged();
     void TracksMaxPropertyChanged();
     void ProtocolInfoPropertyChanged();
+    void AutoPlayPropertyChanged();
+    void QobuzTracksPropertyChanged();
 private:
     Action* iActionPlay;
     Action* iActionPause;
@@ -1031,6 +1075,8 @@ private:
     PropertyBinary* iIdArray;
     PropertyUint* iTracksMax;
     PropertyString* iProtocolInfo;
+    PropertyBool* iAutoPlay;
+    PropertyString* iQobuzTracks;
     Functor iTransportStateChanged;
     Functor iRepeatChanged;
     Functor iShuffleChanged;
@@ -1038,6 +1084,8 @@ private:
     Functor iIdArrayChanged;
     Functor iTracksMaxChanged;
     Functor iProtocolInfoChanged;
+    Functor iAutoPlayChanged;
+    Functor iQobuzTracksChanged;
 };
 
 } // namespace Net

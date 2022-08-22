@@ -102,6 +102,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
         uint PropertyTracksMax();
         void SetPropertyProtocolInfoChanged(System.Action aProtocolInfoChanged);
         String PropertyProtocolInfo();
+        void SetPropertyAutoPlayChanged(System.Action aAutoPlayChanged);
+        bool PropertyAutoPlay();
+        void SetPropertyQobuzTracksChanged(System.Action aQobuzTracksChanged);
+        String PropertyQobuzTracks();
     }
 
     internal class SyncPlayAvOpenhomeOrgPlaylist1 : SyncProxyAction
@@ -581,6 +585,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private PropertyBinary iIdArray;
         private PropertyUint iTracksMax;
         private PropertyString iProtocolInfo;
+        private PropertyBool iAutoPlay;
+        private PropertyString iQobuzTracks;
         private System.Action iTransportStateChanged;
         private System.Action iRepeatChanged;
         private System.Action iShuffleChanged;
@@ -588,6 +594,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private System.Action iIdArrayChanged;
         private System.Action iTracksMaxChanged;
         private System.Action iProtocolInfoChanged;
+        private System.Action iAutoPlayChanged;
+        private System.Action iQobuzTracksChanged;
         private Mutex iPropertyLock;
 
         /// <summary>
@@ -734,6 +742,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
             AddProperty(iTracksMax);
             iProtocolInfo = new PropertyString("ProtocolInfo", ProtocolInfoPropertyChanged);
             AddProperty(iProtocolInfo);
+            iAutoPlay = new PropertyBool("AutoPlay", AutoPlayPropertyChanged);
+            AddProperty(iAutoPlay);
+            iQobuzTracks = new PropertyString("QobuzTracks", QobuzTracksPropertyChanged);
+            AddProperty(iQobuzTracks);
             
             iPropertyLock = new Mutex();
         }
@@ -2147,6 +2159,50 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Set a delegate to be run when the AutoPlay state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.</remarks>
+        /// <param name="aAutoPlayChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyAutoPlayChanged(System.Action aAutoPlayChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iAutoPlayChanged = aAutoPlayChanged;
+            }
+        }
+
+        private void AutoPlayPropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iAutoPlayChanged);
+            }
+        }
+
+        /// <summary>
+        /// Set a delegate to be run when the QobuzTracks state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.</remarks>
+        /// <param name="aQobuzTracksChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyQobuzTracksChanged(System.Action aQobuzTracksChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iQobuzTracksChanged = aQobuzTracksChanged;
+            }
+        }
+
+        private void QobuzTracksPropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iQobuzTracksChanged);
+            }
+        }
+
+        /// <summary>
         /// Query the value of the TransportState property.
         /// </summary>
         /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
@@ -2301,6 +2357,50 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Query the value of the AutoPlay property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the AutoPlay property</returns>
+        public bool PropertyAutoPlay()
+        {
+            PropertyReadLock();
+            bool val;
+            try
+            {
+                val = iAutoPlay.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
+        }
+
+        /// <summary>
+        /// Query the value of the QobuzTracks property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the QobuzTracks property</returns>
+        public String PropertyQobuzTracks()
+        {
+            PropertyReadLock();
+            String val;
+            try
+            {
+                val = iQobuzTracks.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
+        }
+
+        /// <summary>
         /// Must be called for each class instance.  Must be called before Core.Library.Close().
         /// </summary>
         public void Dispose()
@@ -2345,6 +2445,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iIdArray.Dispose();
             iTracksMax.Dispose();
             iProtocolInfo.Dispose();
+            iAutoPlay.Dispose();
+            iQobuzTracks.Dispose();
         }
     }
 }
