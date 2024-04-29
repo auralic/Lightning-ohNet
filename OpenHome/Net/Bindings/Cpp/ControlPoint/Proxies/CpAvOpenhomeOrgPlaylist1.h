@@ -120,6 +120,8 @@ public:
     virtual void PropertyAutoPlay(bool& aAutoPlay) const = 0;
     virtual void SetPropertyQobuzTracksChanged(Functor& aQobuzTracksChanged) = 0;
     virtual void PropertyQobuzTracks(std::string& aQobuzTracks) const = 0;
+    virtual void SetPropertyTuneInUrlChanged(Functor& aTuneInUrlChanged) = 0;
+    virtual void PropertyTuneInUrl(std::string& aTuneInUrl) const = 0;
 };
 
 /**
@@ -908,6 +910,15 @@ public:
      * @param[in]  aFunctor  The callback to run when the state variable changes
      */
     void SetPropertyQobuzTracksChanged(Functor& aFunctor);
+    /**
+     * Set a callback to be run when the TuneInUrl state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgPlaylist1Cpp instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyTuneInUrlChanged(Functor& aFunctor);
 
     /**
      * Query the value of the TransportState property.
@@ -1000,6 +1011,16 @@ public:
      */
     void PropertyQobuzTracks(std::string& aQobuzTracks) const;
     /**
+     * Query the value of the TuneInUrl property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aTuneInUrl
+     */
+    void PropertyTuneInUrl(std::string& aTuneInUrl) const;
+    /**
     * This function exposes the Subscribe() function of the iCpProxy member variable
     */
     void Subscribe();
@@ -1042,6 +1063,7 @@ private:
     void ProtocolInfoPropertyChanged();
     void AutoPlayPropertyChanged();
     void QobuzTracksPropertyChanged();
+    void TuneInUrlPropertyChanged();
 private:
     Action* iActionPlay;
     Action* iActionPause;
@@ -1078,6 +1100,7 @@ private:
     PropertyString* iProtocolInfo;
     PropertyBool* iAutoPlay;
     PropertyString* iQobuzTracks;
+    PropertyString* iTuneInUrl;
     Functor iTransportStateChanged;
     Functor iRepeatChanged;
     Functor iShuffleChanged;
@@ -1087,6 +1110,7 @@ private:
     Functor iProtocolInfoChanged;
     Functor iAutoPlayChanged;
     Functor iQobuzTracksChanged;
+    Functor iTuneInUrlChanged;
 };
 
 } // namespace Net

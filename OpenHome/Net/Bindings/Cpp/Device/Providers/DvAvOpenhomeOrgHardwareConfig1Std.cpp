@@ -933,6 +933,14 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetEnableEqualizer()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetEnableDirac()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableDirac");
+    action->AddInputParameter(new ParameterBool("EnableDirac"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableDirac);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoLogIn(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -1719,6 +1727,17 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableEqualizer(IDviInvocat
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableDirac(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    bool EnableDirac = aInvocation.InvocationReadBool("EnableDirac");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetEnableDirac(invocation, EnableDirac);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::LogIn(IDvInvocationStd& /*aInvocation*/, const std::string& /*aServiceName*/, const std::string& /*aMessageIn*/, std::string& /*aMessageOut*/)
 {
     ASSERTS();
@@ -1960,6 +1979,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetEnableSpeaker(IDvInvocationSt
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetEnableEqualizer(IDvInvocationStd& /*aInvocation*/, bool /*aEnableEqualizer*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetEnableDirac(IDvInvocationStd& /*aInvocation*/, bool /*aEnableDirac*/)
 {
     ASSERTS();
 }

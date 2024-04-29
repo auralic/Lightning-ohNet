@@ -775,6 +775,7 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     private IDvInvocationListener iDelegateSetEnableResampler;
     private IDvInvocationListener iDelegateSetEnableSpeaker;
     private IDvInvocationListener iDelegateSetEnableEqualizer;
+    private IDvInvocationListener iDelegateSetEnableDirac;
     private PropertyString iPropertyMessageOut;
     private PropertyBool iPropertyAlive;
     private PropertyUint iPropertyCurrentAction;
@@ -2293,6 +2294,20 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     }
 
     /**
+     * Signal that the action SetEnableDirac is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetEnableDirac must be overridden if this is called.
+     */      
+    protected void enableActionSetEnableDirac()
+    {
+        Action action = new Action("SetEnableDirac");
+        action.addInputParameter(new ParameterBool("EnableDirac"));
+        iDelegateSetEnableDirac = new DoSetEnableDirac();
+        enableAction(action, iDelegateSetEnableDirac);
+    }
+
+    /**
      * LogIn action.
      *
      * <p>Will be called when the device stack receives an invocation of the
@@ -3063,6 +3078,22 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
      * @param aEnableEqualizer
      */
     protected void setEnableEqualizer(IDvInvocation aInvocation, boolean aEnableEqualizer)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetEnableDirac action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetEnableDirac action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetEnableDirac} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aEnableDirac
+     */
+    protected void setEnableDirac(IDvInvocation aInvocation, boolean aEnableDirac)
     {
         throw (new ActionDisabledError());
     }
@@ -5513,6 +5544,54 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
             catch (ActionError ae)
             {
                 invocation.reportActionError(ae, "SetEnableEqualizer");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetEnableDirac implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean enableDirac;
+            try
+            {
+                invocation.readStart();
+                enableDirac = invocation.readBool("EnableDirac");
+                invocation.readEnd();
+                setEnableDirac(invocation, enableDirac);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetEnableDirac");
                 return;
             }
             catch (PropertyUpdateError pue)

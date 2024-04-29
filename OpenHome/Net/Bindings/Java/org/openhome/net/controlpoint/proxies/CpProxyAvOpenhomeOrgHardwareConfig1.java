@@ -157,6 +157,9 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public void syncSetEnableEqualizer(boolean aEnableEqualizer);
     public void beginSetEnableEqualizer(boolean aEnableEqualizer, ICpProxyListener aCallback);
     public void endSetEnableEqualizer(long aAsyncHandle);
+    public void syncSetEnableDirac(boolean aEnableDirac);
+    public void beginSetEnableDirac(boolean aEnableDirac, ICpProxyListener aCallback);
+    public void endSetEnableDirac(long aAsyncHandle);
     public void setPropertyMessageOutChanged(IPropertyChangeListener aMessageOutChanged);
     public String getPropertyMessageOut();
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
@@ -1194,6 +1197,21 @@ class SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
     }
 }
 
+class SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetEnableDirac(aAsyncHandle);
+        
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
  */
@@ -1574,6 +1592,7 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private Action iActionSetEnableResampler;
     private Action iActionSetEnableSpeaker;
     private Action iActionSetEnableEqualizer;
+    private Action iActionSetEnableDirac;
     private PropertyString iMessageOut;
     private PropertyBool iAlive;
     private PropertyUint iCurrentAction;
@@ -1898,6 +1917,10 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         iActionSetEnableEqualizer = new Action("SetEnableEqualizer");
         param = new ParameterBool("EnableEqualizer");
         iActionSetEnableEqualizer.addInputParameter(param);
+
+        iActionSetEnableDirac = new Action("SetEnableDirac");
+        param = new ParameterBool("EnableDirac");
+        iActionSetEnableDirac.addInputParameter(param);
 
         iMessageOutChanged = new PropertyChangeListener();
         iMessageOut = new PropertyString("MessageOut",
@@ -4783,6 +4806,54 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetEnableDirac(boolean aEnableDirac)
+    {
+        SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1 sync = new SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1(this);
+        beginSetEnableDirac(aEnableDirac, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetEnableDirac}.
+     * 
+     * @param aEnableDirac
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetEnableDirac(boolean aEnableDirac, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetEnableDirac, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionSetEnableDirac.getInputParameter(inIndex++), aEnableDirac));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetEnableDirac} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetEnableDirac} method.
+     */
+    public void endSetEnableDirac(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
      * Set a delegate to be run when the MessageOut state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
@@ -5783,6 +5854,7 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             iActionSetEnableResampler.destroy();
             iActionSetEnableSpeaker.destroy();
             iActionSetEnableEqualizer.destroy();
+            iActionSetEnableDirac.destroy();
             iMessageOut.destroy();
             iAlive.destroy();
             iCurrentAction.destroy();

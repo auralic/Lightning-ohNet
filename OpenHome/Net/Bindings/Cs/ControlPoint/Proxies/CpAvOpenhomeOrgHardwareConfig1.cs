@@ -157,6 +157,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncSetEnableEqualizer(bool aEnableEqualizer);
         void BeginSetEnableEqualizer(bool aEnableEqualizer, CpProxy.CallbackAsyncComplete aCallback);
         void EndSetEnableEqualizer(IntPtr aAsyncHandle);
+        void SyncSetEnableDirac(bool aEnableDirac);
+        void BeginSetEnableDirac(bool aEnableDirac, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetEnableDirac(IntPtr aAsyncHandle);
         void SetPropertyMessageOutChanged(System.Action aMessageOutChanged);
         String PropertyMessageOut();
         void SetPropertyAliveChanged(System.Action aAliveChanged);
@@ -1103,6 +1106,20 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
     };
 
+    internal class SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+        public SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetEnableDirac(aAsyncHandle);
+        }
+    };
+
     /// <summary>
     /// Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
     /// </summary>
@@ -1157,6 +1174,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionSetEnableResampler;
         private OpenHome.Net.Core.Action iActionSetEnableSpeaker;
         private OpenHome.Net.Core.Action iActionSetEnableEqualizer;
+        private OpenHome.Net.Core.Action iActionSetEnableDirac;
         private PropertyString iMessageOut;
         private PropertyBool iAlive;
         private PropertyUint iCurrentAction;
@@ -1479,6 +1497,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionSetEnableEqualizer = new OpenHome.Net.Core.Action("SetEnableEqualizer");
             param = new ParameterBool("EnableEqualizer");
             iActionSetEnableEqualizer.AddInputParameter(param);
+
+            iActionSetEnableDirac = new OpenHome.Net.Core.Action("SetEnableDirac");
+            param = new ParameterBool("EnableDirac");
+            iActionSetEnableDirac.AddInputParameter(param);
 
             iMessageOut = new PropertyString("MessageOut", MessageOutPropertyChanged);
             AddProperty(iMessageOut);
@@ -3993,6 +4015,52 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aEnableDirac"></param>
+        public void SyncSetEnableDirac(bool aEnableDirac)
+        {
+            SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1 sync = new SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1(this);
+            BeginSetEnableDirac(aEnableDirac, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetEnableDirac().</remarks>
+        /// <param name="aEnableDirac"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetEnableDirac(bool aEnableDirac, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetEnableDirac, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionSetEnableDirac.InputParameter(inIndex++), aEnableDirac));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetEnableDirac(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the MessageOut state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -5109,6 +5177,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionSetEnableResampler.Dispose();
             iActionSetEnableSpeaker.Dispose();
             iActionSetEnableEqualizer.Dispose();
+            iActionSetEnableDirac.Dispose();
             iMessageOut.Dispose();
             iAlive.Dispose();
             iCurrentAction.Dispose();

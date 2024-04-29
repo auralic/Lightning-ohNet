@@ -1126,6 +1126,27 @@ void SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsy
 }
 
 
+class SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1Cpp& iService;
+};
+
+SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1Cpp::SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1Cpp(CpProxyAvOpenhomeOrgHardwareConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetEnableDirac(aAsync);
+}
+
+
 CpProxyAvOpenhomeOrgHardwareConfig1Cpp::CpProxyAvOpenhomeOrgHardwareConfig1Cpp(CpDeviceCpp& aDevice)
     : iCpProxy("av-openhome-org", "HardwareConfig", 1, aDevice.Device())
 {
@@ -1393,6 +1414,10 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::CpProxyAvOpenhomeOrgHardwareConfig1Cpp(C
     param = new OpenHome::Net::ParameterBool("EnableEqualizer");
     iActionSetEnableEqualizer->AddInputParameter(param);
 
+    iActionSetEnableDirac = new Action("SetEnableDirac");
+    param = new OpenHome::Net::ParameterBool("EnableDirac");
+    iActionSetEnableDirac->AddInputParameter(param);
+
     Functor functor;
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1Cpp::MessageOutPropertyChanged);
     iMessageOut = new PropertyString("MessageOut", functor);
@@ -1520,6 +1545,7 @@ CpProxyAvOpenhomeOrgHardwareConfig1Cpp::~CpProxyAvOpenhomeOrgHardwareConfig1Cpp(
     delete iActionSetEnableResampler;
     delete iActionSetEnableSpeaker;
     delete iActionSetEnableEqualizer;
+    delete iActionSetEnableDirac;
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncLogIn(const std::string& aServiceName, const std::string& aMessageIn, std::string& aMessageOut)
@@ -3276,6 +3302,36 @@ void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndSetEnableEqualizer(IAsync& aAsyn
     ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
     Invocation& invocation = (Invocation&)aAsync;
     ASSERT(invocation.Action().Name() == Brn("SetEnableEqualizer"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::SyncSetEnableDirac(bool aEnableDirac)
+{
+    SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1Cpp sync(*this);
+    BeginSetEnableDirac(aEnableDirac, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::BeginSetEnableDirac(bool aEnableDirac, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetEnableDirac, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetEnableDirac->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aEnableDirac));
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1Cpp::EndSetEnableDirac(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetEnableDirac"));
 
     Error::ELevel level;
     TUint code;

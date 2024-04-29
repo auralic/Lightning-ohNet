@@ -139,6 +139,7 @@ public:
     void EnableActionSetEnableResampler(CallbackHardwareConfig1SetEnableResampler aCallback, void* aPtr);
     void EnableActionSetEnableSpeaker(CallbackHardwareConfig1SetEnableSpeaker aCallback, void* aPtr);
     void EnableActionSetEnableEqualizer(CallbackHardwareConfig1SetEnableEqualizer aCallback, void* aPtr);
+    void EnableActionSetEnableDirac(CallbackHardwareConfig1SetEnableDirac aCallback, void* aPtr);
 private:
     void DoLogIn(IDviInvocation& aInvocation);
     void DoLogOut(IDviInvocation& aInvocation);
@@ -189,6 +190,7 @@ private:
     void DoSetEnableResampler(IDviInvocation& aInvocation);
     void DoSetEnableSpeaker(IDviInvocation& aInvocation);
     void DoSetEnableEqualizer(IDviInvocation& aInvocation);
+    void DoSetEnableDirac(IDviInvocation& aInvocation);
 private:
     CallbackHardwareConfig1LogIn iCallbackLogIn;
     void* iPtrLogIn;
@@ -288,6 +290,8 @@ private:
     void* iPtrSetEnableSpeaker;
     CallbackHardwareConfig1SetEnableEqualizer iCallbackSetEnableEqualizer;
     void* iPtrSetEnableEqualizer;
+    CallbackHardwareConfig1SetEnableDirac iCallbackSetEnableDirac;
+    void* iPtrSetEnableDirac;
     PropertyString* iPropertyMessageOut;
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;
@@ -1295,6 +1299,16 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetEnableEqualizer(Cal
     OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableEqualizer");
     action->AddInputParameter(new ParameterBool("EnableEqualizer"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableEqualizer);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetEnableDirac(CallbackHardwareConfig1SetEnableDirac aCallback, void* aPtr)
+{
+    iCallbackSetEnableDirac = aCallback;
+    iPtrSetEnableDirac = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableDirac");
+    action->AddInputParameter(new ParameterBool("EnableDirac"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableDirac);
     iService->AddAction(action, functor);
 }
 
@@ -2479,6 +2493,25 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableEqualizer(IDviInvocatio
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableDirac(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TBool EnableDirac = aInvocation.InvocationReadBool("EnableDirac");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetEnableDirac != NULL);
+    if (0 != iCallbackSetEnableDirac(iPtrSetEnableDirac, invocationC, invocationCPtr, EnableDirac)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Create(DvDeviceC aDevice)
@@ -2734,6 +2767,11 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableSpeaker(
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableEqualizer(THandle aProvider, CallbackHardwareConfig1SetEnableEqualizer aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetEnableEqualizer(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableDirac(THandle aProvider, CallbackHardwareConfig1SetEnableDirac aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetEnableDirac(aCallback, aPtr);
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyMessageOut(THandle aProvider, const char* aValue, uint32_t* aChanged)

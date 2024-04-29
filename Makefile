@@ -23,9 +23,9 @@ openhome_configuration = Release
 android_ndk_debug=0
 endif
 
-CROSS_COMPILE=arm-poky-linux-gnueabi-
-CROSS_COMPILE_LINKFLAGS=-march=armv7-a -marm  -mthumb-interwork -mfloat-abi=hard -mfpu=neon -mtune=cortex-a9 --sysroot=/opt/fsl-imx-x11/3.14.52-1.1.1/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi
-CROSS_COMPILE_CFLAGS=-march=armv7-a -marm  -mthumb-interwork -mfloat-abi=hard -mfpu=neon -mtune=cortex-a9 --sysroot=/opt/fsl-imx-x11/3.14.52-1.1.1/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi
+CROSS_COMPILE=aarch64-tdx-linux-
+CROSS_COMPILE_LINKFLAGS=-mcpu=cortex-a53 -march=armv8-a+crc -fstack-protector-strong  -O2 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Werror=format-security --sysroot=/opt/tdx-xwayland/6.2.0/sysroots/cortexa53-tdx-linux
+CROSS_COMPILE_CFLAGS=-mcpu=cortex-a53 -march=armv8-a+crc -fstack-protector-strong  -O2 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Werror=format-security --sysroot=/opt/tdx-xwayland/6.2.0/sysroots/cortexa53-tdx-linux
 
 
 # Figure out platform, openhome_system and openhome_architecture
@@ -344,7 +344,7 @@ ifeq ($(nocpp11), yes)
 else ifeq ($(platform),IntelMac)
     cppflags = $(cflags_base) -std=c++11 -Werror
 else
-    cppflags = $(cflags_base) -std=c++0x -Werror
+    cppflags = $(cflags_base) -std=c++0x 
 endif
 cflags = $(cflags_base) -Werror
 inc_build = Build/Include

@@ -106,6 +106,8 @@ interface ICpProxyAvOpenhomeOrgPlaylist1 extends ICpProxy
     public boolean getPropertyAutoPlay();
     public void setPropertyQobuzTracksChanged(IPropertyChangeListener aQobuzTracksChanged);
     public String getPropertyQobuzTracks();
+    public void setPropertyTuneInUrlChanged(IPropertyChangeListener aTuneInUrlChanged);
+    public String getPropertyTuneInUrl();
 }
 
 class SyncPlayAvOpenhomeOrgPlaylist1 extends SyncProxyAction
@@ -675,6 +677,7 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
     private PropertyString iProtocolInfo;
     private PropertyBool iAutoPlay;
     private PropertyString iQobuzTracks;
+    private PropertyString iTuneInUrl;
     private IPropertyChangeListener iTransportStateChanged;
     private IPropertyChangeListener iRepeatChanged;
     private IPropertyChangeListener iShuffleChanged;
@@ -684,6 +687,7 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
     private IPropertyChangeListener iProtocolInfoChanged;
     private IPropertyChangeListener iAutoPlayChanged;
     private IPropertyChangeListener iQobuzTracksChanged;
+    private IPropertyChangeListener iTuneInUrlChanged;
     private Object iPropertyLock;
 
     /**
@@ -899,6 +903,15 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
             }
         );
         addProperty(iQobuzTracks);
+        iTuneInUrlChanged = new PropertyChangeListener();
+        iTuneInUrl = new PropertyString("TuneInUrl",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    tuneInUrlPropertyChanged();
+                }
+            }
+        );
+        addProperty(iTuneInUrl);
         iPropertyLock = new Object();
     }
     /**
@@ -2469,6 +2482,29 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
             reportEvent(iQobuzTracksChanged);
         }
     }
+    /**
+     * Set a delegate to be run when the TuneInUrl state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.
+     *
+     * @param aTuneInUrlChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyTuneInUrlChanged(IPropertyChangeListener aTuneInUrlChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iTuneInUrlChanged = aTuneInUrlChanged;
+        }
+    }
+
+    private void tuneInUrlPropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iTuneInUrlChanged);
+        }
+    }
 
     /**
      * Query the value of the TransportState property.
@@ -2615,6 +2651,22 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
     }
     
     /**
+     * Query the value of the TuneInUrl property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the TuneInUrl property.
+     */
+    public String getPropertyTuneInUrl()
+    {
+        propertyReadLock();
+        String val = iTuneInUrl.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
      * Dispose of this control point proxy.
      * Must be called for each class instance.
      * Must be called before <tt>Library.close()</tt>.
@@ -2664,6 +2716,7 @@ public class CpProxyAvOpenhomeOrgPlaylist1 extends CpProxy implements ICpProxyAv
             iProtocolInfo.destroy();
             iAutoPlay.destroy();
             iQobuzTracks.destroy();
+            iTuneInUrl.destroy();
         }
     }
 }

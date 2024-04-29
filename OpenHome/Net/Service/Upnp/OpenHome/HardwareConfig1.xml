@@ -654,6 +654,16 @@
                 </argument>
          </argumentList>
       </action>
+      <action>
+         <name>SetEnableDirac</name>
+         <argumentList>
+                <argument>
+                    <name>EnableDirac</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>EnableDirac</relatedStateVariable>
+                </argument>
+         </argumentList>
+      </action>
    </actionList>
    <serviceStateTable>
       <stateVariable sendEvents="no">
@@ -858,6 +868,10 @@
       </stateVariable>
       <stateVariable sendEvents="no">
          <name>EnableEqualizer</name>
+         <dataType>boolean</dataType>
+      </stateVariable>
+      <stateVariable sendEvents="no">
+         <name>EnableDirac</name>
          <dataType>boolean</dataType>
       </stateVariable>
    </serviceStateTable>

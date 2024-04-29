@@ -390,6 +390,10 @@ DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnablePropertyAutoPlay(TH
  * Enable the QobuzTracks property.
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnablePropertyQobuzTracks(THandle aProvider);
+/**
+ * Enable the TuneInUrl property.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnablePropertyTuneInUrl(THandle aProvider);
 
 /**
  * Register a callback for the action Play
@@ -878,6 +882,28 @@ DllExport int32_t STDCALL DvProviderAvOpenhomeOrgPlaylist1SetPropertyQobuzTracks
  * @param[out] aValue     Value for the property.  Caller is responsible for freeing this.
  */
 DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1GetPropertyQobuzTracks(THandle aProvider, char** aValue);
+/**
+ * Set the value of the TuneInUrl property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgPlaylist1EnablePropertyTuneInUrl has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgPlaylist1Create
+ * @param[in]  aValue     New value for the property (will be copied)
+ * @param[out] aChanged   1 if the value has been updated; 0 if it was the same as the previous value
+ *
+ * @return  0 if the property was successfully set; non-zero if there was an error (including
+ *          an attempt to set a property to a value not in its allowed range/set)
+ */
+DllExport int32_t STDCALL DvProviderAvOpenhomeOrgPlaylist1SetPropertyTuneInUrl(THandle aProvider, const char* aValue, uint32_t* aChanged);
+/**
+ * Get a copy of the value of the TuneInUrl property
+ *
+ * Can only be called if DvProviderAvOpenhomeOrgPlaylist1EnablePropertyTuneInUrl has previously been called.
+ *
+ * @param[in]  aProvider  Handle returned by DvProviderAvOpenhomeOrgPlaylist1Create
+ * @param[out] aValue     Value for the property.  Caller is responsible for freeing this.
+ */
+DllExport void STDCALL DvProviderAvOpenhomeOrgPlaylist1GetPropertyTuneInUrl(THandle aProvider, char** aValue);
 
 /* @} */
 

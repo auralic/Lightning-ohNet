@@ -376,6 +376,7 @@ namespace OpenHome.Net.Device.Providers
         private ActionDelegate iDelegateSetEnableResampler;
         private ActionDelegate iDelegateSetEnableSpeaker;
         private ActionDelegate iDelegateSetEnableEqualizer;
+        private ActionDelegate iDelegateSetEnableDirac;
         private PropertyString iPropertyMessageOut;
         private PropertyBool iPropertyAlive;
         private PropertyUint iPropertyCurrentAction;
@@ -1935,6 +1936,19 @@ namespace OpenHome.Net.Device.Providers
         }
 
         /// <summary>
+        /// Signal that the action SetEnableDirac is supported.
+        /// </summary>
+        /// <remarks>The action's availability will be published in the device's service.xml.
+        /// SetEnableDirac must be overridden if this is called.</remarks>
+        protected void EnableActionSetEnableDirac()
+        {
+            OpenHome.Net.Core.Action action = new OpenHome.Net.Core.Action("SetEnableDirac");
+            action.AddInputParameter(new ParameterBool("EnableDirac"));
+            iDelegateSetEnableDirac = new ActionDelegate(DoSetEnableDirac);
+            EnableAction(action, iDelegateSetEnableDirac, GCHandle.ToIntPtr(iGch));
+        }
+
+        /// <summary>
         /// LogIn action.
         /// </summary>
         /// <remarks>Will be called when the device stack receives an invocation of the
@@ -2649,6 +2663,20 @@ namespace OpenHome.Net.Device.Providers
         /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
         /// <param name="aEnableEqualizer"></param>
         protected virtual void SetEnableEqualizer(IDvInvocation aInvocation, bool aEnableEqualizer)
+        {
+            throw (new ActionDisabledError());
+        }
+
+        /// <summary>
+        /// SetEnableDirac action.
+        /// </summary>
+        /// <remarks>Will be called when the device stack receives an invocation of the
+        /// SetEnableDirac action for the owning device.
+        ///
+        /// Must be implemented iff EnableActionSetEnableDirac was called.</remarks>
+        /// <param name="aInvocation">Interface allowing querying of aspects of this particular action invocation.</param>
+        /// <param name="aEnableDirac"></param>
+        protected virtual void SetEnableDirac(IDvInvocation aInvocation, bool aEnableDirac)
         {
             throw (new ActionDisabledError());
         }
@@ -4968,6 +4996,52 @@ namespace OpenHome.Net.Device.Providers
             catch (System.Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetEnableEqualizer" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
+            }
+            return 0;
+        }
+
+        private static int DoSetEnableDirac(IntPtr aPtr, IntPtr aInvocation)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(aPtr);
+            DvProviderAvOpenhomeOrgHardwareConfig1 self = (DvProviderAvOpenhomeOrgHardwareConfig1)gch.Target;
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            bool enableDirac;
+            try
+            {
+                invocation.ReadStart();
+                enableDirac = invocation.ReadBool("EnableDirac");
+                invocation.ReadEnd();
+                self.SetEnableDirac(invocation, enableDirac);
+            }
+            catch (ActionError e)
+            {
+                invocation.ReportActionError(e, "SetEnableDirac");
+                return -1;
+            }
+            catch (PropertyUpdateError)
+            {
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "SetEnableDirac" }));
+                return -1;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetEnableDirac" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                return -1;
+            }
+            try
+            {
+                invocation.WriteStart();
+                invocation.WriteEnd();
+            }
+            catch (ActionError)
+            {
+                return -1;
+            }
+            catch (System.Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetEnableDirac" });
                 System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;

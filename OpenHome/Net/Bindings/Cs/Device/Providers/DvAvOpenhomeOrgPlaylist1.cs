@@ -125,6 +125,19 @@ namespace OpenHome.Net.Device.Providers
         /// </summary>
         /// <returns>Value of the QobuzTracks property.</param>
         string PropertyQobuzTracks();
+
+        /// <summary>
+        /// Set the value of the TuneInUrl property
+        /// </summary>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        bool SetPropertyTuneInUrl(string aValue);
+
+        /// <summary>
+        /// Get a copy of the value of the TuneInUrl property
+        /// </summary>
+        /// <returns>Value of the TuneInUrl property.</param>
+        string PropertyTuneInUrl();
     }
     /// <summary>
     /// Provider for the av.openhome.org:Playlist:1 UPnP service
@@ -167,6 +180,7 @@ namespace OpenHome.Net.Device.Providers
         private PropertyString iPropertyProtocolInfo;
         private PropertyBool iPropertyAutoPlay;
         private PropertyString iPropertyQobuzTracks;
+        private PropertyString iPropertyTuneInUrl;
 
         /// <summary>
         /// Constructor
@@ -265,6 +279,16 @@ namespace OpenHome.Net.Device.Providers
             List<String> allowedValues = new List<String>();
             iPropertyQobuzTracks = new PropertyString(new ParameterString("QobuzTracks", allowedValues));
             AddProperty(iPropertyQobuzTracks);
+        }
+
+        /// <summary>
+        /// Enable the TuneInUrl property.
+        /// </summary>
+        public void EnablePropertyTuneInUrl()
+        {
+            List<String> allowedValues = new List<String>();
+            iPropertyTuneInUrl = new PropertyString(new ParameterString("TuneInUrl", allowedValues));
+            AddProperty(iPropertyTuneInUrl);
         }
 
         /// <summary>
@@ -490,6 +514,31 @@ namespace OpenHome.Net.Device.Providers
             if (iPropertyQobuzTracks == null)
                 throw new PropertyDisabledError();
             return iPropertyQobuzTracks.Value();
+        }
+
+        /// <summary>
+        /// Set the value of the TuneInUrl property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyTuneInUrl has previously been called.</remarks>
+        /// <param name="aValue">New value for the property</param>
+        /// <returns>true if the value has been updated; false if aValue was the same as the previous value</returns>
+        public bool SetPropertyTuneInUrl(string aValue)
+        {
+            if (iPropertyTuneInUrl == null)
+                throw new PropertyDisabledError();
+            return SetPropertyString(iPropertyTuneInUrl, aValue);
+        }
+
+        /// <summary>
+        /// Get a copy of the value of the TuneInUrl property
+        /// </summary>
+        /// <remarks>Can only be called if EnablePropertyTuneInUrl has previously been called.</remarks>
+        /// <returns>Value of the TuneInUrl property.</returns>
+        public string PropertyTuneInUrl()
+        {
+            if (iPropertyTuneInUrl == null)
+                throw new PropertyDisabledError();
+            return iPropertyTuneInUrl.Value();
         }
 
         /// <summary>

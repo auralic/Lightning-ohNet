@@ -366,6 +366,10 @@
             <name>QobuzTracks</name>
             <dataType>string</dataType>
         </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>TuneInUrl</name>
+            <dataType>string</dataType>
+        </stateVariable>
     </serviceStateTable>
 </scpd>
 

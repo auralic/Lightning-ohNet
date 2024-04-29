@@ -745,6 +745,9 @@ CpProxyAvOpenhomeOrgPlaylist1Cpp::CpProxyAvOpenhomeOrgPlaylist1Cpp(CpDeviceCpp& 
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1Cpp::QobuzTracksPropertyChanged);
     iQobuzTracks = new PropertyString("QobuzTracks", functor);
     AddProperty(iQobuzTracks);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1Cpp::TuneInUrlPropertyChanged);
+    iTuneInUrl = new PropertyString("TuneInUrl", functor);
+    AddProperty(iTuneInUrl);
 }
 
 CpProxyAvOpenhomeOrgPlaylist1Cpp::~CpProxyAvOpenhomeOrgPlaylist1Cpp()
@@ -1690,6 +1693,13 @@ void CpProxyAvOpenhomeOrgPlaylist1Cpp::SetPropertyQobuzTracksChanged(Functor& aF
     iCpProxy.GetLock().Signal();
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1Cpp::SetPropertyTuneInUrlChanged(Functor& aFunctor)
+{
+    iCpProxy.GetLock().Wait();
+    iTuneInUrlChanged = aFunctor;
+    iCpProxy.GetLock().Signal();
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1Cpp::PropertyTransportState(std::string& aTransportState) const
 {
     AutoMutex a(iCpProxy.PropertyReadLock());
@@ -1775,6 +1785,16 @@ void CpProxyAvOpenhomeOrgPlaylist1Cpp::PropertyQobuzTracks(std::string& aQobuzTr
     aQobuzTracks.assign((const char*)val.Ptr(), val.Bytes());
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1Cpp::PropertyTuneInUrl(std::string& aTuneInUrl) const
+{
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
+    const Brx& val = iTuneInUrl->Value();
+    aTuneInUrl.assign((const char*)val.Ptr(), val.Bytes());
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1Cpp::TransportStatePropertyChanged()
 {
     ReportEvent(iTransportStateChanged);
@@ -1818,6 +1838,11 @@ void CpProxyAvOpenhomeOrgPlaylist1Cpp::AutoPlayPropertyChanged()
 void CpProxyAvOpenhomeOrgPlaylist1Cpp::QobuzTracksPropertyChanged()
 {
     ReportEvent(iQobuzTracksChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1Cpp::TuneInUrlPropertyChanged()
+{
+    ReportEvent(iTuneInUrlChanged);
 }
 
 void CpProxyAvOpenhomeOrgPlaylist1Cpp::Subscribe()

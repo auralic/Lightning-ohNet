@@ -106,6 +106,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
         bool PropertyAutoPlay();
         void SetPropertyQobuzTracksChanged(System.Action aQobuzTracksChanged);
         String PropertyQobuzTracks();
+        void SetPropertyTuneInUrlChanged(System.Action aTuneInUrlChanged);
+        String PropertyTuneInUrl();
     }
 
     internal class SyncPlayAvOpenhomeOrgPlaylist1 : SyncProxyAction
@@ -587,6 +589,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private PropertyString iProtocolInfo;
         private PropertyBool iAutoPlay;
         private PropertyString iQobuzTracks;
+        private PropertyString iTuneInUrl;
         private System.Action iTransportStateChanged;
         private System.Action iRepeatChanged;
         private System.Action iShuffleChanged;
@@ -596,6 +599,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private System.Action iProtocolInfoChanged;
         private System.Action iAutoPlayChanged;
         private System.Action iQobuzTracksChanged;
+        private System.Action iTuneInUrlChanged;
         private Mutex iPropertyLock;
 
         /// <summary>
@@ -746,6 +750,8 @@ namespace OpenHome.Net.ControlPoint.Proxies
             AddProperty(iAutoPlay);
             iQobuzTracks = new PropertyString("QobuzTracks", QobuzTracksPropertyChanged);
             AddProperty(iQobuzTracks);
+            iTuneInUrl = new PropertyString("TuneInUrl", TuneInUrlPropertyChanged);
+            AddProperty(iTuneInUrl);
             
             iPropertyLock = new Mutex();
         }
@@ -2203,6 +2209,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Set a delegate to be run when the TuneInUrl state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgPlaylist1 instance will not overlap.</remarks>
+        /// <param name="aTuneInUrlChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyTuneInUrlChanged(System.Action aTuneInUrlChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iTuneInUrlChanged = aTuneInUrlChanged;
+            }
+        }
+
+        private void TuneInUrlPropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iTuneInUrlChanged);
+            }
+        }
+
+        /// <summary>
         /// Query the value of the TransportState property.
         /// </summary>
         /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
@@ -2401,6 +2429,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Query the value of the TuneInUrl property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the TuneInUrl property</returns>
+        public String PropertyTuneInUrl()
+        {
+            PropertyReadLock();
+            String val;
+            try
+            {
+                val = iTuneInUrl.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
+        }
+
+        /// <summary>
         /// Must be called for each class instance.  Must be called before Core.Library.Close().
         /// </summary>
         public void Dispose()
@@ -2447,6 +2497,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iProtocolInfo.Dispose();
             iAutoPlay.Dispose();
             iQobuzTracks.Dispose();
+            iTuneInUrl.Dispose();
         }
     }
 }

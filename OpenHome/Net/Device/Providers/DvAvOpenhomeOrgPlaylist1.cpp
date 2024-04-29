@@ -136,6 +136,23 @@ void DvProviderAvOpenhomeOrgPlaylist1::WritePropertyQobuzTracks(IWriter& aWriter
     iPropertyQobuzTracks->Write(aWriter);
 }
 
+TBool DvProviderAvOpenhomeOrgPlaylist1::SetPropertyTuneInUrl(const Brx& aValue)
+{
+    ASSERT(iPropertyTuneInUrl != NULL);
+    return SetPropertyString(*iPropertyTuneInUrl, aValue);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::GetPropertyTuneInUrl(Brhz& aValue)
+{
+    ASSERT(iPropertyTuneInUrl != NULL);
+    aValue.Set(iPropertyTuneInUrl->Value());
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::WritePropertyTuneInUrl(IWriter& aWriter)
+{
+    iPropertyTuneInUrl->Write(aWriter);
+}
+
 DvProviderAvOpenhomeOrgPlaylist1::DvProviderAvOpenhomeOrgPlaylist1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "Playlist", 1)
 {
@@ -159,6 +176,7 @@ void DvProviderAvOpenhomeOrgPlaylist1::Construct()
     iPropertyProtocolInfo = NULL;
     iPropertyAutoPlay = NULL;
     iPropertyQobuzTracks = NULL;
+    iPropertyTuneInUrl = NULL;
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1::EnablePropertyTransportState()
@@ -221,6 +239,12 @@ void DvProviderAvOpenhomeOrgPlaylist1::EnablePropertyQobuzTracks()
 {
     iPropertyQobuzTracks = new PropertyString(new ParameterString("QobuzTracks"));
     iService->AddProperty(iPropertyQobuzTracks); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1::EnablePropertyTuneInUrl()
+{
+    iPropertyTuneInUrl = new PropertyString(new ParameterString("TuneInUrl"));
+    iService->AddProperty(iPropertyTuneInUrl); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1::EnableActionPlay()

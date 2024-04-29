@@ -753,6 +753,9 @@ CpProxyAvOpenhomeOrgPlaylist1::CpProxyAvOpenhomeOrgPlaylist1(CpDevice& aDevice)
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1::QobuzTracksPropertyChanged);
     iQobuzTracks = new PropertyString("QobuzTracks", functor);
     AddProperty(iQobuzTracks);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1::TuneInUrlPropertyChanged);
+    iTuneInUrl = new PropertyString("TuneInUrl", functor);
+    AddProperty(iTuneInUrl);
 }
 
 CpProxyAvOpenhomeOrgPlaylist1::~CpProxyAvOpenhomeOrgPlaylist1()
@@ -1662,6 +1665,13 @@ void CpProxyAvOpenhomeOrgPlaylist1::SetPropertyQobuzTracksChanged(Functor& aFunc
     iCpProxy.GetLock().Signal();
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1::SetPropertyTuneInUrlChanged(Functor& aFunctor)
+{
+    iCpProxy.GetLock().Wait();
+    iTuneInUrlChanged = aFunctor;
+    iCpProxy.GetLock().Signal();
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1::PropertyTransportState(Brhz& aTransportState) const
 {
     AutoMutex a(iCpProxy.PropertyReadLock());
@@ -1743,6 +1753,15 @@ void CpProxyAvOpenhomeOrgPlaylist1::PropertyQobuzTracks(Brhz& aQobuzTracks) cons
     aQobuzTracks.Set(iQobuzTracks->Value());
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1::PropertyTuneInUrl(Brhz& aTuneInUrl) const
+{
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
+    aTuneInUrl.Set(iTuneInUrl->Value());
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1::TransportStatePropertyChanged()
 {
     ReportEvent(iTransportStateChanged);
@@ -1786,6 +1805,11 @@ void CpProxyAvOpenhomeOrgPlaylist1::AutoPlayPropertyChanged()
 void CpProxyAvOpenhomeOrgPlaylist1::QobuzTracksPropertyChanged()
 {
     ReportEvent(iQobuzTracksChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1::TuneInUrlPropertyChanged()
+{
+    ReportEvent(iTuneInUrlChanged);
 }
 
 

@@ -136,6 +136,7 @@ public:
     void SetPropertyProtocolInfoChanged(Functor& aFunctor);
     void SetPropertyAutoPlayChanged(Functor& aFunctor);
     void SetPropertyQobuzTracksChanged(Functor& aFunctor);
+    void SetPropertyTuneInUrlChanged(Functor& aFunctor);
 
     void PropertyTransportState(Brhz& aTransportState) const;
     void PropertyRepeat(TBool& aRepeat) const;
@@ -146,6 +147,7 @@ public:
     void PropertyProtocolInfo(Brhz& aProtocolInfo) const;
     void PropertyAutoPlay(TBool& aAutoPlay) const;
     void PropertyQobuzTracks(Brhz& aQobuzTracks) const;
+    void PropertyTuneInUrl(Brhz& aTuneInUrl) const;
 private:
     void TransportStatePropertyChanged();
     void RepeatPropertyChanged();
@@ -156,6 +158,7 @@ private:
     void ProtocolInfoPropertyChanged();
     void AutoPlayPropertyChanged();
     void QobuzTracksPropertyChanged();
+    void TuneInUrlPropertyChanged();
 private:
     Mutex iLock;
     Action* iActionPlay;
@@ -193,6 +196,7 @@ private:
     PropertyString* iProtocolInfo;
     PropertyBool* iAutoPlay;
     PropertyString* iQobuzTracks;
+    PropertyString* iTuneInUrl;
     Functor iTransportStateChanged;
     Functor iRepeatChanged;
     Functor iShuffleChanged;
@@ -202,6 +206,7 @@ private:
     Functor iProtocolInfoChanged;
     Functor iAutoPlayChanged;
     Functor iQobuzTracksChanged;
+    Functor iTuneInUrlChanged;
 };
 
 
@@ -937,6 +942,9 @@ CpProxyAvOpenhomeOrgPlaylist1C::CpProxyAvOpenhomeOrgPlaylist1C(CpDeviceC aDevice
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1C::QobuzTracksPropertyChanged);
     iQobuzTracks = new PropertyString("QobuzTracks", functor);
     AddProperty(iQobuzTracks);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1C::TuneInUrlPropertyChanged);
+    iTuneInUrl = new PropertyString("TuneInUrl", functor);
+    AddProperty(iTuneInUrl);
 }
 
 CpProxyAvOpenhomeOrgPlaylist1C::~CpProxyAvOpenhomeOrgPlaylist1C()
@@ -1846,6 +1854,13 @@ void CpProxyAvOpenhomeOrgPlaylist1C::SetPropertyQobuzTracksChanged(Functor& aFun
     iLock.Signal();
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1C::SetPropertyTuneInUrlChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iTuneInUrlChanged = aFunctor;
+    iLock.Signal();
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1C::PropertyTransportState(Brhz& aTransportState) const
 {
     AutoMutex a(GetPropertyReadLock());
@@ -1909,6 +1924,13 @@ void CpProxyAvOpenhomeOrgPlaylist1C::PropertyQobuzTracks(Brhz& aQobuzTracks) con
     aQobuzTracks.Set(iQobuzTracks->Value());
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1C::PropertyTuneInUrl(Brhz& aTuneInUrl) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    CheckSubscribed();
+    aTuneInUrl.Set(iTuneInUrl->Value());
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1C::TransportStatePropertyChanged()
 {
     ReportEvent(iTransportStateChanged);
@@ -1952,6 +1974,11 @@ void CpProxyAvOpenhomeOrgPlaylist1C::AutoPlayPropertyChanged()
 void CpProxyAvOpenhomeOrgPlaylist1C::QobuzTracksPropertyChanged()
 {
     ReportEvent(iQobuzTracksChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::TuneInUrlPropertyChanged()
+{
+    ReportEvent(iTuneInUrlChanged);
 }
 
 
@@ -3102,6 +3129,14 @@ void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyQobuzTracksChanged(THandle 
     proxyC->SetPropertyQobuzTracksChanged(functor);
 }
 
+void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyTuneInUrlChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyTuneInUrlChanged(functor);
+}
+
 int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyTransportState(THandle aHandle, char** aTransportState)
 {
     CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
@@ -3231,6 +3266,21 @@ int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyQobuzTracks(THandle aHandle
         return -1;
     }
     *aQobuzTracks = buf_aQobuzTracks.Transfer();
+    return 0;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyTuneInUrl(THandle aHandle, char** aTuneInUrl)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brhz buf_aTuneInUrl;
+    try {
+        proxyC->PropertyTuneInUrl(buf_aTuneInUrl);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    *aTuneInUrl = buf_aTuneInUrl.Transfer();
     return 0;
 }
 

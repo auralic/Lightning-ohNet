@@ -1000,6 +1000,14 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetEnableEqualizer()
     iService->AddAction(action, functor);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetEnableDirac()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableDirac");
+    action->AddInputParameter(new ParameterBool("EnableDirac"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableDirac);
+    iService->AddAction(action, functor);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::DoLogIn(IDviInvocation& aInvocation)
 {
     aInvocation.InvocationReadStart();
@@ -1505,6 +1513,15 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableEqualizer(IDviInvocation
     SetEnableEqualizer(invocation, EnableEqualizer);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableDirac(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TBool EnableDirac = aInvocation.InvocationReadBool("EnableDirac");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetEnableDirac(invocation, EnableDirac);
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::LogIn(IDvInvocation& /*aResponse*/, const Brx& /*aServiceName*/, const Brx& /*aMessageIn*/, IDvInvocationResponseString& /*aMessageOut*/)
 {
     ASSERTS();
@@ -1746,6 +1763,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::SetEnableSpeaker(IDvInvocation& /*a
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::SetEnableEqualizer(IDvInvocation& /*aResponse*/, TBool /*aEnableEqualizer*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetEnableDirac(IDvInvocation& /*aResponse*/, TBool /*aEnableDirac*/)
 {
     ASSERTS();
 }

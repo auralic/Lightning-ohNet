@@ -760,6 +760,12 @@ protected:
      * SetEnableEqualizer must be overridden if this is called.
      */
     void EnableActionSetEnableEqualizer();
+    /**
+     * Signal that the action SetEnableDirac is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetEnableDirac must be overridden if this is called.
+     */
+    void EnableActionSetEnableDirac();
 private:
     /**
      * LogIn action.
@@ -1153,6 +1159,14 @@ private:
      * Must be implemented iff EnableActionSetEnableEqualizer was called.
      */
     virtual void SetEnableEqualizer(IDvInvocationStd& aInvocation, bool aEnableEqualizer);
+    /**
+     * SetEnableDirac action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetEnableDirac action for the owning device.
+     * Must be implemented iff EnableActionSetEnableDirac was called.
+     */
+    virtual void SetEnableDirac(IDvInvocationStd& aInvocation, bool aEnableDirac);
 private:
     DvProviderAvOpenhomeOrgHardwareConfig1Cpp();
     void DoLogIn(IDviInvocation& aInvocation);
@@ -1204,6 +1218,7 @@ private:
     void DoSetEnableResampler(IDviInvocation& aInvocation);
     void DoSetEnableSpeaker(IDviInvocation& aInvocation);
     void DoSetEnableEqualizer(IDviInvocation& aInvocation);
+    void DoSetEnableDirac(IDviInvocation& aInvocation);
 private:
     PropertyString* iPropertyMessageOut;
     PropertyBool* iPropertyAlive;

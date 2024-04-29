@@ -175,6 +175,26 @@ public:
      * Can only be called if EnablePropertyQobuzTracks has previously been called.
      */
     void WritePropertyQobuzTracks(IWriter& aWriter);
+    /**
+     * Set the value of the TuneInUrl property
+     *
+     * Can only be called if EnablePropertyTuneInUrl has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyTuneInUrl(const Brx& aValue);
+    /**
+     * Get a copy of the value of the TuneInUrl property
+     *
+     * Can only be called if EnablePropertyTuneInUrl has previously been called.
+     */
+    void GetPropertyTuneInUrl(Brhz& aValue);
+    /**
+     * Output the value of the TuneInUrl property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyTuneInUrl has previously been called.
+     */
+    void WritePropertyTuneInUrl(IWriter& aWriter);
 protected:
     /**
      * Constructor
@@ -224,6 +244,10 @@ protected:
      * Enable the QobuzTracks property.
      */
     void EnablePropertyQobuzTracks();
+    /**
+     * Enable the TuneInUrl property.
+     */
+    void EnablePropertyTuneInUrl();
     /**
      * Signal that the action Play is supported.
      * The action's availability will be published in the device's service.xml.
@@ -628,6 +652,7 @@ private:
     PropertyString* iPropertyProtocolInfo;
     PropertyBool* iPropertyAutoPlay;
     PropertyString* iPropertyQobuzTracks;
+    PropertyString* iPropertyTuneInUrl;
 };
 
 } // namespace Net

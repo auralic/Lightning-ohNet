@@ -152,6 +152,22 @@ interface IDvProviderAvOpenhomeOrgPlaylist1
      * @return value of the QobuzTracks property.
      */
     public String getPropertyQobuzTracks();
+
+    /**
+     * Set the value of the TuneInUrl property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyTuneInUrl(String aValue);
+
+    /**
+     * Get a copy of the value of the TuneInUrl property
+     *
+     * @return value of the TuneInUrl property.
+     */
+    public String getPropertyTuneInUrl();
         
 }
 
@@ -242,6 +258,7 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
     private PropertyString iPropertyProtocolInfo;
     private PropertyBool iPropertyAutoPlay;
     private PropertyString iPropertyQobuzTracks;
+    private PropertyString iPropertyTuneInUrl;
 
     /**
      * Constructor
@@ -340,6 +357,16 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
         List<String> allowedValues = new LinkedList<String>();
         iPropertyQobuzTracks = new PropertyString(new ParameterString("QobuzTracks", allowedValues));
         addProperty(iPropertyQobuzTracks);
+    }
+
+    /**
+     * Enable the TuneInUrl property.
+     */
+    public void enablePropertyTuneInUrl()
+    {
+        List<String> allowedValues = new LinkedList<String>();
+        iPropertyTuneInUrl = new PropertyString(new ParameterString("TuneInUrl", allowedValues));
+        addProperty(iPropertyTuneInUrl);
     }
 
     /**
@@ -538,6 +565,28 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
     public String getPropertyQobuzTracks()
     {
         return iPropertyQobuzTracks.getValue();
+    }
+
+    /**
+     * Set the value of the TuneInUrl property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyTuneInUrl(String aValue)
+    {
+        return setPropertyString(iPropertyTuneInUrl, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the TuneInUrl property
+     *
+     * @return  value of the TuneInUrl property.
+     */
+    public String getPropertyTuneInUrl()
+    {
+        return iPropertyTuneInUrl.getValue();
     }
 
     /**
