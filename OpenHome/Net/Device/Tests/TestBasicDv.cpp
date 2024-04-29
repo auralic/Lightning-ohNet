@@ -253,6 +253,9 @@ DeviceBasic::DeviceBasic(DvStack& aDvStack)
     iDevice->SetAttribute("Upnp.ModelName", "ohNet test device");
     iTestBasic = new ProviderTestBasic(*iDevice);
     iDevice->SetEnabled();
+    // test that calling SetAttribute disables then re-enables the device
+    iDevice->SetAttribute("Upnp.SerialNumber", "123456");
+    ASSERT(iDevice->Enabled());
 }
 
 DeviceBasic::~DeviceBasic()
@@ -264,4 +267,9 @@ DeviceBasic::~DeviceBasic()
 const Brx& DeviceBasic::Udn() const
 {
     return iDevice->Udn();
+}
+
+DvDevice& DeviceBasic::Device()
+{
+    return *iDevice;
 }

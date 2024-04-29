@@ -40,6 +40,12 @@ public:
      */
     void GetPropertyTransportState(Brhz& aValue);
     /**
+     * Output the value of the TransportState property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyTransportState has previously been called.
+     */
+    void WritePropertyTransportState(IWriter& aWriter);
+    /**
      * Set the value of the Repeat property
      *
      * Can only be called if EnablePropertyRepeat has previously been called.
@@ -96,6 +102,12 @@ public:
      */
     void GetPropertyIdArray(Brh& aValue);
     /**
+     * Output the value of the IdArray property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyIdArray has previously been called.
+     */
+    void WritePropertyIdArray(IWriter& aWriter);
+    /**
      * Set the value of the TracksMax property
      *
      * Can only be called if EnablePropertyTracksMax has previously been called.
@@ -123,6 +135,66 @@ public:
      * Can only be called if EnablePropertyProtocolInfo has previously been called.
      */
     void GetPropertyProtocolInfo(Brhz& aValue);
+    /**
+     * Output the value of the ProtocolInfo property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyProtocolInfo has previously been called.
+     */
+    void WritePropertyProtocolInfo(IWriter& aWriter);
+    /**
+     * Set the value of the AutoPlay property
+     *
+     * Can only be called if EnablePropertyAutoPlay has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyAutoPlay(TBool aValue);
+    /**
+     * Get a copy of the value of the AutoPlay property
+     *
+     * Can only be called if EnablePropertyAutoPlay has previously been called.
+     */
+    void GetPropertyAutoPlay(TBool& aValue);
+    /**
+     * Set the value of the QobuzTracks property
+     *
+     * Can only be called if EnablePropertyQobuzTracks has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyQobuzTracks(const Brx& aValue);
+    /**
+     * Get a copy of the value of the QobuzTracks property
+     *
+     * Can only be called if EnablePropertyQobuzTracks has previously been called.
+     */
+    void GetPropertyQobuzTracks(Brhz& aValue);
+    /**
+     * Output the value of the QobuzTracks property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyQobuzTracks has previously been called.
+     */
+    void WritePropertyQobuzTracks(IWriter& aWriter);
+    /**
+     * Set the value of the TuneInUrl property
+     *
+     * Can only be called if EnablePropertyTuneInUrl has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyTuneInUrl(const Brx& aValue);
+    /**
+     * Get a copy of the value of the TuneInUrl property
+     *
+     * Can only be called if EnablePropertyTuneInUrl has previously been called.
+     */
+    void GetPropertyTuneInUrl(Brhz& aValue);
+    /**
+     * Output the value of the TuneInUrl property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyTuneInUrl has previously been called.
+     */
+    void WritePropertyTuneInUrl(IWriter& aWriter);
 protected:
     /**
      * Constructor
@@ -164,6 +236,18 @@ protected:
      * Enable the ProtocolInfo property.
      */
     void EnablePropertyProtocolInfo();
+    /**
+     * Enable the AutoPlay property.
+     */
+    void EnablePropertyAutoPlay();
+    /**
+     * Enable the QobuzTracks property.
+     */
+    void EnablePropertyQobuzTracks();
+    /**
+     * Enable the TuneInUrl property.
+     */
+    void EnablePropertyTuneInUrl();
     /**
      * Signal that the action Play is supported.
      * The action's availability will be published in the device's service.xml.
@@ -566,6 +650,9 @@ private:
     PropertyBinary* iPropertyIdArray;
     PropertyUint* iPropertyTracksMax;
     PropertyString* iPropertyProtocolInfo;
+    PropertyBool* iPropertyAutoPlay;
+    PropertyString* iPropertyQobuzTracks;
+    PropertyString* iPropertyTuneInUrl;
 };
 
 } // namespace Net

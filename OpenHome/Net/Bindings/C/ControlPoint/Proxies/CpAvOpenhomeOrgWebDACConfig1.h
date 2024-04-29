@@ -49,7 +49,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1Destroy(THandle aHandle)
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDACConfig1Create
  * @param[out] aDACConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDACConfig1SyncGetDACConfig(THandle aHandle, char** aDACConfig);
@@ -85,7 +85,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDACConfig1EndGetDACConfig(THand
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDACConfig1Create
  * @param[in]  aDACConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDACConfig1SyncSetDACConfig(THandle aHandle, const char* aDACConfig);
@@ -155,8 +155,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1SetPropertyCurrentAction
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDACConfig1Create
  * @param[out] aAlive
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
 /**
  * Query the value of the DACConfig property.
  *
@@ -165,8 +167,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyAlive(THandle aH
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDACConfig1Create
  * @param[out] aDACConfig
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyDACConfig(THandle aHandle, char** aDACConfig);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyDACConfig(THandle aHandle, char** aDACConfig);
 /**
  * Query the value of the CurrentAction property.
  *
@@ -175,8 +179,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyDACConfig(THandl
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDACConfig1Create
  * @param[out] aCurrentAction
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDACConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
 
 /* @} */
 

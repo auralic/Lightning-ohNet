@@ -47,11 +47,15 @@ const NetworkAdapter* AutoNetworkAdapterRef::Adapter() const
 
 // NetworkAdapter
 
-NetworkAdapter::NetworkAdapter(Environment& aEnv, TIpAddress aAddress, TIpAddress aNetMask, const char* aName, const char* aCookie)
+NetworkAdapter::NetworkAdapter(Environment& aEnv, TIpAddress aAddress, TIpAddress aNetMask,
+                               TIpAddress aDhcp, TIpAddress aGateway,
+                               const char* aName, const char* aCookie)
     : iEnv(&aEnv)
     , iRefCount(1)
     , iAddress(aAddress)
     , iNetMask(aNetMask)
+    , iDhcpServer(aDhcp)
+    , iGateway(aGateway)
     , iName(aName)
 {
     iEnv->AddObject(this);
@@ -129,6 +133,26 @@ char* NetworkAdapter::FullName() const
     Brhz buf2;
     buf.TransferTo(buf2);
     return (char*)buf2.Transfer();
+}
+
+TBool NetworkAdapter::DhcpServerAddressAvailable() const
+{
+    return (iDhcpServer != 0);
+}
+
+TIpAddress NetworkAdapter::DhcpServerAddress() const
+{
+    return iDhcpServer;
+}
+
+TBool NetworkAdapter::GatewayAddressAvailable() const
+{
+    return (iGateway != 0);
+}
+
+TIpAddress NetworkAdapter::GatewayAddress() const
+{
+    return iGateway;
 }
 
 void NetworkAdapter::ListObjectDetails() const
@@ -337,6 +361,18 @@ void InitialisationParams::SetDvNumPublisherThreads(uint32_t aNumThreads)
     iDvNumPublisherThreads = aNumThreads;
 }
 
+void InitialisationParams::SetDvPublisherThreadPriority(uint32_t aPriority)
+{
+    ASSERT(aPriority > kPrioritySystemLowest);
+    ASSERT(aPriority < kPrioritySystemHighest);
+    iDvPublisherThreadPriority = aPriority;
+}
+
+void InitialisationParams::SetDvPublisherModerationTime(uint32_t aMillisecs)
+{
+    iDvPublisherModerationTimeMs = aMillisecs;
+}
+
 void InitialisationParams::SetDvNumWebSocketThreads(uint32_t aNumThreads)
 {
     iDvNumWebSocketThreads = aNumThreads;
@@ -357,9 +393,11 @@ void InitialisationParams::SetDvWebSocketPort(TUint aPort)
     iDvWebSocketPort = aPort;
 }
 
-void InitialisationParams::SetDvEnableBonjour()
+void InitialisationParams::SetDvEnableBonjour(const TChar* aHostName, TBool aRequiresMdnsCache)
 {
+    iDvBonjourHostName.Set(aHostName);
     iEnableBonjour = true;
+    iRequiresMdnsCache = aRequiresMdnsCache;
 }
 
 void InitialisationParams::SetDvNumLpecThreads(uint32_t aNumThreads)
@@ -375,6 +413,28 @@ void InitialisationParams::SetDvLpecServerPort(uint32_t aPort)
 void InitialisationParams::SetHostUdpIsLowQuality(TBool aLow)
 {
     iHostUdpLowQuality = aLow;
+}
+
+void InitialisationParams::SetTimerManagerPriority(uint32_t aPriority)
+{
+    iTimerManagerThreadPriority = aPriority;
+}
+
+void InitialisationParams::SetHttpUserAgent(const Brx& aUserAgent)
+{
+    iUserAgent.Set(aUserAgent);
+}
+
+void InitialisationParams::SetEnableShell(TUint aPort, TUint aSessionPriority)
+{
+    iEnableShell = true;
+    iShellPort = aPort;
+    iShellSessionPriority = aSessionPriority;
+}
+
+void InitialisationParams::SetSchedulingPolicy(EThreadScheduling aPolicy)
+{
+    iSchedulingPolicy = aPolicy;
 }
 
 FunctorMsg& InitialisationParams::LogOutput()
@@ -502,6 +562,16 @@ uint32_t InitialisationParams::DvNumPublisherThreads() const
     return iDvNumPublisherThreads;
 }
 
+uint32_t InitialisationParams::DvPublisherThreadPriority() const
+{
+    return iDvPublisherThreadPriority;
+}
+
+uint32_t InitialisationParams::DvPublisherModerationTimeMs() const
+{
+    return iDvPublisherModerationTimeMs;
+}
+
 uint32_t InitialisationParams::DvNumWebSocketThreads() const
 {
     return iDvNumWebSocketThreads;
@@ -526,8 +596,10 @@ uint32_t InitialisationParams::DvWebSocketPort() const
     return iDvWebSocketPort;
 }
 
-bool InitialisationParams::DvIsBonjourEnabled() const
+bool InitialisationParams::DvIsBonjourEnabled(const TChar*& aHostName, TBool& aRequiresMdnsCache) const
 {
+    aHostName = iDvBonjourHostName.CString();
+    aRequiresMdnsCache = iRequiresMdnsCache;
     return iEnableBonjour;
 }
 
@@ -544,6 +616,28 @@ uint32_t InitialisationParams::DvLpecServerPort()
 bool InitialisationParams::IsHostUdpLowQuality()
 {
     return iHostUdpLowQuality;
+}
+
+uint32_t InitialisationParams::TimerManagerPriority() const
+{
+    return iTimerManagerThreadPriority;
+}
+
+const Brx& InitialisationParams::HttpUserAgent() const
+{
+    return iUserAgent;
+}
+
+TBool InitialisationParams::IsShellEnabled(TUint& aPort, TUint& aSessionPriority) const
+{
+    aPort = iShellPort;
+    aSessionPriority = iShellSessionPriority;
+    return iEnableShell;
+}
+
+InitialisationParams::EThreadScheduling InitialisationParams::SchedulingPolicy() const
+{
+    return iSchedulingPolicy;
 }
 
 #if defined(PLATFORM_MACOSX_GNU) || defined (PLATFORM_IOS)
@@ -571,14 +665,22 @@ InitialisationParams::InitialisationParams()
     , iDvMaxUpdateTimeSecs(1800)
     , iDvNumServerThreads(4)
     , iDvNumPublisherThreads(4)
+    , iDvPublisherModerationTimeMs(0)
+    , iDvPublisherThreadPriority(kPriorityNormal)
     , iDvNumWebSocketThreads(0)
     , iCpUpnpEventServerPort(0)
     , iDvUpnpWebServerPort(0)
     , iDvWebSocketPort(0)
-    , iEnableBonjour(false)
     , iHostUdpLowQuality(HOST_UDP_LOW_QUALITY_DEFAULT)
+    , iEnableBonjour(false)
+    , iRequiresMdnsCache(false)
     , iDvNumLpecThreads(0)
     , iDvLpecServerPort(0)
+    , iTimerManagerThreadPriority(kPriorityHigh)
+    , iEnableShell(false)
+    , iShellPort(0)
+    , iShellSessionPriority(kPriorityNormal)
+    , iSchedulingPolicy(EScheduleDefault)
 {
     iDefaultLogger = new DefaultLogger;
     FunctorMsg functor = MakeFunctorMsg(*iDefaultLogger, &OpenHome::Net::DefaultLogger::Log);
@@ -608,7 +710,7 @@ Library::Library(InitialisationParams* aInitParams)
         iEnv = gEnv;
         iEnv->SetInitParams(aInitParams);
     }
-    //Debug::SetLevel(Debug::kError);
+    //Debug::SetSeverity(Debug::kSeverityError);
 }
 
 Library::~Library()
@@ -654,6 +756,11 @@ NetworkAdapter* Library::CurrentSubnetAdapter(const char* aCookie)
     return iEnv->NetworkAdapterList().CurrentAdapter(aCookie);
 }
 
+void Library::RefreshNetworkAdapterList()
+{
+    iEnv->NetworkAdapterList().Refresh();
+}
+
 void Library::NotifySuspended()
 {
     iEnv->NotifySuspended();
@@ -671,7 +778,7 @@ Environment* UpnpLibrary::Initialise(InitialisationParams* aInitParams)
 {
     ASSERT(gEnv == NULL);
     Environment* env = Environment::Create(aInitParams);
-    //Debug::SetLevel(Debug::kError);
+    //Debug::SetSeverity(Debug::kSeverityError);
     return env;
 }
 
@@ -715,6 +822,11 @@ void UpnpLibrary::SetCurrentSubnet(TIpAddress aSubnet)
 NetworkAdapter* UpnpLibrary::CurrentSubnetAdapter(const char* aCookie)
 {
     return gEnv->NetworkAdapterList().CurrentAdapter(aCookie);
+}
+
+void UpnpLibrary::RefreshNetworkAdapterList()
+{
+    gEnv->NetworkAdapterList().Refresh();
 }
 
 void UpnpLibrary::NotifySuspended()

@@ -42,29 +42,28 @@ DviProtocolUpnp::DviProtocolUpnp(DviDevice& aDevice)
     iServer = &(iDvStack.ServerUpnp());
     NetworkAdapterList& adapterList = iDvStack.Env().NetworkAdapterList();
     Functor functor = MakeFunctor(*this, &DviProtocolUpnp::HandleInterfaceChange);
-    iCurrentAdapterChangeListenerId = adapterList.AddCurrentChangeListener(functor);
-    iSubnetListChangeListenerId = adapterList.AddSubnetListChangeListener(functor);
+    iCurrentAdapterChangeListenerId = adapterList.AddCurrentChangeListener(functor, "DviProtocolUpnp-current");
+    iSubnetListChangeListenerId = adapterList.AddSubnetListChangeListener(functor, "DviProtocolUpnp-subnet");
     std::vector<NetworkAdapter*>* subnetList = adapterList.CreateSubnetList();
     AutoNetworkAdapterRef ref(iDvStack.Env(), "DviProtocolUpnp ctor");
     const NetworkAdapter* current = ref.Adapter();
-    if (current != NULL) {
-        AddInterface(*current);
-    }
-    else {
-        for (TUint i=0; i<subnetList->size(); i++) {
-            NetworkAdapter* subnet = (*subnetList)[i];
-            try {
-                AddInterface(*subnet);
-            }
-            catch (NetworkError& ) {
-                // some hosts may have adapters that don't support multicast
-                // we can't differentiate between no support ever and transient failure
-                // (typical on Windows & Mac after hibernation) so just ignore this exception
-                // and trust that we'll get advertised on another interface.
-                char* adapterName = subnet->FullName();
-                LOG2(kTrace, kError, "DvDevice unable to use adapter %s\n", adapterName);
-                delete adapterName;
-            }
+    const TIpAddress kLoopbackAddr = MakeIpAddress(127, 0, 0, 1);
+    for (TUint i=0; i<subnetList->size(); i++) {
+        NetworkAdapter* subnet = (*subnetList)[i];
+        if (current != NULL && subnet->Address() != current->Address() && subnet->Address() != kLoopbackAddr) {
+            continue;
+        }
+        try {
+            AddInterface(*subnet);
+        }
+        catch (NetworkError&) {
+            // some hosts may have adapters that don't support multicast
+            // we can't differentiate between no support ever and transient failure
+            // (typical on Windows & Mac after hibernation) so just ignore this exception
+            // and trust that we'll get advertised on another interface.
+            char* adapterName = subnet->FullName();
+            LOG_ERROR(kDvDevice, "DvDevice unable to use adapter %s\n", adapterName);
+            delete adapterName;
         }
     }
     NetworkAdapterList::DestroySubnetList(subnetList);
@@ -84,7 +83,7 @@ DviProtocolUpnp::~DviProtocolUpnp()
     iSuppressScheduledEvents = true;
     iLock.Signal();
     for (TUint i=0; i<adapters.size(); i++) {
-        adapters[i]->Destroy();
+        adapters[i]->RemoveRef();
     }
     iDvStack.SsdpNotifierManager().Stop(iDevice.Udn());
 }
@@ -150,68 +149,52 @@ void DviProtocolUpnp::HandleInterfaceChange()
     TBool update = false;
     std::vector<DviProtocolUpnpAdapterSpecificData*> pendingDelete;
     {
+        const TIpAddress kLoopbackAddr = MakeIpAddress(127, 0, 0, 1);
         AutoMutex a(iLock);
         NetworkAdapterList& adapterList = iDvStack.Env().NetworkAdapterList();
         AutoNetworkAdapterRef ref(iDvStack.Env(), "DviProtocolUpnp::HandleInterfaceChange");
         const NetworkAdapter* current = ref.Adapter();
         TUint i = 0;
-        if (current != NULL) {
-            // remove listeners whose interface is no longer available
-            while (i<iAdapters.size()) {
-                if (iAdapters[i]->Interface() == current->Address()) {
-                    i++;
-                }
-                else {
-                    iAdapters[i]->SetPendingDelete();
-                    pendingDelete.push_back(iAdapters[i]);
-                    iAdapters.erase(iAdapters.begin() + i);
-                }
-                // add listener if 'current' is a new subnet
-                if (iAdapters.size() == 0) {
-                    iDvStack.SsdpNotifierManager().Stop(iDevice.Udn());
-                    DviProtocolUpnpAdapterSpecificData* adapter = AddInterface(*current);
-                    if (iDevice.Enabled()) {
-                        adapter->SendByeByeThenAlive(*this);
-                    }
-                }
+        std::vector<NetworkAdapter*>* subnetList = adapterList.CreateSubnetList();
+        std::vector<NetworkAdapter*>* adapters = adapterList.CreateNetworkAdapterList();
+        // remove listeners whose interface is no longer available
+        while (i<iAdapters.size()) {
+            if (FindAdapter(iAdapters[i]->Interface(), *adapters) != -1
+                && (!adapterList.SingleSubnetModeEnabled() ||
+                (current != NULL && iAdapters[i]->Interface() == current->Address()) ||
+                iAdapters[i]->Interface() == kLoopbackAddr)) {
+                i++;
+            }
+            else {
+                iAdapters[i]->SetPendingDelete();
+                pendingDelete.push_back(iAdapters[i]);
+                iAdapters.erase(iAdapters.begin() + i);
             }
         }
-        else {
-            std::vector<NetworkAdapter*>* subnetList = adapterList.CreateSubnetList();
-            std::vector<NetworkAdapter*>* adapters = adapterList.CreateNetworkAdapterList();
-            // remove listeners whose interface is no longer available
-            while (i<iAdapters.size()) {
-                if (FindAdapter(iAdapters[i]->Interface(), *adapters) != -1) {
-                    i++;
-                }
-                else {
-                    iAdapters[i]->SetPendingDelete();
-                    pendingDelete.push_back(iAdapters[i]);
-                    iAdapters.erase(iAdapters.begin() + i);
-                }
-            }
 
-            // add listeners for new subnets
-            for (i=0; i<subnetList->size(); i++) {
-                NetworkAdapter* subnet = (*subnetList)[i];
-                if (FindListenerForSubnet(subnet->Subnet()) == -1) {
-                    AddInterface(*subnet);
-                    update = iDevice.Enabled();
-                }
+        // add listeners for new subnets
+        for (i=0; i<subnetList->size(); i++) {
+            NetworkAdapter* subnet = (*subnetList)[i];
+            if (FindListenerForSubnet(subnet->Subnet()) == -1
+                && (!adapterList.SingleSubnetModeEnabled() ||
+                   (current != NULL && subnet->Address() == current->Address()) ||
+                    subnet->Address() == kLoopbackAddr)) {
+                AddInterface(*subnet);
+                update = iDevice.Enabled();
             }
-            NetworkAdapterList::DestroyNetworkAdapterList(adapters);
-            NetworkAdapterList::DestroySubnetList(subnetList);
-            if (update) {
-                // halt any ssdp broadcasts/responses that are currently in progress
-                // (in case they're for a subnet that's no longer valid)
-                // they'll be advertised again by the SendUpdateNotifications() call below
-                iDvStack.SsdpNotifierManager().Stop(iDevice.Udn());
-            }
+        }
+        NetworkAdapterList::DestroyNetworkAdapterList(adapters);
+        NetworkAdapterList::DestroySubnetList(subnetList);
+        if (update) {
+            // halt any ssdp broadcasts/responses that are currently in progress
+            // (in case they're for a subnet that's no longer valid)
+            // they'll be advertised again by the SendUpdateNotifications() call below
+            iDvStack.SsdpNotifierManager().Stop(iDevice.Udn());
         }
     }
 
     for (TUint i=0; i<pendingDelete.size(); i++) {
-        pendingDelete[i]->Destroy();
+        pendingDelete[i]->RemoveRef();
     }
 
     if (update) {
@@ -254,10 +237,9 @@ void DviProtocolUpnp::WriteResource(const Brx& aUriTail, TIpAddress aAdapter, st
     if (aUriTail == kDeviceXmlName) {
         Brh xml;
         Brn xmlBuf;
-        iLock.Wait();
+        AutoMutex _(iLock);
         const TInt index = FindListenerForInterface(aAdapter);
         if (index == -1) {
-            iLock.Signal();
             return;
         }
         if (iDevice.IsRoot()) {
@@ -276,7 +258,6 @@ void DviProtocolUpnp::WriteResource(const Brx& aUriTail, TIpAddress aAdapter, st
                 xmlBuf.Set(xml);
             }
         }
-        iLock.Signal();
         aResourceWriter.WriteResourceBegin(xmlBuf.Bytes(), kOhNetMimeTypeXml);
         aResourceWriter.WriteResource(xmlBuf.Ptr(), xmlBuf.Bytes());
         aResourceWriter.WriteResourceEnd();
@@ -318,44 +299,52 @@ const Brx& DviProtocolUpnp::ProtocolName() const
 
 void DviProtocolUpnp::Enable()
 {
-    iLock.Wait();
-    
-    // check we have at least the basic attributes requried for advertisement
-    ASSERT(Domain().Bytes() > 0);
-    ASSERT(Type().Bytes() > 0);
-    ASSERT(Version() > 0);
-    
-    for (TUint i=0; i<iAdapters.size(); i++) {
-        DviProtocolUpnpAdapterSpecificData* adapter = iAdapters[i];
-        Bws<Uri::kMaxUriBytes> uriBase;
-        DviDevice* root = (iDevice.IsRoot()? &iDevice : iDevice.Root());
-        adapter->UpdateServerPort(*iServer);
-        root->GetUriBase(uriBase, adapter->Interface(), adapter->ServerPort(), *this);
-        adapter->UpdateUriBase(uriBase);
-        adapter->ClearDeviceXml();
-        if (iDevice.ResourceManager() != NULL) {
-            const TChar* name = 0;
-            GetAttribute("FriendlyName", &name);
-            adapter->BonjourRegister(name, iDevice.Udn(), kProtocolName, iDevice.kResourceDir);
-            /*GetAttribute("MdnsHostName", &name);
-            if (name != NULL) {
-                iDvStack.MdnsProvider()->MdnsSetHostName(name);
-                Bwh redirectedPath(iDevice.Udn().Bytes() + kProtocolName.Bytes() + iDevice.kResourceDir.Bytes() + 4);
-                redirectedPath.Append('/');
-                Uri::Escape(redirectedPath, iDevice.Udn());
-                redirectedPath.Append('/');
-                redirectedPath.Append(kProtocolName);
-                redirectedPath.Append('/');
-                redirectedPath.Append(iDevice.kResourceDir);
-                redirectedPath.Append('/');
-                iDvStack.ServerUpnp().Redirect(Brn("/"), redirectedPath);
-            }*/
+    {
+        AutoMutex _(iLock);
+
+        // check we have at least the basic attributes requried for advertisement
+        ASSERT(Domain().Bytes() > 0);
+        ASSERT(Type().Bytes() > 0);
+        ASSERT(Version() > 0);
+
+        for (TUint i=0; i<iAdapters.size(); i++) {
+            DviProtocolUpnpAdapterSpecificData* adapter = iAdapters[i];
+            adapter->AddRef();
+            Bws<Uri::kMaxUriBytes> uriBase;
+            DviDevice* root = (iDevice.IsRoot()? &iDevice : iDevice.Root());
+            iLock.Signal();
+            /* UpdateServerPort can block if we're processing an adapter change and
+               destruction of previous servers is blocked waiting on a call to our
+               WriteResource (for device or service xml) completing */
+            adapter->UpdateServerPort(*iServer);
+            iLock.Wait();
+            root->GetUriBase(uriBase, adapter->Interface(), adapter->ServerPort(), *this);
+            adapter->UpdateUriBase(uriBase);
+            adapter->ClearDeviceXml();
+            if (iDevice.ResourceManager() != NULL) {
+                const TChar* name = 0;
+                GetAttribute("FriendlyName", &name);
+                adapter->BonjourRegister(name, iDevice.Udn(), kProtocolName, iDevice.kResourceDir);
+                /*GetAttribute("MdnsHostName", &name);
+                if (name != NULL) {
+                    iDvStack.MdnsProvider()->MdnsSetHostName(name);
+                    Bwh redirectedPath(iDevice.Udn().Bytes() + kProtocolName.Bytes() + iDevice.kResourceDir.Bytes() + 4);
+                    redirectedPath.Append('/');
+                    Uri::Escape(redirectedPath, iDevice.Udn());
+                    redirectedPath.Append('/');
+                    redirectedPath.Append(kProtocolName);
+                    redirectedPath.Append('/');
+                    redirectedPath.Append(iDevice.kResourceDir);
+                    redirectedPath.Append('/');
+                    iDvStack.ServerUpnp().Redirect(Brn("/"), redirectedPath);
+                }*/
+            }
+            adapter->RemoveRef();
+        }
+        for (TUint i=0; i<iAdapters.size(); i++) {
+            iAdapters[i]->SendByeByeThenAlive(*this);
         }
     }
-    for (TUint i=0; i<iAdapters.size(); i++) {
-        iAdapters[i]->SendByeByeThenAlive(*this);
-    }
-    iLock.Signal();
     QueueAliveTimer();
 }
 
@@ -367,9 +356,11 @@ void DviProtocolUpnp::Disable(Functor& aComplete)
         iDisableComplete = aComplete;
         TUint i;
         iDvStack.SsdpNotifierManager().Stop(iDevice.Udn());
-        iSubnetDisableCount = (TUint)iAdapters.size();
-        Functor functor = MakeFunctor(*this, &DviProtocolUpnp::SubnetDisabled);
-        for (i=0; i<iSubnetDisableCount; i++) {
+        TUint subnetDisableCount = (TUint)iAdapters.size(); // workaround for bizarre issue on qnap arm - take local copy of adapters size and use it to update iSubnetDisableCount instead of using iSubnetDisableCount directly within the lock
+        iSubnetDisableCount = subnetDisableCount;
+        completeNow = (subnetDisableCount == 0);
+        FunctorGeneric<TBool> functor = MakeFunctorGeneric<TBool>(*this, &DviProtocolUpnp::SubnetDisabled);
+        for (i=0; i<subnetDisableCount; i++) {
             LogMulticastNotification("byebye");
             Bws<kMaxUriBytes> uri;
             GetUriDeviceXml(uri, iAdapters[i]->UriBase());
@@ -380,24 +371,50 @@ void DviProtocolUpnp::Disable(Functor& aComplete)
                 completeNow = true;
             }
         }
-        for (TUint i=0; i<iAdapters.size(); i++) {
-            iAdapters[i]->BonjourDeregister();
+        for (TUint j=0; j<iAdapters.size(); j++) {
+            iAdapters[j]->BonjourDeregister();
         }
-        const TChar* name = 0;
+        /*const TChar* name = 0;
         GetAttribute("MdnsHostName", &name);
         if (name != NULL) {
             iDvStack.MdnsProvider()->MdnsSetHostName("");
+        }*/
+        if (completeNow) {
+            iSubnetDisableCount = 0;
         }
     }
     if (completeNow) {
-        iSubnetDisableCount = 0;
-        iDisableComplete();
+        aComplete();
     }
 }
 
 void DviProtocolUpnp::GetAttribute(const TChar* aKey, const TChar** aValue) const
 {
     *aValue = iAttributeMap.Get(aKey);
+    if (*aValue == NULL) {
+        Brn key(aKey);
+        static const Brn kServicePrefix("Service.");
+        if (key.BeginsWith(kServicePrefix)) {
+            Brn pathUpnp = key.Split(kServicePrefix.Bytes());
+            const TUint count = iDevice.ServiceCount();
+            for (TUint i=0; i<count; i++) {
+                DviService& service = iDevice.Service(i);
+                Bws<128> name(service.ServiceType().Domain());
+                const TUint bytes = name.Bytes();
+                for (TUint j=0; j<bytes; j++) {
+                    if (name[j] == '.') {
+                        name[j] = '-';
+                    }
+                }
+                name.Append('.');
+                name.Append(service.ServiceType().Name());
+                if (name == pathUpnp) {
+                    *aValue = (const TChar*)(service.ServiceType().VersionBuf().Ptr());
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void DviProtocolUpnp::SetAttribute(const TChar* aKey, const TChar* aValue)
@@ -408,7 +425,7 @@ void DviProtocolUpnp::SetAttribute(const TChar* aKey, const TChar* aValue)
     }
     if (strcmp(aKey, "MdnsHostName") == 0) {
         ASSERT(iDevice.ResourceManager() != NULL);
-        ASSERT(iDvStack.MdnsProvider() != NULL);
+        ASSERT(iDvStack.Env().MdnsProvider() != NULL);
     }
 
     iAttributeMap.Set(aKey, aValue);
@@ -448,18 +465,19 @@ void DviProtocolUpnp::GetResourceManagerUri(const NetworkAdapter& aAdapter, Brh&
     }
 }
 
-void DviProtocolUpnp::SubnetDisabled()
+void DviProtocolUpnp::SubnetDisabled(TBool /*aNotificationsCompleted*/)
 {
     iLock.Wait();
     ASSERT(iSubnetDisableCount != 0);
     TBool signal = (--iSubnetDisableCount == 0);
+    Functor disableComplete = iDisableComplete;
     iLock.Signal();
     if (signal) {
-        iDisableComplete();
+        disableComplete();
     }
 }
 
-void DviProtocolUpnp::SubnetUpdated()
+void DviProtocolUpnp::SubnetUpdated(TBool)
 {
     iLock.Wait();
     ASSERT(iUpdateCount != 0);
@@ -504,7 +522,7 @@ void DviProtocolUpnp::SendUpdateNotifications()
     iDvStack.UpdateBootId();
     const TUint numAdapters = (TUint)iAdapters.size();
     iUpdateCount += numAdapters; // its possible this'll be called while previous updates are still being processed
-    Functor functor = MakeFunctor(*this, &DviProtocolUpnp::SubnetUpdated);
+    FunctorGeneric<TBool> functor = MakeFunctorGeneric<TBool>(*this, &DviProtocolUpnp::SubnetUpdated);
     for (TUint i=0; i<iAdapters.size(); i++) {
         Bws<kMaxUriBytes> uri;
         GetUriDeviceXml(uri, iAdapters[i]->UriBase());
@@ -512,7 +530,7 @@ void DviProtocolUpnp::SendUpdateNotifications()
     }
 }
 
-void DviProtocolUpnp::SendByeByes(TIpAddress aAdapter, const Brx& aUriBase, Functor aCompleted)
+void DviProtocolUpnp::SendByeByes(TIpAddress aAdapter, const Brx& aUriBase, FunctorGeneric<TBool> aCompleted)
 {
     Bws<kMaxUriBytes> uri;
     GetUriDeviceXml(uri, aUriBase);
@@ -521,7 +539,7 @@ void DviProtocolUpnp::SendByeByes(TIpAddress aAdapter, const Brx& aUriBase, Func
     }
     catch (NetworkError&) {
         if (aCompleted) {
-            aCompleted();
+            aCompleted(true);
         }
     }
 }
@@ -554,22 +572,22 @@ void DviProtocolUpnp::GetDeviceXml(Brh& aXml, TIpAddress aAdapter)
 
 void DviProtocolUpnp::LogUnicastNotification(const char* aType)
 {
-    Mutex& lock = iDvStack.Env().Mutex();
-    lock.Wait();
-    LOG(kDvDevice, "Device ");
-    LOG(kDvDevice, iDevice.Udn());
-    LOG(kDvDevice, " starting response to msearch type \'%s\'\n", aType);
-    lock.Signal();
+    const Brx& udn = iDevice.Udn();
+    LOG(kDvDevice, "Device %.*s starting response to msearch type \'%s\'\n", PBUF(udn), aType);
 }
 
 void DviProtocolUpnp::LogMulticastNotification(const char* aType)
 {
-    Mutex& lock = iDvStack.Env().Mutex();
-    lock.Wait();
-    LOG(kDvDevice, "Device ");
-    LOG(kDvDevice, iDevice.Udn());
-    LOG(kDvDevice, " starting to send %s notifications.\n", aType);
-    lock.Signal();
+    const Brx& udn = iDevice.Udn();
+    LOG(kDvDevice, "Device %.*s starting to send %s notifications.\n", PBUF(udn), aType);
+}
+
+TBool DviProtocolUpnpAdapterSpecificData::IsLocationReachable(const Endpoint& aEndpoint)
+{
+    /* This method has the same purpose as CpiDeviceListUpnp::IsLocationReachable.
+        The reachability check is needed to ensure that all M-SEARCH responses contain
+        a location Uri that can be accessed by the M-SEARCH sender. */
+    return (aEndpoint.Address() & iMask) == (iSubnet & iMask);
 }
 
 void DviProtocolUpnp::SsdpSearchAll(const Endpoint& aEndpoint, TUint aMx, TIpAddress aAdapter)
@@ -653,36 +671,53 @@ void DviProtocolUpnp::SsdpSearchServiceType(const Endpoint& aEndpoint, TUint aMx
 // DviProtocolUpnpAdapterSpecificData
 
 DviProtocolUpnpAdapterSpecificData::DviProtocolUpnpAdapterSpecificData(DvStack& aDvStack, IUpnpMsearchHandler& aMsearchHandler, const NetworkAdapter& aAdapter, Bwx& aUriBase, TUint aServerPort)
-    : iRefCount(1)
+    : iLock("UASD")
+    , iRefCount(1)
     , iDvStack(aDvStack)
     , iMsearchHandler(&aMsearchHandler)
     , iId(0x7fffffff)
     , iSubnet(aAdapter.Subnet())
     , iAdapter(aAdapter.Address())
+    , iMask(aAdapter.Mask())
     , iUriBase(aUriBase)
     , iServerPort(aServerPort)
+#ifndef DEFINE_WINDOWS_UNIVERSAL
     , iBonjourWebPage(0)
+#endif
     , iDevice(NULL)
 {
     iListener = &(iDvStack.Env().MulticastListenerClaim(aAdapter.Address()));
     iId = iListener->AddMsearchHandler(this);
 }
 
-void DviProtocolUpnpAdapterSpecificData::Destroy()
+void DviProtocolUpnpAdapterSpecificData::AddRef()
 {
-    if (--iRefCount == 0) {
+    iLock.Wait();
+    ++iRefCount;
+    iLock.Signal();
+}
+
+TBool DviProtocolUpnpAdapterSpecificData::RemoveRef()
+{
+    iLock.Wait();
+    const TBool dead = (--iRefCount == 0);
+    iLock.Signal();
+    if (dead) {
         delete this;
     }
+    return dead;
     // if iRefCount>0 this object is now orphaned
     // ...there is a tiny risk of it being leaked if the stack is immediately shut down
 }
 
 DviProtocolUpnpAdapterSpecificData::~DviProtocolUpnpAdapterSpecificData()
 {
+#ifndef DEFINE_WINDOWS_UNIVERSAL
     if (iBonjourWebPage != NULL) {
         iBonjourWebPage->SetDisabled();
         delete iBonjourWebPage;
     }
+#endif
     iListener->RemoveMsearchHandler(iId);
     iDvStack.Env().MulticastListenerRelease(iAdapter);
 }
@@ -736,17 +771,28 @@ void DviProtocolUpnpAdapterSpecificData::ClearDeviceXml()
 
 void DviProtocolUpnpAdapterSpecificData::SetPendingDelete()
 {
-    Mutex& lock = iDvStack.Env().Mutex();
-    lock.Wait();
+    iLock.Wait();
     iMsearchHandler = 0;
-    lock.Signal();
+    iLock.Signal();
 }
+
+#ifdef DEFINE_WINDOWS_UNIVERSAL
+
+void DviProtocolUpnpAdapterSpecificData::BonjourRegister(const TChar* /*aName*/, const Brx& /*aUdn*/, const Brx& /*aProtocol*/, const Brx& /*aResourceDir*/)
+{
+}
+
+void DviProtocolUpnpAdapterSpecificData::BonjourDeregister()
+{
+}
+
+#else
 
 void DviProtocolUpnpAdapterSpecificData::BonjourRegister(const TChar* aName, const Brx& aUdn, const Brx& aProtocol, const Brx& aResourceDir)
 {
     if (aName != NULL) {
         if (iBonjourWebPage == 0) {
-            IMdnsProvider* mdnsProvider = iDvStack.MdnsProvider();
+            IMdnsProvider* mdnsProvider = iDvStack.Env().MdnsProvider();
             if (mdnsProvider != NULL) {
                 iBonjourWebPage = new BonjourWebPage(*mdnsProvider);
             }
@@ -766,6 +812,7 @@ void DviProtocolUpnpAdapterSpecificData::BonjourRegister(const TChar* aName, con
     }
 }
 
+
 void DviProtocolUpnpAdapterSpecificData::BonjourDeregister()
 {
     if (iBonjourWebPage != NULL) {
@@ -773,35 +820,36 @@ void DviProtocolUpnpAdapterSpecificData::BonjourDeregister()
     }
 }
 
+#endif
+
 void DviProtocolUpnpAdapterSpecificData::SendByeByeThenAlive(DviProtocolUpnp& aDevice)
 {
     iDevice = &aDevice;
-    iRefCount++;
-    Functor functor = MakeFunctor(*this, &DviProtocolUpnpAdapterSpecificData::ByeByesComplete);
+    AddRef();
+    FunctorGeneric<TBool> functor = MakeFunctorGeneric<TBool>(*this, &DviProtocolUpnpAdapterSpecificData::ByeByesComplete);
     iDevice->SendByeByes(iAdapter, iUriBase, functor);
 }
 
-void DviProtocolUpnpAdapterSpecificData::ByeByesComplete()
+void DviProtocolUpnpAdapterSpecificData::ByeByesComplete(TBool aCancelled)
 {
-    if (--iRefCount == 0) {
-        delete this;
-    }
-    else {
-        iDevice->SendAlives(iAdapter, iUriBase);
+    if (!RemoveRef()) {
+        if (!aCancelled) {
+            iDevice->SendAlives(iAdapter, iUriBase);
+        }
     }
 }
 
 IUpnpMsearchHandler* DviProtocolUpnpAdapterSpecificData::Handler()
 {
-    Mutex& lock = iDvStack.Env().Mutex();
-    lock.Wait();
-    IUpnpMsearchHandler* device = iMsearchHandler;
-    lock.Signal();
-    return device;
+    AutoMutex _(iLock);
+    return iMsearchHandler;
 }
 
 void DviProtocolUpnpAdapterSpecificData::SsdpSearchAll(const Endpoint& aEndpoint, TUint aMx)
 {
+    if (!IsLocationReachable(aEndpoint)) {
+        return;
+    }
     IUpnpMsearchHandler* handler = Handler();
     if (handler != NULL) {
         handler->SsdpSearchAll(aEndpoint, aMx, iListener->Interface());
@@ -810,6 +858,9 @@ void DviProtocolUpnpAdapterSpecificData::SsdpSearchAll(const Endpoint& aEndpoint
 
 void DviProtocolUpnpAdapterSpecificData::SsdpSearchRoot(const Endpoint& aEndpoint, TUint aMx)
 {
+    if (!IsLocationReachable(aEndpoint)) {
+        return;
+    }
     IUpnpMsearchHandler* handler = Handler();
     if (handler != NULL) {
         handler->SsdpSearchRoot(aEndpoint, aMx, iListener->Interface());
@@ -818,6 +869,9 @@ void DviProtocolUpnpAdapterSpecificData::SsdpSearchRoot(const Endpoint& aEndpoin
 
 void DviProtocolUpnpAdapterSpecificData::SsdpSearchUuid(const Endpoint& aEndpoint, TUint aMx, const Brx& aUuid)
 {
+    if (!IsLocationReachable(aEndpoint)) {
+        return;
+    }
     IUpnpMsearchHandler* handler = Handler();
     if (handler != NULL) {
         handler->SsdpSearchUuid(aEndpoint, aMx, iListener->Interface(), aUuid);
@@ -826,6 +880,9 @@ void DviProtocolUpnpAdapterSpecificData::SsdpSearchUuid(const Endpoint& aEndpoin
 
 void DviProtocolUpnpAdapterSpecificData::SsdpSearchDeviceType(const Endpoint& aEndpoint, TUint aMx, const Brx& aDomain, const Brx& aType, TUint aVersion)
 {
+    if (!IsLocationReachable(aEndpoint)) {
+        return;
+    }
     IUpnpMsearchHandler* handler = Handler();
     if (handler != NULL) {
         handler->SsdpSearchDeviceType(aEndpoint, aMx, iListener->Interface(), aDomain, aType, aVersion);
@@ -834,6 +891,9 @@ void DviProtocolUpnpAdapterSpecificData::SsdpSearchDeviceType(const Endpoint& aE
 
 void DviProtocolUpnpAdapterSpecificData::SsdpSearchServiceType(const Endpoint& aEndpoint, TUint aMx, const Brx& aDomain, const Brx& aType, TUint aVersion)
 {
+    if (!IsLocationReachable(aEndpoint)) {
+        return;
+    }
     IUpnpMsearchHandler* handler = Handler();
     if (handler != NULL) {
         handler->SsdpSearchServiceType(aEndpoint, aMx, iListener->Interface(), aDomain, aType, aVersion);
@@ -936,7 +996,8 @@ void DviProtocolUpnpDeviceXmlWriter::Write(TIpAddress aAdapter)
         }
         iWriter.Write("<serviceList>");
         for (TUint i=0; i<serviceCount; i++) {
-            const OpenHome::Net::ServiceType& serviceType = iDeviceUpnp.iDevice.Service(i).ServiceType();
+            DviService& service = iDeviceUpnp.iDevice.Service(i);
+            const OpenHome::Net::ServiceType& serviceType = service.ServiceType();
             iWriter.Write("<service>");
             iWriter.Write("<serviceType>");
             iWriter.Write(serviceType.FullNameUpnp());
@@ -955,20 +1016,24 @@ void DviProtocolUpnpDeviceXmlWriter::Write(TIpAddress aAdapter)
             iWriter.Write(DviProtocolUpnp::kServiceXmlName);
             iWriter.Write("</SCPDURL>");
             iWriter.Write("<controlURL>");
-            iWriter.Write('/');
-            Uri::Escape(iWriter, iDeviceUpnp.iDevice.Udn());
-            iWriter.Write('/');
-            iWriter.Write(serviceType.PathUpnp());
-            iWriter.Write('/');
-            iWriter.Write(DviProtocolUpnp::kControlUrlTail);
+            if (service.DvActions().size() > 0) {
+                iWriter.Write('/');
+                Uri::Escape(iWriter, iDeviceUpnp.iDevice.Udn());
+                iWriter.Write('/');
+                iWriter.Write(serviceType.PathUpnp());
+                iWriter.Write('/');
+                iWriter.Write(DviProtocolUpnp::kControlUrlTail);
+                }
             iWriter.Write("</controlURL>");
             iWriter.Write("<eventSubURL>");
-            iWriter.Write('/');
-            Uri::Escape(iWriter, iDeviceUpnp.iDevice.Udn());
-            iWriter.Write('/');
-            iWriter.Write(serviceType.PathUpnp());
-            iWriter.Write('/');
-            iWriter.Write(DviProtocolUpnp::kEventUrlTail);
+            if (service.Properties().size() > 0) {
+                iWriter.Write('/');
+                Uri::Escape(iWriter, iDeviceUpnp.iDevice.Udn());
+                iWriter.Write('/');
+                iWriter.Write(serviceType.PathUpnp());
+                iWriter.Write('/');
+                iWriter.Write(DviProtocolUpnp::kEventUrlTail);
+            }
             iWriter.Write("</eventSubURL>");
             iWriter.Write("</service>");
         }
@@ -993,6 +1058,7 @@ void DviProtocolUpnpDeviceXmlWriter::Write(TIpAddress aAdapter)
         }
         iWriter.Write("</deviceList>");
     }
+    WritePresentationUrlTag(aAdapter);
     iWriter.Write("</device>");
     if (iDeviceUpnp.iDevice.IsRoot()) {
         iWriter.Write("</root>");
@@ -1094,7 +1160,8 @@ void DviProtocolUpnpDeviceXmlWriter::WriteResourceEnd()
 
 void DviProtocolUpnpServiceXmlWriter::Write(const DviService& aService, const DviProtocolUpnp& aDevice, IResourceWriter& aResourceWriter)
 {
-    WriterBwh writer(1024);
+    static const TUint kBufGranularity = 1024 * 8;
+    WriterBwh writer(kBufGranularity);
     WriteServiceXml(writer, aService, aDevice);
     Brh xml;
     writer.TransferTo(xml);
@@ -1116,10 +1183,12 @@ void DviProtocolUpnpServiceXmlWriter::WriteServiceXml(WriterBwh& aWriter, const 
         aWriter.Write("<name>");
         aWriter.Write(action->Name());
         aWriter.Write("</name>");
-        aWriter.Write("<argumentList>");
-        WriteServiceActionParams(aWriter, *action, true);
-        WriteServiceActionParams(aWriter, *action, false);
-        aWriter.Write("</argumentList>");
+        if (action->InputParameters().size() > 0 || action->OutputParameters().size() > 0) {
+            aWriter.Write("<argumentList>");
+            WriteServiceActionParams(aWriter, *action, true);
+            WriteServiceActionParams(aWriter, *action, false);
+            aWriter.Write("</argumentList>");
+        }
         aWriter.Write("</action>");
     }
     aWriter.Write("</actionList>");

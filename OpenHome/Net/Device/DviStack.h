@@ -17,7 +17,6 @@
 #include <OpenHome/Net/Private/Bonjour.h>
 #include <OpenHome/Net/Private/DviPropertyUpdateCollection.h>
 #include <OpenHome/Net/Private/DviSsdpNotifier.h>
-#include <OpenHome/Net/Private/DviServerLpec.h>
 #include <OpenHome/Private/Standard.h>
 
 #include <vector>
@@ -25,8 +24,17 @@
 namespace OpenHome {
 namespace Net {
 
+class IControlPointObserver
+{
+public:
+    virtual void NotifyControlPoint(const OpenHome::Brx& aControlPoint) = 0; // not allowed to throw
+};
+
+class IDvProtocolFactory;
+
 class DvStack : private IStack, private INonCopyable
 {
+    static const TUint kMaxControlPointBytes = 1024;
 public:
     DvStack(Environment& aEnv);
     Environment& Env() { return iEnv; }
@@ -36,10 +44,13 @@ public:
     DviServerUpnp& ServerUpnp();
     DviDeviceMap& DeviceMap();
     DviSubscriptionManager& SubscriptionManager();
-    IMdnsProvider* MdnsProvider();
     DviPropertyUpdateCollection& PropertyUpdateCollection();
     DviSsdpNotifierManager& SsdpNotifierManager();
-    DviServerLpec& LpecServer();
+    void AddProtocolFactory(IDvProtocolFactory* aProtocolFactory);
+    std::vector<IDvProtocolFactory*>& ProtocolFactories();
+    void AddControlPointObserver(IControlPointObserver& aObserver);
+    void RemoveControlPointObserver(IControlPointObserver& aObserver);
+    void NotifyControlPointUsed(const OpenHome::Brx& aControlPoint);
 private:
     ~DvStack();
 private:
@@ -50,10 +61,11 @@ private:
     DviDeviceMap* iDviDeviceMap;
     DviSubscriptionManager* iSubscriptionManager;
     DviServerWebSocket* iDviServerWebSocket;
-    IMdnsProvider* iMdns;
     DviPropertyUpdateCollection* iPropertyUpdateCollection;
     DviSsdpNotifierManager* iSsdpNotifierManager;
-    DviServerLpec* iLpecServer;
+    std::vector<IDvProtocolFactory*> iProtocolFactories;
+    std::vector<IControlPointObserver*> iControlPointObservers;
+    Bws<kMaxControlPointBytes> iControlPoint;
 };
 
 } // namespace Net

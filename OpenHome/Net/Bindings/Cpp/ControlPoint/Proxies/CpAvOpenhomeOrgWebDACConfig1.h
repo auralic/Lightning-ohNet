@@ -19,18 +19,36 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgWebDACConfig1Cpp : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgWebDACConfig1Cpp() {}
+    virtual void SyncGetDACConfig(std::string& aDACConfig) = 0;
+    virtual void BeginGetDACConfig(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDACConfig(IAsync& aAsync, std::string& aDACConfig) = 0;
+    virtual void SyncSetDACConfig(const std::string& aDACConfig) = 0;
+    virtual void BeginSetDACConfig(const std::string& aDACConfig, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetDACConfig(IAsync& aAsync) = 0;
+    virtual void SetPropertyAliveChanged(Functor& aAliveChanged) = 0;
+    virtual void PropertyAlive(bool& aAlive) const = 0;
+    virtual void SetPropertyDACConfigChanged(Functor& aDACConfigChanged) = 0;
+    virtual void PropertyDACConfig(std::string& aDACConfig) const = 0;
+    virtual void SetPropertyCurrentActionChanged(Functor& aCurrentActionChanged) = 0;
+    virtual void PropertyCurrentAction(uint32_t& aCurrentAction) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:WebDACConfig:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgWebDACConfig1Cpp : public CpProxy
+class CpProxyAvOpenhomeOrgWebDACConfig1Cpp : public ICpProxyAvOpenhomeOrgWebDACConfig1Cpp
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -155,7 +173,40 @@ public:
      * @param[out] aCurrentAction
      */
     void PropertyCurrentAction(uint32_t& aCurrentAction) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void AlivePropertyChanged();
     void DACConfigPropertyChanged();
     void CurrentActionPropertyChanged();

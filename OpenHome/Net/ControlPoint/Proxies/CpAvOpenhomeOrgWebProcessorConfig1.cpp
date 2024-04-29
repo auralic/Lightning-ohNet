@@ -7,20 +7,37 @@
 #include <OpenHome/Net/Private/Error.h>
 #include <OpenHome/Net/Private/CpiDevice.h>
 
-using namespace OpenHome;
-using namespace OpenHome::Net;
-
+namespace OpenHome {
+namespace Net {
 
 class SyncGetProcessorConfigAvOpenhomeOrgWebProcessorConfig1 : public SyncProxyAction
 {
 public:
     SyncGetProcessorConfigAvOpenhomeOrgWebProcessorConfig1(CpProxyAvOpenhomeOrgWebProcessorConfig1& aProxy, Brh& aProcessorConfig);
     virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetProcessorConfigAvOpenhomeOrgWebProcessorConfig1() {}
 private:
     CpProxyAvOpenhomeOrgWebProcessorConfig1& iService;
     Brh& iProcessorConfig;
 };
+
+class SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1(CpProxyAvOpenhomeOrgWebProcessorConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgWebProcessorConfig1& iService;
+};
+
+} // namespace Net
+} // namespace OpenHome
+
+
+using namespace OpenHome;
+using namespace OpenHome::Net;
+
+
+// SyncGetProcessorConfigAvOpenhomeOrgWebProcessorConfig1
 
 SyncGetProcessorConfigAvOpenhomeOrgWebProcessorConfig1::SyncGetProcessorConfigAvOpenhomeOrgWebProcessorConfig1(CpProxyAvOpenhomeOrgWebProcessorConfig1& aProxy, Brh& aProcessorConfig)
     : iService(aProxy)
@@ -33,16 +50,7 @@ void SyncGetProcessorConfigAvOpenhomeOrgWebProcessorConfig1::CompleteRequest(IAs
     iService.EndGetProcessorConfig(aAsync, iProcessorConfig);
 }
 
-
-class SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1(CpProxyAvOpenhomeOrgWebProcessorConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgWebProcessorConfig1& iService;
-};
+// SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1
 
 SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1::SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1(CpProxyAvOpenhomeOrgWebProcessorConfig1& aProxy)
     : iService(aProxy)
@@ -55,8 +63,10 @@ void SyncSetProcessorConfigAvOpenhomeOrgWebProcessorConfig1::CompleteRequest(IAs
 }
 
 
+// CpProxyAvOpenhomeOrgWebProcessorConfig1
+
 CpProxyAvOpenhomeOrgWebProcessorConfig1::CpProxyAvOpenhomeOrgWebProcessorConfig1(CpDevice& aDevice)
-    : CpProxy("av-openhome-org", "WebProcessorConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "WebProcessorConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -93,11 +103,11 @@ void CpProxyAvOpenhomeOrgWebProcessorConfig1::SyncGetProcessorConfig(Brh& aProce
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1::BeginGetProcessorConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetProcessorConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetProcessorConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetProcessorConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1::EndGetProcessorConfig(IAsync& aAsync, Brh& aProcessorConfig)
@@ -125,11 +135,11 @@ void CpProxyAvOpenhomeOrgWebProcessorConfig1::SyncSetProcessorConfig(const Brx& 
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1::BeginSetProcessorConfig(const Brx& aProcessorConfig, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetProcessorConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetProcessorConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetProcessorConfig->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aProcessorConfig));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1::EndSetProcessorConfig(IAsync& aAsync)
@@ -148,29 +158,33 @@ void CpProxyAvOpenhomeOrgWebProcessorConfig1::EndSetProcessorConfig(IAsync& aAsy
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1::SetPropertyAliveChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iAliveChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1::SetPropertyProcessorConfigChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iProcessorConfigChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1::PropertyAlive(TBool& aAlive) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1::PropertyProcessorConfig(Brhz& aProcessorConfig) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aProcessorConfig.Set(iProcessorConfig->Value());
 }
 
@@ -183,4 +197,45 @@ void CpProxyAvOpenhomeOrgWebProcessorConfig1::ProcessorConfigPropertyChanged()
 {
     ReportEvent(iProcessorConfigChanged);
 }
+
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgWebProcessorConfig1::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgWebProcessorConfig1::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgWebProcessorConfig1::Version() const
+{
+  return iCpProxy.Version();
+}
+
 

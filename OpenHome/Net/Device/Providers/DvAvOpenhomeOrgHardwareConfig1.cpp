@@ -8,6 +8,23 @@
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
+TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyMessageOut(const Brx& aValue)
+{
+    ASSERT(iPropertyMessageOut != NULL);
+    return SetPropertyString(*iPropertyMessageOut, aValue);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyMessageOut(Brhz& aValue)
+{
+    ASSERT(iPropertyMessageOut != NULL);
+    aValue.Set(iPropertyMessageOut->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyMessageOut(IWriter& aWriter)
+{
+    iPropertyMessageOut->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyAlive(TBool aValue)
 {
     ASSERT(iPropertyAlive != NULL);
@@ -68,6 +85,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyRoomName(Brhz& aValue)
     aValue.Set(iPropertyRoomName->Value());
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyRoomName(IWriter& aWriter)
+{
+    iPropertyRoomName->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyInterFace(const Brx& aValue)
 {
     ASSERT(iPropertyInterFace != NULL);
@@ -78,6 +100,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyInterFace(Brhz& aValue)
 {
     ASSERT(iPropertyInterFace != NULL);
     aValue.Set(iPropertyInterFace->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyInterFace(IWriter& aWriter)
+{
+    iPropertyInterFace->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyNetMask(const Brx& aValue)
@@ -92,6 +119,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyNetMask(Brhz& aValue)
     aValue.Set(iPropertyNetMask->Value());
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyNetMask(IWriter& aWriter)
+{
+    iPropertyNetMask->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyGateWay(const Brx& aValue)
 {
     ASSERT(iPropertyGateWay != NULL);
@@ -102,6 +134,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyGateWay(Brhz& aValue)
 {
     ASSERT(iPropertyGateWay != NULL);
     aValue.Set(iPropertyGateWay->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyGateWay(IWriter& aWriter)
+{
+    iPropertyGateWay->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyDNS(const Brx& aValue)
@@ -116,6 +153,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyDNS(Brhz& aValue)
     aValue.Set(iPropertyDNS->Value());
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyDNS(IWriter& aWriter)
+{
+    iPropertyDNS->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyDHCP(const Brx& aValue)
 {
     ASSERT(iPropertyDHCP != NULL);
@@ -126,6 +168,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyDHCP(Brhz& aValue)
 {
     ASSERT(iPropertyDHCP != NULL);
     aValue.Set(iPropertyDHCP->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyDHCP(IWriter& aWriter)
+{
+    iPropertyDHCP->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertySsid(const Brx& aValue)
@@ -140,6 +187,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertySsid(Brhz& aValue)
     aValue.Set(iPropertySsid->Value());
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertySsid(IWriter& aWriter)
+{
+    iPropertySsid->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyPassWord(const Brx& aValue)
 {
     ASSERT(iPropertyPassWord != NULL);
@@ -150,6 +202,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyPassWord(Brhz& aValue)
 {
     ASSERT(iPropertyPassWord != NULL);
     aValue.Set(iPropertyPassWord->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyPassWord(IWriter& aWriter)
+{
+    iPropertyPassWord->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyEncrypType(const Brx& aValue)
@@ -164,6 +221,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyEncrypType(Brhz& aValue)
     aValue.Set(iPropertyEncrypType->Value());
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyEncrypType(IWriter& aWriter)
+{
+    iPropertyEncrypType->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyChannel(const Brx& aValue)
 {
     ASSERT(iPropertyChannel != NULL);
@@ -174,6 +236,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyChannel(Brhz& aValue)
 {
     ASSERT(iPropertyChannel != NULL);
     aValue.Set(iPropertyChannel->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyChannel(IWriter& aWriter)
+{
+    iPropertyChannel->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyUpnpType(const Brx& aValue)
@@ -188,6 +255,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyUpnpType(Brhz& aValue)
     aValue.Set(iPropertyUpnpType->Value());
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyUpnpType(IWriter& aWriter)
+{
+    iPropertyUpnpType->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyStatus(const Brx& aValue)
 {
     ASSERT(iPropertyStatus != NULL);
@@ -198,6 +270,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyStatus(Brhz& aValue)
 {
     ASSERT(iPropertyStatus != NULL);
     aValue.Set(iPropertyStatus->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyStatus(IWriter& aWriter)
+{
+    iPropertyStatus->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertySampleFormat(const Brx& aValue)
@@ -212,6 +289,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertySampleFormat(Brhz& aValu
     aValue.Set(iPropertySampleFormat->Value());
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertySampleFormat(IWriter& aWriter)
+{
+    iPropertySampleFormat->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyIpAddress(const Brx& aValue)
 {
     ASSERT(iPropertyIpAddress != NULL);
@@ -222,6 +304,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyIpAddress(Brhz& aValue)
 {
     ASSERT(iPropertyIpAddress != NULL);
     aValue.Set(iPropertyIpAddress->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyIpAddress(IWriter& aWriter)
+{
+    iPropertyIpAddress->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyProtect(const Brx& aValue)
@@ -236,6 +323,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyProtect(Brhz& aValue)
     aValue.Set(iPropertyProtect->Value());
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyProtect(IWriter& aWriter)
+{
+    iPropertyProtect->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyProtectPassword(const Brx& aValue)
 {
     ASSERT(iPropertyProtectPassword != NULL);
@@ -246,6 +338,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyProtectPassword(Brhz& aV
 {
     ASSERT(iPropertyProtectPassword != NULL);
     aValue.Set(iPropertyProtectPassword->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyProtectPassword(IWriter& aWriter)
+{
+    iPropertyProtectPassword->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyActiveStatus(const Brx& aValue)
@@ -260,6 +357,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyActiveStatus(Brhz& aValu
     aValue.Set(iPropertyActiveStatus->Value());
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyActiveStatus(IWriter& aWriter)
+{
+    iPropertyActiveStatus->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyTime(const Brx& aValue)
 {
     ASSERT(iPropertyTime != NULL);
@@ -270,6 +372,11 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetPropertyTime(Brhz& aValue)
 {
     ASSERT(iPropertyTime != NULL);
     aValue.Set(iPropertyTime->Value());
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::WritePropertyTime(IWriter& aWriter)
+{
+    iPropertyTime->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1::SetPropertyVolumeControl(TBool aValue)
@@ -298,6 +405,7 @@ DvProviderAvOpenhomeOrgHardwareConfig1::DvProviderAvOpenhomeOrgHardwareConfig1(D
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::Construct()
 {
+    iPropertyMessageOut = NULL;
     iPropertyAlive = NULL;
     iPropertyCurrentAction = NULL;
     iPropertyRestart = NULL;
@@ -321,6 +429,12 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::Construct()
     iPropertyActiveStatus = NULL;
     iPropertyTime = NULL;
     iPropertyVolumeControl = NULL;
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyMessageOut()
+{
+    iPropertyMessageOut = new PropertyString(new ParameterString("MessageOut"));
+    iService->AddProperty(iPropertyMessageOut); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyAlive()
@@ -459,6 +573,32 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnablePropertyVolumeControl()
 {
     iPropertyVolumeControl = new PropertyBool(new ParameterBool("VolumeControl"));
     iService->AddProperty(iPropertyVolumeControl); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionLogIn()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("LogIn");
+    action->AddInputParameter(new ParameterString("ServiceName"));
+    action->AddInputParameter(new ParameterString("MessageIn"));
+    action->AddOutputParameter(new ParameterRelated("MessageOut", *iPropertyMessageOut));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoLogIn);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionLogOut()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("LogOut");
+    action->AddInputParameter(new ParameterString("ServiceName"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoLogOut);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionCancelLogIn()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("CancelLogIn");
+    action->AddInputParameter(new ParameterString("ServiceName"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoCancelLogIn);
+    iService->AddAction(action, functor);
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionIsAlive()
@@ -834,6 +974,71 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetDACBalance()
     action->AddInputParameter(new ParameterUint("Balance"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetDACBalance);
     iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetEnableResampler()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableResampler");
+    action->AddInputParameter(new ParameterBool("EnableResampler"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableResampler);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetEnableSpeaker()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableSpeaker");
+    action->AddInputParameter(new ParameterBool("EnableSpeaker"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableSpeaker);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetEnableEqualizer()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableEqualizer");
+    action->AddInputParameter(new ParameterBool("EnableEqualizer"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableEqualizer);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::EnableActionSetEnableDirac()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableDirac");
+    action->AddInputParameter(new ParameterBool("EnableDirac"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableDirac);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoLogIn(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz ServiceName;
+    aInvocation.InvocationReadString("ServiceName", ServiceName);
+    Brhz MessageIn;
+    aInvocation.InvocationReadString("MessageIn", MessageIn);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    DviInvocationResponseString respMessageOut(aInvocation, "MessageOut");
+    LogIn(invocation, ServiceName, MessageIn, respMessageOut);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoLogOut(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz ServiceName;
+    aInvocation.InvocationReadString("ServiceName", ServiceName);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    LogOut(invocation, ServiceName);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoCancelLogIn(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz ServiceName;
+    aInvocation.InvocationReadString("ServiceName", ServiceName);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    CancelLogIn(invocation, ServiceName);
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::DoIsAlive(IDviInvocation& aInvocation)
@@ -1281,6 +1486,57 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetDACBalance(IDviInvocation& aIn
     SetDACBalance(invocation, Balance);
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableResampler(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TBool EnableResampler = aInvocation.InvocationReadBool("EnableResampler");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetEnableResampler(invocation, EnableResampler);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableSpeaker(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TBool EnableSpeaker = aInvocation.InvocationReadBool("EnableSpeaker");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetEnableSpeaker(invocation, EnableSpeaker);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableEqualizer(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TBool EnableEqualizer = aInvocation.InvocationReadBool("EnableEqualizer");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetEnableEqualizer(invocation, EnableEqualizer);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::DoSetEnableDirac(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    TBool EnableDirac = aInvocation.InvocationReadBool("EnableDirac");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    SetEnableDirac(invocation, EnableDirac);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::LogIn(IDvInvocation& /*aResponse*/, const Brx& /*aServiceName*/, const Brx& /*aMessageIn*/, IDvInvocationResponseString& /*aMessageOut*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::LogOut(IDvInvocation& /*aResponse*/, const Brx& /*aServiceName*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::CancelLogIn(IDvInvocation& /*aResponse*/, const Brx& /*aServiceName*/)
+{
+    ASSERTS();
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1::IsAlive(IDvInvocation& /*aResponse*/, IDvInvocationResponseBool& /*aAlive*/)
 {
     ASSERTS();
@@ -1492,6 +1748,26 @@ void DvProviderAvOpenhomeOrgHardwareConfig1::GetDACBalance(IDvInvocation& /*aRes
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1::SetDACBalance(IDvInvocation& /*aResponse*/, TUint /*aBalance*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetEnableResampler(IDvInvocation& /*aResponse*/, TBool /*aEnableResampler*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetEnableSpeaker(IDvInvocation& /*aResponse*/, TBool /*aEnableSpeaker*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetEnableEqualizer(IDvInvocation& /*aResponse*/, TBool /*aEnableEqualizer*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1::SetEnableDirac(IDvInvocation& /*aResponse*/, TBool /*aEnableDirac*/)
 {
     ASSERTS();
 }

@@ -202,14 +202,14 @@ void CpProxyAvOpenhomeOrgWebClockConfig1C::SetPropertyClockConfigChanged(Functor
 void CpProxyAvOpenhomeOrgWebClockConfig1C::PropertyAlive(TBool& aAlive) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebClockConfig1C::PropertyClockConfig(Brhz& aClockConfig) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aClockConfig.Set(iClockConfig->Value());
 }
 
@@ -335,21 +335,33 @@ void STDCALL CpProxyAvOpenhomeOrgWebClockConfig1SetPropertyClockConfigChanged(TH
     proxyC->SetPropertyClockConfigChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebClockConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebClockConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
 {
     CpProxyAvOpenhomeOrgWebClockConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebClockConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Alive;
-    proxyC->PropertyAlive(Alive);
+    try {
+        proxyC->PropertyAlive(Alive);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aAlive = Alive? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebClockConfig1PropertyClockConfig(THandle aHandle, char** aClockConfig)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebClockConfig1PropertyClockConfig(THandle aHandle, char** aClockConfig)
 {
     CpProxyAvOpenhomeOrgWebClockConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebClockConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aClockConfig;
-    proxyC->PropertyClockConfig(buf_aClockConfig);
+    try {
+        proxyC->PropertyClockConfig(buf_aClockConfig);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aClockConfig = buf_aClockConfig.Transfer();
+    return 0;
 }
 

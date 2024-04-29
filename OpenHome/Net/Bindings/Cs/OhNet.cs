@@ -369,7 +369,7 @@ namespace OpenHome.Net.Core
         /// A callback which will be run if the library encounters an error it cannot recover from
         /// </summary>
         /// <remarks>Suggested action if this is called is to exit the process and restart the library and its owning application.
-        /// 
+        ///
         /// The string passed to the callback is an error message so would be useful to log.</remarks>
         public MessageListener FatalErrorHandler { internal get; set; }
         public AsyncListener AsyncBeginHandler { internal get; set; }
@@ -420,7 +420,7 @@ namespace OpenHome.Net.Core
         /// </summary>
         /// <remarks>If more that this number are pending, the additional attempted invocations
         /// will block until a pre-allocated slot becomes clear.
-        /// 
+        ///
         /// A higher number of invocations will decrease the likelihood and duration of
         /// any UI-level delays but will also increase the peaks in RAM requirements.</remarks>
         public uint NumInvocations { get; set; }
@@ -524,6 +524,26 @@ namespace OpenHome.Net.Core
         /// Behaviour when more than one DvDevice sets the "MdnsHostName" attribute is undefined.
         /// Note that enabling Bonjour will cause the device stack to run a http server on port 80, requiring root privileges on linux.</remarks>
         public bool DvEnableBonjour { get; set; }
+        /// <summary>
+        /// Set a MDNS hostname.
+        /// </summary>
+        /// <remarks>Only used if DvEnableBonjour is true.</remarks>
+        public string DvMdnsHostName { private get; set; }
+        /// <summary>
+        /// Sets requirement flag for Mdns cache.
+        /// </summary>
+        /// <remarks>Only used if DvEnableBonjour is true.</remarks>
+        public bool DvMdnsRequiresCache { private get; set; }
+        /// <summary>
+        /// Set User-Agent reported by HTTP clients
+        /// </summary>
+        /// <remarks></remarks>
+        public string HttpUserAgent { private get; set; }
+        /// <summary>
+        /// Set true to disable inferred BYEBYEs from device lists
+        /// </summary>
+        /// <remarks></remarks>
+        public bool HostUdpIsLowQuality { get; set; }
 
         private uint iDvUpnpWebServerPort;
 
@@ -700,7 +720,7 @@ namespace OpenHome.Net.Core
 #else
         [DllImport("ohNet")]
 #endif
-        static extern void OhNetInitParamsSetDvEnableBonjour(IntPtr aParams);
+        static extern void OhNetInitParamsSetDvEnableBonjour(IntPtr aParams, IntPtr aHostName, bool aRequiresMdnsCache);
 #if IOS
         [DllImport("__Internal")]
 #else
@@ -713,6 +733,18 @@ namespace OpenHome.Net.Core
         [DllImport("ohNet")]
 #endif
         static extern void OhNetInitParamsSetIncludeLoopbackNetworkAdapter(IntPtr aParams);
+#if IOS
+        [DllImport("__Internal")]
+#else
+        [DllImport("ohNet")]
+#endif
+        static extern void OhNetInitParamsSetHttpUserAgent(IntPtr aParams, IntPtr aHostName);
+#if IOS
+        [DllImport("__Internal")]
+#else
+        [DllImport("ohNet")]
+#endif
+        static extern void OhNetInitParamsSetHostUdpIsLowQuality(IntPtr aParams, int aHostName);
 #if IOS
         [DllImport("__Internal")]
 #else
@@ -821,6 +853,12 @@ namespace OpenHome.Net.Core
         [DllImport("ohNet")]
 #endif
         static extern uint OhNetInitParamsDvIsBonjourEnabled(IntPtr aParams);
+#if IOS
+        [DllImport("__Internal")]
+#else
+        [DllImport("ohNet")]
+#endif
+        static extern int OhNetInitParamsIsHostUdpLowQuality(IntPtr aParams);
 
         public InitParams()
         {
@@ -835,18 +873,18 @@ namespace OpenHome.Net.Core
             SubnetAddedListener = null;
             SubnetRemovedListener = null;
             NetworkAdapterChangedListener = null;
-            TcpConnectTimeoutMs = OhNetInitParamsTcpConnectTimeoutMs(defaultParams); 
-            MsearchTimeSecs = OhNetInitParamsMsearchTimeSecs(defaultParams); 
-            MsearchTtl = OhNetInitParamsMsearchTtl(defaultParams); 
-            NumEventSessionThreads = OhNetInitParamsNumEventSessionThreads(defaultParams); 
-            NumXmlFetcherThreads = OhNetInitParamsNumXmlFetcherThreads(defaultParams); 
-            NumActionInvokerThreads = OhNetInitParamsNumActionInvokerThreads(defaultParams); 
-            NumInvocations = OhNetInitParamsNumInvocations(defaultParams); 
+            TcpConnectTimeoutMs = OhNetInitParamsTcpConnectTimeoutMs(defaultParams);
+            MsearchTimeSecs = OhNetInitParamsMsearchTimeSecs(defaultParams);
+            MsearchTtl = OhNetInitParamsMsearchTtl(defaultParams);
+            NumEventSessionThreads = OhNetInitParamsNumEventSessionThreads(defaultParams);
+            NumXmlFetcherThreads = OhNetInitParamsNumXmlFetcherThreads(defaultParams);
+            NumActionInvokerThreads = OhNetInitParamsNumActionInvokerThreads(defaultParams);
+            NumInvocations = OhNetInitParamsNumInvocations(defaultParams);
             NumSubscriberThreads = OhNetInitParamsNumSubscriberThreads(defaultParams);
             SubscriptionDurationSecs = OhNetInitParamsSubscriptionDurationSecs(defaultParams);
-            PendingSubscriptionTimeoutMs = OhNetInitParamsPendingSubscriptionTimeoutMs(defaultParams); 
-            DvMaxUpdateTimeSecs = OhNetInitParamsDvMaxUpdateTimeSecs(defaultParams); 
-            DvNumServerThreads = OhNetInitParamsDvNumServerThreads(defaultParams); 
+            PendingSubscriptionTimeoutMs = OhNetInitParamsPendingSubscriptionTimeoutMs(defaultParams);
+            DvMaxUpdateTimeSecs = OhNetInitParamsDvMaxUpdateTimeSecs(defaultParams);
+            DvNumServerThreads = OhNetInitParamsDvNumServerThreads(defaultParams);
             DvNumPublisherThreads = OhNetInitParamsDvNumPublisherThreads(defaultParams);
             DvNumWebSocketThreads = OhNetInitParamsDvNumWebSocketThreads(defaultParams);
             CpUpnpEventPort = OhNetInitParamsCpUpnpEventServerPort(defaultParams);
@@ -854,7 +892,8 @@ namespace OpenHome.Net.Core
             DvWebSocketPort = OhNetInitParamsDvWebSocketPort(defaultParams);
             UseLoopbackNetworkAdapter = false; // FIXME: No getter?
             IncludeLoopbackNetworkAdapter = false;
-            DvEnableBonjour = OhNetInitParamsDvIsBonjourEnabled(defaultParams) != 0; 
+            DvEnableBonjour = OhNetInitParamsDvIsBonjourEnabled(defaultParams) != 0;
+            HostUdpIsLowQuality = OhNetInitParamsIsHostUdpLowQuality(defaultParams) != 0;
 
             OhNetInitParamsDestroy(defaultParams);
         }
@@ -917,8 +956,18 @@ namespace OpenHome.Net.Core
             OhNetInitParamsSetDvWebSocketPort(nativeParams, DvWebSocketPort);
             if (DvEnableBonjour)
             {
-                OhNetInitParamsSetDvEnableBonjour(nativeParams);
+                IntPtr hostName = InteropUtils.StringToHGlobalUtf8(DvMdnsHostName);
+                bool reqMdnsCache = DvMdnsRequiresCache;
+                OhNetInitParamsSetDvEnableBonjour(nativeParams, hostName, reqMdnsCache);
+                Marshal.FreeHGlobal(hostName);
             }
+            if (!String.IsNullOrEmpty(HttpUserAgent))
+            {
+                IntPtr userAgent = InteropUtils.StringToHGlobalUtf8(HttpUserAgent);
+                OhNetInitParamsSetHttpUserAgent(nativeParams, userAgent);
+                Marshal.FreeHGlobal(userAgent);
+            }
+            OhNetInitParamsSetHostUdpIsLowQuality(nativeParams, HostUdpIsLowQuality ? 1 : 0);
             if (UseLoopbackNetworkAdapter)
             {
                 OhNetInitParamsSetUseLoopbackNetworkAdapter(nativeParams);
@@ -927,7 +976,7 @@ namespace OpenHome.Net.Core
             {
                 if (UseLoopbackNetworkAdapter)
                 {
-                    Console.WriteLine("WARNING: IncludeLoopbackNetworkAdapter is incompatible with UseLoopbackNetworkAdapter. Ignoring UseLoopbackNetworkAdapter.");
+                    System.Diagnostics.Debug.WriteLine("WARNING: IncludeLoopbackNetworkAdapter is incompatible with UseLoopbackNetworkAdapter. Ignoring UseLoopbackNetworkAdapter.");
                 }
                 OhNetInitParamsSetIncludeLoopbackNetworkAdapter(nativeParams);
             }
@@ -939,16 +988,11 @@ namespace OpenHome.Net.Core
         }
     }
 
-    [Serializable]
     public class LibraryException : Exception
     {
         public LibraryException() { }
         public LibraryException(string message) : base(message) { }
         public LibraryException(string message, Exception inner) : base(message, inner) { }
-        protected LibraryException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context)
-            : base(info, context) { }
     }
 
 
@@ -1058,6 +1102,12 @@ namespace OpenHome.Net.Core
 #else
         [DllImport("ohNet")]
 #endif
+        static extern void OhNetLibrarySetHttpUserAgent(IntPtr aPtr);
+#if IOS
+        [DllImport("__Internal")]
+#else
+        [DllImport("ohNet")]
+#endif
         static extern void OhNetFree(IntPtr aPtr);
 #if IOS
         [DllImport("__Internal")]
@@ -1070,7 +1120,19 @@ namespace OpenHome.Net.Core
 #else
         [DllImport("ohNet")]
 #endif
-        static extern void OhNetDebugSetLevel(uint aLevel);
+        static extern void OhNetRefreshNetworkAdapterList();
+#if IOS
+        [DllImport("__Internal")]
+#else
+        [DllImport("ohNet")]
+#endif
+        static extern void OhNetDebugSetLevel(ulong aLevel);
+#if IOS
+        [DllImport("__Internal")]
+#else
+        [DllImport("ohNet")]
+#endif
+        static extern void OhNetDebugSetSeverity(uint aLevel);
 #if IOS
         [DllImport("__Internal")]
 #else
@@ -1203,12 +1265,22 @@ namespace OpenHome.Net.Core
         /// Set which subnet the library should use
         /// </summary>
         /// <remarks>Device lists and subscriptions will be automatically updated.
-        /// 
+        ///
         /// No other subnet will be selected if aSubnet is not available</remarks>
         /// <param name="aSubnet">Handle returned by SubnetAt()</param>
         public void SetCurrentSubnet(NetworkAdapter aSubnet)
         {
             OhNetSetCurrentSubnet(aSubnet.Subnet());
+        }
+
+        /// <summary>
+        /// Force a refresh of the library's list of available network adapters
+        /// </summary>
+        /// <remarks>This should only be required on platforms that are not capable of
+        /// automatically detecting adapter changes.</remarks>
+        public void RefreshNetworkAdapterList()
+        {
+            OhNetRefreshNetworkAdapterList();
         }
 
         /// <summary>
@@ -1233,38 +1305,47 @@ namespace OpenHome.Net.Core
             OhNetLibraryNotifyResumed();
         }
 
+        public void SetHttpUserAgent(string aUserAgent)
+        {
+            IntPtr userAgent = InteropUtils.StringToHGlobalUtf8(aUserAgent);
+            OhNetLibrarySetHttpUserAgent(userAgent);
+            Marshal.FreeHGlobal(userAgent);
+        }
+
         public enum DebugLevel: uint
         {
             None           = 0,
-            Trace          = 1<<1,
-            Thread         = 1<<2,
-            Network        = 1<<3,
-            Timer          = 1<<4,
-            SsdpMulticast  = 1<<5,
-            SsdpUnicast    = 1<<6,
-            Http           = 1<<7,
-            Device         = 1<<8,
-            XmlFetch       = 1<<9,
-            Service        = 1<<10,
-            Event          = 1<<11,
-            DvInvocation   = 1<<13,
-            DvEvent        = 1<<14,
-            DvWebSocket    = 1<<15,
-            Bonjour        = 1<<17,
-            DvDevice       = 1<<18,
-            App0           = 1<<20,
-            App1           = 1<<21,
-            App2           = 1<<22,
-            App3           = 1<<23,
-            App4           = 1<<24,
-            App5           = 1<<25,
-            App6           = 1<<26,
-            App7           = 1<<27,
-            App8           = 1<<28,
-            App9           = 1<<29,
-            Error          = 1<<30,
-            All            = 0x7FFFFFFF,
-            Verbose        = 0x80000000
+            Thread         = 1<<0,
+            Network        = 1<<1,
+            Timer          = 1<<2,
+            SsdpMulticast  = 1<<3,
+            SsdpUnicast    = 1<<4,
+            Http           = 1<<5,
+            Device         = 1<<6,
+            XmlFetch       = 1<<7,
+            Service        = 1<<8,
+            Event          = 1<<9,
+            SsdpNotifier   = 1<<10,
+            DvInvocation   = 1<<11,
+            DvEvent        = 1<<12,
+            DvWebSocket    = 1<<13,
+            Lpec           = 1<<14,
+            Bonjour        = 1<<15,
+            DvDevice       = 1<<16,
+            App0           = 1<<17,
+            App1           = 1<<18,
+            App2           = 1<<19,
+            App3           = 1<<20,
+            App4           = 1<<21,
+            App5           = 1<<22,
+            App6           = 1<<23,
+            App7           = 1<<24,
+            App8           = 1<<25,
+            App9           = 1<<26,
+            App10          = 1<<27,
+            App11          = 1<<28,
+            App12          = 1<<29,
+            App13          = 1<<30
         }
 
         /// <summary>
@@ -1274,7 +1355,28 @@ namespace OpenHome.Net.Core
         /// <param name="aLevel">Bit(s) specifying which debug levels to enable</param>
         public static void SetDebugLevel(DebugLevel aLevel)
         {
-            OhNetDebugSetLevel((uint)aLevel);
+            OhNetDebugSetLevel((ulong)aLevel);
+        }
+
+        public enum DebugSeverity : uint
+        {
+            None     = 0,
+            Critical = 1,
+            Error    = 2,
+            Warning  = 3,
+            Info     = 4,
+            Debug    = 5,
+            Trace    = 6
+        }
+
+        /// <summary>
+        /// Set the severity (if any) of debug logging.
+        /// </summary>
+        /// <remarks>Log messages will be passed to the callback registered in InitParams.LogOutput.</remarks>
+        /// <param name="aSeverity">Highest value of debug severity to enable.</param>
+        public static void SetDebugSeverity(DebugSeverity aSeverity)
+        {
+            OhNetDebugSetSeverity((uint)aSeverity);
         }
 
         /// <summary>
@@ -1362,7 +1464,7 @@ namespace OpenHome.Net.Core
             {
                 byte[] array = new byte[aLen];
                 Marshal.Copy(aPtr, array, 0, (int)aLen);
-                str = System.Text.Encoding.UTF8.GetString(array);
+                str = System.Text.Encoding.UTF8.GetString(array, 0, array.Length);
             }
             return str;
         }
@@ -1378,7 +1480,7 @@ namespace OpenHome.Net.Core
                 return "";
             byte[] array = new byte[len];
             Marshal.Copy(aPtr, array, 0, len);
-            return System.Text.Encoding.UTF8.GetString(array);
+            return System.Text.Encoding.UTF8.GetString(array, 0, array.Length);
         }
     }
 }

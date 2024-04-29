@@ -99,7 +99,6 @@ namespace OpenHome.Net.Device.Providers
         /// </summary>
         /// <returns>Value of the BitPerfectMode property.</param>
         bool PropertyBitPerfectMode();
-        
     }
     /// <summary>
     /// Provider for the av.openhome.org:GroupConfig:1 UPnP service
@@ -683,13 +682,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetGroupMode"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "SetGroupMode" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetGroupMode", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetGroupMode" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -703,8 +702,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetGroupMode", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetGroupMode" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -730,13 +729,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetGroupMode"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "GetGroupMode" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetGroupMode", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetGroupMode" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -753,8 +752,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetGroupMode", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetGroupMode" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -779,13 +778,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetGroupVolume"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "SetGroupVolume" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetGroupVolume", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetGroupVolume" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -799,8 +798,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetGroupVolume", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetGroupVolume" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -824,13 +823,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetGroupVolume"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "GetGroupVolume" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetGroupVolume", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetGroupVolume" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -845,8 +844,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetGroupVolume", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetGroupVolume" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -871,13 +870,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetGroupMute"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "SetGroupMute" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetGroupMute", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetGroupMute" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -891,8 +890,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetGroupMute", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetGroupMute" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -916,13 +915,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetGroupMute"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "GetGroupMute" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetGroupMute", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetGroupMute" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -937,8 +936,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetGroupMute", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetGroupMute" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -962,13 +961,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetGroupStatus"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "GetGroupStatus" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetGroupStatus", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetGroupStatus" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -983,8 +982,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetGroupStatus", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetGroupStatus" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -1009,13 +1008,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetGroupStatus"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "SetGroupStatus" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetGroupStatus", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetGroupStatus" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -1029,8 +1028,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetGroupStatus", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetGroupStatus" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -1054,13 +1053,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetBitPerfectMode"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "GetBitPerfectMode" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetBitPerfectMode", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetBitPerfectMode" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -1075,8 +1074,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetBitPerfectMode", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetBitPerfectMode" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -1101,13 +1100,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetBitPerfectMode"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "SetBitPerfectMode" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetBitPerfectMode", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetBitPerfectMode" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -1121,8 +1120,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetBitPerfectMode", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetBitPerfectMode" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }

@@ -238,7 +238,7 @@ void SyncSetBitPerfectModeAvOpenhomeOrgGroupConfig1Cpp::CompleteRequest(IAsync& 
 
 
 CpProxyAvOpenhomeOrgGroupConfig1Cpp::CpProxyAvOpenhomeOrgGroupConfig1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "GroupConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "GroupConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
     TChar** allowedValues;
@@ -352,7 +352,7 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncSetGroupMode(const std::string& aG
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginSetGroupMode(const std::string& aGroupMode, const std::string& aGroupID, const std::string& aGroupName, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetGroupMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetGroupMode, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetGroupMode->InputParameters();
     {
@@ -367,7 +367,7 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginSetGroupMode(const std::string& a
         Brn buf((const TByte*)aGroupName.c_str(), (TUint)aGroupName.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndSetGroupMode(IAsync& aAsync)
@@ -393,13 +393,13 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncGetGroupMode(std::string& aGroupMo
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginGetGroupMode(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetGroupMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetGroupMode, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetGroupMode->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndGetGroupMode(IAsync& aAsync, std::string& aGroupMode, std::string& aGroupID, std::string& aGroupName)
@@ -438,11 +438,11 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncSetGroupVolume(uint32_t aGroupVolu
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginSetGroupVolume(uint32_t aGroupVolume, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetGroupVolume, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetGroupVolume, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetGroupVolume->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aGroupVolume));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndSetGroupVolume(IAsync& aAsync)
@@ -468,11 +468,11 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncGetGroupVolume(uint32_t& aGroupVol
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginGetGroupVolume(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetGroupVolume, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetGroupVolume, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetGroupVolume->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndGetGroupVolume(IAsync& aAsync, uint32_t& aGroupVolume)
@@ -500,11 +500,11 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncSetGroupMute(bool aGroupMute)
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginSetGroupMute(bool aGroupMute, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetGroupMute, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetGroupMute, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetGroupMute->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aGroupMute));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndSetGroupMute(IAsync& aAsync)
@@ -530,11 +530,11 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncGetGroupMute(bool& aGroupMute)
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginGetGroupMute(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetGroupMute, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetGroupMute, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetGroupMute->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndGetGroupMute(IAsync& aAsync, bool& aGroupMute)
@@ -562,11 +562,11 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncGetGroupStatus(std::string& aGroup
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginGetGroupStatus(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetGroupStatus, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetGroupStatus, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetGroupStatus->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndGetGroupStatus(IAsync& aAsync, std::string& aGroupStatus)
@@ -597,14 +597,14 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncSetGroupStatus(const std::string& 
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginSetGroupStatus(const std::string& aGroupStatus, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetGroupStatus, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetGroupStatus, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetGroupStatus->InputParameters();
     {
         Brn buf((const TByte*)aGroupStatus.c_str(), (TUint)aGroupStatus.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndSetGroupStatus(IAsync& aAsync)
@@ -630,11 +630,11 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncGetBitPerfectMode(bool& aBitPerfec
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginGetBitPerfectMode(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetBitPerfectMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetBitPerfectMode, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetBitPerfectMode->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndGetBitPerfectMode(IAsync& aAsync, bool& aBitPerfectMode)
@@ -662,11 +662,11 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SyncSetBitPerfectMode(bool aBitPerfect
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BeginSetBitPerfectMode(bool aBitPerfectMode, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetBitPerfectMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetBitPerfectMode, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetBitPerfectMode->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aBitPerfectMode));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndSetBitPerfectMode(IAsync& aAsync)
@@ -685,103 +685,117 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::EndSetBitPerfectMode(IAsync& aAsync)
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyGroupModeChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iGroupModeChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyGroupNameChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iGroupNameChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyGroupIDChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iGroupIDChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyGroupVolumeChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iGroupVolumeChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyGroupMuteChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iGroupMuteChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyGroupStatusChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iGroupStatusChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyBitPerfectModeChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iBitPerfectModeChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::PropertyGroupMode(std::string& aGroupMode) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iGroupMode->Value();
     aGroupMode.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::PropertyGroupName(std::string& aGroupName) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iGroupName->Value();
     aGroupName.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::PropertyGroupID(std::string& aGroupID) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iGroupID->Value();
     aGroupID.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::PropertyGroupVolume(uint32_t& aGroupVolume) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aGroupVolume = iGroupVolume->Value();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::PropertyGroupMute(bool& aGroupMute) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aGroupMute = iGroupMute->Value();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::PropertyGroupStatus(std::string& aGroupStatus) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iGroupStatus->Value();
     aGroupStatus.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::PropertyBitPerfectMode(bool& aBitPerfectMode) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aBitPerfectMode = iBitPerfectMode->Value();
 }
 
@@ -818,5 +832,44 @@ void CpProxyAvOpenhomeOrgGroupConfig1Cpp::GroupStatusPropertyChanged()
 void CpProxyAvOpenhomeOrgGroupConfig1Cpp::BitPerfectModePropertyChanged()
 {
     ReportEvent(iBitPerfectModeChanged);
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgGroupConfig1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgGroupConfig1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

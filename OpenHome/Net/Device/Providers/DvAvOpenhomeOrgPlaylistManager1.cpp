@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgPlaylistManager1::GetPropertyMetadata(Brhz& aValue)
     aValue.Set(iPropertyMetadata->Value());
 }
 
+void DvProviderAvOpenhomeOrgPlaylistManager1::WritePropertyMetadata(IWriter& aWriter)
+{
+    iPropertyMetadata->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgPlaylistManager1::SetPropertyImagesXml(const Brx& aValue)
 {
     ASSERT(iPropertyImagesXml != NULL);
@@ -30,6 +35,11 @@ void DvProviderAvOpenhomeOrgPlaylistManager1::GetPropertyImagesXml(Brhz& aValue)
 {
     ASSERT(iPropertyImagesXml != NULL);
     aValue.Set(iPropertyImagesXml->Value());
+}
+
+void DvProviderAvOpenhomeOrgPlaylistManager1::WritePropertyImagesXml(IWriter& aWriter)
+{
+    iPropertyImagesXml->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgPlaylistManager1::SetPropertyIdArray(const Brx& aValue)
@@ -44,6 +54,11 @@ void DvProviderAvOpenhomeOrgPlaylistManager1::GetPropertyIdArray(Brh& aValue)
     aValue.Set(iPropertyIdArray->Value());
 }
 
+void DvProviderAvOpenhomeOrgPlaylistManager1::WritePropertyIdArray(IWriter& aWriter)
+{
+    iPropertyIdArray->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgPlaylistManager1::SetPropertyTokenArray(const Brx& aValue)
 {
     ASSERT(iPropertyTokenArray != NULL);
@@ -54,6 +69,11 @@ void DvProviderAvOpenhomeOrgPlaylistManager1::GetPropertyTokenArray(Brh& aValue)
 {
     ASSERT(iPropertyTokenArray != NULL);
     aValue.Set(iPropertyTokenArray->Value());
+}
+
+void DvProviderAvOpenhomeOrgPlaylistManager1::WritePropertyTokenArray(IWriter& aWriter)
+{
+    iPropertyTokenArray->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgPlaylistManager1::SetPropertyPlaylistsMax(TUint aValue)

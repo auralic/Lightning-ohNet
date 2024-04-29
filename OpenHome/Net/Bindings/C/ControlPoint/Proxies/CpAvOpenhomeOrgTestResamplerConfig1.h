@@ -49,7 +49,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1Destroy(THandle a
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgTestResamplerConfig1Create
  * @param[in]  aResamplerConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1SyncSetResamplerConfig(THandle aHandle, const char* aResamplerConfig);
@@ -85,7 +85,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1EndSetResample
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgTestResamplerConfig1Create
  * @param[out] aResamplerConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1SyncGetResamplerConfig(THandle aHandle, char** aResamplerConfig);
@@ -121,7 +121,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1EndGetResample
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgTestResamplerConfig1Create
  * @param[in]  aPCMAutoDetect
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1SyncSetPCMAutoDetect(THandle aHandle, uint32_t aPCMAutoDetect);
@@ -157,7 +157,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1EndSetPCMAutoD
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgTestResamplerConfig1Create
  * @param[out] aPCMAutoDetect
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1SyncGetPCMAutoDetect(THandle aHandle, uint32_t* aPCMAutoDetect);
@@ -193,7 +193,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1EndGetPCMAutoD
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgTestResamplerConfig1Create
  * @param[in]  aDSDtoPCM
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1SyncSetDSDtoPCM(THandle aHandle, uint32_t aDSDtoPCM);
@@ -229,7 +229,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1EndSetDSDtoPCM
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgTestResamplerConfig1Create
  * @param[out] aDSDtoPCM
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1SyncGetDSDtoPCM(THandle aHandle, uint32_t* aDSDtoPCM);
@@ -277,8 +277,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1SetPropertyCurren
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgTestResamplerConfig1Create
  * @param[out] aCurrentAction
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgTestResamplerConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
 
 /* @} */
 

@@ -134,6 +134,9 @@ public:
     void SetPropertyIdArrayChanged(Functor& aFunctor);
     void SetPropertyTracksMaxChanged(Functor& aFunctor);
     void SetPropertyProtocolInfoChanged(Functor& aFunctor);
+    void SetPropertyAutoPlayChanged(Functor& aFunctor);
+    void SetPropertyQobuzTracksChanged(Functor& aFunctor);
+    void SetPropertyTuneInUrlChanged(Functor& aFunctor);
 
     void PropertyTransportState(Brhz& aTransportState) const;
     void PropertyRepeat(TBool& aRepeat) const;
@@ -142,6 +145,9 @@ public:
     void PropertyIdArray(Brh& aIdArray) const;
     void PropertyTracksMax(TUint& aTracksMax) const;
     void PropertyProtocolInfo(Brhz& aProtocolInfo) const;
+    void PropertyAutoPlay(TBool& aAutoPlay) const;
+    void PropertyQobuzTracks(Brhz& aQobuzTracks) const;
+    void PropertyTuneInUrl(Brhz& aTuneInUrl) const;
 private:
     void TransportStatePropertyChanged();
     void RepeatPropertyChanged();
@@ -150,6 +156,9 @@ private:
     void IdArrayPropertyChanged();
     void TracksMaxPropertyChanged();
     void ProtocolInfoPropertyChanged();
+    void AutoPlayPropertyChanged();
+    void QobuzTracksPropertyChanged();
+    void TuneInUrlPropertyChanged();
 private:
     Mutex iLock;
     Action* iActionPlay;
@@ -185,6 +194,9 @@ private:
     PropertyBinary* iIdArray;
     PropertyUint* iTracksMax;
     PropertyString* iProtocolInfo;
+    PropertyBool* iAutoPlay;
+    PropertyString* iQobuzTracks;
+    PropertyString* iTuneInUrl;
     Functor iTransportStateChanged;
     Functor iRepeatChanged;
     Functor iShuffleChanged;
@@ -192,6 +204,9 @@ private:
     Functor iIdArrayChanged;
     Functor iTracksMaxChanged;
     Functor iProtocolInfoChanged;
+    Functor iAutoPlayChanged;
+    Functor iQobuzTracksChanged;
+    Functor iTuneInUrlChanged;
 };
 
 
@@ -921,6 +936,15 @@ CpProxyAvOpenhomeOrgPlaylist1C::CpProxyAvOpenhomeOrgPlaylist1C(CpDeviceC aDevice
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1C::ProtocolInfoPropertyChanged);
     iProtocolInfo = new PropertyString("ProtocolInfo", functor);
     AddProperty(iProtocolInfo);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1C::AutoPlayPropertyChanged);
+    iAutoPlay = new PropertyBool("AutoPlay", functor);
+    AddProperty(iAutoPlay);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1C::QobuzTracksPropertyChanged);
+    iQobuzTracks = new PropertyString("QobuzTracks", functor);
+    AddProperty(iQobuzTracks);
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgPlaylist1C::TuneInUrlPropertyChanged);
+    iTuneInUrl = new PropertyString("TuneInUrl", functor);
+    AddProperty(iTuneInUrl);
 }
 
 CpProxyAvOpenhomeOrgPlaylist1C::~CpProxyAvOpenhomeOrgPlaylist1C()
@@ -1816,53 +1840,95 @@ void CpProxyAvOpenhomeOrgPlaylist1C::SetPropertyProtocolInfoChanged(Functor& aFu
     iLock.Signal();
 }
 
+void CpProxyAvOpenhomeOrgPlaylist1C::SetPropertyAutoPlayChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iAutoPlayChanged = aFunctor;
+    iLock.Signal();
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::SetPropertyQobuzTracksChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iQobuzTracksChanged = aFunctor;
+    iLock.Signal();
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::SetPropertyTuneInUrlChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iTuneInUrlChanged = aFunctor;
+    iLock.Signal();
+}
+
 void CpProxyAvOpenhomeOrgPlaylist1C::PropertyTransportState(Brhz& aTransportState) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aTransportState.Set(iTransportState->Value());
 }
 
 void CpProxyAvOpenhomeOrgPlaylist1C::PropertyRepeat(TBool& aRepeat) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aRepeat = iRepeat->Value();
 }
 
 void CpProxyAvOpenhomeOrgPlaylist1C::PropertyShuffle(TBool& aShuffle) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aShuffle = iShuffle->Value();
 }
 
 void CpProxyAvOpenhomeOrgPlaylist1C::PropertyId(TUint& aId) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aId = iId->Value();
 }
 
 void CpProxyAvOpenhomeOrgPlaylist1C::PropertyIdArray(Brh& aIdArray) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aIdArray.Set(iIdArray->Value());
 }
 
 void CpProxyAvOpenhomeOrgPlaylist1C::PropertyTracksMax(TUint& aTracksMax) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aTracksMax = iTracksMax->Value();
 }
 
 void CpProxyAvOpenhomeOrgPlaylist1C::PropertyProtocolInfo(Brhz& aProtocolInfo) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aProtocolInfo.Set(iProtocolInfo->Value());
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::PropertyAutoPlay(TBool& aAutoPlay) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    CheckSubscribed();
+    aAutoPlay = iAutoPlay->Value();
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::PropertyQobuzTracks(Brhz& aQobuzTracks) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    CheckSubscribed();
+    aQobuzTracks.Set(iQobuzTracks->Value());
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::PropertyTuneInUrl(Brhz& aTuneInUrl) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    CheckSubscribed();
+    aTuneInUrl.Set(iTuneInUrl->Value());
 }
 
 void CpProxyAvOpenhomeOrgPlaylist1C::TransportStatePropertyChanged()
@@ -1898,6 +1964,21 @@ void CpProxyAvOpenhomeOrgPlaylist1C::TracksMaxPropertyChanged()
 void CpProxyAvOpenhomeOrgPlaylist1C::ProtocolInfoPropertyChanged()
 {
     ReportEvent(iProtocolInfoChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::AutoPlayPropertyChanged()
+{
+    ReportEvent(iAutoPlayChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::QobuzTracksPropertyChanged()
+{
+    ReportEvent(iQobuzTracksChanged);
+}
+
+void CpProxyAvOpenhomeOrgPlaylist1C::TuneInUrlPropertyChanged()
+{
+    ReportEvent(iTuneInUrlChanged);
 }
 
 
@@ -3032,63 +3113,174 @@ void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyProtocolInfoChanged(THandle
     proxyC->SetPropertyProtocolInfoChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyTransportState(THandle aHandle, char** aTransportState)
+void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyAutoPlayChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyAutoPlayChanged(functor);
+}
+
+void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyQobuzTracksChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyQobuzTracksChanged(functor);
+}
+
+void STDCALL CpProxyAvOpenhomeOrgPlaylist1SetPropertyTuneInUrlChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyTuneInUrlChanged(functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyTransportState(THandle aHandle, char** aTransportState)
 {
     CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aTransportState;
-    proxyC->PropertyTransportState(buf_aTransportState);
+    try {
+        proxyC->PropertyTransportState(buf_aTransportState);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aTransportState = buf_aTransportState.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyRepeat(THandle aHandle, uint32_t* aRepeat)
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyRepeat(THandle aHandle, uint32_t* aRepeat)
 {
     CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Repeat;
-    proxyC->PropertyRepeat(Repeat);
+    try {
+        proxyC->PropertyRepeat(Repeat);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aRepeat = Repeat? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyShuffle(THandle aHandle, uint32_t* aShuffle)
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyShuffle(THandle aHandle, uint32_t* aShuffle)
 {
     CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Shuffle;
-    proxyC->PropertyShuffle(Shuffle);
+    try {
+        proxyC->PropertyShuffle(Shuffle);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aShuffle = Shuffle? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyId(THandle aHandle, uint32_t* aId)
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyId(THandle aHandle, uint32_t* aId)
 {
     CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyId(*aId);
+    try {
+        proxyC->PropertyId(*aId);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyIdArray(THandle aHandle, char** aIdArray, uint32_t* aLen)
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyIdArray(THandle aHandle, char** aIdArray, uint32_t* aLen)
 {
     CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brh buf_aIdArray;
-    proxyC->PropertyIdArray(buf_aIdArray);
+    try {
+        proxyC->PropertyIdArray(buf_aIdArray);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aLen = buf_aIdArray.Bytes();
     *aIdArray = buf_aIdArray.Extract();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyTracksMax(THandle aHandle, uint32_t* aTracksMax)
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyTracksMax(THandle aHandle, uint32_t* aTracksMax)
 {
     CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyTracksMax(*aTracksMax);
+    try {
+        proxyC->PropertyTracksMax(*aTracksMax);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyProtocolInfo(THandle aHandle, char** aProtocolInfo)
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyProtocolInfo(THandle aHandle, char** aProtocolInfo)
 {
     CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aProtocolInfo;
-    proxyC->PropertyProtocolInfo(buf_aProtocolInfo);
+    try {
+        proxyC->PropertyProtocolInfo(buf_aProtocolInfo);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aProtocolInfo = buf_aProtocolInfo.Transfer();
+    return 0;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyAutoPlay(THandle aHandle, uint32_t* aAutoPlay)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    TBool AutoPlay;
+    try {
+        proxyC->PropertyAutoPlay(AutoPlay);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    *aAutoPlay = AutoPlay? 1 : 0;
+    return 0;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyQobuzTracks(THandle aHandle, char** aQobuzTracks)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brhz buf_aQobuzTracks;
+    try {
+        proxyC->PropertyQobuzTracks(buf_aQobuzTracks);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    *aQobuzTracks = buf_aQobuzTracks.Transfer();
+    return 0;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgPlaylist1PropertyTuneInUrl(THandle aHandle, char** aTuneInUrl)
+{
+    CpProxyAvOpenhomeOrgPlaylist1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgPlaylist1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Brhz buf_aTuneInUrl;
+    try {
+        proxyC->PropertyTuneInUrl(buf_aTuneInUrl);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    *aTuneInUrl = buf_aTuneInUrl.Transfer();
+    return 0;
 }
 

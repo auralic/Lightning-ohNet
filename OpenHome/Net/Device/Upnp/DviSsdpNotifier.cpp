@@ -6,6 +6,7 @@
 #include <OpenHome/Private/Env.h>
 #include <OpenHome/Net/Private/DviStack.h>
 #include <OpenHome/Net/Private/Ssdp.h>
+#include <OpenHome/Private/Debug.h>
 #include <OpenHome/Private/Printer.h>
 #include <OpenHome/OsWrapper.h>
 
@@ -14,7 +15,7 @@
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
-#undef NOTIFIER_LOG_ENABLE
+#undef NOTIFIER_LOG_VERBOSE
 
 // SsdpNotifierScheduler
 
@@ -23,13 +24,19 @@ SsdpNotifierScheduler::~SsdpNotifierScheduler()
     delete iTimer;
 }
 
-SsdpNotifierScheduler::SsdpNotifierScheduler(DvStack& aDvStack, ISsdpNotifyListener& aListener)
+SsdpNotifierScheduler::SsdpNotifierScheduler(DvStack& aDvStack, ISsdpNotifyListener& aListener, const TChar* aId)
     : iType(NULL)
+    , iId(aId)
     , iDvStack(aDvStack)
     , iListener(aListener)
 {
     Functor functor = MakeFunctor(*this, &SsdpNotifierScheduler::SendNextMsg);
     iTimer = new Timer(iDvStack.Env(), functor, "SsdpNotifierScheduler");
+}
+
+void SsdpNotifierScheduler::SetUdn(const Brx& aUdn)
+{
+    iUdn.Set(aUdn);
 }
 
 void SsdpNotifierScheduler::Start(TUint aDuration, TUint aMsgCount)
@@ -44,8 +51,9 @@ void SsdpNotifierScheduler::Stop()
     iStop = true;
 }
 
-void SsdpNotifierScheduler::NotifyComplete()
+void SsdpNotifierScheduler::NotifyComplete(TBool aCancelled)
 {
+    LOG(kDvSsdpNotifier, "SsdpNotifier completed (cancelled=%u) - %s (%p) %s %.*s\n", aCancelled, iType, this, iId, PBUF(iUdn));
 }
 
 void SsdpNotifierScheduler::SendNextMsg()
@@ -53,15 +61,21 @@ void SsdpNotifierScheduler::SendNextMsg()
     TUint remaining = 0;
     TBool stop = true;
     try {
-        stop = (iStop || (remaining = NextMsg()) == 0);
+        stop = (iStop || ((remaining = NextMsg()) == 0));
     }
-    catch (WriterError&) {}
-    catch (NetworkError&) {}
-    if (stop) {
-#ifdef NOTIFIER_LOG_ENABLE
-        Log::Print("++ Notifier completed - %s (%p)\n", iType, this);
+    catch (WriterError&) {
+        stop = true;
+        LOG_ERROR(kDvDevice, "WriterError from SsdpNotifierScheduler::SendNextMsg() id=%s\n", iId);
+    }
+    catch (NetworkError&) {
+        stop = true;
+        LOG_ERROR(kDvDevice, "NetworkError from SsdpNotifierScheduler::SendNextMsg() id=%s\n", iId);
+    }
+#ifdef NOTIFIER_LOG_VERBOSE
+    LOG(kDvSsdpNotifier, "Ssdp notification sent - %s (%p) %s  %.*s remaining=%u  stop=%d\n", iType, this, iId, PBUF(iUdn), remaining, stop);
 #endif
-        NotifyComplete();
+    if (stop) {
+        NotifyComplete(iStop);
         iListener.NotifySchedulerComplete(this);
         return;
     }
@@ -76,15 +90,16 @@ void SsdpNotifierScheduler::ScheduleNextTimer(TUint aRemainingMsgs) const
     Environment& env = iDvStack.Env();
     const TUint timeNow = Os::TimeInMs(env.OsCtx());
     TInt remaining;
-    if (timeNow > iEndTimeMs && timeNow-iEndTimeMs > UINT_MAX/2) {
-        // clock may wrap during this series of announcements but it hasn't wrapped yet
-        remaining = (UINT_MAX - timeNow) + iEndTimeMs;
+    if (timeNow > iEndTimeMs) {
+        /* We've either taken longer than MX secs (e.g. the device is very
+           heavily loaded, other Timer clients have blocked the TimerManager
+          thread) or time has wrapped.
+          Hard-code a short time for remaining notifications. */
+        remaining = 20;
     }
     else {
         remaining = iEndTimeMs - timeNow;
     }
-    TInt maxUpdateTimeMs = (TInt)iDvStack.Env().InitParams()->DvMaxUpdateTimeSecs() * 1000;
-    ASSERT(remaining <= maxUpdateTimeMs);
     TInt maxInterval = remaining / (TInt)aRemainingMsgs;
     if (maxInterval < kMinTimerIntervalMs) {
         // we're running behind.  Schedule another timer to run immediately
@@ -98,10 +113,7 @@ void SsdpNotifierScheduler::ScheduleNextTimer(TUint aRemainingMsgs) const
 
 void SsdpNotifierScheduler::LogNotifierStart(const TChar* aType)
 {
-    iType = aType;
-#ifdef NOTIFIER_LOG_ENABLE
-    Log::Print("++ %s (%p)\n", iType, this);
-#endif
+    LOG(kDvSsdpNotifier, "SsdpNotifier starting - %s (%p) %s %.*s\n", aType, this, iId, PBUF(iUdn));
 }
 
 
@@ -113,7 +125,7 @@ void SsdpNotifierScheduler::LogNotifierStart(const TChar* aType)
 #define NEXT_MSG_SERVICE_TYPE (3)
 
 MsearchResponse::MsearchResponse(DvStack& aDvStack, ISsdpNotifyListener& aListener)
-    : SsdpNotifierScheduler(aDvStack, aListener)
+    : SsdpNotifierScheduler(aDvStack, aListener, "MSearchResponse")
     , iAnnouncementData(NULL)
 {
     iNotifier = new SsdpMsearchResponder(aDvStack);
@@ -168,12 +180,18 @@ void MsearchResponse::StartServiceType(IUpnpAnnouncementData& aAnnouncementData,
     Start(aAnnouncementData, 1, NEXT_MSG_SERVICE_TYPE + index, aRemote, aMx, aUri, aConfigId, aAdapter);
 }
 
+Endpoint MsearchResponse::Remote() const
+{
+    return iRemote;
+}
+
 void MsearchResponse::Start(IUpnpAnnouncementData& aAnnouncementData, TUint aTotalMsgs, TUint aNextMsgIndex, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)
 {
     iAnnouncementData = &aAnnouncementData;
     iNextMsgIndex = aNextMsgIndex;
     iRemainingMsgs = aTotalMsgs;
     static_cast<SsdpMsearchResponder*>(iNotifier)->SetRemote(aRemote, aConfigId, aAdapter);
+    iRemote = aRemote;
     iUri.Replace(aUri);
     SsdpNotifierScheduler::Start(aMx * 1000, iRemainingMsgs);
 }
@@ -205,7 +223,7 @@ TUint MsearchResponse::NextMsg()
 // DeviceAnnouncement
 
 DeviceAnnouncement::DeviceAnnouncement(DvStack& aDvStack, ISsdpNotifyListener& aListener)
-    : SsdpNotifierScheduler(aDvStack, aListener)
+    : SsdpNotifierScheduler(aDvStack, aListener, "DevAnounce")
     , iSsdpNotifier(aDvStack)
     , iNotifierAlive(iSsdpNotifier)
     , iNotifierByeBye(iSsdpNotifier)
@@ -217,18 +235,18 @@ DeviceAnnouncement::DeviceAnnouncement(DvStack& aDvStack, ISsdpNotifyListener& a
 void DeviceAnnouncement::StartAlive(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId)
 {
     LogNotifierStart("StartAlive");
-    iCompleted = Functor();
+    iCompleted = FunctorGeneric<TBool>();
     Start(iNotifierAlive, aAnnouncementData, aAdapter, aUri, aConfigId, kMsgIntervalMsAlive);
 }
 
-void DeviceAnnouncement::StartByeBye(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, Functor& aCompleted)
+void DeviceAnnouncement::StartByeBye(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, FunctorGeneric<TBool>& aCompleted)
 {
     LogNotifierStart("StartByeBye");
     iCompleted = aCompleted;
     Start(iNotifierByeBye, aAnnouncementData, aAdapter, aUri, aConfigId, kMsgIntervalMsByeBye);
 }
 
-void DeviceAnnouncement::StartUpdate(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, Functor& aCompleted)
+void DeviceAnnouncement::StartUpdate(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, FunctorGeneric<TBool>& aCompleted)
 {
     LogNotifierStart("StartUpdate");
     iCompleted = aCompleted;
@@ -269,15 +287,18 @@ TUint DeviceAnnouncement::NextMsg()
     return (iTotalMsgs - iNextMsgIndex);
 }
 
-void DeviceAnnouncement::NotifyComplete()
+void DeviceAnnouncement::NotifyComplete(TBool aCancelled)
 {
+    SsdpNotifierScheduler::NotifyComplete(aCancelled);
     if (iCompleted) {
-        iCompleted();
+        iCompleted(aCancelled);
     }
 }
 
 
 // DviSsdpNotifierManager
+
+const TUint DviSsdpNotifierManager::kMaxMsearchResponsesPerEndpoint = 5;
 
 DviSsdpNotifierManager::DviSsdpNotifierManager(DvStack& aDvStack)
     : iDvStack(aDvStack)
@@ -289,7 +310,7 @@ DviSsdpNotifierManager::DviSsdpNotifierManager(DvStack& aDvStack)
 DviSsdpNotifierManager::~DviSsdpNotifierManager()
 {
     iShutdownSem.Wait();
-    
+
     // nasty way of ensuring NotifySchedulerComplete has released iLock
     iLock.Wait();
     iLock.Signal();
@@ -315,7 +336,7 @@ void DviSsdpNotifierManager::AnnouncementAlive(IUpnpAnnouncementData& aAnnouncem
     }
 }
 
-void DviSsdpNotifierManager::AnnouncementByeBye(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, Functor& aCompleted)
+void DviSsdpNotifierManager::AnnouncementByeBye(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, FunctorGeneric<TBool>& aCompleted)
 {
     AutoMutex a(iLock);
     Announcer* announcer = GetAnnouncer(aAnnouncementData);
@@ -330,7 +351,7 @@ void DviSsdpNotifierManager::AnnouncementByeBye(IUpnpAnnouncementData& aAnnounce
     }
 }
 
-void DviSsdpNotifierManager::AnnouncementUpdate(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, Functor& aCompleted)
+void DviSsdpNotifierManager::AnnouncementUpdate(IUpnpAnnouncementData& aAnnouncementData, TIpAddress aAdapter, const Brx& aUri, TUint aConfigId, FunctorGeneric<TBool>& aCompleted)
 {
     AutoMutex a(iLock);
     Announcer* announcer = GetAnnouncer(aAnnouncementData);
@@ -347,41 +368,57 @@ void DviSsdpNotifierManager::AnnouncementUpdate(IUpnpAnnouncementData& aAnnounce
 
 void DviSsdpNotifierManager::MsearchResponseAll(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)
 {
-    AutoMutex a(iLock);
-    Responder* responder = GetResponder(aAnnouncementData);
-    responder->Response().StartAll(aAnnouncementData, aRemote, aMx, aUri, aConfigId, aAdapter);
+    try {
+        AutoMutex a(iLock);
+        Responder* responder = GetResponder(aAnnouncementData, aRemote);
+        responder->Response().StartAll(aAnnouncementData, aRemote, aMx, aUri, aConfigId, aAdapter);
+    }
+    catch (MsearchResponseLimit&) {}
 }
 
 void DviSsdpNotifierManager::MsearchResponseRoot(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)
 {
-    AutoMutex a(iLock);
-    Responder* responder = GetResponder(aAnnouncementData);
-    responder->Response().StartRoot(aAnnouncementData, aRemote, aMx, aUri, aConfigId, aAdapter);
+    try {
+        AutoMutex a(iLock);
+        Responder* responder = GetResponder(aAnnouncementData, aRemote);
+        responder->Response().StartRoot(aAnnouncementData, aRemote, aMx, aUri, aConfigId, aAdapter);
+    }
+    catch (MsearchResponseLimit&) {}
 }
 
 void DviSsdpNotifierManager::MsearchResponseUuid(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)
 {
-    AutoMutex a(iLock);
-    Responder* responder = GetResponder(aAnnouncementData);
-    responder->Response().StartUuid(aAnnouncementData, aRemote, aMx, aUri, aConfigId, aAdapter);
+    try {
+        AutoMutex a(iLock);
+        Responder* responder = GetResponder(aAnnouncementData, aRemote);
+        responder->Response().StartUuid(aAnnouncementData, aRemote, aMx, aUri, aConfigId, aAdapter);
+    }
+    catch (MsearchResponseLimit&) {}
 }
 
 void DviSsdpNotifierManager::MsearchResponseDeviceType(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)
 {
-    AutoMutex a(iLock);
-    Responder* responder = GetResponder(aAnnouncementData);
-    responder->Response().StartDeviceType(aAnnouncementData, aRemote, aMx, aUri, aConfigId, aAdapter);
+    try {
+        AutoMutex a(iLock);
+        Responder* responder = GetResponder(aAnnouncementData, aRemote);
+        responder->Response().StartDeviceType(aAnnouncementData, aRemote, aMx, aUri, aConfigId, aAdapter);
+    }
+    catch (MsearchResponseLimit&) {}
 }
 
 void DviSsdpNotifierManager::MsearchResponseServiceType(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote, TUint aMx, const OpenHome::Net::ServiceType& aServiceType, const Brx& aUri, TUint aConfigId, TIpAddress aAdapter)
 {
-    AutoMutex a(iLock);
-    Responder* responder = GetResponder(aAnnouncementData);
-    responder->Response().StartServiceType(aAnnouncementData, aRemote, aMx, aServiceType, aUri, aConfigId, aAdapter);
+    try {
+        AutoMutex a(iLock);
+        Responder* responder = GetResponder(aAnnouncementData, aRemote);
+        responder->Response().StartServiceType(aAnnouncementData, aRemote, aMx, aServiceType, aUri, aConfigId, aAdapter);
+    }
+    catch (MsearchResponseLimit&) {}
 }
 
 void DviSsdpNotifierManager::Stop(const Brx& aUdn)
 {
+    LOG(kDvSsdpNotifier, "DviSsdpNotifierManager::Stop(%.*s)\n", PBUF(aUdn));
     iLock.Wait();
     Stop(iActiveResponders, aUdn);
     Stop(iActiveAnnouncers, aUdn);
@@ -408,8 +445,21 @@ void DviSsdpNotifierManager::Delete(std::list<Notifier*>& aList)
     }
 }
 
-DviSsdpNotifierManager::Responder* DviSsdpNotifierManager::GetResponder(IUpnpAnnouncementData& aAnnouncementData)
+DviSsdpNotifierManager::Responder* DviSsdpNotifierManager::GetResponder(IUpnpAnnouncementData& aAnnouncementData, const Endpoint& aRemote)
 {
+    TUint responsesPerEndpoint = 0;
+    for (std::list<Notifier*>::iterator it = iActiveResponders.begin(); it != iActiveResponders.end(); ++it) {
+        Endpoint remote = static_cast<Responder*>(*it)->Response().Remote();
+        if (remote == aRemote) {
+            if (++responsesPerEndpoint > kMaxMsearchResponsesPerEndpoint) {
+                Endpoint::EndpointBuf epBuf;
+                remote.AppendEndpoint(epBuf);
+                LOG(kDvSsdpNotifier, "DviSsdpNotifierManager ignoring excess msearch from %.*s\n", PBUF(epBuf));
+                THROW(MsearchResponseLimit);
+            }
+        }
+    }
+
     DviSsdpNotifierManager::Responder* responder;
     if (iFreeResponders.size() == 0) {
         MsearchResponse* msr = new MsearchResponse(iDvStack, *this);
@@ -497,6 +547,7 @@ TBool DviSsdpNotifierManager::Notifier::MatchesDevice(const Brx& aUdn) const
 void DviSsdpNotifierManager::Notifier::SetActive(const Brx& aUdn)
 {
     iUdn.Set(aUdn);
+    iScheduler->SetUdn(iUdn);
 }
 
 void DviSsdpNotifierManager::Notifier::SetInactive()

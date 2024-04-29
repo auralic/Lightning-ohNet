@@ -19,18 +19,80 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyUpnpOrgScheduledRecording2Cpp : public ICpProxy
+{
+public:
+    virtual ~ICpProxyUpnpOrgScheduledRecording2Cpp() {}
+    virtual void SyncGetSortCapabilities(std::string& aSortCaps, uint32_t& aSortLevelCap) = 0;
+    virtual void BeginGetSortCapabilities(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetSortCapabilities(IAsync& aAsync, std::string& aSortCaps, uint32_t& aSortLevelCap) = 0;
+    virtual void SyncGetPropertyList(const std::string& aDataTypeID, std::string& aPropertyList) = 0;
+    virtual void BeginGetPropertyList(const std::string& aDataTypeID, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetPropertyList(IAsync& aAsync, std::string& aPropertyList) = 0;
+    virtual void SyncGetAllowedValues(const std::string& aDataTypeID, const std::string& aFilter, std::string& aPropertyInfo) = 0;
+    virtual void BeginGetAllowedValues(const std::string& aDataTypeID, const std::string& aFilter, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetAllowedValues(IAsync& aAsync, std::string& aPropertyInfo) = 0;
+    virtual void SyncGetStateUpdateID(uint32_t& aId) = 0;
+    virtual void BeginGetStateUpdateID(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetStateUpdateID(IAsync& aAsync, uint32_t& aId) = 0;
+    virtual void SyncBrowseRecordSchedules(const std::string& aFilter, uint32_t aStartingIndex, uint32_t aRequestedCount, const std::string& aSortCriteria, std::string& aResult, uint32_t& aNumberReturned, uint32_t& aTotalMatches, uint32_t& aUpdateID) = 0;
+    virtual void BeginBrowseRecordSchedules(const std::string& aFilter, uint32_t aStartingIndex, uint32_t aRequestedCount, const std::string& aSortCriteria, FunctorAsync& aFunctor) = 0;
+    virtual void EndBrowseRecordSchedules(IAsync& aAsync, std::string& aResult, uint32_t& aNumberReturned, uint32_t& aTotalMatches, uint32_t& aUpdateID) = 0;
+    virtual void SyncBrowseRecordTasks(const std::string& aRecordScheduleID, const std::string& aFilter, uint32_t aStartingIndex, uint32_t aRequestedCount, const std::string& aSortCriteria, std::string& aResult, uint32_t& aNumberReturned, uint32_t& aTotalMatches, uint32_t& aUpdateID) = 0;
+    virtual void BeginBrowseRecordTasks(const std::string& aRecordScheduleID, const std::string& aFilter, uint32_t aStartingIndex, uint32_t aRequestedCount, const std::string& aSortCriteria, FunctorAsync& aFunctor) = 0;
+    virtual void EndBrowseRecordTasks(IAsync& aAsync, std::string& aResult, uint32_t& aNumberReturned, uint32_t& aTotalMatches, uint32_t& aUpdateID) = 0;
+    virtual void SyncCreateRecordSchedule(const std::string& aElements, std::string& aRecordScheduleID, std::string& aResult, uint32_t& aUpdateID) = 0;
+    virtual void BeginCreateRecordSchedule(const std::string& aElements, FunctorAsync& aFunctor) = 0;
+    virtual void EndCreateRecordSchedule(IAsync& aAsync, std::string& aRecordScheduleID, std::string& aResult, uint32_t& aUpdateID) = 0;
+    virtual void SyncDeleteRecordSchedule(const std::string& aRecordScheduleID) = 0;
+    virtual void BeginDeleteRecordSchedule(const std::string& aRecordScheduleID, FunctorAsync& aFunctor) = 0;
+    virtual void EndDeleteRecordSchedule(IAsync& aAsync) = 0;
+    virtual void SyncGetRecordSchedule(const std::string& aRecordScheduleID, const std::string& aFilter, std::string& aResult, uint32_t& aUpdateID) = 0;
+    virtual void BeginGetRecordSchedule(const std::string& aRecordScheduleID, const std::string& aFilter, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetRecordSchedule(IAsync& aAsync, std::string& aResult, uint32_t& aUpdateID) = 0;
+    virtual void SyncEnableRecordSchedule(const std::string& aRecordScheduleID) = 0;
+    virtual void BeginEnableRecordSchedule(const std::string& aRecordScheduleID, FunctorAsync& aFunctor) = 0;
+    virtual void EndEnableRecordSchedule(IAsync& aAsync) = 0;
+    virtual void SyncDisableRecordSchedule(const std::string& aRecordScheduleID) = 0;
+    virtual void BeginDisableRecordSchedule(const std::string& aRecordScheduleID, FunctorAsync& aFunctor) = 0;
+    virtual void EndDisableRecordSchedule(IAsync& aAsync) = 0;
+    virtual void SyncDeleteRecordTask(const std::string& aRecordTaskID) = 0;
+    virtual void BeginDeleteRecordTask(const std::string& aRecordTaskID, FunctorAsync& aFunctor) = 0;
+    virtual void EndDeleteRecordTask(IAsync& aAsync) = 0;
+    virtual void SyncGetRecordTask(const std::string& aRecordTaskID, const std::string& aFilter, std::string& aResult, uint32_t& aUpdateID) = 0;
+    virtual void BeginGetRecordTask(const std::string& aRecordTaskID, const std::string& aFilter, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetRecordTask(IAsync& aAsync, std::string& aResult, uint32_t& aUpdateID) = 0;
+    virtual void SyncEnableRecordTask(const std::string& aRecordTaskID) = 0;
+    virtual void BeginEnableRecordTask(const std::string& aRecordTaskID, FunctorAsync& aFunctor) = 0;
+    virtual void EndEnableRecordTask(IAsync& aAsync) = 0;
+    virtual void SyncDisableRecordTask(const std::string& aRecordTaskID) = 0;
+    virtual void BeginDisableRecordTask(const std::string& aRecordTaskID, FunctorAsync& aFunctor) = 0;
+    virtual void EndDisableRecordTask(IAsync& aAsync) = 0;
+    virtual void SyncResetRecordTask(const std::string& aRecordTaskID) = 0;
+    virtual void BeginResetRecordTask(const std::string& aRecordTaskID, FunctorAsync& aFunctor) = 0;
+    virtual void EndResetRecordTask(IAsync& aAsync) = 0;
+    virtual void SyncGetRecordScheduleConflicts(const std::string& aRecordScheduleID, std::string& aRecordScheduleConflictIDList, uint32_t& aUpdateID) = 0;
+    virtual void BeginGetRecordScheduleConflicts(const std::string& aRecordScheduleID, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetRecordScheduleConflicts(IAsync& aAsync, std::string& aRecordScheduleConflictIDList, uint32_t& aUpdateID) = 0;
+    virtual void SyncGetRecordTaskConflicts(const std::string& aRecordTaskID, std::string& aRecordTaskConflictIDList, uint32_t& aUpdateID) = 0;
+    virtual void BeginGetRecordTaskConflicts(const std::string& aRecordTaskID, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetRecordTaskConflicts(IAsync& aAsync, std::string& aRecordTaskConflictIDList, uint32_t& aUpdateID) = 0;
+    virtual void SetPropertyLastChangeChanged(Functor& aLastChangeChanged) = 0;
+    virtual void PropertyLastChange(std::string& aLastChange) const = 0;
+};
 
 /**
  * Proxy for upnp.org:ScheduledRecording:2
  * @ingroup Proxies
  */
-class CpProxyUpnpOrgScheduledRecording2Cpp : public CpProxy
+class CpProxyUpnpOrgScheduledRecording2Cpp : public ICpProxyUpnpOrgScheduledRecording2Cpp
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -597,7 +659,40 @@ public:
      * @param[out] aLastChange
      */
     void PropertyLastChange(std::string& aLastChange) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void LastChangePropertyChanged();
 private:
     Action* iActionGetSortCapabilities;

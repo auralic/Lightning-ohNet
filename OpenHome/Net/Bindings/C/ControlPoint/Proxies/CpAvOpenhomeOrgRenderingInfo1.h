@@ -49,7 +49,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRenderingInfo1Destroy(THandle aHandle
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRenderingInfo1Create
  * @param[out] aInfo
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRenderingInfo1SyncGetEntireInfo(THandle aHandle, char** aInfo);
@@ -97,8 +97,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRenderingInfo1SetPropertyInfoChanged(
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRenderingInfo1Create
  * @param[out] aInfo
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgRenderingInfo1PropertyInfo(THandle aHandle, char** aInfo);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRenderingInfo1PropertyInfo(THandle aHandle, char** aInfo);
 
 /* @} */
 

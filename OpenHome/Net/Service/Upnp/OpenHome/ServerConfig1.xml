@@ -6,6 +6,16 @@
     </specVersion>
     <actionList>
         <action>
+            <name>SetPlayCD</name>
+            <argumentList>
+                <argument>
+                    <name>PlayCD</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>PlayCD</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
             <name>SetServerName</name>
             <argumentList>
                 <argument>
@@ -263,6 +273,10 @@
         </action>
     </actionList>
     <serviceStateTable>
+      <stateVariable sendEvents="yes">
+         <name>PlayCD</name>
+         <dataType>boolean</dataType>
+      </stateVariable>
       <stateVariable sendEvents="yes">
          <name>Alive</name>
          <dataType>boolean</dataType>

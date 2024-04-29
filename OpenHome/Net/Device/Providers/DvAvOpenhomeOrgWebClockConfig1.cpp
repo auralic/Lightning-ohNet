@@ -32,6 +32,11 @@ void DvProviderAvOpenhomeOrgWebClockConfig1::GetPropertyClockConfig(Brhz& aValue
     aValue.Set(iPropertyClockConfig->Value());
 }
 
+void DvProviderAvOpenhomeOrgWebClockConfig1::WritePropertyClockConfig(IWriter& aWriter)
+{
+    iPropertyClockConfig->Write(aWriter);
+}
+
 DvProviderAvOpenhomeOrgWebClockConfig1::DvProviderAvOpenhomeOrgWebClockConfig1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "WebClockConfig", 1)
 {

@@ -895,35 +895,35 @@ void CpProxyAvOpenhomeOrgRoon1C::SetPropertyUpdateCoverChanged(Functor& aFunctor
 void CpProxyAvOpenhomeOrgRoon1C::PropertyTransportState(Brhz& aTransportState) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aTransportState.Set(iTransportState->Value());
 }
 
 void CpProxyAvOpenhomeOrgRoon1C::PropertyRepeat(TBool& aRepeat) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aRepeat = iRepeat->Value();
 }
 
 void CpProxyAvOpenhomeOrgRoon1C::PropertyRepeatOne(TBool& aRepeatOne) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aRepeatOne = iRepeatOne->Value();
 }
 
 void CpProxyAvOpenhomeOrgRoon1C::PropertyShuffle(TBool& aShuffle) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aShuffle = iShuffle->Value();
 }
 
 void CpProxyAvOpenhomeOrgRoon1C::PropertyUpdateCover(TBool& aUpdateCover) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aUpdateCover = iUpdateCover->Value();
 }
 
@@ -1514,48 +1514,78 @@ void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyUpdateCoverChanged(THandle aHan
     proxyC->SetPropertyUpdateCoverChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyTransportState(THandle aHandle, char** aTransportState)
+int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyTransportState(THandle aHandle, char** aTransportState)
 {
     CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aTransportState;
-    proxyC->PropertyTransportState(buf_aTransportState);
+    try {
+        proxyC->PropertyTransportState(buf_aTransportState);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aTransportState = buf_aTransportState.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeat(THandle aHandle, uint32_t* aRepeat)
+int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeat(THandle aHandle, uint32_t* aRepeat)
 {
     CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Repeat;
-    proxyC->PropertyRepeat(Repeat);
+    try {
+        proxyC->PropertyRepeat(Repeat);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aRepeat = Repeat? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeatOne(THandle aHandle, uint32_t* aRepeatOne)
+int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeatOne(THandle aHandle, uint32_t* aRepeatOne)
 {
     CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool RepeatOne;
-    proxyC->PropertyRepeatOne(RepeatOne);
+    try {
+        proxyC->PropertyRepeatOne(RepeatOne);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aRepeatOne = RepeatOne? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyShuffle(THandle aHandle, uint32_t* aShuffle)
+int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyShuffle(THandle aHandle, uint32_t* aShuffle)
 {
     CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Shuffle;
-    proxyC->PropertyShuffle(Shuffle);
+    try {
+        proxyC->PropertyShuffle(Shuffle);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aShuffle = Shuffle? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyUpdateCover(THandle aHandle, uint32_t* aUpdateCover)
+int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyUpdateCover(THandle aHandle, uint32_t* aUpdateCover)
 {
     CpProxyAvOpenhomeOrgRoon1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgRoon1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool UpdateCover;
-    proxyC->PropertyUpdateCover(UpdateCover);
+    try {
+        proxyC->PropertyUpdateCover(UpdateCover);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aUpdateCover = UpdateCover? 1 : 0;
+    return 0;
 }
 

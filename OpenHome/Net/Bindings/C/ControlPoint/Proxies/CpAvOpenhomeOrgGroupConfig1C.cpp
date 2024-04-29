@@ -813,49 +813,49 @@ void CpProxyAvOpenhomeOrgGroupConfig1C::SetPropertyBitPerfectModeChanged(Functor
 void CpProxyAvOpenhomeOrgGroupConfig1C::PropertyGroupMode(Brhz& aGroupMode) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aGroupMode.Set(iGroupMode->Value());
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1C::PropertyGroupName(Brhz& aGroupName) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aGroupName.Set(iGroupName->Value());
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1C::PropertyGroupID(Brhz& aGroupID) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aGroupID.Set(iGroupID->Value());
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1C::PropertyGroupVolume(TUint& aGroupVolume) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aGroupVolume = iGroupVolume->Value();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1C::PropertyGroupMute(TBool& aGroupMute) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aGroupMute = iGroupMute->Value();
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1C::PropertyGroupStatus(Brhz& aGroupStatus) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aGroupStatus.Set(iGroupStatus->Value());
 }
 
 void CpProxyAvOpenhomeOrgGroupConfig1C::PropertyBitPerfectMode(TBool& aBitPerfectMode) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aBitPerfectMode = iBitPerfectMode->Value();
 }
 
@@ -1385,64 +1385,106 @@ void STDCALL CpProxyAvOpenhomeOrgGroupConfig1SetPropertyBitPerfectModeChanged(TH
     proxyC->SetPropertyBitPerfectModeChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMode(THandle aHandle, char** aGroupMode)
+int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMode(THandle aHandle, char** aGroupMode)
 {
     CpProxyAvOpenhomeOrgGroupConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgGroupConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aGroupMode;
-    proxyC->PropertyGroupMode(buf_aGroupMode);
+    try {
+        proxyC->PropertyGroupMode(buf_aGroupMode);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aGroupMode = buf_aGroupMode.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupName(THandle aHandle, char** aGroupName)
+int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupName(THandle aHandle, char** aGroupName)
 {
     CpProxyAvOpenhomeOrgGroupConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgGroupConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aGroupName;
-    proxyC->PropertyGroupName(buf_aGroupName);
+    try {
+        proxyC->PropertyGroupName(buf_aGroupName);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aGroupName = buf_aGroupName.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupID(THandle aHandle, char** aGroupID)
+int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupID(THandle aHandle, char** aGroupID)
 {
     CpProxyAvOpenhomeOrgGroupConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgGroupConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aGroupID;
-    proxyC->PropertyGroupID(buf_aGroupID);
+    try {
+        proxyC->PropertyGroupID(buf_aGroupID);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aGroupID = buf_aGroupID.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupVolume(THandle aHandle, uint32_t* aGroupVolume)
+int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupVolume(THandle aHandle, uint32_t* aGroupVolume)
 {
     CpProxyAvOpenhomeOrgGroupConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgGroupConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyGroupVolume(*aGroupVolume);
+    try {
+        proxyC->PropertyGroupVolume(*aGroupVolume);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMute(THandle aHandle, uint32_t* aGroupMute)
+int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupMute(THandle aHandle, uint32_t* aGroupMute)
 {
     CpProxyAvOpenhomeOrgGroupConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgGroupConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool GroupMute;
-    proxyC->PropertyGroupMute(GroupMute);
+    try {
+        proxyC->PropertyGroupMute(GroupMute);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aGroupMute = GroupMute? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupStatus(THandle aHandle, char** aGroupStatus)
+int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyGroupStatus(THandle aHandle, char** aGroupStatus)
 {
     CpProxyAvOpenhomeOrgGroupConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgGroupConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aGroupStatus;
-    proxyC->PropertyGroupStatus(buf_aGroupStatus);
+    try {
+        proxyC->PropertyGroupStatus(buf_aGroupStatus);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aGroupStatus = buf_aGroupStatus.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyBitPerfectMode(THandle aHandle, uint32_t* aBitPerfectMode)
+int32_t STDCALL CpProxyAvOpenhomeOrgGroupConfig1PropertyBitPerfectMode(THandle aHandle, uint32_t* aBitPerfectMode)
 {
     CpProxyAvOpenhomeOrgGroupConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgGroupConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool BitPerfectMode;
-    proxyC->PropertyBitPerfectMode(BitPerfectMode);
+    try {
+        proxyC->PropertyBitPerfectMode(BitPerfectMode);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aBitPerfectMode = BitPerfectMode? 1 : 0;
+    return 0;
 }
 

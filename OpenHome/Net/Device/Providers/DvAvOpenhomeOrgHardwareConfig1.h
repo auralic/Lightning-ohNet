@@ -26,6 +26,26 @@ class DvProviderAvOpenhomeOrgHardwareConfig1 : public DvProvider
 public:
     virtual ~DvProviderAvOpenhomeOrgHardwareConfig1() {}
     /**
+     * Set the value of the MessageOut property
+     *
+     * Can only be called if EnablePropertyMessageOut has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    TBool SetPropertyMessageOut(const Brx& aValue);
+    /**
+     * Get a copy of the value of the MessageOut property
+     *
+     * Can only be called if EnablePropertyMessageOut has previously been called.
+     */
+    void GetPropertyMessageOut(Brhz& aValue);
+    /**
+     * Output the value of the MessageOut property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyMessageOut has previously been called.
+     */
+    void WritePropertyMessageOut(IWriter& aWriter);
+    /**
      * Set the value of the Alive property
      *
      * Can only be called if EnablePropertyAlive has previously been called.
@@ -96,6 +116,12 @@ public:
      */
     void GetPropertyRoomName(Brhz& aValue);
     /**
+     * Output the value of the RoomName property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyRoomName has previously been called.
+     */
+    void WritePropertyRoomName(IWriter& aWriter);
+    /**
      * Set the value of the InterFace property
      *
      * Can only be called if EnablePropertyInterFace has previously been called.
@@ -109,6 +135,12 @@ public:
      * Can only be called if EnablePropertyInterFace has previously been called.
      */
     void GetPropertyInterFace(Brhz& aValue);
+    /**
+     * Output the value of the InterFace property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyInterFace has previously been called.
+     */
+    void WritePropertyInterFace(IWriter& aWriter);
     /**
      * Set the value of the NetMask property
      *
@@ -124,6 +156,12 @@ public:
      */
     void GetPropertyNetMask(Brhz& aValue);
     /**
+     * Output the value of the NetMask property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyNetMask has previously been called.
+     */
+    void WritePropertyNetMask(IWriter& aWriter);
+    /**
      * Set the value of the GateWay property
      *
      * Can only be called if EnablePropertyGateWay has previously been called.
@@ -137,6 +175,12 @@ public:
      * Can only be called if EnablePropertyGateWay has previously been called.
      */
     void GetPropertyGateWay(Brhz& aValue);
+    /**
+     * Output the value of the GateWay property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyGateWay has previously been called.
+     */
+    void WritePropertyGateWay(IWriter& aWriter);
     /**
      * Set the value of the DNS property
      *
@@ -152,6 +196,12 @@ public:
      */
     void GetPropertyDNS(Brhz& aValue);
     /**
+     * Output the value of the DNS property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyDNS has previously been called.
+     */
+    void WritePropertyDNS(IWriter& aWriter);
+    /**
      * Set the value of the DHCP property
      *
      * Can only be called if EnablePropertyDHCP has previously been called.
@@ -165,6 +215,12 @@ public:
      * Can only be called if EnablePropertyDHCP has previously been called.
      */
     void GetPropertyDHCP(Brhz& aValue);
+    /**
+     * Output the value of the DHCP property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyDHCP has previously been called.
+     */
+    void WritePropertyDHCP(IWriter& aWriter);
     /**
      * Set the value of the Ssid property
      *
@@ -180,6 +236,12 @@ public:
      */
     void GetPropertySsid(Brhz& aValue);
     /**
+     * Output the value of the Ssid property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertySsid has previously been called.
+     */
+    void WritePropertySsid(IWriter& aWriter);
+    /**
      * Set the value of the PassWord property
      *
      * Can only be called if EnablePropertyPassWord has previously been called.
@@ -193,6 +255,12 @@ public:
      * Can only be called if EnablePropertyPassWord has previously been called.
      */
     void GetPropertyPassWord(Brhz& aValue);
+    /**
+     * Output the value of the PassWord property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyPassWord has previously been called.
+     */
+    void WritePropertyPassWord(IWriter& aWriter);
     /**
      * Set the value of the EncrypType property
      *
@@ -208,6 +276,12 @@ public:
      */
     void GetPropertyEncrypType(Brhz& aValue);
     /**
+     * Output the value of the EncrypType property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyEncrypType has previously been called.
+     */
+    void WritePropertyEncrypType(IWriter& aWriter);
+    /**
      * Set the value of the Channel property
      *
      * Can only be called if EnablePropertyChannel has previously been called.
@@ -221,6 +295,12 @@ public:
      * Can only be called if EnablePropertyChannel has previously been called.
      */
     void GetPropertyChannel(Brhz& aValue);
+    /**
+     * Output the value of the Channel property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyChannel has previously been called.
+     */
+    void WritePropertyChannel(IWriter& aWriter);
     /**
      * Set the value of the UpnpType property
      *
@@ -236,6 +316,12 @@ public:
      */
     void GetPropertyUpnpType(Brhz& aValue);
     /**
+     * Output the value of the UpnpType property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyUpnpType has previously been called.
+     */
+    void WritePropertyUpnpType(IWriter& aWriter);
+    /**
      * Set the value of the Status property
      *
      * Can only be called if EnablePropertyStatus has previously been called.
@@ -249,6 +335,12 @@ public:
      * Can only be called if EnablePropertyStatus has previously been called.
      */
     void GetPropertyStatus(Brhz& aValue);
+    /**
+     * Output the value of the Status property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyStatus has previously been called.
+     */
+    void WritePropertyStatus(IWriter& aWriter);
     /**
      * Set the value of the SampleFormat property
      *
@@ -264,6 +356,12 @@ public:
      */
     void GetPropertySampleFormat(Brhz& aValue);
     /**
+     * Output the value of the SampleFormat property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertySampleFormat has previously been called.
+     */
+    void WritePropertySampleFormat(IWriter& aWriter);
+    /**
      * Set the value of the IpAddress property
      *
      * Can only be called if EnablePropertyIpAddress has previously been called.
@@ -277,6 +375,12 @@ public:
      * Can only be called if EnablePropertyIpAddress has previously been called.
      */
     void GetPropertyIpAddress(Brhz& aValue);
+    /**
+     * Output the value of the IpAddress property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyIpAddress has previously been called.
+     */
+    void WritePropertyIpAddress(IWriter& aWriter);
     /**
      * Set the value of the Protect property
      *
@@ -292,6 +396,12 @@ public:
      */
     void GetPropertyProtect(Brhz& aValue);
     /**
+     * Output the value of the Protect property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyProtect has previously been called.
+     */
+    void WritePropertyProtect(IWriter& aWriter);
+    /**
      * Set the value of the ProtectPassword property
      *
      * Can only be called if EnablePropertyProtectPassword has previously been called.
@@ -305,6 +415,12 @@ public:
      * Can only be called if EnablePropertyProtectPassword has previously been called.
      */
     void GetPropertyProtectPassword(Brhz& aValue);
+    /**
+     * Output the value of the ProtectPassword property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyProtectPassword has previously been called.
+     */
+    void WritePropertyProtectPassword(IWriter& aWriter);
     /**
      * Set the value of the ActiveStatus property
      *
@@ -320,6 +436,12 @@ public:
      */
     void GetPropertyActiveStatus(Brhz& aValue);
     /**
+     * Output the value of the ActiveStatus property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyActiveStatus has previously been called.
+     */
+    void WritePropertyActiveStatus(IWriter& aWriter);
+    /**
      * Set the value of the Time property
      *
      * Can only be called if EnablePropertyTime has previously been called.
@@ -333,6 +455,12 @@ public:
      * Can only be called if EnablePropertyTime has previously been called.
      */
     void GetPropertyTime(Brhz& aValue);
+    /**
+     * Output the value of the Time property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyTime has previously been called.
+     */
+    void WritePropertyTime(IWriter& aWriter);
     /**
      * Set the value of the VolumeControl property
      *
@@ -360,6 +488,10 @@ protected:
      * @param[in] aDevice  Device which owns this provider
      */
     DvProviderAvOpenhomeOrgHardwareConfig1(DviDevice& aDevice);
+    /**
+     * Enable the MessageOut property.
+     */
+    void EnablePropertyMessageOut();
     /**
      * Enable the Alive property.
      */
@@ -452,6 +584,24 @@ protected:
      * Enable the VolumeControl property.
      */
     void EnablePropertyVolumeControl();
+    /**
+     * Signal that the action LogIn is supported.
+     * The action's availability will be published in the device's service.xml.
+     * LogIn must be overridden if this is called.
+     */
+    void EnableActionLogIn();
+    /**
+     * Signal that the action LogOut is supported.
+     * The action's availability will be published in the device's service.xml.
+     * LogOut must be overridden if this is called.
+     */
+    void EnableActionLogOut();
+    /**
+     * Signal that the action CancelLogIn is supported.
+     * The action's availability will be published in the device's service.xml.
+     * CancelLogIn must be overridden if this is called.
+     */
+    void EnableActionCancelLogIn();
     /**
      * Signal that the action IsAlive is supported.
      * The action's availability will be published in the device's service.xml.
@@ -710,7 +860,55 @@ protected:
      * SetDACBalance must be overridden if this is called.
      */
     void EnableActionSetDACBalance();
+    /**
+     * Signal that the action SetEnableResampler is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetEnableResampler must be overridden if this is called.
+     */
+    void EnableActionSetEnableResampler();
+    /**
+     * Signal that the action SetEnableSpeaker is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetEnableSpeaker must be overridden if this is called.
+     */
+    void EnableActionSetEnableSpeaker();
+    /**
+     * Signal that the action SetEnableEqualizer is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetEnableEqualizer must be overridden if this is called.
+     */
+    void EnableActionSetEnableEqualizer();
+    /**
+     * Signal that the action SetEnableDirac is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetEnableDirac must be overridden if this is called.
+     */
+    void EnableActionSetEnableDirac();
 private:
+    /**
+     * LogIn action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * LogIn action for the owning device.
+     * Must be implemented iff EnableActionLogIn was called.
+     */
+    virtual void LogIn(IDvInvocation& aInvocation, const Brx& aServiceName, const Brx& aMessageIn, IDvInvocationResponseString& aMessageOut);
+    /**
+     * LogOut action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * LogOut action for the owning device.
+     * Must be implemented iff EnableActionLogOut was called.
+     */
+    virtual void LogOut(IDvInvocation& aInvocation, const Brx& aServiceName);
+    /**
+     * CancelLogIn action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * CancelLogIn action for the owning device.
+     * Must be implemented iff EnableActionCancelLogIn was called.
+     */
+    virtual void CancelLogIn(IDvInvocation& aInvocation, const Brx& aServiceName);
     /**
      * IsAlive action.
      *
@@ -1055,9 +1253,44 @@ private:
      * Must be implemented iff EnableActionSetDACBalance was called.
      */
     virtual void SetDACBalance(IDvInvocation& aInvocation, TUint aBalance);
+    /**
+     * SetEnableResampler action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetEnableResampler action for the owning device.
+     * Must be implemented iff EnableActionSetEnableResampler was called.
+     */
+    virtual void SetEnableResampler(IDvInvocation& aInvocation, TBool aEnableResampler);
+    /**
+     * SetEnableSpeaker action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetEnableSpeaker action for the owning device.
+     * Must be implemented iff EnableActionSetEnableSpeaker was called.
+     */
+    virtual void SetEnableSpeaker(IDvInvocation& aInvocation, TBool aEnableSpeaker);
+    /**
+     * SetEnableEqualizer action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetEnableEqualizer action for the owning device.
+     * Must be implemented iff EnableActionSetEnableEqualizer was called.
+     */
+    virtual void SetEnableEqualizer(IDvInvocation& aInvocation, TBool aEnableEqualizer);
+    /**
+     * SetEnableDirac action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetEnableDirac action for the owning device.
+     * Must be implemented iff EnableActionSetEnableDirac was called.
+     */
+    virtual void SetEnableDirac(IDvInvocation& aInvocation, TBool aEnableDirac);
 private:
     DvProviderAvOpenhomeOrgHardwareConfig1();
     void Construct();
+    void DoLogIn(IDviInvocation& aInvocation);
+    void DoLogOut(IDviInvocation& aInvocation);
+    void DoCancelLogIn(IDviInvocation& aInvocation);
     void DoIsAlive(IDviInvocation& aInvocation);
     void DoUpdate(IDviInvocation& aInvocation);
     void DoActive(IDviInvocation& aInvocation);
@@ -1101,7 +1334,12 @@ private:
     void DoSetDACPhase(IDviInvocation& aInvocation);
     void DoGetDACBalance(IDviInvocation& aInvocation);
     void DoSetDACBalance(IDviInvocation& aInvocation);
+    void DoSetEnableResampler(IDviInvocation& aInvocation);
+    void DoSetEnableSpeaker(IDviInvocation& aInvocation);
+    void DoSetEnableEqualizer(IDviInvocation& aInvocation);
+    void DoSetEnableDirac(IDviInvocation& aInvocation);
 private:
+    PropertyString* iPropertyMessageOut;
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;
     PropertyBool* iPropertyRestart;

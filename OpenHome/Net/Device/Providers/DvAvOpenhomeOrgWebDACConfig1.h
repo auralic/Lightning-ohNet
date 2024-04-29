@@ -54,6 +54,12 @@ public:
      */
     void GetPropertyDACConfig(Brhz& aValue);
     /**
+     * Output the value of the DACConfig property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyDACConfig has previously been called.
+     */
+    void WritePropertyDACConfig(IWriter& aWriter);
+    /**
      * Set the value of the CurrentAction property
      *
      * Can only be called if EnablePropertyCurrentAction has previously been called.

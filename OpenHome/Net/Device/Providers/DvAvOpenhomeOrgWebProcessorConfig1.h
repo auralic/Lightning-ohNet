@@ -53,6 +53,12 @@ public:
      * Can only be called if EnablePropertyProcessorConfig has previously been called.
      */
     void GetPropertyProcessorConfig(Brhz& aValue);
+    /**
+     * Output the value of the ProcessorConfig property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyProcessorConfig has previously been called.
+     */
+    void WritePropertyProcessorConfig(IWriter& aWriter);
 protected:
     /**
      * Constructor

@@ -178,6 +178,13 @@
     <publisher>OpenHome</publisher>
     <dcpdir></dcpdir>
     <domain>av.openhome.org</domain>
+    <type>Credentials</type>
+    <version>1</version>
+  </service>
+  <service>
+    <publisher>OpenHome</publisher>
+    <dcpdir></dcpdir>
+    <domain>av.openhome.org</domain>
     <type>ServerConfig</type>
     <version>1</version>
   </service>
@@ -207,6 +214,41 @@
     <dcpdir></dcpdir>
     <domain>av.openhome.org</domain>
     <type>Roon</type>
+    <version>1</version>
+  </service>
+  <service>
+    <publisher>OpenHome</publisher>
+    <dcpdir></dcpdir>
+    <domain>av.openhome.org</domain>
+    <type>TidalConnect</type>
+    <version>1</version>
+  </service>
+  <service>
+    <publisher>OpenHome</publisher>
+    <dcpdir></dcpdir>
+    <domain>av.openhome.org</domain>
+    <type>Bluetooth</type>
+    <version>1</version>
+  </service>
+  <service>
+    <publisher>OpenHome</publisher>
+    <dcpdir></dcpdir>
+    <domain>av.openhome.org</domain>
+    <type>Airplay</type>
+    <version>1</version>
+  </service>
+  <service>
+    <publisher>OpenHome</publisher>
+    <dcpdir></dcpdir>
+    <domain>av.openhome.org</domain>
+    <type>MusicStation</type>
+    <version>1</version>
+  </service>
+  <service>
+    <publisher>OpenHome</publisher>
+    <dcpdir></dcpdir>
+    <domain>av.openhome.org</domain>
+    <type>Spotify</type>
     <version>1</version>
   </service>
   <service>

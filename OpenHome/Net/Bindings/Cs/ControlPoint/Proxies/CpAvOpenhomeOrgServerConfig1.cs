@@ -10,6 +10,9 @@ namespace OpenHome.Net.ControlPoint.Proxies
 {
     public interface ICpProxyAvOpenhomeOrgServerConfig1 : ICpProxy, IDisposable
     {
+        void SyncSetPlayCD(bool aPlayCD);
+        void BeginSetPlayCD(bool aPlayCD, CpProxy.CallbackAsyncComplete aCallback);
+        void EndSetPlayCD(IntPtr aAsyncHandle);
         void SyncSetServerName(String aServerName);
         void BeginSetServerName(String aServerName, CpProxy.CallbackAsyncComplete aCallback);
         void EndSetServerName(IntPtr aAsyncHandle);
@@ -85,11 +88,27 @@ namespace OpenHome.Net.ControlPoint.Proxies
         void SyncSetServerConfig(String aSetValue);
         void BeginSetServerConfig(String aSetValue, CpProxy.CallbackAsyncComplete aCallback);
         void EndSetServerConfig(IntPtr aAsyncHandle);
+        void SetPropertyPlayCDChanged(System.Action aPlayCDChanged);
+        bool PropertyPlayCD();
         void SetPropertyAliveChanged(System.Action aAliveChanged);
         bool PropertyAlive();
         void SetPropertySubscriptValueChanged(System.Action aSubscriptValueChanged);
         String PropertySubscriptValue();
     }
+
+    internal class SyncSetPlayCDAvOpenhomeOrgServerConfig1 : SyncProxyAction
+    {
+        private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+        public SyncSetPlayCDAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+        {
+            iService = aProxy;
+        }
+        protected override void CompleteRequest(IntPtr aAsyncHandle)
+        {
+            iService.EndSetPlayCD(aAsyncHandle);
+        }
+    };
 
     internal class SyncSetServerNameAvOpenhomeOrgServerConfig1 : SyncProxyAction
     {
@@ -556,6 +575,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
     /// </summary>
     public class CpProxyAvOpenhomeOrgServerConfig1 : CpProxy, IDisposable, ICpProxyAvOpenhomeOrgServerConfig1
     {
+        private OpenHome.Net.Core.Action iActionSetPlayCD;
         private OpenHome.Net.Core.Action iActionSetServerName;
         private OpenHome.Net.Core.Action iActionGetServerVersion;
         private OpenHome.Net.Core.Action iActionGetProgressInfo;
@@ -581,8 +601,10 @@ namespace OpenHome.Net.ControlPoint.Proxies
         private OpenHome.Net.Core.Action iActionGetCurrentScanFile;
         private OpenHome.Net.Core.Action iActionGetServerConfig;
         private OpenHome.Net.Core.Action iActionSetServerConfig;
+        private PropertyBool iPlayCD;
         private PropertyBool iAlive;
         private PropertyString iSubscriptValue;
+        private System.Action iPlayCDChanged;
         private System.Action iAliveChanged;
         private System.Action iSubscriptValueChanged;
         private Mutex iPropertyLock;
@@ -592,11 +614,15 @@ namespace OpenHome.Net.ControlPoint.Proxies
         /// </summary>
         /// <remarks>Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable and reporting of their changes.</remarks>
         /// <param name="aDevice">The device to use</param>
-        public CpProxyAvOpenhomeOrgServerConfig1(CpDevice aDevice)
+        public CpProxyAvOpenhomeOrgServerConfig1(ICpDevice aDevice)
             : base("av-openhome-org", "ServerConfig", 1, aDevice)
         {
             OpenHome.Net.Core.Parameter param;
             List<String> allowedValues = new List<String>();
+
+            iActionSetPlayCD = new OpenHome.Net.Core.Action("SetPlayCD");
+            param = new ParameterBool("PlayCD");
+            iActionSetPlayCD.AddInputParameter(param);
 
             iActionSetServerName = new OpenHome.Net.Core.Action("SetServerName");
             param = new ParameterString("ServerName", allowedValues);
@@ -706,12 +732,60 @@ namespace OpenHome.Net.ControlPoint.Proxies
             param = new ParameterString("SetValue", allowedValues);
             iActionSetServerConfig.AddInputParameter(param);
 
+            iPlayCD = new PropertyBool("PlayCD", PlayCDPropertyChanged);
+            AddProperty(iPlayCD);
             iAlive = new PropertyBool("Alive", AlivePropertyChanged);
             AddProperty(iAlive);
             iSubscriptValue = new PropertyString("SubscriptValue", SubscriptValuePropertyChanged);
             AddProperty(iSubscriptValue);
             
             iPropertyLock = new Mutex();
+        }
+
+        /// <summary>
+        /// Invoke the action synchronously
+        /// </summary>
+        /// <remarks>Blocks until the action has been processed
+        /// on the device and sets any output arguments</remarks>
+        /// <param name="aPlayCD"></param>
+        public void SyncSetPlayCD(bool aPlayCD)
+        {
+            SyncSetPlayCDAvOpenhomeOrgServerConfig1 sync = new SyncSetPlayCDAvOpenhomeOrgServerConfig1(this);
+            BeginSetPlayCD(aPlayCD, sync.AsyncComplete());
+            sync.Wait();
+            sync.ReportError();
+        }
+
+        /// <summary>
+        /// Invoke the action asynchronously
+        /// </summary>
+        /// <remarks>Returns immediately and will run the client-specified callback when the action
+        /// later completes.  Any output arguments can then be retrieved by calling
+        /// EndSetPlayCD().</remarks>
+        /// <param name="aPlayCD"></param>
+        /// <param name="aCallback">Delegate to run when the action completes.
+        /// This is guaranteed to be run but may indicate an error</param>
+        public void BeginSetPlayCD(bool aPlayCD, CallbackAsyncComplete aCallback)
+        {
+            Invocation invocation = iService.Invocation(iActionSetPlayCD, aCallback);
+            int inIndex = 0;
+            invocation.AddInput(new ArgumentBool((ParameterBool)iActionSetPlayCD.InputParameter(inIndex++), aPlayCD));
+            iService.InvokeAction(invocation);
+        }
+
+        /// <summary>
+        /// Retrieve the output arguments from an asynchronously invoked action.
+        /// </summary>
+        /// <remarks>This may only be called from the callback set in the above Begin function.</remarks>
+        /// <param name="aAsyncHandle">Argument passed to the delegate set in the above Begin function</param>
+        public void EndSetPlayCD(IntPtr aAsyncHandle)
+        {
+            uint code;
+            string desc;
+            if (Invocation.Error(aAsyncHandle, out code, out desc))
+            {
+                throw new ProxyError(code, desc);
+            }
         }
 
         /// <summary>
@@ -1927,6 +2001,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
         }
 
         /// <summary>
+        /// Set a delegate to be run when the PlayCD state variable changes.
+        /// </summary>
+        /// <remarks>Callbacks may be run in different threads but callbacks for a
+        /// CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.</remarks>
+        /// <param name="aPlayCDChanged">The delegate to run when the state variable changes</param>
+        public void SetPropertyPlayCDChanged(System.Action aPlayCDChanged)
+        {
+            lock (iPropertyLock)
+            {
+                iPlayCDChanged = aPlayCDChanged;
+            }
+        }
+
+        private void PlayCDPropertyChanged()
+        {
+            lock (iPropertyLock)
+            {
+                ReportEvent(iPlayCDChanged);
+            }
+        }
+
+        /// <summary>
         /// Set a delegate to be run when the Alive state variable changes.
         /// </summary>
         /// <remarks>Callbacks may be run in different threads but callbacks for a
@@ -1968,6 +2064,28 @@ namespace OpenHome.Net.ControlPoint.Proxies
             {
                 ReportEvent(iSubscriptValueChanged);
             }
+        }
+
+        /// <summary>
+        /// Query the value of the PlayCD property.
+        /// </summary>
+        /// <remarks>This function is threadsafe and can only be called if Subscribe() has been
+        /// called and a first eventing callback received more recently than any call
+        /// to Unsubscribe().</remarks>
+        /// <returns>Value of the PlayCD property</returns>
+        public bool PropertyPlayCD()
+        {
+            PropertyReadLock();
+            bool val;
+            try
+            {
+                val = iPlayCD.Value();
+            }
+            finally
+            {
+                PropertyReadUnlock();
+            }
+            return val;
         }
 
         /// <summary>
@@ -2026,6 +2144,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
                 DisposeProxy();
                 iHandle = IntPtr.Zero;
             }
+            iActionSetPlayCD.Dispose();
             iActionSetServerName.Dispose();
             iActionGetServerVersion.Dispose();
             iActionGetProgressInfo.Dispose();
@@ -2051,6 +2170,7 @@ namespace OpenHome.Net.ControlPoint.Proxies
             iActionGetCurrentScanFile.Dispose();
             iActionGetServerConfig.Dispose();
             iActionSetServerConfig.Dispose();
+            iPlayCD.Dispose();
             iAlive.Dispose();
             iSubscriptValue.Dispose();
         }

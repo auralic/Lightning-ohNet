@@ -41,30 +41,53 @@ public:
     std::vector<NetworkAdapter*>* CreateNetworkAdapterList() const;
     static void DestroyNetworkAdapterList(std::vector<NetworkAdapter*>* aList);
     void SetCurrentSubnet(TIpAddress aSubnet);
-    TUint AddCurrentChangeListener(Functor aFunctor, TBool aInternalClient = true); // internal clients are notified first
+    void Refresh();
+    TUint AddCurrentChangeListener(Functor aFunctor, const TChar* aId, TBool aInternalClient = true); // internal clients are notified first
     void RemoveCurrentChangeListener(TUint aId);
-    TUint AddSubnetListChangeListener(Functor aFunctor, TBool aInternalClient = true); // internal clients are notified first
+    TUint AddSubnetListChangeListener(Functor aFunctor, const TChar* aId, TBool aInternalClient = true); // internal clients are notified first
     void RemoveSubnetListChangeListener(TUint aId);
-    TUint AddSubnetAddedListener(FunctorNetworkAdapter aFunctor); // only for use by client code
+    TUint AddSubnetAddedListener(FunctorNetworkAdapter aFunctor, const TChar* aId); // only for use by client code
     void RemoveSubnetAddedListener(TUint aId);
-    TUint AddSubnetRemovedListener(FunctorNetworkAdapter aFunctor); // only for use by client code
+    TUint AddSubnetRemovedListener(FunctorNetworkAdapter aFunctor, const TChar* aId); // only for use by client code
     void RemoveSubnetRemovedListener(TUint aId);
-    TUint AddNetworkAdapterChangeListener(FunctorNetworkAdapter aFunctor); // only for use by client code
+    TUint AddNetworkAdapterChangeListener(FunctorNetworkAdapter aFunctor, const TChar* aId); // only for use by client code
     void RemoveNetworkAdapterChangeListener(TUint aId);
 private:
-    typedef std::map<TUint,Functor> Map;
-    typedef std::map<TUint,FunctorNetworkAdapter> MapNetworkAdapter;
+    class Listener
+    {
+    public:
+        Listener(Functor aFunctor, const TChar* aId)
+            : iFunctor(aFunctor)
+            , iId(aId)
+        {}
+    public:
+        Functor iFunctor;
+        const TChar* iId;
+    };
+    class ListenerNetworkAdapter
+    {
+    public:
+        ListenerNetworkAdapter(FunctorNetworkAdapter aFunctor, const TChar* aId)
+            : iFunctor(aFunctor)
+            , iId(aId)
+        {}
+    public:
+        FunctorNetworkAdapter iFunctor;
+        const TChar* iId;
+    };
+    typedef std::vector<std::pair<TUint, Listener> > VectorListener;
+    typedef std::map<TUint, ListenerNetworkAdapter> MapNetworkAdapter;
     std::vector<NetworkAdapter*>* CreateSubnetListLocked() const;
-    TUint AddListener(Functor aFunctor, Map& aMap);
-    TBool RemoveSubnetListChangeListener(TUint aId, Map& aMap);
-    TUint AddSubnetListener(FunctorNetworkAdapter aFunctor, MapNetworkAdapter& aMap);
+    TUint AddListener(Functor aFunctor, const TChar* aId, VectorListener& aList);
+    TBool RemoveSubnetListChangeListener(TUint aId, VectorListener& aList);
+    TUint AddSubnetListener(FunctorNetworkAdapter aFunctor, const TChar* aId, MapNetworkAdapter& aMap);
     void RemoveSubnetListener(TUint aId, MapNetworkAdapter& aMap);
     static void InterfaceListChanged(void* aPtr);
     static TInt FindSubnet(TIpAddress aSubnet, const std::vector<NetworkAdapter*>& aList);
     void UpdateCurrentAdapter();
     void HandleInterfaceListChanged();
-    void RunCallbacks(Map& aMap);
-    void DoRunCallbacks(Map& aMap);
+    void RunCallbacks(const VectorListener& aCallbacks);
+    void DoRunCallbacks(const VectorListener& aCallbacks);
     void RunSubnetCallbacks(MapNetworkAdapter& aMap, NetworkAdapter& aAdapter);
     static TBool CompareSubnets(NetworkAdapter* aI, NetworkAdapter* aJ);
     static void TraceAdapter(const TChar* aPrefix, NetworkAdapter& aAdapter);
@@ -95,10 +118,10 @@ private:
     std::vector<NetworkAdapter*>* iSubnets;
     mutable NetworkAdapter* iCurrent;
     TIpAddress iDefaultSubnet;
-    Map iListenersCurrentInternal;
-    Map iListenersCurrentExternal;
-    Map iListenersSubnetInternal;
-    Map iListenersSubnetExternal;
+    VectorListener iListenersCurrentInternal;
+    VectorListener iListenersCurrentExternal;
+    VectorListener iListenersSubnetInternal;
+    VectorListener iListenersSubnetExternal;
     MapNetworkAdapter iListenersAdded;
     MapNetworkAdapter iListenersRemoved;
     MapNetworkAdapter iListenersAdapterChanged;

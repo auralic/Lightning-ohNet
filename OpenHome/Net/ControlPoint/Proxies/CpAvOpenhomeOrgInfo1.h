@@ -18,18 +18,60 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgInfo1 : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgInfo1() {}
+    virtual void SyncCounters(TUint& aTrackCount, TUint& aDetailsCount, TUint& aMetatextCount) = 0;
+    virtual void BeginCounters(FunctorAsync& aFunctor) = 0;
+    virtual void EndCounters(IAsync& aAsync, TUint& aTrackCount, TUint& aDetailsCount, TUint& aMetatextCount) = 0;
+    virtual void SyncTrack(Brh& aUri, Brh& aMetadata) = 0;
+    virtual void BeginTrack(FunctorAsync& aFunctor) = 0;
+    virtual void EndTrack(IAsync& aAsync, Brh& aUri, Brh& aMetadata) = 0;
+    virtual void SyncDetails(TUint& aDuration, TUint& aBitRate, TUint& aBitDepth, TUint& aSampleRate, TBool& aLossless, Brh& aCodecName) = 0;
+    virtual void BeginDetails(FunctorAsync& aFunctor) = 0;
+    virtual void EndDetails(IAsync& aAsync, TUint& aDuration, TUint& aBitRate, TUint& aBitDepth, TUint& aSampleRate, TBool& aLossless, Brh& aCodecName) = 0;
+    virtual void SyncMetatext(Brh& aValue) = 0;
+    virtual void BeginMetatext(FunctorAsync& aFunctor) = 0;
+    virtual void EndMetatext(IAsync& aAsync, Brh& aValue) = 0;
+    virtual void SetPropertyTrackCountChanged(Functor& aTrackCountChanged) = 0;
+    virtual void PropertyTrackCount(TUint& aTrackCount) const = 0;
+    virtual void SetPropertyDetailsCountChanged(Functor& aDetailsCountChanged) = 0;
+    virtual void PropertyDetailsCount(TUint& aDetailsCount) const = 0;
+    virtual void SetPropertyMetatextCountChanged(Functor& aMetatextCountChanged) = 0;
+    virtual void PropertyMetatextCount(TUint& aMetatextCount) const = 0;
+    virtual void SetPropertyUriChanged(Functor& aUriChanged) = 0;
+    virtual void PropertyUri(Brhz& aUri) const = 0;
+    virtual void SetPropertyMetadataChanged(Functor& aMetadataChanged) = 0;
+    virtual void PropertyMetadata(Brhz& aMetadata) const = 0;
+    virtual void SetPropertyDurationChanged(Functor& aDurationChanged) = 0;
+    virtual void PropertyDuration(TUint& aDuration) const = 0;
+    virtual void SetPropertyBitRateChanged(Functor& aBitRateChanged) = 0;
+    virtual void PropertyBitRate(TUint& aBitRate) const = 0;
+    virtual void SetPropertyBitDepthChanged(Functor& aBitDepthChanged) = 0;
+    virtual void PropertyBitDepth(TUint& aBitDepth) const = 0;
+    virtual void SetPropertySampleRateChanged(Functor& aSampleRateChanged) = 0;
+    virtual void PropertySampleRate(TUint& aSampleRate) const = 0;
+    virtual void SetPropertyLosslessChanged(Functor& aLosslessChanged) = 0;
+    virtual void PropertyLossless(TBool& aLossless) const = 0;
+    virtual void SetPropertyCodecNameChanged(Functor& aCodecNameChanged) = 0;
+    virtual void PropertyCodecName(Brhz& aCodecName) const = 0;
+    virtual void SetPropertyMetatextChanged(Functor& aMetatextChanged) = 0;
+    virtual void PropertyMetatext(Brhz& aMetatext) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:Info:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgInfo1 : public CpProxy
+class CpProxyAvOpenhomeOrgInfo1 : public ICpProxyAvOpenhomeOrgInfo1
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -393,7 +435,40 @@ public:
      * @param[out] aMetatext
      */
     void PropertyMetatext(Brhz& aMetatext) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void TrackCountPropertyChanged();
     void DetailsCountPropertyChanged();
     void MetatextCountPropertyChanged();

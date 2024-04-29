@@ -18,18 +18,44 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgTestResamplerConfig1 : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgTestResamplerConfig1() {}
+    virtual void SyncSetResamplerConfig(const Brx& aResamplerConfig) = 0;
+    virtual void BeginSetResamplerConfig(const Brx& aResamplerConfig, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetResamplerConfig(IAsync& aAsync) = 0;
+    virtual void SyncGetResamplerConfig(Brh& aResamplerConfig) = 0;
+    virtual void BeginGetResamplerConfig(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetResamplerConfig(IAsync& aAsync, Brh& aResamplerConfig) = 0;
+    virtual void SyncSetPCMAutoDetect(TBool aPCMAutoDetect) = 0;
+    virtual void BeginSetPCMAutoDetect(TBool aPCMAutoDetect, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetPCMAutoDetect(IAsync& aAsync) = 0;
+    virtual void SyncGetPCMAutoDetect(TBool& aPCMAutoDetect) = 0;
+    virtual void BeginGetPCMAutoDetect(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetPCMAutoDetect(IAsync& aAsync, TBool& aPCMAutoDetect) = 0;
+    virtual void SyncSetDSDtoPCM(TBool aDSDtoPCM) = 0;
+    virtual void BeginSetDSDtoPCM(TBool aDSDtoPCM, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetDSDtoPCM(IAsync& aAsync) = 0;
+    virtual void SyncGetDSDtoPCM(TBool& aDSDtoPCM) = 0;
+    virtual void BeginGetDSDtoPCM(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDSDtoPCM(IAsync& aAsync, TBool& aDSDtoPCM) = 0;
+    virtual void SetPropertyCurrentActionChanged(Functor& aCurrentActionChanged) = 0;
+    virtual void PropertyCurrentAction(TUint& aCurrentAction) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:TestResamplerConfig:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgTestResamplerConfig1 : public CpProxy
+class CpProxyAvOpenhomeOrgTestResamplerConfig1 : public ICpProxyAvOpenhomeOrgTestResamplerConfig1
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -220,7 +246,40 @@ public:
      * @param[out] aCurrentAction
      */
     void PropertyCurrentAction(TUint& aCurrentAction) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void CurrentActionPropertyChanged();
 private:
     Action* iActionSetResamplerConfig;

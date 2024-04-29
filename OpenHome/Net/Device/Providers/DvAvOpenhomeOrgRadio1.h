@@ -40,6 +40,12 @@ public:
      */
     void GetPropertyUri(Brhz& aValue);
     /**
+     * Output the value of the Uri property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyUri has previously been called.
+     */
+    void WritePropertyUri(IWriter& aWriter);
+    /**
      * Set the value of the Metadata property
      *
      * Can only be called if EnablePropertyMetadata has previously been called.
@@ -54,6 +60,12 @@ public:
      */
     void GetPropertyMetadata(Brhz& aValue);
     /**
+     * Output the value of the Metadata property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyMetadata has previously been called.
+     */
+    void WritePropertyMetadata(IWriter& aWriter);
+    /**
      * Set the value of the TransportState property
      *
      * Can only be called if EnablePropertyTransportState has previously been called.
@@ -67,6 +79,12 @@ public:
      * Can only be called if EnablePropertyTransportState has previously been called.
      */
     void GetPropertyTransportState(Brhz& aValue);
+    /**
+     * Output the value of the TransportState property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyTransportState has previously been called.
+     */
+    void WritePropertyTransportState(IWriter& aWriter);
     /**
      * Set the value of the Id property
      *
@@ -96,6 +114,12 @@ public:
      */
     void GetPropertyIdArray(Brh& aValue);
     /**
+     * Output the value of the IdArray property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyIdArray has previously been called.
+     */
+    void WritePropertyIdArray(IWriter& aWriter);
+    /**
      * Set the value of the ChannelsMax property
      *
      * Can only be called if EnablePropertyChannelsMax has previously been called.
@@ -123,6 +147,12 @@ public:
      * Can only be called if EnablePropertyProtocolInfo has previously been called.
      */
     void GetPropertyProtocolInfo(Brhz& aValue);
+    /**
+     * Output the value of the ProtocolInfo property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyProtocolInfo has previously been called.
+     */
+    void WritePropertyProtocolInfo(IWriter& aWriter);
 protected:
     /**
      * Constructor

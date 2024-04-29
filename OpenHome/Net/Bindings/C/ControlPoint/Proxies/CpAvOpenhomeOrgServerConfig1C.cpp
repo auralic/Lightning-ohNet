@@ -23,6 +23,10 @@ public:
     ~CpProxyAvOpenhomeOrgServerConfig1C();
     //CpProxyAvOpenhomeOrgServerConfig1* Proxy() { return static_cast<CpProxyAvOpenhomeOrgServerConfig1*>(iProxy); }
 
+    void SyncSetPlayCD(TBool aPlayCD);
+    void BeginSetPlayCD(TBool aPlayCD, FunctorAsync& aFunctor);
+    void EndSetPlayCD(IAsync& aAsync);
+
     void SyncSetServerName(const Brx& aServerName);
     void BeginSetServerName(const Brx& aServerName, FunctorAsync& aFunctor);
     void EndSetServerName(IAsync& aAsync);
@@ -123,16 +127,20 @@ public:
     void BeginSetServerConfig(const Brx& aSetValue, FunctorAsync& aFunctor);
     void EndSetServerConfig(IAsync& aAsync);
 
+    void SetPropertyPlayCDChanged(Functor& aFunctor);
     void SetPropertyAliveChanged(Functor& aFunctor);
     void SetPropertySubscriptValueChanged(Functor& aFunctor);
 
+    void PropertyPlayCD(TBool& aPlayCD) const;
     void PropertyAlive(TBool& aAlive) const;
     void PropertySubscriptValue(Brhz& aSubscriptValue) const;
 private:
+    void PlayCDPropertyChanged();
     void AlivePropertyChanged();
     void SubscriptValuePropertyChanged();
 private:
     Mutex iLock;
+    Action* iActionSetPlayCD;
     Action* iActionSetServerName;
     Action* iActionGetServerVersion;
     Action* iActionGetProgressInfo;
@@ -158,11 +166,34 @@ private:
     Action* iActionGetCurrentScanFile;
     Action* iActionGetServerConfig;
     Action* iActionSetServerConfig;
+    PropertyBool* iPlayCD;
     PropertyBool* iAlive;
     PropertyString* iSubscriptValue;
+    Functor iPlayCDChanged;
     Functor iAliveChanged;
     Functor iSubscriptValueChanged;
 };
+
+
+class SyncSetPlayCDAvOpenhomeOrgServerConfig1C : public SyncProxyAction
+{
+public:
+    SyncSetPlayCDAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetPlayCDAvOpenhomeOrgServerConfig1C() {};
+private:
+    CpProxyAvOpenhomeOrgServerConfig1C& iService;
+};
+
+SyncSetPlayCDAvOpenhomeOrgServerConfig1C::SyncSetPlayCDAvOpenhomeOrgServerConfig1C(CpProxyAvOpenhomeOrgServerConfig1C& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetPlayCDAvOpenhomeOrgServerConfig1C::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetPlayCD(aAsync);
+}
 
 
 class SyncSetServerNameAvOpenhomeOrgServerConfig1C : public SyncProxyAction
@@ -739,6 +770,10 @@ CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC
 {
     OpenHome::Net::Parameter* param;
 
+    iActionSetPlayCD = new Action("SetPlayCD");
+    param = new OpenHome::Net::ParameterBool("PlayCD");
+    iActionSetPlayCD->AddInputParameter(param);
+
     iActionSetServerName = new Action("SetServerName");
     param = new OpenHome::Net::ParameterString("ServerName");
     iActionSetServerName->AddInputParameter(param);
@@ -848,6 +883,9 @@ CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC
     iActionSetServerConfig->AddInputParameter(param);
 
     Functor functor;
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1C::PlayCDPropertyChanged);
+    iPlayCD = new PropertyBool("PlayCD", functor);
+    AddProperty(iPlayCD);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1C::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
     AddProperty(iAlive);
@@ -859,6 +897,7 @@ CpProxyAvOpenhomeOrgServerConfig1C::CpProxyAvOpenhomeOrgServerConfig1C(CpDeviceC
 CpProxyAvOpenhomeOrgServerConfig1C::~CpProxyAvOpenhomeOrgServerConfig1C()
 {
     DestroyService();
+    delete iActionSetPlayCD;
     delete iActionSetServerName;
     delete iActionGetServerVersion;
     delete iActionGetProgressInfo;
@@ -884,6 +923,36 @@ CpProxyAvOpenhomeOrgServerConfig1C::~CpProxyAvOpenhomeOrgServerConfig1C()
     delete iActionGetCurrentScanFile;
     delete iActionGetServerConfig;
     delete iActionSetServerConfig;
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::SyncSetPlayCD(TBool aPlayCD)
+{
+    SyncSetPlayCDAvOpenhomeOrgServerConfig1C sync(*this);
+    BeginSetPlayCD(aPlayCD, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::BeginSetPlayCD(TBool aPlayCD, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = Service()->Invocation(*iActionSetPlayCD, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetPlayCD->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aPlayCD));
+    Invocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::EndSetPlayCD(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetPlayCD"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1C::SyncSetServerName(const Brx& aServerName)
@@ -1661,6 +1730,13 @@ void CpProxyAvOpenhomeOrgServerConfig1C::EndSetServerConfig(IAsync& aAsync)
     }
 }
 
+void CpProxyAvOpenhomeOrgServerConfig1C::SetPropertyPlayCDChanged(Functor& aFunctor)
+{
+    iLock.Wait();
+    iPlayCDChanged = aFunctor;
+    iLock.Signal();
+}
+
 void CpProxyAvOpenhomeOrgServerConfig1C::SetPropertyAliveChanged(Functor& aFunctor)
 {
     iLock.Wait();
@@ -1675,18 +1751,30 @@ void CpProxyAvOpenhomeOrgServerConfig1C::SetPropertySubscriptValueChanged(Functo
     iLock.Signal();
 }
 
+void CpProxyAvOpenhomeOrgServerConfig1C::PropertyPlayCD(TBool& aPlayCD) const
+{
+    AutoMutex a(GetPropertyReadLock());
+    CheckSubscribed();
+    aPlayCD = iPlayCD->Value();
+}
+
 void CpProxyAvOpenhomeOrgServerConfig1C::PropertyAlive(TBool& aAlive) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1C::PropertySubscriptValue(Brhz& aSubscriptValue) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aSubscriptValue.Set(iSubscriptValue->Value());
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1C::PlayCDPropertyChanged()
+{
+    ReportEvent(iPlayCDChanged);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1C::AlivePropertyChanged()
@@ -1709,6 +1797,44 @@ void STDCALL CpProxyAvOpenhomeOrgServerConfig1Destroy(THandle aHandle)
 {
     CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
     delete proxyC;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncSetPlayCD(THandle aHandle, uint32_t aPlayCD)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    int32_t err = 0;
+    try {
+        proxyC->SyncSetPlayCD((aPlayCD==0? false : true));
+    }
+    catch (ProxyError& ) {
+        err = -1;
+    }
+    return err;
+}
+
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1BeginSetPlayCD(THandle aHandle, uint32_t aPlayCD, OhNetCallbackAsync aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    FunctorAsync functor = MakeFunctorAsync(aPtr, (OhNetFunctorAsync)aCallback);
+    proxyC->BeginSetPlayCD((aPlayCD==0? false : true), functor);
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndSetPlayCD(THandle aHandle, OhNetHandleAsync aAsync)
+{
+    int32_t err = 0;
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    IAsync* async = reinterpret_cast<IAsync*>(aAsync);
+    ASSERT(async != NULL);
+    try {
+        proxyC->EndSetPlayCD(*async);
+    }
+    catch(...) {
+        err = -1;
+    }
+    return err;
 }
 
 int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1SyncSetServerName(THandle aHandle, const char* aServerName)
@@ -2803,6 +2929,14 @@ int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1EndSetServerConfig(THandle aHan
     return err;
 }
 
+void STDCALL CpProxyAvOpenhomeOrgServerConfig1SetPropertyPlayCDChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    Functor functor = MakeFunctor(aPtr, aCallback);
+    proxyC->SetPropertyPlayCDChanged(functor);
+}
+
 void STDCALL CpProxyAvOpenhomeOrgServerConfig1SetPropertyAliveChanged(THandle aHandle, OhNetCallback aCallback, void* aPtr)
 {
     CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
@@ -2819,21 +2953,48 @@ void STDCALL CpProxyAvOpenhomeOrgServerConfig1SetPropertySubscriptValueChanged(T
     proxyC->SetPropertySubscriptValueChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertyPlayCD(THandle aHandle, uint32_t* aPlayCD)
+{
+    CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
+    ASSERT(proxyC != NULL);
+    TBool PlayCD;
+    try {
+        proxyC->PropertyPlayCD(PlayCD);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    *aPlayCD = PlayCD? 1 : 0;
+    return 0;
+}
+
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
 {
     CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Alive;
-    proxyC->PropertyAlive(Alive);
+    try {
+        proxyC->PropertyAlive(Alive);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aAlive = Alive? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertySubscriptValue(THandle aHandle, char** aSubscriptValue)
+int32_t STDCALL CpProxyAvOpenhomeOrgServerConfig1PropertySubscriptValue(THandle aHandle, char** aSubscriptValue)
 {
     CpProxyAvOpenhomeOrgServerConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgServerConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aSubscriptValue;
-    proxyC->PropertySubscriptValue(buf_aSubscriptValue);
+    try {
+        proxyC->PropertySubscriptValue(buf_aSubscriptValue);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aSubscriptValue = buf_aSubscriptValue.Transfer();
+    return 0;
 }
 

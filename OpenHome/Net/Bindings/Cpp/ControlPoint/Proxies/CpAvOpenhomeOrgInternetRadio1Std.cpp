@@ -125,7 +125,7 @@ void SyncTransportStateAvOpenhomeOrgInternetRadio1Cpp::CompleteRequest(IAsync& a
 
 
 CpProxyAvOpenhomeOrgInternetRadio1Cpp::CpProxyAvOpenhomeOrgInternetRadio1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "InternetRadio", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "InternetRadio", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
     TChar** allowedValues;
@@ -189,8 +189,8 @@ void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SyncPlay()
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::BeginPlay(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionPlay, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionPlay, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::EndPlay(IAsync& aAsync)
@@ -216,8 +216,8 @@ void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SyncStop()
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::BeginStop(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionStop, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionStop, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::EndStop(IAsync& aAsync)
@@ -243,7 +243,7 @@ void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SyncSetSender(const std::string& aUr
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::BeginSetSender(const std::string& aUri, const std::string& aMetadata, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetSender, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetSender, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetSender->InputParameters();
     {
@@ -254,7 +254,7 @@ void CpProxyAvOpenhomeOrgInternetRadio1Cpp::BeginSetSender(const std::string& aU
         Brn buf((const TByte*)aMetadata.c_str(), (TUint)aMetadata.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::EndSetSender(IAsync& aAsync)
@@ -280,12 +280,12 @@ void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SyncSender(std::string& aUri, std::s
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::BeginSender(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSender, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSender, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionSender->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::EndSender(IAsync& aAsync, std::string& aUri, std::string& aMetadata)
@@ -320,11 +320,11 @@ void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SyncTransportState(std::string& aVal
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::BeginTransportState(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionTransportState, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionTransportState, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionTransportState->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::EndTransportState(IAsync& aAsync, std::string& aValue)
@@ -348,45 +348,51 @@ void CpProxyAvOpenhomeOrgInternetRadio1Cpp::EndTransportState(IAsync& aAsync, st
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SetPropertyUriChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iUriChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SetPropertyMetadataChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iMetadataChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SetPropertyTransportStateChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iTransportStateChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::PropertyUri(std::string& aUri) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iUri->Value();
     aUri.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::PropertyMetadata(std::string& aMetadata) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iMetadata->Value();
     aMetadata.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::PropertyTransportState(std::string& aTransportState) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iTransportState->Value();
     aTransportState.assign((const char*)val.Ptr(), val.Bytes());
 }
@@ -404,5 +410,44 @@ void CpProxyAvOpenhomeOrgInternetRadio1Cpp::MetadataPropertyChanged()
 void CpProxyAvOpenhomeOrgInternetRadio1Cpp::TransportStatePropertyChanged()
 {
     ReportEvent(iTransportStateChanged);
+}
+
+void CpProxyAvOpenhomeOrgInternetRadio1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgInternetRadio1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgInternetRadio1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgInternetRadio1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgInternetRadio1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgInternetRadio1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgInternetRadio1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

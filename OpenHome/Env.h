@@ -8,6 +8,7 @@
 #define HEADER_STACK
 
 #include <OpenHome/Types.h>
+#include <OpenHome/Buffer.h>
 
 #include <vector>
 #include <map>
@@ -17,9 +18,14 @@ class FunctorMsg;
 class TimerManager;
 class Mutex;
 class NetworkAdapterList;
+class ThreadPriorityArbitrator;
 class Log;
 class MListener;
 class IStackObject;
+class Shell;
+class IInfoAggregator;
+class ShellCommandDebug;
+class IWriter;
 
 class IStack
 {
@@ -44,6 +50,7 @@ namespace Net {
     class CpStack;
     class DvStack;
     class SsdpListenerMulticast;
+    class IMdnsProvider;
 } // namespace Net
 
 class Environment
@@ -65,6 +72,10 @@ public:
     OsContext* OsCtx();
     Log& Logger();
     OpenHome::NetworkAdapterList& NetworkAdapterList();
+    ThreadPriorityArbitrator& PriorityArbitrator();
+    OpenHome::Shell* Shell();
+    IInfoAggregator* InfoAggregator();
+    OpenHome::ShellCommandDebug* ShellCommandDebug();
     Net::SsdpListenerMulticast& MulticastListenerClaim(TIpAddress aInterface);
     void MulticastListenerRelease(TIpAddress aInterface);
     void AddSuspendObserver(ISuspendObserver& aObserver);
@@ -78,16 +89,22 @@ public:
     TUint Random(TUint aMaxValue, TUint aMinValue = 0);
     void SetRandomSeed(TUint aSeed);
     Net::InitialisationParams* InitParams();
+    void SetHttpUserAgent(const Brx& aUserAgent);
+    TBool HasHttpUserAgent() const;
+    void WriteHttpUserAgent(IWriter& aWriter);
     void AddObject(IStackObject* aObject);
     void RemoveObject(IStackObject* aObject);
     void ListObjects();
     IStack* CpiStack();
     IStack* DviStack();
+    void CreateMdnsProvider();
+    Net::IMdnsProvider* MdnsProvider();
     void SetInitParams(Net::InitialisationParams* aInitParams);
 private:
     Environment(FunctorMsg& aLogOutput);
     Environment(Net::InitialisationParams* aInitParams);
     void Construct(FunctorMsg& aLogOutput);
+    void CreateShell();
     void SetCpStack(IStack* aStack);
     void SetDvStack(IStack* aStack);
 private:
@@ -97,6 +114,10 @@ private:
     OpenHome::TimerManager* iTimerManager;
     OpenHome::Mutex* iPublicLock;
     OpenHome::NetworkAdapterList* iNetworkAdapterList;
+    ThreadPriorityArbitrator* iThreadPriorityArbitrator;
+    OpenHome::Shell* iShell;
+    IInfoAggregator* iInfoAggregator;
+    OpenHome::ShellCommandDebug* iShellCommandDebug;
     std::vector<MListener*> iMulticastListeners;
     std::vector<ISuspendObserver*> iSuspendObservers;
     std::vector<IResumeObserver*> iResumeObservers;
@@ -107,6 +128,8 @@ private:
     typedef std::map<IStackObject*,IStackObject*> ObjectMap;
     ObjectMap iObjectMap;
     OpenHome::Mutex* iPrivateLock;
+    Bws<128> iHttpUserAgent;
+    Net::IMdnsProvider* iMdns;
 };
 
 } // namespace OpenHome

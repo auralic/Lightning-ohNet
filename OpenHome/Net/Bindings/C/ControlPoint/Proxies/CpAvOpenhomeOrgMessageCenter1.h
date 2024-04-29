@@ -50,7 +50,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgMessageCenter1Destroy(THandle aHandle
  * @param[out] aMessage
  * @param[out] aMessageID
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgMessageCenter1SyncGetMessage(THandle aHandle, char** aMessage, uint32_t* aMessageID);
@@ -110,8 +110,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgMessageCenter1SetPropertyMessageIDCha
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgMessageCenter1Create
  * @param[out] aMessage
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgMessageCenter1PropertyMessage(THandle aHandle, char** aMessage);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgMessageCenter1PropertyMessage(THandle aHandle, char** aMessage);
 /**
  * Query the value of the MessageID property.
  *
@@ -120,8 +122,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgMessageCenter1PropertyMessage(THandle
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgMessageCenter1Create
  * @param[out] aMessageID
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgMessageCenter1PropertyMessageID(THandle aHandle, uint32_t* aMessageID);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgMessageCenter1PropertyMessageID(THandle aHandle, uint32_t* aMessageID);
 
 /* @} */
 

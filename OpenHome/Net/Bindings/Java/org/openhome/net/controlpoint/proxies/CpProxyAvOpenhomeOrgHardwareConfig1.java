@@ -10,6 +10,15 @@ import org.openhome.net.core.*;
     
 interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
 {
+    public String syncLogIn(String aServiceName, String aMessageIn);
+    public void beginLogIn(String aServiceName, String aMessageIn, ICpProxyListener aCallback);
+    public String endLogIn(long aAsyncHandle);
+    public void syncLogOut(String aServiceName);
+    public void beginLogOut(String aServiceName, ICpProxyListener aCallback);
+    public void endLogOut(long aAsyncHandle);
+    public void syncCancelLogIn(String aServiceName);
+    public void beginCancelLogIn(String aServiceName, ICpProxyListener aCallback);
+    public void endCancelLogIn(long aAsyncHandle);
     public boolean syncIsAlive();
     public void beginIsAlive(ICpProxyListener aCallback);
     public boolean endIsAlive(long aAsyncHandle);
@@ -139,6 +148,20 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public void syncSetDACBalance(long aBalance);
     public void beginSetDACBalance(long aBalance, ICpProxyListener aCallback);
     public void endSetDACBalance(long aAsyncHandle);
+    public void syncSetEnableResampler(boolean aEnableResampler);
+    public void beginSetEnableResampler(boolean aEnableResampler, ICpProxyListener aCallback);
+    public void endSetEnableResampler(long aAsyncHandle);
+    public void syncSetEnableSpeaker(boolean aEnableSpeaker);
+    public void beginSetEnableSpeaker(boolean aEnableSpeaker, ICpProxyListener aCallback);
+    public void endSetEnableSpeaker(long aAsyncHandle);
+    public void syncSetEnableEqualizer(boolean aEnableEqualizer);
+    public void beginSetEnableEqualizer(boolean aEnableEqualizer, ICpProxyListener aCallback);
+    public void endSetEnableEqualizer(long aAsyncHandle);
+    public void syncSetEnableDirac(boolean aEnableDirac);
+    public void beginSetEnableDirac(boolean aEnableDirac, ICpProxyListener aCallback);
+    public void endSetEnableDirac(long aAsyncHandle);
+    public void setPropertyMessageOutChanged(IPropertyChangeListener aMessageOutChanged);
+    public String getPropertyMessageOut();
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
     public void setPropertyCurrentActionChanged(IPropertyChangeListener aCurrentActionChanged);
@@ -185,6 +208,57 @@ interface ICpProxyAvOpenhomeOrgHardwareConfig1 extends ICpProxy
     public String getPropertyTime();
     public void setPropertyVolumeControlChanged(IPropertyChangeListener aVolumeControlChanged);
     public boolean getPropertyVolumeControl();
+}
+
+class SyncLogInAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+    private String iMessageOut;
+
+    public SyncLogInAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    public String getMessageOut()
+    {
+        return iMessageOut;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        String result = iService.endLogIn(aAsyncHandle);
+        
+        iMessageOut = result;
+    }
+}
+
+class SyncLogOutAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncLogOutAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endLogOut(aAsyncHandle);
+        
+    }
+}
+
+class SyncCancelLogInAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncCancelLogInAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endCancelLogIn(aAsyncHandle);
+        
+    }
 }
 
 class SyncIsAliveAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
@@ -1078,6 +1152,66 @@ class SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
     }
 }
 
+class SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetEnableResampler(aAsyncHandle);
+        
+    }
+}
+
+class SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetEnableSpeaker(aAsyncHandle);
+        
+    }
+}
+
+class SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetEnableEqualizer(aAsyncHandle);
+        
+    }
+}
+
+class SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgHardwareConfig1 iService;
+
+    public SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetEnableDirac(aAsyncHandle);
+        
+    }
+}
+
 /**
  * Proxy for the av.openhome.org:HardwareConfig:1 UPnP service
  */
@@ -1409,6 +1543,9 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         }
     }
 
+    private Action iActionLogIn;
+    private Action iActionLogOut;
+    private Action iActionCancelLogIn;
     private Action iActionIsAlive;
     private Action iActionUpdate;
     private Action iActionActive;
@@ -1452,6 +1589,11 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private Action iActionSetDACPhase;
     private Action iActionGetDACBalance;
     private Action iActionSetDACBalance;
+    private Action iActionSetEnableResampler;
+    private Action iActionSetEnableSpeaker;
+    private Action iActionSetEnableEqualizer;
+    private Action iActionSetEnableDirac;
+    private PropertyString iMessageOut;
     private PropertyBool iAlive;
     private PropertyUint iCurrentAction;
     private PropertyBool iRestart;
@@ -1475,6 +1617,7 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     private PropertyString iActiveStatus;
     private PropertyString iTime;
     private PropertyBool iVolumeControl;
+    private IPropertyChangeListener iMessageOutChanged;
     private IPropertyChangeListener iAliveChanged;
     private IPropertyChangeListener iCurrentActionChanged;
     private IPropertyChangeListener iRestartChanged;
@@ -1512,6 +1655,22 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         super("av-openhome-org", "HardwareConfig", 1, aDevice);
         Parameter param;
         List<String> allowedValues = new LinkedList<String>();
+
+        iActionLogIn = new Action("LogIn");
+        param = new ParameterString("ServiceName", allowedValues);
+        iActionLogIn.addInputParameter(param);
+        param = new ParameterString("MessageIn", allowedValues);
+        iActionLogIn.addInputParameter(param);
+        param = new ParameterString("MessageOut", allowedValues);
+        iActionLogIn.addOutputParameter(param);
+
+        iActionLogOut = new Action("LogOut");
+        param = new ParameterString("ServiceName", allowedValues);
+        iActionLogOut.addInputParameter(param);
+
+        iActionCancelLogIn = new Action("CancelLogIn");
+        param = new ParameterString("ServiceName", allowedValues);
+        iActionCancelLogIn.addInputParameter(param);
 
         iActionIsAlive = new Action("IsAlive");
         param = new ParameterBool("Alive");
@@ -1747,6 +1906,31 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         param = new ParameterUint("Balance");
         iActionSetDACBalance.addInputParameter(param);
 
+        iActionSetEnableResampler = new Action("SetEnableResampler");
+        param = new ParameterBool("EnableResampler");
+        iActionSetEnableResampler.addInputParameter(param);
+
+        iActionSetEnableSpeaker = new Action("SetEnableSpeaker");
+        param = new ParameterBool("EnableSpeaker");
+        iActionSetEnableSpeaker.addInputParameter(param);
+
+        iActionSetEnableEqualizer = new Action("SetEnableEqualizer");
+        param = new ParameterBool("EnableEqualizer");
+        iActionSetEnableEqualizer.addInputParameter(param);
+
+        iActionSetEnableDirac = new Action("SetEnableDirac");
+        param = new ParameterBool("EnableDirac");
+        iActionSetEnableDirac.addInputParameter(param);
+
+        iMessageOutChanged = new PropertyChangeListener();
+        iMessageOut = new PropertyString("MessageOut",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    messageOutPropertyChanged();
+                }
+            }
+        );
+        addProperty(iMessageOut);
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
             new PropertyChangeListener() {
@@ -1956,6 +2140,162 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
         addProperty(iVolumeControl);
         iPropertyLock = new Object();
     }
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     *
+     * @return the result of the invoked action.
+     */
+    public String syncLogIn(String aServiceName, String aMessageIn)
+    {
+        SyncLogInAvOpenhomeOrgHardwareConfig1 sync = new SyncLogInAvOpenhomeOrgHardwareConfig1(this);
+        beginLogIn(aServiceName, aMessageIn, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+
+        return sync.getMessageOut();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endLogIn}.
+     * 
+     * @param aServiceName
+     * @param aMessageIn
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginLogIn(String aServiceName, String aMessageIn, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionLogIn, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionLogIn.getInputParameter(inIndex++), aServiceName));
+        invocation.addInput(new ArgumentString((ParameterString)iActionLogIn.getInputParameter(inIndex++), aMessageIn));
+        int outIndex = 0;
+        invocation.addOutput(new ArgumentString((ParameterString)iActionLogIn.getOutputParameter(outIndex++)));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginLogIn} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginLogIn} method.
+     * @return the result of the previously invoked action.
+     */
+    public String endLogIn(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+        int index = 0;
+        String messageOut = Invocation.getOutputString(aAsyncHandle, index++);
+        return messageOut;
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncLogOut(String aServiceName)
+    {
+        SyncLogOutAvOpenhomeOrgHardwareConfig1 sync = new SyncLogOutAvOpenhomeOrgHardwareConfig1(this);
+        beginLogOut(aServiceName, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endLogOut}.
+     * 
+     * @param aServiceName
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginLogOut(String aServiceName, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionLogOut, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionLogOut.getInputParameter(inIndex++), aServiceName));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginLogOut} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginLogOut} method.
+     */
+    public void endLogOut(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncCancelLogIn(String aServiceName)
+    {
+        SyncCancelLogInAvOpenhomeOrgHardwareConfig1 sync = new SyncCancelLogInAvOpenhomeOrgHardwareConfig1(this);
+        beginCancelLogIn(aServiceName, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endCancelLogIn}.
+     * 
+     * @param aServiceName
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginCancelLogIn(String aServiceName, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionCancelLogIn, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentString((ParameterString)iActionCancelLogIn.getInputParameter(inIndex++), aServiceName));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginCancelLogIn} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginCancelLogIn} method.
+     */
+    public void endCancelLogIn(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
     /**
      * Invoke the action synchronously.
      * Blocks until the action has been processed on the device and sets any
@@ -4322,6 +4662,221 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     }
         
     /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetEnableResampler(boolean aEnableResampler)
+    {
+        SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1 sync = new SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1(this);
+        beginSetEnableResampler(aEnableResampler, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetEnableResampler}.
+     * 
+     * @param aEnableResampler
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetEnableResampler(boolean aEnableResampler, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetEnableResampler, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionSetEnableResampler.getInputParameter(inIndex++), aEnableResampler));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetEnableResampler} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetEnableResampler} method.
+     */
+    public void endSetEnableResampler(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetEnableSpeaker(boolean aEnableSpeaker)
+    {
+        SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1 sync = new SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1(this);
+        beginSetEnableSpeaker(aEnableSpeaker, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetEnableSpeaker}.
+     * 
+     * @param aEnableSpeaker
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetEnableSpeaker(boolean aEnableSpeaker, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetEnableSpeaker, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionSetEnableSpeaker.getInputParameter(inIndex++), aEnableSpeaker));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetEnableSpeaker} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetEnableSpeaker} method.
+     */
+    public void endSetEnableSpeaker(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetEnableEqualizer(boolean aEnableEqualizer)
+    {
+        SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1 sync = new SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1(this);
+        beginSetEnableEqualizer(aEnableEqualizer, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetEnableEqualizer}.
+     * 
+     * @param aEnableEqualizer
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetEnableEqualizer(boolean aEnableEqualizer, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetEnableEqualizer, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionSetEnableEqualizer.getInputParameter(inIndex++), aEnableEqualizer));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetEnableEqualizer} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetEnableEqualizer} method.
+     */
+    public void endSetEnableEqualizer(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetEnableDirac(boolean aEnableDirac)
+    {
+        SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1 sync = new SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1(this);
+        beginSetEnableDirac(aEnableDirac, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetEnableDirac}.
+     * 
+     * @param aEnableDirac
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetEnableDirac(boolean aEnableDirac, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetEnableDirac, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionSetEnableDirac.getInputParameter(inIndex++), aEnableDirac));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetEnableDirac} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetEnableDirac} method.
+     */
+    public void endSetEnableDirac(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
+    /**
+     * Set a delegate to be run when the MessageOut state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
+     *
+     * @param aMessageOutChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyMessageOutChanged(IPropertyChangeListener aMessageOutChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iMessageOutChanged = aMessageOutChanged;
+        }
+    }
+
+    private void messageOutPropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iMessageOutChanged);
+        }
+    }
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
@@ -4852,6 +5407,22 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
     }
 
     /**
+     * Query the value of the MessageOut property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the MessageOut property.
+     */
+    public String getPropertyMessageOut()
+    {
+        propertyReadLock();
+        String val = iMessageOut.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
      * Query the value of the Alive property.
      * This function is thread-safe and can only be called if {@link 
      * #subscribe} has been called and a first eventing callback received
@@ -5234,6 +5805,9 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             }
             disposeProxy();
             iHandle = 0;
+            iActionLogIn.destroy();
+            iActionLogOut.destroy();
+            iActionCancelLogIn.destroy();
             iActionIsAlive.destroy();
             iActionUpdate.destroy();
             iActionActive.destroy();
@@ -5277,6 +5851,11 @@ public class CpProxyAvOpenhomeOrgHardwareConfig1 extends CpProxy implements ICpP
             iActionSetDACPhase.destroy();
             iActionGetDACBalance.destroy();
             iActionSetDACBalance.destroy();
+            iActionSetEnableResampler.destroy();
+            iActionSetEnableSpeaker.destroy();
+            iActionSetEnableEqualizer.destroy();
+            iActionSetEnableDirac.destroy();
+            iMessageOut.destroy();
             iAlive.destroy();
             iCurrentAction.destroy();
             iRestart.destroy();

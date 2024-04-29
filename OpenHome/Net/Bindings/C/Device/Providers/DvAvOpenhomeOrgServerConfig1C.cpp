@@ -18,12 +18,16 @@ class DvProviderAvOpenhomeOrgServerConfig1C : public DvProvider
 {
 public:
     DvProviderAvOpenhomeOrgServerConfig1C(DvDeviceC aDevice);
+    TBool SetPropertyPlayCD(TBool aValue);
+    void GetPropertyPlayCD(TBool& aValue);
     TBool SetPropertyAlive(TBool aValue);
     void GetPropertyAlive(TBool& aValue);
     TBool SetPropertySubscriptValue(const Brx& aValue);
     void GetPropertySubscriptValue(Brhz& aValue);
+    void EnablePropertyPlayCD();
     void EnablePropertyAlive();
     void EnablePropertySubscriptValue();
+    void EnableActionSetPlayCD(CallbackServerConfig1SetPlayCD aCallback, void* aPtr);
     void EnableActionSetServerName(CallbackServerConfig1SetServerName aCallback, void* aPtr);
     void EnableActionGetServerVersion(CallbackServerConfig1GetServerVersion aCallback, void* aPtr);
     void EnableActionGetProgressInfo(CallbackServerConfig1GetProgressInfo aCallback, void* aPtr);
@@ -50,6 +54,7 @@ public:
     void EnableActionGetServerConfig(CallbackServerConfig1GetServerConfig aCallback, void* aPtr);
     void EnableActionSetServerConfig(CallbackServerConfig1SetServerConfig aCallback, void* aPtr);
 private:
+    void DoSetPlayCD(IDviInvocation& aInvocation);
     void DoSetServerName(IDviInvocation& aInvocation);
     void DoGetServerVersion(IDviInvocation& aInvocation);
     void DoGetProgressInfo(IDviInvocation& aInvocation);
@@ -76,6 +81,8 @@ private:
     void DoGetServerConfig(IDviInvocation& aInvocation);
     void DoSetServerConfig(IDviInvocation& aInvocation);
 private:
+    CallbackServerConfig1SetPlayCD iCallbackSetPlayCD;
+    void* iPtrSetPlayCD;
     CallbackServerConfig1SetServerName iCallbackSetServerName;
     void* iPtrSetServerName;
     CallbackServerConfig1GetServerVersion iCallbackGetServerVersion;
@@ -126,6 +133,7 @@ private:
     void* iPtrGetServerConfig;
     CallbackServerConfig1SetServerConfig iCallbackSetServerConfig;
     void* iPtrSetServerConfig;
+    PropertyBool* iPropertyPlayCD;
     PropertyBool* iPropertyAlive;
     PropertyString* iPropertySubscriptValue;
 };
@@ -133,8 +141,21 @@ private:
 DvProviderAvOpenhomeOrgServerConfig1C::DvProviderAvOpenhomeOrgServerConfig1C(DvDeviceC aDevice)
     : DvProvider(DviDeviceC::DeviceFromHandle(aDevice)->Device(), "av.openhome.org", "ServerConfig", 1)
 {
+    iPropertyPlayCD = NULL;
     iPropertyAlive = NULL;
     iPropertySubscriptValue = NULL;
+}
+
+TBool DvProviderAvOpenhomeOrgServerConfig1C::SetPropertyPlayCD(TBool aValue)
+{
+    ASSERT(iPropertyPlayCD != NULL);
+    return SetPropertyBool(*iPropertyPlayCD, aValue);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::GetPropertyPlayCD(TBool& aValue)
+{
+    ASSERT(iPropertyPlayCD != NULL);
+    aValue = iPropertyPlayCD->Value();
 }
 
 TBool DvProviderAvOpenhomeOrgServerConfig1C::SetPropertyAlive(TBool aValue)
@@ -161,6 +182,12 @@ void DvProviderAvOpenhomeOrgServerConfig1C::GetPropertySubscriptValue(Brhz& aVal
     aValue.Set(iPropertySubscriptValue->Value());
 }
 
+void DvProviderAvOpenhomeOrgServerConfig1C::EnablePropertyPlayCD()
+{
+    iPropertyPlayCD = new PropertyBool(new ParameterBool("PlayCD"));
+    iService->AddProperty(iPropertyPlayCD); // passes ownership
+}
+
 void DvProviderAvOpenhomeOrgServerConfig1C::EnablePropertyAlive()
 {
     iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
@@ -171,6 +198,16 @@ void DvProviderAvOpenhomeOrgServerConfig1C::EnablePropertySubscriptValue()
 {
     iPropertySubscriptValue = new PropertyString(new ParameterString("SubscriptValue"));
     iService->AddProperty(iPropertySubscriptValue); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionSetPlayCD(CallbackServerConfig1SetPlayCD aCallback, void* aPtr)
+{
+    iCallbackSetPlayCD = aCallback;
+    iPtrSetPlayCD = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetPlayCD");
+    action->AddInputParameter(new ParameterRelated("PlayCD", *iPropertyPlayCD));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoSetPlayCD);
+    iService->AddAction(action, functor);
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionSetServerName(CallbackServerConfig1SetServerName aCallback, void* aPtr)
@@ -425,6 +462,25 @@ void DvProviderAvOpenhomeOrgServerConfig1C::EnableActionSetServerConfig(Callback
     action->AddInputParameter(new ParameterString("SetValue"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgServerConfig1C::DoSetServerConfig);
     iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgServerConfig1C::DoSetPlayCD(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TBool PlayCD = aInvocation.InvocationReadBool("PlayCD");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetPlayCD != NULL);
+    if (0 != iCallbackSetPlayCD(iPtrSetPlayCD, invocationC, invocationCPtr, PlayCD)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
 }
 
 void DvProviderAvOpenhomeOrgServerConfig1C::DoSetServerName(IDviInvocation& aInvocation)
@@ -1023,6 +1079,11 @@ void STDCALL DvProviderAvOpenhomeOrgServerConfig1Destroy(THandle aProvider)
     delete reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider);
 }
 
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionSetPlayCD(THandle aProvider, CallbackServerConfig1SetPlayCD aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionSetPlayCD(aCallback, aPtr);
+}
+
 void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionSetServerName(THandle aProvider, CallbackServerConfig1SetServerName aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionSetServerName(aCallback, aPtr);
@@ -1148,6 +1209,19 @@ void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnableActionSetServerConfig(THa
     reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnableActionSetServerConfig(aCallback, aPtr);
 }
 
+int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertyPlayCD(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
+{
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->SetPropertyPlayCD((aValue!=0))? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1GetPropertyPlayCD(THandle aProvider, uint32_t* aValue)
+{
+    TBool val;
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->GetPropertyPlayCD(val);
+    *aValue = (val? 1 : 0);
+}
+
 int32_t STDCALL DvProviderAvOpenhomeOrgServerConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
 {
     *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->SetPropertyAlive((aValue!=0))? 1 : 0);
@@ -1173,6 +1247,11 @@ void STDCALL DvProviderAvOpenhomeOrgServerConfig1GetPropertySubscriptValue(THand
     Brhz buf;
     reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->GetPropertySubscriptValue(buf);
     *aValue = (char*)buf.Transfer();
+}
+
+void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnablePropertyPlayCD(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgServerConfig1C*>(aProvider)->EnablePropertyPlayCD();
 }
 
 void STDCALL DvProviderAvOpenhomeOrgServerConfig1EnablePropertyAlive(THandle aProvider)

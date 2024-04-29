@@ -142,6 +142,11 @@ DllExport void STDCALL OhNetLibraryNotifyResumed(void);
  */
 DllExport void STDCALL OhNetLibraryRenewSubscriptions(void);
 
+/**
+ * Override the HTTP user agent set in initialisation params
+ */
+DllExport void STDCALL OhNetLibrarySetHttpUserAgent(const char* aUserAgent);
+
 /* @} */
 /**
  * @addtogroup InitParams
@@ -470,14 +475,40 @@ DllExport void STDCALL OhNetInitParamsSetDvWebSocketPort(OhNetHandleInitParams a
 
 /**
  * Enable use of Bonjour.
+ *
  * All DvDevice instances with a resource manager will be published using Bonjour.
  * If a device sets the "Upnp.MdnsHostName" attribute, its presentation will be available via http://[hostname].local.
  * Behaviour when more than one DvDevice sets the "MdnsHostName" attribute is undefined.
  * Note that enabling Bonjour will cause the device stack to run a http server on port 80, requiring root privileges on linux.
  *
  * @param[in] aParams          Initialisation params
+ * @param[in] aHostName        mDNS host name
  */
-DllExport void STDCALL OhNetInitParamsSetDvEnableBonjour(OhNetHandleInitParams aParams);
+DllExport void STDCALL OhNetInitParamsSetDvEnableBonjour(OhNetHandleInitParams aParams, const char* aHostName, uint8_t aRequiresMdnsCache);
+
+/**
+ * Disable control point stack inferring device removal.
+ *
+ * UPnP relies on devices sending regular UDP multicast messages confirming their continued availability.
+ * It is reasonably easy to lose these messages on misconfigured networks.  This option allows an
+ * application to disable inferred device removal altogether.  This risks device lists showing too many
+ * devices but can sometime reduce customer support effort.
+ *
+ * @param[in] aParams          Initialisation params
+ * @param[in] aLowQuality      0 => good quality networking (default); 1 => unreliable multicast reception
+ */
+DllExport void STDCALL OhNetInitParamsSetHostUdpIsLowQuality(OhNetHandleInitParams aParams, int32_t aLowQuality);
+
+/**
+* Set HTTP user agent string.
+*
+* This will be reported by any HTTP clients run by ohNet.
+* It may also be used by some ohNet clients.
+*
+* @param[in] aParams          Initialisation params
+* @param[in] aUserAgent       User agent
+*/
+DllExport void STDCALL OhNetInitParamsSetHttpUserAgent(OhNetHandleInitParams aParams, const char* aUserAgent);
 
 /**
  * Query the tcp connection timeout
@@ -641,6 +672,15 @@ DllExport uint32_t STDCALL OhNetInitParamsDvWebSocketPort(OhNetHandleInitParams 
  * @return  1 if Bonjour is enabled; 0 otherwise
  */
 DllExport uint32_t STDCALL OhNetInitParamsDvIsBonjourEnabled(OhNetHandleInitParams aParams);
+
+/**
+* Query state of HostUdpIsLowQuality (so whether device lists will infer device removal)
+*
+* @param[in] aParams          Initialisation params
+*
+* @return  1 if low quality mode is enabled; 0 otherwise
+*/
+DllExport uint32_t STDCALL OhNetInitParamsIsHostUdpLowQuality(OhNetHandleInitParams aParams);
 
 /* @} */
 
@@ -810,6 +850,14 @@ DllExport void STDCALL OhNetSetCurrentSubnet(uint32_t aSubnet);
  */
 DllExport OhNetHandleNetworkAdapter STDCALL OhNetCurrentSubnetAdapter(const char* aCookie);
 
+/**
+* Force a refresh of the library's list of available network adapters
+*
+* This should only be required on platforms that are not capable of
+* automatically detecting adapter changes.
+*/
+DllExport void STDCALL OhNetRefreshNetworkAdapterList();
+
 /* @} */
 
 /**
@@ -849,7 +897,16 @@ DllExport void STDCALL OhNetFreeExternal(void* aPtr);
  *
  * @param[in] aLevel           Bit(s) specifying debug level.  See OpenHome/Private/Debug.h.
  */
-DllExport void STDCALL OhNetDebugSetLevel(uint32_t aLevel);
+DllExport void STDCALL OhNetDebugSetLevel(uint64_t aLevel);
+
+/**
+ * Enable debug logging.
+ *
+ * Log messages will be passed to the callback registered in OhNetInitParamsSetLogOutput.
+ *
+ * @param[in] aSeverity        Integer specifying debug severity.  See OpenHome/Private/Debug.h.
+ */
+DllExport void STDCALL OhNetDebugSetSeverity(uint32_t aSeverity);
 
 /**
  * Terminate the ohNet process after a fatal error. On some platforms, this call

@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgMessageCenter1::GetPropertyMessage(Brhz& aValue)
     aValue.Set(iPropertyMessage->Value());
 }
 
+void DvProviderAvOpenhomeOrgMessageCenter1::WritePropertyMessage(IWriter& aWriter)
+{
+    iPropertyMessage->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgMessageCenter1::SetPropertyMessageID(TUint aValue)
 {
     ASSERT(iPropertyMessageID != NULL);

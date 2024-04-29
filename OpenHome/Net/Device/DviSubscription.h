@@ -10,6 +10,7 @@
 #include <OpenHome/Private/Thread.h>
 #include <OpenHome/Private/Fifo.h>
 #include <OpenHome/Net/Core/OhNet.h>
+#include <OpenHome/Private/InfoProvider.h>
 
 #include <vector>
 #include <map>
@@ -32,11 +33,13 @@ class IPropertyWriterFactory
 {
 public:
     virtual ~IPropertyWriterFactory() {}
-    virtual IPropertyWriter* CreateWriter(const IDviSubscriptionUserData* aUserData, 
-                                          const Brx& aSid, TUint aSequenceNumber) = 0;
+    virtual IPropertyWriter* ClaimWriter(const IDviSubscriptionUserData* aUserData, 
+                                         const Brx& aSid, TUint aSequenceNumber) = 0;
+    virtual void ReleaseWriter(IPropertyWriter* aWriter) = 0;
     virtual void NotifySubscriptionCreated(const Brx& aSid) = 0;
     virtual void NotifySubscriptionDeleted(const Brx& aSid) = 0;
     virtual void NotifySubscriptionExpired(const Brx& aSid) = 0;
+    virtual void LogUserData(IWriter& aWriter, const IDviSubscriptionUserData& aUserData) = 0;
 };
 
 class DviDevice;
@@ -58,6 +61,9 @@ public:
     void Renew(TUint& aSeconds);
     void WriteChanges();
     const Brx& Sid() const;
+    DviService* Service(); // claims a ref for non-NULL return
+    DviService* ServiceLocked(); // claims a ref for non-NULL return
+    void Log(IWriter& aWriter);
 private: // from IStackObject
     void ListObjectDetails() const;
 private:
@@ -80,6 +86,15 @@ private:
     TBool iExpired;
 };
 
+class AutoSubscriptionRef : public INonCopyable
+{
+public:
+    AutoSubscriptionRef(DviSubscription& aSubscription);
+    ~AutoSubscriptionRef();
+private:
+    DviSubscription& iSubscription;
+};
+
 class PropertyWriter : public IPropertyWriter
 {
 public:
@@ -87,15 +102,18 @@ public:
 protected:
     PropertyWriter();
     void SetWriter(IWriter& aWriter);
+private:
+    inline void WriteVariable(const Brx& aName, const Brx& aValue);
+    inline void WriteVariableStart(const Brx& aName);
+    inline void WriteVariableEnd(const Brx& aName);
+    static void WriteVariableStart(IWriter& aWriter, const Brx& aName);
+    static void WriteVariableEnd(IWriter& aWriter, const Brx& aName);
 private: // IPropertyWriter
     void PropertyWriteString(const Brx& aName, const Brx& aValue);
     void PropertyWriteInt(const Brx& aName, TInt aValue);
     void PropertyWriteUint(const Brx& aName, TUint aValue);
     void PropertyWriteBool(const Brx& aName, TBool aValue);
     void PropertyWriteBinary(const Brx& aName, const Brx& aValue);
-    void Release();
-private:
-    void WriteVariable(const Brx& aName, const Brx& aValue);
 private:
     IWriter* iWriter;
 };
@@ -103,7 +121,7 @@ private:
 class Publisher : public Thread
 {
 public:
-    Publisher(const TChar* aName, Fifo<Publisher*>& aFree);
+    Publisher(const TChar* aName, TUint aPriority, Fifo<Publisher*>& aFree, TUint aModerationMs);
     ~Publisher();
     void Publish(DviSubscription* aSubscription);
 private:
@@ -112,27 +130,33 @@ private:
 private:
     Fifo<Publisher*>& iFree;
     DviSubscription* iSubscription;
+    const TUint iModerationMs;
+    Semaphore iModerator;
 };
 
-class DviSubscriptionManager : public Thread
+class DviSubscriptionManager : public Thread, private IInfoProvider
 {
+    static const Brn kQuerySubscriptions;
 public:
-    DviSubscriptionManager(DvStack& aDvStack);
+    DviSubscriptionManager(DvStack& aDvStack, TUint aPriority);
     ~DviSubscriptionManager();
     void AddSubscription(DviSubscription& aSubscription);
     void RemoveSubscription(DviSubscription& aSubscription);
     DviSubscription* Find(const Brx& aSid);
     void QueueUpdate(DviSubscription& aSubscription);
+private: // from IInfoProvider
+    void QueryInfo(const Brx& aQuery, IWriter& aWriter);
 private:
     void Run();
 private:
     DvStack& iDvStack;
     Mutex iLock;
-    std::list<DviSubscription*> iList;
+    std::list<DviSubscription*> iPengingUpdates;
     Fifo<Publisher*> iFree;
     Publisher** iPublishers;
     typedef std::map<Brn,DviSubscription*,BufferCmp> Map;
     Map iMap;
+    TUint iCount;
 };
 
 } // namespace Net

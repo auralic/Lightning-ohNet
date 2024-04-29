@@ -40,6 +40,12 @@ public:
      */
     void GetPropertyTransportState(Brhz& aValue);
     /**
+     * Output the value of the TransportState property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyTransportState has previously been called.
+     */
+    void WritePropertyTransportState(IWriter& aWriter);
+    /**
      * Set the value of the Repeat property
      *
      * Can only be called if EnablePropertyRepeat has previously been called.

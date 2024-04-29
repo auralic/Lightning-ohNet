@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+    
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+
+    <actionList>
+        <action>
+            <name>Play</name>
+        </action>
+        <action>
+            <name>Pause</name>
+        </action>
+        <action>
+            <name>Stop</name>
+        </action>
+        <action>
+            <name>Next</name>
+        </action>
+        <action>
+            <name>Previous</name>
+        </action>
+        <action>
+            <name>SetThumbRating</name>
+            <argumentList>
+                <argument>
+                    <name>ThumbRating</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>ThumbRating</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>SeekSecondAbsolute</name>
+            <argumentList>
+                <argument>
+                    <name>Value</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Absolute</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>SeekSecondRelative</name>
+            <argumentList>
+                <argument>
+                    <name>Value</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Relative</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>TransportState</name>
+            <argumentList>
+                <argument>
+                    <name>Value</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>TransportState</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+        <action>
+            <name>Insert</name>
+            <argumentList>
+                <argument>
+                    <name>AfterId</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Id</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>Uri</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Uri</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>Metadata</name>
+                    <direction>in</direction>
+                    <relatedStateVariable>Metadata</relatedStateVariable>
+                </argument>
+                <argument>
+                    <name>NewId</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>Id</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+    </actionList>
+
+    <serviceStateTable>
+        <stateVariable sendEvents="yes">
+            <name>TransportState</name>
+            <dataType>string</dataType>
+            <allowedValueList>
+                <allowedValue>Playing</allowedValue>
+                <allowedValue>Paused</allowedValue>
+                <allowedValue>Stopped</allowedValue>
+                <allowedValue>Buffering</allowedValue>
+            </allowedValueList>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>ThumbRating</name>
+            <dataType>string</dataType>
+            <allowedValueList>
+                <allowedValue>thumbs_up</allowedValue>
+                <allowedValue>thumbs_down</allowedValue>
+                <allowedValue>neutral</allowedValue>
+            </allowedValueList>
+        </stateVariable>
+        <stateVariable sendEvents="yes">
+            <name>Id</name>
+            <dataType>ui4</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>Relative</name>
+            <dataType>i4</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>Absolute</name>
+            <dataType>ui4</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>Uri</name>
+            <dataType>string</dataType>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>Metadata</name>
+            <dataType>string</dataType>
+        </stateVariable>
+    </serviceStateTable>
+</scpd>
+

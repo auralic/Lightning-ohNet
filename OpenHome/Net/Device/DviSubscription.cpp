@@ -7,10 +7,12 @@
 #include <OpenHome/Functor.h>
 #include <OpenHome/Net/Private/DviStack.h>
 #include <OpenHome/Private/Debug.h>
+#include <OpenHome/Private/Ascii.h>
 #include <OpenHome/Private/Converter.h>
 
 #include <vector>
 #include <stdlib.h>
+#include <stdint.h>
 
 using namespace OpenHome;
 using namespace OpenHome::Net;
@@ -86,8 +88,8 @@ void DviSubscription::Start(DviService& aService)
 
 void DviSubscription::Stop()
 {
-    iLock.Wait();
     iTimer->Cancel();
+    iLock.Wait();
     if (iService != NULL) {
         iService->RemoveRef();
         iService = NULL;
@@ -168,6 +170,7 @@ void DviSubscription::WriteChanges()
     if (iExpired) {
         // reads/writes of iExpired assumed not to require thread safety
         // ...if this later turns out wrong, DO NOT USE iLock to protect iExpired - it'll deadlock with TimeManager's lock
+        LOG_DEBUG(kDvEvent, "Subscription %.*s has expired. Don't publish changes\n", PBUF(iSid));
         Remove();
         return;
     }
@@ -179,62 +182,74 @@ void DviSubscription::WriteChanges()
             writer->PropertyWriteEnd();
         }
     }
-    catch(NetworkTimeout&) {
-        // we may block a publisher for a relatively long time failing to connect
-        // its reasonable to assume that later attempts are also likely to fail
-        // ...so its better if we don't keep blocking and instead remove the subscription
+    catch (AssertionFailed&) {
+        throw;
+    }
+    catch (Exception& ex) {
+        LOG_ERROR(kDvEvent, "Exception - %s - eventing update for %.*s\n", ex.Message(), PBUF(iSid));
+        /* we may block a publisher for a relatively long time (e.g. failing to connect)
+           its reasonable to assume that later attempts are also likely to fail
+           ...so its better if we don't keep blocking and instead remove the subscription */
+        iExpired = true;
         Remove();
     }
-    catch(NetworkError&) {}
-    catch(HttpError&) {}
-    catch(WriterError&) {}
-    catch(ReaderError&) {}
     if (writer != NULL) {
-        writer->Release();
+        iWriterFactory.ReleaseWriter(writer);
     }
 }
 
 IPropertyWriter* DviSubscription::CreateWriter()
 {
-    LOG(kDvEvent, "WriteChanges for subscription ");
-    LOG(kDvEvent, iSid);
-    LOG(kDvEvent, " seq - %u\n", iSequenceNumber);
+    LOG_DEBUG(kDvEvent, "WriteChanges for subscription %.*s seq - %u\n", PBUF(iSid), iSequenceNumber);
     if (!iDevice.Enabled()) {
-        LOG(kDvEvent, "Device disabled; defer publishing changes\n");
+        LOG_DEBUG(kDvEvent, "Device disabled; defer publishing changes\n");
         return NULL;
     }
 
     if (iService == NULL) {
-        LOG(kDvEvent, "Subscription stopped; don't publish changes\n");
+        LOG_DEBUG(kDvEvent, "Subscription stopped; don't publish changes\n");
         return NULL;
     }
-    AutoPropertiesLock b(*iService);
-    IPropertyWriter* writer = NULL;
+
     const std::vector<Property*>& properties = iService->Properties();
     ASSERT(properties.size() == iPropertySequenceNumbers.size()); // services can't change definition after first advertisement
+    TBool changed = false;
+    {
+        AutoPropertiesLock b(*iService);
+        for (TUint i=0; i<properties.size(); i++) {
+            Property* prop = properties[i];
+            const TUint seq = prop->SequenceNumber();
+            ASSERT(seq != 0); // => implementor hasn't initialised the property
+            if (seq != iPropertySequenceNumbers[i]) {
+                changed = true;
+                break;
+            }
+        }
+
+    }
+    if (!changed) {
+        LOG_DEBUG(kDvEvent, "Found no changes to publish for %.*s\n", PBUF(iSid));
+        return NULL;
+    }
+    IPropertyWriter* writer = iWriterFactory.ClaimWriter(iUserData, iSid, iSequenceNumber);
+    if (writer == NULL) {
+        THROW(WriterError);
+    }
+    if (iSequenceNumber == UINT32_MAX) {
+        iSequenceNumber = 1;
+    }
+    else {
+        iSequenceNumber++;
+    }
+
+    AutoPropertiesLock b(*iService);
     for (TUint i=0; i<properties.size(); i++) {
         Property* prop = properties[i];
-        TUint seq = prop->SequenceNumber();
-        ASSERT(seq != 0); // => implementor hasn't initialised the property
+        const TUint seq = prop->SequenceNumber();
         if (seq != iPropertySequenceNumbers[i]) {
-            if (writer == NULL) {
-                writer = iWriterFactory.CreateWriter(iUserData, iSid, iSequenceNumber);
-                if (writer == NULL) {
-                    THROW(WriterError);
-                }
-                if (iSequenceNumber == UINT32_MAX) {
-                    iSequenceNumber = 1;
-                }
-                else {
-                    iSequenceNumber++;
-                }
-            }
             prop->Write(*writer);
             iPropertySequenceNumbers[i] = seq;
         }
-    }
-    if (writer == NULL) {
-        LOG(kDvEvent, "Found no changes to publish\n");
     }
     return writer;
 }
@@ -242,6 +257,48 @@ IPropertyWriter* DviSubscription::CreateWriter()
 const Brx& DviSubscription::Sid() const
 {
     return iSid;
+}
+
+DviService* DviSubscription::Service()
+{
+    AutoMutex _(iLock);
+    return ServiceLocked();
+}
+
+DviService* DviSubscription::ServiceLocked()
+{
+    if (iService != NULL) {
+        iService->AddRef();
+    }
+    return iService;
+}
+
+void DviSubscription::Log(IWriter& aWriter)
+{
+    AutoMutex _(iLock);
+
+    aWriter.Write(Brn("sid: "));
+    aWriter.Write(iSid);
+
+    aWriter.Write(Brn(", service: "));
+    if (iService == NULL) {
+        aWriter.Write(Brn(""));
+    }
+    else {
+        aWriter.Write(iService->ServiceType().Name());
+    }
+
+    aWriter.Write(Brn(", seq: "));
+    Bws<Ascii::kMaxUintStringBytes> seqBuf;
+    (void)Ascii::AppendDec(seqBuf, iSequenceNumber);
+    aWriter.Write(seqBuf);
+
+    aWriter.Write(Brn(", expired: "));
+    static const Brn kTrue("true");
+    static const Brn kFalse("false");
+    aWriter.Write(iExpired? kTrue : kFalse);
+
+    iWriterFactory.LogUserData(aWriter, *iUserData);
 }
 
 void DviSubscription::ListObjectDetails() const
@@ -276,6 +333,7 @@ DviSubscription::~DviSubscription()
 
 void DviSubscription::Expired()
 {
+    LOG(kDvEvent, "Subscription %.*s expired\n", PBUF(iSid));
     iExpired = true;
     // reads/writes of iExpired assumed not to require thread safety
     // ...if this later turns out wrong, DO NOT USE iLock to protect iExpired - it'll deadlock with TimeManager's lock
@@ -284,6 +342,19 @@ void DviSubscription::Expired()
        locks in the opposite order to Publisher threads.
        Instead, queue an update; this will happen on a Publisher thread where the subscription can safely be removed. */
     iDvStack.SubscriptionManager().QueueUpdate(*this);
+}
+
+
+// AutoSubscriptionRef
+
+AutoSubscriptionRef::AutoSubscriptionRef(DviSubscription& aSubscription)
+    : iSubscription(aSubscription)
+{
+}
+
+AutoSubscriptionRef::~AutoSubscriptionRef()
+{
+    iSubscription.RemoveRef();
 }
 
 
@@ -301,24 +372,49 @@ void PropertyWriter::SetWriter(IWriter& aWriter)
 
 void PropertyWriter::WriteVariable(IWriter& aWriter, const Brx& aName, const Brx& aValue)
 { // static
-    aWriter.Write(Brn("<e:property>"));
-    aWriter.Write('<');
+    WriteVariableStart(aWriter, aName);
+    aWriter.Write(aValue);
+    WriteVariableEnd(aWriter, aName);
+}
+
+void PropertyWriter::WriteVariableStart(IWriter& aWriter, const Brx& aName)
+{ // static
+    static const Brn kPropertyStart("<e:property><");
+    aWriter.Write(kPropertyStart);
     aWriter.Write(aName);
     aWriter.Write('>');
-    aWriter.Write(aValue);
+}
+
+void PropertyWriter::WriteVariableEnd(IWriter& aWriter, const Brx& aName)
+{ // static
+    static const Brn kPropertyEnd("></e:property>");
     aWriter.Write(Brn("</"));
     aWriter.Write(aName);
-    aWriter.Write('>');
-    aWriter.Write(Brn("</e:property>"));
+    aWriter.Write(kPropertyEnd);
+}
+
+inline void PropertyWriter::WriteVariable(const Brx& aName, const Brx& aValue)
+{
+    ASSERT(iWriter != NULL);
+    WriteVariable(*iWriter, aName, aValue);
+}
+
+inline void PropertyWriter::WriteVariableStart(const Brx& aName)
+{
+    ASSERT(iWriter != NULL);
+    WriteVariableStart(*iWriter, aName);
+}
+
+inline void PropertyWriter::WriteVariableEnd(const Brx& aName)
+{
+    WriteVariableEnd(*iWriter, aName);
 }
 
 void PropertyWriter::PropertyWriteString(const Brx& aName, const Brx& aValue)
 {
-    WriterBwh writer(1024);
-    Converter::ToXmlEscaped(writer, aValue);
-    Brh buf;
-    writer.TransferTo(buf);
-    WriteVariable(aName, buf);
+    WriteVariableStart(aName);
+    Converter::ToXmlEscaped(*iWriter, aValue);
+    WriteVariableEnd(aName);
 }
 
 void PropertyWriter::PropertyWriteInt(const Brx& aName, TInt aValue)
@@ -342,30 +438,19 @@ void PropertyWriter::PropertyWriteBool(const Brx& aName, TBool aValue)
 
 void PropertyWriter::PropertyWriteBinary(const Brx& aName, const Brx& aValue)
 {
-    WriterBwh writer(1024);
-    Converter::ToBase64(writer, aValue);
-    Brh buf;
-    writer.TransferTo(buf);
-    WriteVariable(aName, buf);
-}
-
-void PropertyWriter::Release()
-{
-    delete this;
-}
-
-void PropertyWriter::WriteVariable(const Brx& aName, const Brx& aValue)
-{
-    ASSERT(iWriter != NULL);
-    WriteVariable(*iWriter, aName, aValue);
+    WriteVariableStart(aName);
+    Converter::ToBase64(*iWriter, aValue);
+    WriteVariableEnd(aName);
 }
 
 
 // Publisher
 
-Publisher::Publisher(const TChar* aName, Fifo<Publisher*>& aFree)
-    : Thread(aName)
+Publisher::Publisher(const TChar* aName, TUint aPriority, Fifo<Publisher*>& aFree, TUint aModerationMs)
+    : Thread(aName, aPriority)
     , iFree(aFree)
+    , iModerationMs(aModerationMs)
+    , iModerator("PBMS", 0)
 {
 }
 
@@ -387,9 +472,9 @@ void Publisher::Error(const TChar* aErr)
 void Publisher::Error(const TChar* /*aErr*/)
 #endif
 {
-    LOG2(kDvEvent, kError, "Error - %s - from SID ", aErr);
-    LOG2(kDvEvent, kError, iSubscription->Sid());
-    LOG2(kDvEvent, kError, "\n");
+    LOG_ERROR(kDvEvent, "Error - %s - from SID ", aErr);
+    LOG_ERROR(kDvEvent, iSubscription->Sid());
+    LOG_ERROR(kDvEvent, "\n");
 }
 
 void Publisher::Run()
@@ -416,6 +501,12 @@ void Publisher::Run()
         }
 
         iSubscription->RemoveRef();
+        if (iModerationMs > 0) {
+            try {
+                iModerator.Wait(iModerationMs);
+            }
+            catch (Timeout&) {}
+        }
         iFree.Write(this);
     }
 }
@@ -423,20 +514,31 @@ void Publisher::Run()
 
 // DviSubscriptionManager
 
-DviSubscriptionManager::DviSubscriptionManager(DvStack& aDvStack)
-    : Thread("DvSubscriptionMgr")
+const Brn DviSubscriptionManager::kQuerySubscriptions("subscriptions");
+
+DviSubscriptionManager::DviSubscriptionManager(DvStack& aDvStack, TUint aPriority)
+    : Thread("DvSubscriptionMgr", aPriority)
     , iDvStack(aDvStack)
     , iLock("DSBM")
     , iFree(aDvStack.Env().InitParams()->DvNumPublisherThreads())
+    , iCount(0)
 {
-    const TUint numPublisherThreads = iDvStack.Env().InitParams()->DvNumPublisherThreads();
-    LOG(kDvEvent, "> DviSubscriptionManager: creating %u publisher threads\n", numPublisherThreads);
+    IInfoAggregator* infoAggregator = iDvStack.Env().InfoAggregator();
+    if (infoAggregator != NULL) {
+        std::vector<Brn> queries;
+        queries.push_back(kQuerySubscriptions);
+        infoAggregator->Register(*this, queries);
+    }
+    InitialisationParams* initParams = iDvStack.Env().InitParams();
+    const TUint numPublisherThreads = initParams->DvNumPublisherThreads();
+    const TUint moderationMs = initParams->DvPublisherModerationTimeMs();
+    LOG_DEBUG(kDvEvent, "> DviSubscriptionManager: creating %u publisher threads\n", numPublisherThreads);
     iPublishers = (Publisher**)malloc(sizeof(*iPublishers) * numPublisherThreads);
     for (TUint i=0; i<numPublisherThreads; i++) {
         Bws<Thread::kMaxNameBytes+1> thName;
         thName.AppendPrintf("Publisher %d", i);
         thName.PtrZ();
-        iPublishers[i] = new Publisher((const TChar*)thName.Ptr(), iFree);
+        iPublishers[i] = new Publisher((const TChar*)thName.Ptr(), aPriority, iFree, moderationMs);
         iFree.Write(iPublishers[i]);
         iPublishers[i]->Start();
     }
@@ -445,7 +547,7 @@ DviSubscriptionManager::DviSubscriptionManager(DvStack& aDvStack)
 
 DviSubscriptionManager::~DviSubscriptionManager()
 {
-    LOG(kDvEvent, "> ~DviSubscriptionManager\n");
+    LOG_DEBUG(kDvEvent, "> ~DviSubscriptionManager\n");
 
     iLock.Wait();
     Kill();
@@ -458,13 +560,11 @@ DviSubscriptionManager::~DviSubscriptionManager()
     }
     free(iPublishers);
 
-    std::list<DviSubscription*>::iterator it = iList.begin();
-    while (it != iList.end()) {
+    for (std::list<DviSubscription*>::iterator it = iPengingUpdates.begin(); it != iPengingUpdates.end(); ++it) {
         (*it)->RemoveRef();
-        it++;
     }
 
-    LOG(kDvEvent, "< ~DviSubscriptionManager\n");
+    LOG_DEBUG(kDvEvent, "< ~DviSubscriptionManager\n");
 }
 
 void DviSubscriptionManager::AddSubscription(DviSubscription& aSubscription)
@@ -473,6 +573,7 @@ void DviSubscriptionManager::AddSubscription(DviSubscription& aSubscription)
     Brn sid(aSubscription.Sid());
     iMap.insert(std::pair<Brn,DviSubscription*>(sid, &aSubscription));
     aSubscription.AddRef();
+    iCount++;
     iLock.Signal();
 }
 
@@ -506,9 +607,33 @@ void DviSubscriptionManager::QueueUpdate(DviSubscription& aSubscription)
 {
     aSubscription.AddRef();
     iLock.Wait();
-    iList.push_back(&aSubscription);
+    iPengingUpdates.push_back(&aSubscription);
     Signal();
     iLock.Signal();
+}
+
+void DviSubscriptionManager::QueryInfo(const Brx& aQuery, IWriter& aWriter)
+{
+    if (aQuery != kQuerySubscriptions) {
+        return;
+    }
+    AutoMutex _(iLock);
+    Map::iterator it;
+    Bws<80> summary;
+    summary.AppendPrintf("Subscriptions: %u current, %u since startup\n", iMap.size(), iCount);
+    aWriter.Write(summary);
+    aWriter.Write(Brn("Current:"));
+    for (it=iMap.begin(); it!=iMap.end(); ++it) {
+        aWriter.Write(Brn("\n\t"));
+        it->second->Log(aWriter);
+    }
+    aWriter.Write(Brn("\n\nPending updates:"));
+    std::list<DviSubscription*>::iterator it2;
+    for (it2=iPengingUpdates.begin(); it2!=iPengingUpdates.end(); ++it2) {
+        aWriter.Write(Brn("\n\t"));
+        it->second->Log(aWriter);
+    }
+    aWriter.Write(Brn("\n"));
 }
 
 void DviSubscriptionManager::Run()
@@ -517,8 +642,8 @@ void DviSubscriptionManager::Run()
         Wait();
         Publisher* publisher = iFree.Read();
         iLock.Wait();
-        DviSubscription* subscription = iList.front();
-        iList.pop_front();
+        DviSubscription* subscription = iPengingUpdates.front();
+        iPengingUpdates.pop_front();
         iLock.Signal();
         publisher->Publish(subscription);
     }

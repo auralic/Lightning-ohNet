@@ -221,9 +221,7 @@ void Ssdp::WriteMaxAge(Environment& aEnv, IWriterHttpHeader& aWriter)
 {
     IWriterAscii& stream = aWriter.WriteHeaderField(Ssdp::kHeaderCacheControl);
     stream.Write(kSsdpMaxAge);
-    stream.Write(Ascii::kSp);
     stream.Write(kSsdpMaxAgeSeparator);
-    stream.Write(Ascii::kSp);
     stream.WriteUint(aEnv.InitParams()->DvMaxUpdateTimeSecs());
     stream.WriteFlush();
 }
@@ -471,7 +469,7 @@ void SsdpHeaderSt::Process(const Brx& aValue)
     if (type == kMsearchUrn) {
         Brn domain = parser.Next(':');
         Brn kind = parser.Next(':');
-        Brn type = parser.Next(':');
+        Brn urntype = parser.Next(':');
         if (domain.Bytes() > kMaxDomainBytes) {
             THROW(HttpError);
         }
@@ -485,11 +483,11 @@ void SsdpHeaderSt::Process(const Brx& aValue)
             THROW(HttpError);
         }
 
-        if (type.Bytes() > kMaxTypeBytes) {
+        if (urntype.Bytes() > kMaxTypeBytes) {
             THROW(HttpError);
         }
 
-        iType.Replace(type);
+        iType.Replace(urntype);
 
         if (kind == kMsearchDevice) {
             iTarget = eSsdpDeviceType;
@@ -564,7 +562,7 @@ void SsdpHeaderNt::Process(const Brx& aValue)
     if (type == kMsearchUrn) {
         Brn domain = parser.Next(':');
         Brn kind = parser.Next(':');
-        Brn type = parser.Next(':');
+        Brn urntype = parser.Next(':');
         if (domain.Bytes() > kMaxDomainBytes) {
             THROW(HttpError);
         }
@@ -575,10 +573,10 @@ void SsdpHeaderNt::Process(const Brx& aValue)
         catch (AsciiError&) {
             THROW(HttpError);
         }
-        if (type.Bytes() > kMaxTypeBytes) {
+        if (urntype.Bytes() > kMaxTypeBytes) {
             THROW(HttpError);
         }
-        iType.Replace(type);
+        iType.Replace(urntype);
         if (kind == kMsearchDevice) {
             iTarget = eSsdpDeviceType;
             return;
@@ -654,18 +652,19 @@ void SsdpHeaderUsn::Process(const Brx& aValue)
     }
 
     Brn type = parser.Next(':');
+
     if (type == kMsearchUrn) {
         Brn domain = parser.Next(':');
         Brn kind = parser.Next(':');
-        Brn type = parser.Next(':');
+        Brn urntype = parser.Next(':');
         if (domain.Bytes() > kMaxDomainBytes) {
             THROW(HttpError);
         }
         Ssdp::UpnpDomainToCanonical(domain, iDomain);
-        if (type.Bytes() > kMaxTypeBytes) {
+        if (urntype.Bytes() > kMaxTypeBytes) {
             THROW(HttpError);
         }
-        iType.Replace(type);
+        iType.Replace(urntype);
         try {
             iVersion = Ascii::Uint(parser.Remaining());
         }

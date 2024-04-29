@@ -20,6 +20,11 @@ void DvProviderUpnpOrgScheduledRecording2::GetPropertyLastChange(Brhz& aValue)
     aValue.Set(iPropertyLastChange->Value());
 }
 
+void DvProviderUpnpOrgScheduledRecording2::WritePropertyLastChange(IWriter& aWriter)
+{
+    iPropertyLastChange->Write(aWriter);
+}
+
 DvProviderUpnpOrgScheduledRecording2::DvProviderUpnpOrgScheduledRecording2(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "upnp.org", "ScheduledRecording", 2)
 {

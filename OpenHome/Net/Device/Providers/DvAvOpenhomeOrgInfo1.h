@@ -82,6 +82,12 @@ public:
      */
     void GetPropertyUri(Brhz& aValue);
     /**
+     * Output the value of the Uri property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyUri has previously been called.
+     */
+    void WritePropertyUri(IWriter& aWriter);
+    /**
      * Set the value of the Metadata property
      *
      * Can only be called if EnablePropertyMetadata has previously been called.
@@ -95,6 +101,12 @@ public:
      * Can only be called if EnablePropertyMetadata has previously been called.
      */
     void GetPropertyMetadata(Brhz& aValue);
+    /**
+     * Output the value of the Metadata property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyMetadata has previously been called.
+     */
+    void WritePropertyMetadata(IWriter& aWriter);
     /**
      * Set the value of the Duration property
      *
@@ -180,6 +192,12 @@ public:
      */
     void GetPropertyCodecName(Brhz& aValue);
     /**
+     * Output the value of the CodecName property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyCodecName has previously been called.
+     */
+    void WritePropertyCodecName(IWriter& aWriter);
+    /**
      * Set the value of the Metatext property
      *
      * Can only be called if EnablePropertyMetatext has previously been called.
@@ -193,6 +211,12 @@ public:
      * Can only be called if EnablePropertyMetatext has previously been called.
      */
     void GetPropertyMetatext(Brhz& aValue);
+    /**
+     * Output the value of the Metatext property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyMetatext has previously been called.
+     */
+    void WritePropertyMetatext(IWriter& aWriter);
 protected:
     /**
      * Constructor

@@ -49,7 +49,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1Destroy(THandle aHand
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDeviceConfig1Create
  * @param[out] aDeviceConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1SyncGetDeviceConfig(THandle aHandle, char** aDeviceConfig);
@@ -85,7 +85,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1EndGetDeviceConfig
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDeviceConfig1Create
  * @param[in]  aDeviceConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1SyncSetDeviceConfig(THandle aHandle, const char* aDeviceConfig);
@@ -121,7 +121,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1EndSetDeviceConfig
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDeviceConfig1Create
  * @param[out] aWiFiList
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1SyncGetWiFiList(THandle aHandle, char** aWiFiList);
@@ -159,7 +159,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1EndGetWiFiList(THa
  * @param[in]  aCurrentTime
  * @param[in]  aTimeStamp
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1SyncSetTimeZone(THandle aHandle, const char* aTimeZone, const char* aCurrentTime, const char* aTimeStamp);
@@ -197,7 +197,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1EndSetTimeZone(THa
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDeviceConfig1Create
  * @param[out] aServiceLoaction
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1SyncGetServiceLocation(THandle aHandle, char** aServiceLoaction);
@@ -267,8 +267,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1SetPropertyCurrentAct
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDeviceConfig1Create
  * @param[out] aAlive
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
 /**
  * Query the value of the DeviceConfig property.
  *
@@ -277,8 +279,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyAlive(THandle
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDeviceConfig1Create
  * @param[out] aDeviceConfig
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyDeviceConfig(THandle aHandle, char** aDeviceConfig);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyDeviceConfig(THandle aHandle, char** aDeviceConfig);
 /**
  * Query the value of the CurrentAction property.
  *
@@ -287,8 +291,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyDeviceConfig(
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebDeviceConfig1Create
  * @param[out] aCurrentAction
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction);
 
 /* @} */
 

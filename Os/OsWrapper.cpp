@@ -29,6 +29,14 @@ Brn Os::GetPlatformNameAndVersion(OsContext* aContext, TUint& aMajor, TUint& aMi
     return nameBuf;
 }
 
+void Os::ThreadGetPriorityRange(OsContext* aContext, TUint& aHostMin, TUint& aHostMax)
+{
+    uint32_t hostMin, hostMax;
+    OsThreadGetPriorityRange(aContext, &hostMin, &hostMax);
+    aHostMin = (TUint)hostMin;
+    aHostMax = (TUint)hostMax;
+}
+
 THandle Os::NetworkCreate(OsContext* aContext, ESocketType aSocketType)
 {
     THandle handle = OsNetworkCreate(aContext, (OsNetworkSocketType)aSocketType);
@@ -89,7 +97,7 @@ void OpenHome::Os::NetworkConnect(THandle aHandle, const Endpoint& aEndpoint, TU
 {
     int32_t err = OsNetworkConnect(aHandle, aEndpoint.Address(), aEndpoint.Port(), aTimeoutMs);
     if (err != 0) {
-        LOG2F(kNetwork, kError, "Os::NetworkConnect H = %d, RETURN VALUE = %d\n", aHandle, err);
+        LOG_ERROR(kNetwork, "Os::NetworkConnect H = %d, RETURN VALUE = %d\n", aHandle, err);
         if (err == -1)  // Timeout
             THROW(NetworkTimeout);
         if (err == -2)  // Connection refused
@@ -114,7 +122,7 @@ void OpenHome::Os::NetworkSocketSetSendBufBytes(THandle aHandle, TUint aBytes)
 {
     int32_t err = OsNetworkSocketSetSendBufBytes(aHandle, aBytes);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::NetworkSocketSetSendBufBytes H = %d, RETURN VALUE = %d\n", aHandle, err);
+        LOG_ERROR(kNetwork, "Os::NetworkSocketSetSendBufBytes H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }
@@ -123,7 +131,7 @@ void OpenHome::Os::NetworkSocketSetRecvBufBytes(THandle aHandle, TUint aBytes)
 {
     int32_t err = OsNetworkSocketSetRecvBufBytes(aHandle, aBytes);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::NetworkSocketSetRecvBufBytes H = %d, RETURN VALUE = %d\n", aHandle, err);
+        LOG_ERROR(kNetwork, "Os::NetworkSocketSetRecvBufBytes H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }
@@ -132,7 +140,7 @@ void OpenHome::Os::NetworkSocketSetReceiveTimeout(THandle aHandle, TUint aMilliS
 {
     int32_t err = OsNetworkSocketSetReceiveTimeout(aHandle, aMilliSeconds);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::OsNetworkSocketSetReceiveTimeout H = %d, RETURN VALUE = %d\n", aHandle, err);
+        LOG_ERROR(kNetwork, "Os::OsNetworkSocketSetReceiveTimeout H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }
@@ -141,7 +149,7 @@ void OpenHome::Os::NetworkTcpSetNoDelay(THandle aHandle)
 {
     int32_t err = OsNetworkTcpSetNoDelay(aHandle);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::OsNetworkTcpSetNoDelay H = %d, RETURN VALUE = %d\n", aHandle, err);
+        //LOG_ERROR(kNetwork, "Os::OsNetworkTcpSetNoDelay H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }
@@ -150,7 +158,7 @@ void OpenHome::Os::NetworkSocketSetReuseAddress(THandle aHandle)
 {
     int32_t err = OsNetworkSocketSetReuseAddress(aHandle);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::OsNetworkSocketSetReuseAddress H = %d, RETURN VALUE = %d\n", aHandle, err);
+        LOG_ERROR(kNetwork, "Os::OsNetworkSocketSetReuseAddress H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }
@@ -159,7 +167,7 @@ void OpenHome::Os::NetworkSocketSetMulticastTtl(THandle aHandle, TUint8 aTtl)
 {
     int32_t err = OsNetworkSocketSetMulticastTtl(aHandle, aTtl);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::OsNetworkSocketSetMulticastTtl H = %d, RETURN VALUE = %d\n", aHandle, err);
+        LOG_ERROR(kNetwork, "Os::OsNetworkSocketSetMulticastTtl H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }
@@ -168,7 +176,7 @@ void OpenHome::Os::NetworkSocketMulticastAddMembership(THandle aHandle, TIpAddre
 {
     int32_t err = OsNetworkSocketMulticastAddMembership(aHandle, aInterface, aAddress);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::OsNetworkSocketMulticastAddMembership H = %d, RETURN VALUE = %d\n", aHandle, err);
+        LOG_ERROR(kNetwork, "Os::OsNetworkSocketMulticastAddMembership H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }
@@ -177,7 +185,7 @@ void OpenHome::Os::NetworkSocketMulticastDropMembership(THandle aHandle, TIpAddr
 {
     int32_t err = OsNetworkSocketMulticastDropMembership(aHandle, aInterface, aAddress);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::OsNetworkSocketMulticastDropMembership H = %d, RETURN VALUE = %d\n", aHandle, err);
+        LOG_ERROR(kNetwork, "Os::OsNetworkSocketMulticastDropMembership H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }
@@ -186,7 +194,7 @@ void OpenHome::Os::NetworkSocketSetMulticastIf(THandle aHandle, TIpAddress aInte
 {
     int32_t err = OsNetworkSocketSetMulticastIf(aHandle, aInterface);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::OsNetworkSocketSetMulticastIf H = %d, RETURN VALUE = %d\n", aHandle, err);
+        LOG_ERROR(kNetwork, "Os::OsNetworkSocketSetMulticastIf H = %d, RETURN VALUE = %d\n", aHandle, err);
         THROW(NetworkError);
     }
 }
@@ -198,13 +206,15 @@ std::vector<NetworkAdapter*>* OpenHome::Os::NetworkListAdapters(Environment& aEn
     OsNetworkAdapter* cIfs = NULL;
     int32_t err = OsNetworkListAdapters(aEnv.OsCtx(), &cIfs, (uint32_t)aUseLoopback);
     if(err != 0) {
-        LOG2F(kNetwork, kError, "Os::NetworkListAdapters RETURN VALUE = %d\n", err);
+        LOG_ERROR(kNetwork, "Os::NetworkListAdapters RETURN VALUE = %d\n", err);
         THROW(NetworkError);
     }
     std::vector<NetworkAdapter*>* ifs = new std::vector<NetworkAdapter*>;
     OsNetworkAdapter* ptr = cIfs;
     while (ptr != NULL) {
-        NetworkAdapter* iface = new NetworkAdapter(aEnv, ptr->iAddress, ptr->iNetMask, ptr->iName, aCookie);
+        NetworkAdapter* iface = new NetworkAdapter(aEnv, ptr->iAddress, ptr->iNetMask,
+                                                   ptr->iDhcpServer, ptr->iGateway,
+                                                   ptr->iName, aCookie);
         ifs->push_back(iface);
         ptr = ptr->iNext;
     }

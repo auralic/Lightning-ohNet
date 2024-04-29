@@ -49,7 +49,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1Destroy(THandle aH
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebProcessorConfig1Create
  * @param[out] aProcessorConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1SyncGetProcessorConfig(THandle aHandle, char** aProcessorConfig);
@@ -85,7 +85,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1EndGetProcessor
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebProcessorConfig1Create
  * @param[in]  aProcessorConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1SyncSetProcessorConfig(THandle aHandle, const char* aProcessorConfig);
@@ -144,8 +144,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1SetPropertyProcess
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebProcessorConfig1Create
  * @param[out] aAlive
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
 /**
  * Query the value of the ProcessorConfig property.
  *
@@ -154,8 +156,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1PropertyAlive(THan
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebProcessorConfig1Create
  * @param[out] aProcessorConfig
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1PropertyProcessorConfig(THandle aHandle, char** aProcessorConfig);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1PropertyProcessorConfig(THandle aHandle, char** aProcessorConfig);
 
 /* @} */
 

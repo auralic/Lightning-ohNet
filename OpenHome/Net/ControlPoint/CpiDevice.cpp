@@ -101,6 +101,11 @@ void CpiDevice::Unsubscribe(CpiSubscription& aSubscription, const Brx& aSid)
     iProtocol.Unsubscribe(aSubscription, aSid);
 }
 
+TBool CpiDevice::OrphanSubscriptionsOnSubnetChange() const
+{
+    return iProtocol.OrphanSubscriptionsOnSubnetChange();
+}
+
 void CpiDevice::NotifyRemovedBeforeReady()
 {
     iProtocol.NotifyRemovedBeforeReady();
@@ -150,9 +155,7 @@ void CpiDevice::ListObjectDetails() const
 
 CpiDevice::~CpiDevice()
 {
-    LOG(kDevice, "~CpiDevice for device ");
-    LOG(kDevice, iUdn);
-    LOG(kDevice, "\n");
+    LOG(kDevice, "~CpiDevice for device %.*s\n", PBUF(iUdn));
     ASSERT(iRefCount == 0);
     iCpStack.Env().RemoveObject(this);
 }
@@ -218,9 +221,7 @@ CpiDeviceList::~CpiDeviceList()
 
 void CpiDeviceList::Add(CpiDevice* aDevice)
 {
-    LOG(kDevice, "CpiDeviceList::Add for device ");
-    LOG(kDevice, aDevice->Udn());
-    LOG(kDevice, "\n");
+    LOG(kDevice, "CpiDeviceList::Add for device %.*s\n", PBUF(aDevice->Udn()));
     iLock.Wait();
     if (aDevice->HasExpired() || !iActive) {
         LOG(kDevice, "< CpiDeviceList::Add, device expired or list stopped\n");
@@ -241,9 +242,7 @@ void CpiDeviceList::Add(CpiDevice* aDevice)
     CpiDevice* tmp = RefDeviceLocked(aDevice->Udn());
     if (tmp != NULL) {
         // device is already in the list, ignore this call to Add()
-        LOG(kDevice, "< CpiDeviceList::Add, device ");
-        LOG(kDevice, aDevice->Udn());
-        LOG(kDevice, " already in list\n");
+        LOG(kDevice, "< CpiDeviceList::Add, device %.*s already in list\n", PBUF(aDevice->Udn()));
         iLock.Signal();
         tmp->RemoveRef();
         aDevice->RemoveRef();
@@ -350,9 +349,7 @@ void CpiDeviceList::RemoveRef()
 
 void CpiDeviceList::NotifyAdded(CpiDevice& aDevice)
 {
-    LOG(kDevice, "CpiDeviceList::NotifyAdded for device ");
-    LOG(kDevice, aDevice.Udn());
-    LOG(kDevice, "\n");
+    LOG(kDevice, "CpiDeviceList::NotifyAdded for device %.*s\n", PBUF(aDevice.Udn()));
     iLock.Wait();
     if (!iActive) {
         iLock.Signal();
@@ -371,9 +368,7 @@ void CpiDeviceList::NotifyAdded(CpiDevice& aDevice)
         // aDevice has been replaced, probably because its location changed
         return;
     }
-    LOG(kTrace, "Device+ {udn{");
-    LOG(kTrace, aDevice.Udn());
-    LOG(kTrace, "}}\n");
+    LOG_TRACE(kDevice, "Device+ {udn{%.*s}}\n", PBUF(aDevice.Udn()));
     iAdded(aDevice);
 }
 
@@ -384,9 +379,7 @@ void CpiDeviceList::NotifyRemoved(CpiDevice& aDevice)
 
 TBool CpiDeviceList::DoRemove(CpiDevice& aDevice)
 {
-    LOG(kDevice, "> CpiDeviceList::DoRemove for device ");
-    LOG(kDevice, aDevice.Udn());
-    LOG(kDevice, "\n");
+    LOG(kDevice, "> CpiDeviceList::DoRemove for device %.*s\n", PBUF(aDevice.Udn()));
     iLock.Wait();
     TBool found = false;
     for (TUint i=0; i<(TUint)iPendingRemove.size(); i++) {
@@ -413,9 +406,7 @@ TBool CpiDeviceList::DoRemove(CpiDevice& aDevice)
     if (callObserver) {
         iRemoved(aDevice);
     }
-    LOG(kTrace, "Device-  {udn{");
-    LOG(kTrace, aDevice.Udn());
-    LOG(kTrace, "}}\n");
+    LOG_TRACE(kDevice, "Device-  {udn{%.*s}}\n", PBUF(aDevice.Udn()));
     aDevice.RemoveRef();
     return true;
 }

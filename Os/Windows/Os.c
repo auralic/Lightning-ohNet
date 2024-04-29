@@ -4,17 +4,44 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <assert.h>
 #include <Winsock2.h>
-#include <Windows.h>
 #include <Ws2tcpip.h>
+#include <Windows.h>
+
+#ifdef DEFINE_WINDOWS_UNIVERSAL
+#include <Processthreadsapi.h>
+#include <Synchapi.h>
+#include <algorithm>
+#include "collection.h"
+using namespace Platform;
+using namespace Windows;
+using namespace Windows::Networking;
+using namespace Windows::Networking::Connectivity;
+using namespace Windows::Foundation::Collections;
+
+#define InitializeCriticalSection(arg0) InitializeCriticalSectionEx(arg0, 0, 0)
+#define WaitForSingleObject(arg0, arg1) WaitForSingleObjectEx(arg0, arg1, false)
+#define M_CreateSemaphore(arg0, arg1, arg2, arg3) CreateSemaphoreEx(arg0, arg1, arg2, arg3, 0, (SYNCHRONIZE | SEMAPHORE_MODIFY_STATE))
+#define M_CreateEvent(arg0, arg1, arg2, arg3) CreateEventEx(arg0, arg3, 0 | (arg1 ? CREATE_EVENT_MANUAL_RESET : 0) | (arg2 ? CREATE_EVENT_INITIAL_SET : 0), (SYNCHRONIZE | EVENT_MODIFY_STATE))
+
+#define TlsAlloc() FlsAlloc(NULL)
+#define TlsFree(arg0) FlsFree(arg0)
+#define TlsSetValue(arg0, arg1) FlsSetValue(arg0, arg1)
+#define TlsGetValue(arg0) FlsGetValue(arg0)
+
+#else
 #include <Iphlpapi.h>
 #include <Dbghelp.h>
+#define M_CreateSemaphore(arg0, arg1, arg2, arg3) CreateSemaphore(arg0, arg1, arg2, arg3)
+#define M_CreateEvent(arg0, arg1, arg2, arg3) CreateEvent(arg0, arg1, arg2, arg3)
+#endif
 
 static const uint32_t kMinStackBytes = 1024 * 16;
 static const uint32_t kStackPaddingBytes = 1024 * 16;
-static const uint32_t kPriorityMin = 50;
-static const uint32_t kPriorityMax = 150;
+static const uint32_t kPriorityMin = 0;
+static const uint32_t kPriorityMax = (uint32_t)(THREAD_PRIORITY_TIME_CRITICAL - THREAD_PRIORITY_IDLE);
 
 #define UNUSED(a) (a) = (a)
 
@@ -42,17 +69,22 @@ typedef struct OsContext {
 } OsContext;
 
 
-OsContext* OsCreate()
+OsContext* OsCreate(OsThreadSchedulePolicy aSchedulerPolicy)
 {
     FILETIME ft;
     WSADATA wsaData;
     WORD ver = (2<<8)|2; // WinSock v2.2.  Standard on XP and later
 
+#ifndef DEFINE_WINDOWS_UNIVERSAL
     char* noErrDlgs = getenv("OHNET_NO_ERROR_DIALOGS");
     OsContext* ctx = malloc(sizeof(*ctx));
     if (noErrDlgs != NULL && strcmp(noErrDlgs, "1") == 0) {
         _set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
     }
+#else
+    OsContext* ctx = (OsContext*)malloc(sizeof(*ctx));
+#endif
+    UNUSED(aSchedulerPolicy);
     if (ctx == NULL) {
         return NULL;
     }
@@ -85,11 +117,14 @@ OsContext* OsCreate()
         return NULL;
     }
     {
+#ifndef DEFINE_WINDOWS_UNIVERSAL
         HMODULE hModule = GetModuleHandle(NULL);
         CHAR path[MAX_PATH];
         GetModuleFileName(hModule, path, MAX_PATH);
         ctx->iDebugSymbolHandle = GetCurrentProcess();
+        SymSetOptions(SYMOPT_FAIL_CRITICAL_ERRORS);
         (void)SymInitialize(ctx->iDebugSymbolHandle, /*NULL*/path, TRUE);
+#endif
     }
 
     return ctx;
@@ -100,7 +135,11 @@ void OsDestroy(OsContext* aContext)
     if (aContext == NULL) {
         return;
     }
+
+#ifndef DEFINE_WINDOWS_UNIVERSAL
     (void)SymCleanup(aContext->iDebugSymbolHandle);
+#endif
+
     if (NULL != aContext->iInterfaceChangeObserver) {
         aContext->iInterfaceChangeObserver->iShutdown = 1;
         (void)WSASetEvent(aContext->iInterfaceChangeObserver->iShutdownEvent);
@@ -125,6 +164,27 @@ void OsQuit(OsContext* aContext)
     abort();
 }
 
+
+#ifdef DEFINE_WINDOWS_UNIVERSAL
+typedef struct _SYMBOL_INFO {
+  ULONG   SizeOfStruct;
+  ULONG   TypeIndex;
+  ULONG64 Reserved[2];
+  ULONG   Index;
+  ULONG   Size;
+  ULONG64 ModBase;
+  ULONG   Flags;
+  ULONG64 Value;
+  ULONG64 Address;
+  ULONG   Register;
+  ULONG   Scope;
+  ULONG   Tag;
+  ULONG   NameLen;
+  ULONG   MaxNameLen;
+  TCHAR   Name[1];
+} SYMBOL_INFO, *PSYMBOL_INFO;
+#endif
+
 #define STACK_TRACE_MAX_DEPTH 32
 typedef struct OsStackTrace
 {
@@ -134,7 +194,9 @@ typedef struct OsStackTrace
     OsContext* iOsContext;
 } OsStackTrace;
 
+#ifndef DEFINE_WINDOWS_UNIVERSAL
 #define STACK_TRACE_ENABLE
+#endif
 
 THandle OsStackTraceInitialise(OsContext* aContext)
 {
@@ -219,7 +281,9 @@ uint64_t OsTimeInUs(OsContext* aContext)
     /* if time has moved backwards, calculate by how much and add this to aContext->iTimeAdjustment */
     if (now < aContext->iPrevTime) {
         diff = aContext->iPrevTime - now;
-        fprintf(stderr, "WARNING: clock moved backwards by %3lums\n", now / 10000);
+#ifndef DEFINE_WINDOWS_UNIVERSAL
+        fprintf(stderr, "WARNING: clock moved backwards by %3llums\n", now / 10000);
+#endif
         aContext->iTimeAdjustment += diff;
     }
     aContext->iPrevTime = now; /* stash current time to allow the next call to spot any backwards move */
@@ -231,11 +295,17 @@ uint64_t OsTimeInUs(OsContext* aContext)
     return diff;
 }
 
+#ifdef DEFINE_WINDOWS_UNIVERSAL
+void OsConsoleWrite(const char* /*aStr*/)
+{
+}
+#else
 void OsConsoleWrite(const char* aStr)
 {
     fprintf(stderr, "%s", aStr);
     fflush(stderr);
 }
+#endif
 
 void OsGetPlatformNameAndVersion(OsContext* aContext, char** aName, uint32_t* aMajor, uint32_t* aMinor)
 {
@@ -264,7 +334,7 @@ THandle OsSemaphoreCreate(OsContext* aContext, const char* aName, uint32_t aCoun
 {
     UNUSED(aContext);
     UNUSED(aName);
-    return (THandle)CreateSemaphore(NULL, aCount, INT32_MAX, NULL);
+    return (THandle)M_CreateSemaphore(NULL, aCount, INT32_MAX, NULL);
 }
 
 void OsSemaphoreDestroy(THandle aSem)
@@ -316,7 +386,7 @@ typedef struct
 
 THandle OsMutexCreate(OsContext* aContext, const char* aName)
 {
-    Mutex* mutex = calloc(1, sizeof(*mutex));
+    Mutex* mutex = (Mutex*)calloc(1, sizeof(*mutex));
     UNUSED(aContext);
     UNUSED(aName);
     if (NULL == mutex) {
@@ -364,7 +434,15 @@ typedef struct
     void*            iArg;
     uint32_t         iPriority;
     OsContext*       iCtx;
+    THandle          iSemaHandle;
 } ThreadData;
+
+void OsThreadGetPriorityRange(OsContext* aContext, uint32_t* aHostMin, uint32_t* aHostMax)
+{
+    UNUSED(aContext);
+    *aHostMin = kPriorityMin;
+    *aHostMax = kPriorityMax;
+}
 
 #pragma pack(push,8)
 typedef struct tagTHREADNAME_INFO
@@ -395,27 +473,8 @@ static void SetCurrentThreadName(const char* threadName)
 DWORD threadEntrypoint(LPVOID aArg)
 {
     ThreadData* data = (ThreadData*)aArg;
-    int priority = THREAD_PRIORITY_NORMAL;
-    static const int kHostPriorities[] = { THREAD_PRIORITY_IDLE
-                                          ,THREAD_PRIORITY_LOWEST
-                                          ,THREAD_PRIORITY_BELOW_NORMAL
-                                          ,THREAD_PRIORITY_NORMAL
-                                          ,THREAD_PRIORITY_ABOVE_NORMAL
-                                          ,THREAD_PRIORITY_HIGHEST
-                                          ,THREAD_PRIORITY_TIME_CRITICAL };
-    static const int kNumHostPriorities = sizeof(kHostPriorities) / sizeof(kHostPriorities[0]);
-    int step = (kPriorityMax - kPriorityMin) / kNumHostPriorities;
-    int i;
-
-    assert(data != NULL);
-    //fprintf(stderr, "++ new thread: %s(%d)\n", data->iName, GetCurrentThreadId());
-
-    for (i=kNumHostPriorities-1; i>=0; i--) {
-        if (kPriorityMin + (i*step) < data->iPriority) {
-            priority = kHostPriorities[i];
-            break;
-        }
-    }
+    int priority = data->iPriority;
+    priority += THREAD_PRIORITY_IDLE;
     if (!SetThreadPriority(data->iThread, priority)) {
         //fprintf(stderr, "SetPriority failed (err=%d)\n", GetLastError());
         //fflush(stderr);
@@ -435,7 +494,19 @@ THandle OsThreadCreate(OsContext* aContext, const char* aName, uint32_t aPriorit
     if (NULL == data) {
         return kHandleNull;
     }
+#ifndef DEFINE_WINDOWS_UNIVERSAL
     data->iName = _strdup(aName);
+#else
+     size_t length = strlen(aName);
+     data->iName = new char[length + 1];
+     memcpy_s(data->iName, length + 1, aName, length + 1);
+#endif
+
+    if (data->iName == NULL) {
+        free(data);
+        return kHandleNull;
+    }
+
     if (aPriority < kPriorityMin || aPriority > kPriorityMax) {
         return kHandleNull;
     }
@@ -447,12 +518,40 @@ THandle OsThreadCreate(OsContext* aContext, const char* aName, uint32_t aPriorit
     data->iArg        = aArg;
     data->iPriority   = aPriority;
     data->iCtx        = aContext;
+    data->iSemaHandle = OsSemaphoreCreate(aContext, "tls_sem", 0);
+
+    if (data->iSemaHandle == kHandleNull) {
+        free(data->iName);
+        free(data);
+        return kHandleNull;
+    }
 
     data->iThread = CreateThread(NULL, aStackBytes, (LPTHREAD_START_ROUTINE)&threadEntrypoint, data, 0, NULL);
     if (0 == data->iThread) {
+        OsSemaphoreDestroy(data->iSemaHandle);
+        free(data->iName);
         free(data);
+	return kHandleNull;
     }
     return (THandle)data;
+}
+
+void OsThreadWait(THandle aThread, uint32_t aConsumePolicy)
+{
+    THandle sema = ((ThreadData*) aThread)->iSemaHandle;
+
+    OsSemaphoreWait(sema);
+
+    if (aConsumePolicy == eConsumeAll) {
+        OsSemaphoreClear(sema);
+    }
+}
+
+void OsThreadSignal(THandle aThread)
+{
+    THandle sema = ((ThreadData*) aThread)->iSemaHandle;
+
+    OsSemaphoreSignal(sema);
 }
 
 void* OsThreadTls(OsContext* aContext)
@@ -464,6 +563,7 @@ void OsThreadDestroy(THandle aThread)
 {
     ThreadData* data = (ThreadData*)aThread;
     if (data != NULL) {
+        OsSemaphoreDestroy(data->iSemaHandle);
         free(data->iName);
         free(data);
     }
@@ -479,7 +579,8 @@ int32_t OsThreadSupportsPriorities(OsContext* aContext)
 typedef struct OsNetworkHandle
 {
     SOCKET     iSocket;
-    WSAEVENT   iEvent;
+    WSAEVENT   iEventSocket;
+    WSAEVENT   iEventInterrupt;
     int32_t    iInterrupted;
     OsContext* iCtx;
 }OsNetworkHandle;
@@ -508,9 +609,23 @@ static OsNetworkHandle* CreateHandle(OsContext* aContext, SOCKET aSocket)
         (void)closesocket(handle->iSocket);
         return kHandleNull;
     }
-    handle->iEvent = WSACreateEvent();
-    if (NULL == handle->iEvent) {
-        (void)closesocket(handle->iSocket);
+    handle->iEventSocket = WSACreateEvent();
+    if (NULL == handle->iEventSocket) {
+        (void)closesocket(aSocket);
+        free(handle);
+        return kHandleNull;
+    }
+    handle->iEventInterrupt = WSACreateEvent();
+    if (NULL == handle->iEventInterrupt) {
+        WSACloseEvent(handle->iEventSocket);
+        (void)closesocket(aSocket);
+        free(handle);
+        return kHandleNull;
+    }
+    if (0 != WSAEventSelect(aSocket, handle->iEventSocket, FD_READ | FD_WRITE | FD_ACCEPT | FD_CONNECT | FD_CLOSE)) {
+        WSACloseEvent(handle->iEventInterrupt);
+        WSACloseEvent(handle->iEventSocket);
+        (void)closesocket(aSocket);
         free(handle);
         return kHandleNull;
     }
@@ -526,7 +641,9 @@ static void SetSocketBlocking(SOCKET aSocket)
     u_long nonBlocking = 0;
     WSAEventSelect(aSocket, NULL, 0);
     if (-1 == ioctlsocket(aSocket, FIONBIO, &nonBlocking)) {
+#ifndef DEFINE_WINDOWS_UNIVERSAL
         fprintf(stdout, "SetSocketBlocking failed for socket %u\n", aSocket);
+#endif
     }
 }
 
@@ -583,7 +700,6 @@ int32_t OsNetworkConnect(THandle aHandle, TIpAddress aAddress, uint16_t aPort, u
     int32_t err = -1;
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     struct sockaddr_in addr;
-    WSAEVENT event;
     HANDLE handles[2];
     DWORD ret;
 
@@ -591,19 +707,11 @@ int32_t OsNetworkConnect(THandle aHandle, TIpAddress aAddress, uint16_t aPort, u
         return -1;
     }
 
-    event = WSACreateEvent();
-    if (NULL == event) {
-        return -1;
-    }
-    if (0 != WSAEventSelect(handle->iSocket, event, FD_CONNECT|FD_WRITE)) {
-        WSACloseEvent(event);
-        return -1;
-    }
+    handles[0] = handle->iEventSocket;
+    handles[1] = handle->iEventInterrupt;
 
     sockaddrFromEndpoint(&addr, aAddress, aPort);
     (void)connect(handle->iSocket, (struct sockaddr*)&addr, sizeof(addr));
-    handles[0] = event;
-    handles[1] = handle->iEvent;
     ret = WSAWaitForMultipleEvents(2, &handles[0], FALSE, aTimeoutMs, FALSE);
     if (WAIT_OBJECT_0 == ret) {
         // Need to check socket status using getsockopt. See msdn page for select:
@@ -615,26 +723,42 @@ int32_t OsNetworkConnect(THandle aHandle, TIpAddress aAddress, uint16_t aPort, u
         }
     }
 
-    SetSocketBlocking(handle->iSocket);
-    WSACloseEvent(event);
     return err;
 }
 
 int32_t OsNetworkSend(THandle aHandle, const uint8_t* aBuffer, uint32_t aBytes)
 {
-    int32_t sent = 0;
     int32_t bytes = 0;
+    uint32_t remaining = aBytes;
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
+    HANDLE handles[2];
+    DWORD ret;
+
     if (SocketInterrupted(handle)) {
         return -1;
     }
+
+    handles[0] = handle->iEventSocket;
+    handles[1] = handle->iEventInterrupt;
     do {
-        bytes = send(handle->iSocket, (const char*)aBuffer, aBytes, 0);
+        bytes = send(handle->iSocket, (const char*)aBuffer, remaining, 0);
         if (bytes != -1) {
-            sent += bytes;
+            aBuffer += bytes;
+            remaining -= bytes;
         }
-    } while(bytes != -1 && sent < (int32_t)aBytes);    
-    return sent;
+        else if (WSAEWOULDBLOCK == WSAGetLastError()) {
+            ret = WSAWaitForMultipleEvents(2, &handles[0], FALSE, INFINITE, FALSE);
+            if (WAIT_OBJECT_0 == ret) {
+                bytes = 0; // space to write - reset bytes to allow for another iteration
+            }
+            (void)WSAResetEvent(handle->iEventSocket);
+        }
+        else {
+            break;
+        }
+    } while(bytes != -1 && remaining > 0);
+
+    return (int32_t)aBytes - remaining;
 }
 
 int32_t OsNetworkSendTo(THandle aHandle, const uint8_t* aBuffer, uint32_t aBytes, TIpAddress aAddress, uint16_t aPort)
@@ -660,7 +784,6 @@ int32_t OsNetworkReceive(THandle aHandle, uint8_t* aBuffer, uint32_t aBytes)
 {
     int32_t received;
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
-    WSAEVENT event;
     HANDLE handles[2];
     DWORD ret;
 
@@ -668,27 +791,19 @@ int32_t OsNetworkReceive(THandle aHandle, uint8_t* aBuffer, uint32_t aBytes)
         return -1;
     }
 
-    event = WSACreateEvent();
-    if (NULL == event) {
-        return -1;
-    }
-    if (0 != WSAEventSelect(handle->iSocket, event, FD_READ|FD_CLOSE)) {
-        WSACloseEvent(event);
-        return -1;
-    }
+    handles[0] = handle->iEventSocket;
+    handles[1] = handle->iEventInterrupt;
 
     received = recv(handle->iSocket, (char*)aBuffer, aBytes, 0);
-    if (SOCKET_ERROR==received && WSAEWOULDBLOCK==WSAGetLastError()) {
-        handles[0] = event;
-        handles[1] = handle->iEvent;
+    while (SOCKET_ERROR==received && WSAEWOULDBLOCK==WSAGetLastError()) {
         ret = WSAWaitForMultipleEvents(2, &handles[0], FALSE, INFINITE, FALSE);
-        if (WAIT_OBJECT_0 == ret) {
-            received = recv(handle->iSocket, (char*)aBuffer, aBytes, 0);
+        if (SocketInterrupted(handle)) {
+            break;
         }
+        (void)WSAResetEvent(handle->iEventSocket);
+        received = recv(handle->iSocket, (char*)aBuffer, aBytes, 0);
     }
 
-    SetSocketBlocking(handle->iSocket);
-    WSACloseEvent(event);
     return received;
 }
 
@@ -698,7 +813,6 @@ int32_t OsNetworkReceiveFrom(THandle aHandle, uint8_t* aBuffer, uint32_t aBytes,
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     struct sockaddr_in addr;
     int len = sizeof(addr);
-    WSAEVENT event;
     HANDLE handles[2];
     DWORD ret = 0;
 
@@ -708,14 +822,8 @@ int32_t OsNetworkReceiveFrom(THandle aHandle, uint8_t* aBuffer, uint32_t aBytes,
 
     sockaddrFromEndpoint(&addr, 0, 0);
 
-    event = WSACreateEvent();
-    if (NULL == event) {
-        return -1;
-    }
-    if (0 != WSAEventSelect(handle->iSocket, event, FD_READ)) {
-        WSACloseEvent(event);
-        return -1;
-    }
+    handles[0] = handle->iEventSocket;
+    handles[1] = handle->iEventInterrupt;
 
     received = recvfrom(handle->iSocket, (char*)aBuffer, aBytes, 0, (struct sockaddr*)&addr, &len);
     while (SOCKET_ERROR == received) {
@@ -723,18 +831,14 @@ int32_t OsNetworkReceiveFrom(THandle aHandle, uint8_t* aBuffer, uint32_t aBytes,
         if (WSAECONNRESET != err && WSAEWOULDBLOCK != err) {
             break;
         }
-        handles[0] = event;
-        handles[1] = handle->iEvent;
         ret = WSAWaitForMultipleEvents(2, &handles[0], FALSE, INFINITE, FALSE);
         if (SocketInterrupted(handle)) {
             break;
         }
-        (void)WSAResetEvent(event);
+        (void)WSAResetEvent(handle->iEventSocket);
         received = recvfrom(handle->iSocket, (char*)aBuffer, aBytes, 0, (struct sockaddr*)&addr, &len);
     }
 
-    SetSocketBlocking(handle->iSocket);
-    WSACloseEvent(event);
     *aAddress = addr.sin_addr.s_addr;
     *aPort = SwapEndian16(addr.sin_port);
     return received;
@@ -747,10 +851,10 @@ int32_t OsNetworkInterrupt(THandle aHandle, int32_t aInterrupt)
     OsMutexLock(handle->iCtx->iMutex);
     handle->iInterrupted = aInterrupt;
     if (aInterrupt != 0) {
-        (void)WSASetEvent(handle->iEvent);
+        (void)WSASetEvent(handle->iEventInterrupt);
     }
     else {
-        (void)WSAResetEvent(handle->iEvent);
+        (void)WSAResetEvent(handle->iEventInterrupt);
     }
     OsMutexUnlock(handle->iCtx->iMutex);
     return err;
@@ -761,7 +865,8 @@ int32_t OsNetworkClose(THandle aHandle)
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
     int32_t err = closesocket(handle->iSocket);
     if (0 == err) {
-        WSACloseEvent(handle->iEvent);
+        WSACloseEvent(handle->iEventInterrupt);
+        WSACloseEvent(handle->iEventSocket);
         free(handle);
     }
     return err;
@@ -783,7 +888,6 @@ THandle OsNetworkAccept(THandle aHandle, TIpAddress* aClientAddress, uint32_t* a
     SOCKET h;
     OsNetworkHandle* newHandle;
     OsNetworkHandle* handle = (OsNetworkHandle*)aHandle;
-    WSAEVENT event;
     HANDLE handles[2];
     DWORD ret;
     struct sockaddr_in addr;
@@ -795,26 +899,18 @@ THandle OsNetworkAccept(THandle aHandle, TIpAddress* aClientAddress, uint32_t* a
         return kHandleNull;
     }
     sockaddrFromEndpoint(&addr, 0, 0);
-    event = WSACreateEvent();
-    if (NULL == event) {
-        return kHandleNull;
-    }
-    if (0 != WSAEventSelect(handle->iSocket, event, FD_ACCEPT|FD_CLOSE)) {
-        WSACloseEvent(event);
-        return kHandleNull;
-    }
+    handles[0] = handle->iEventSocket;
+    handles[1] = handle->iEventInterrupt;
 
     h = accept(handle->iSocket, (struct sockaddr*)&addr, &len);
-    if (INVALID_SOCKET==h && WSAEWOULDBLOCK==WSAGetLastError()) {
-        handles[0] = event;
-        handles[1] = handle->iEvent;
+    while (INVALID_SOCKET==h && WSAEWOULDBLOCK==WSAGetLastError()) {
         ret = WSAWaitForMultipleEvents(2, &handles[0], FALSE, INFINITE, FALSE);
-        if (WAIT_OBJECT_0 == ret) {
-            h = accept(handle->iSocket, (struct sockaddr*)&addr, &len);
+        (void)WSAResetEvent(handle->iEventSocket);
+        if (SocketInterrupted(handle)) {
+            break;
         }
+        h = accept(handle->iSocket, (struct sockaddr*)&addr, &len);
     }
-    SetSocketBlocking(handle->iSocket);
-    WSACloseEvent(event);
     if (INVALID_SOCKET == h) {
         return kHandleNull;
     }
@@ -931,10 +1027,17 @@ int32_t OsNetworkSocketSetMulticastIf(THandle aHandle,  TIpAddress aInterface)
     return err;
 }
 
-int32_t OsNetworkListAdapters(OsContext* aContext, OsNetworkAdapter** aInterfaces, uint32_t aUseLoopback)
-{
+
 #define MakeIpAddress(aByte1, aByte2, aByte3, aByte4) \
         (aByte1 | (aByte2<<8) | (aByte3<<16) | (aByte4<<24))
+
+
+
+#ifndef DEFINE_WINDOWS_UNIVERSAL
+
+int32_t OsNetworkListAdapters(OsContext* aContext, OsNetworkAdapter** aInterfaces, uint32_t aUseLoopback)
+{
+
 
     MIB_IFTABLE* ifTable          = NULL;
     MIB_IPADDRTABLE* addrTable    = NULL;
@@ -1059,7 +1162,117 @@ failure:
     free(ifTable);
     OsNetworkFreeInterfaces(head);
     return -1;
-}
+
+
+  }
+
+#else
+#define IF_TYPE_ETHERNET_CSMACD 6
+
+  int32_t OsNetworkListAdapters(OsContext* aContext, OsNetworkAdapter** aInterfaces, uint32_t aUseLoopback)
+  {
+    UNUSED(aContext);
+    UNUSED(aUseLoopback);
+
+    OsNetworkAdapter* head = NULL;
+
+    try
+    {
+        auto hostNames = NetworkInformation::GetHostNames();
+
+        for each (auto iter in hostNames)
+        {
+            HostName^ hostName = (HostName^)iter;
+            if (hostName != nullptr && hostName->Type == HostNameType::Ipv4 && hostName->IPInformation != nullptr)
+            {
+                TIpAddress address;
+
+                IPInformation^ ipInfo = hostName->IPInformation;                
+                int prefixLength = ipInfo->PrefixLength->Value;
+                String^ ipAddressString = hostName->CanonicalName;
+
+                // convert String ipAddressString to char*
+                auto wideData = ipAddressString->Data();                
+                int bufferSize = WideCharToMultiByte(CP_UTF8, 0, wideData, -1, nullptr, 0, NULL, NULL);
+                auto utf8 = std::make_unique<char[]>(bufferSize);
+                if (0 == WideCharToMultiByte(CP_UTF8, 0, wideData, -1, utf8.get(), bufferSize, NULL, NULL))
+                {
+                    OsNetworkFreeInterfaces(head);
+                    return -1;
+                }
+                std::string ipAddrStdStr = std::string(utf8.get());
+                const char* ipAddressChars = ipAddrStdStr.c_str();
+                
+                if (0 != OsNetworkGetHostByName(ipAddressChars, &address))
+                {
+                    OsNetworkFreeInterfaces(head);
+                    return -1;
+                }
+
+                TIpAddress netmask = 0xFFFFFFFF;
+                netmask <<= 32 - prefixLength;
+                netmask = htonl(netmask);
+
+                OsNetworkAdapter* nif;
+                nif = (OsNetworkAdapter*)calloc(1, sizeof(*nif));
+                if (nif == NULL) {
+                    return -1;
+                }
+                nif->iReserved = IF_TYPE_ETHERNET_CSMACD;
+                nif->iAddress = address;
+                nif->iNetMask = netmask;
+                nif->iName = (char*)malloc(1);
+                nif->iName[0] = '\0';
+                if (head == NULL) 
+                {
+                    head = nif;
+                }
+                else 
+                {
+                    TIpAddress subnet = (nif->iAddress & nif->iNetMask);
+                    OsNetworkAdapter* p1 = head;
+                    OsNetworkAdapter* prev = NULL;
+                    while (NULL != p1) 
+                    {
+                        if ((p1->iAddress & p1->iNetMask) == subnet) 
+                        {
+                            while (NULL != p1 && IF_TYPE_ETHERNET_CSMACD == p1->iReserved) 
+                            {
+                                prev = p1;
+                                p1 = p1->iNext;
+                            }
+                            break;
+                        }
+                        prev = p1;
+                        p1 = p1->iNext;
+                    }
+                    if (NULL == prev) 
+                    {
+                        nif->iNext = head;
+                        head = nif;
+                    }
+                    else 
+                    {
+                        nif->iNext = prev->iNext;
+                        prev->iNext = nif;
+                    }
+                }
+            }
+        }
+    }
+    catch (Exception^ ex)
+    {
+        OsNetworkFreeInterfaces(head);
+        return -1;
+    }
+
+    *aInterfaces = head;
+
+    return 0;
+  }
+
+#endif
+
 
 void OsNetworkFreeInterfaces(OsNetworkAdapter* aInterfaces)
 {
@@ -1117,12 +1330,12 @@ void OsNetworkSetInterfaceChangedObserver(OsContext* aContext, InterfaceListChan
 
     icobs->iSocket = socket(AF_INET, SOCK_DGRAM, 0);
     SetSocketBlocking(icobs->iSocket);
-    icobs->iEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-    icobs->iShutdownEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+    icobs->iEvent = M_CreateEvent(NULL, FALSE, FALSE, NULL);
+    icobs->iShutdownEvent = M_CreateEvent(NULL, FALSE, FALSE, NULL);
     icobs->iCallback = aCallback;
     icobs->iArg = aArg;
     icobs->iShutdown = 0;
-    icobs->iSem = CreateSemaphore(NULL, 0, INT32_MAX, NULL);
+    icobs->iSem = M_CreateSemaphore(NULL, 0, INT32_MAX, NULL);
     (void)WSAEventSelect(icobs->iSocket, icobs->iEvent, FD_ADDRESS_LIST_CHANGE);
     (void)CreateThread(NULL, 16*1024, (LPTHREAD_START_ROUTINE)&interfaceChangeThread, icobs, 0, NULL);
     aContext->iInterfaceChangeObserver = icobs;

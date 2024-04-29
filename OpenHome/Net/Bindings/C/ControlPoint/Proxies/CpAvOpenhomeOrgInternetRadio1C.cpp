@@ -412,21 +412,21 @@ void CpProxyAvOpenhomeOrgInternetRadio1C::SetPropertyTransportStateChanged(Funct
 void CpProxyAvOpenhomeOrgInternetRadio1C::PropertyUri(Brhz& aUri) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aUri.Set(iUri->Value());
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1C::PropertyMetadata(Brhz& aMetadata) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aMetadata.Set(iMetadata->Value());
 }
 
 void CpProxyAvOpenhomeOrgInternetRadio1C::PropertyTransportState(Brhz& aTransportState) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aTransportState.Set(iTransportState->Value());
 }
 
@@ -693,30 +693,48 @@ void STDCALL CpProxyAvOpenhomeOrgInternetRadio1SetPropertyTransportStateChanged(
     proxyC->SetPropertyTransportStateChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyUri(THandle aHandle, char** aUri)
+int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyUri(THandle aHandle, char** aUri)
 {
     CpProxyAvOpenhomeOrgInternetRadio1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgInternetRadio1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aUri;
-    proxyC->PropertyUri(buf_aUri);
+    try {
+        proxyC->PropertyUri(buf_aUri);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aUri = buf_aUri.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyMetadata(THandle aHandle, char** aMetadata)
+int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyMetadata(THandle aHandle, char** aMetadata)
 {
     CpProxyAvOpenhomeOrgInternetRadio1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgInternetRadio1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aMetadata;
-    proxyC->PropertyMetadata(buf_aMetadata);
+    try {
+        proxyC->PropertyMetadata(buf_aMetadata);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aMetadata = buf_aMetadata.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyTransportState(THandle aHandle, char** aTransportState)
+int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyTransportState(THandle aHandle, char** aTransportState)
 {
     CpProxyAvOpenhomeOrgInternetRadio1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgInternetRadio1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aTransportState;
-    proxyC->PropertyTransportState(buf_aTransportState);
+    try {
+        proxyC->PropertyTransportState(buf_aTransportState);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aTransportState = buf_aTransportState.Transfer();
+    return 0;
 }
 

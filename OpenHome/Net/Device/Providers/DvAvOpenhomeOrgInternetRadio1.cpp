@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgInternetRadio1::GetPropertyUri(Brhz& aValue)
     aValue.Set(iPropertyUri->Value());
 }
 
+void DvProviderAvOpenhomeOrgInternetRadio1::WritePropertyUri(IWriter& aWriter)
+{
+    iPropertyUri->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgInternetRadio1::SetPropertyMetadata(const Brx& aValue)
 {
     ASSERT(iPropertyMetadata != NULL);
@@ -32,6 +37,11 @@ void DvProviderAvOpenhomeOrgInternetRadio1::GetPropertyMetadata(Brhz& aValue)
     aValue.Set(iPropertyMetadata->Value());
 }
 
+void DvProviderAvOpenhomeOrgInternetRadio1::WritePropertyMetadata(IWriter& aWriter)
+{
+    iPropertyMetadata->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgInternetRadio1::SetPropertyTransportState(const Brx& aValue)
 {
     ASSERT(iPropertyTransportState != NULL);
@@ -42,6 +52,11 @@ void DvProviderAvOpenhomeOrgInternetRadio1::GetPropertyTransportState(Brhz& aVal
 {
     ASSERT(iPropertyTransportState != NULL);
     aValue.Set(iPropertyTransportState->Value());
+}
+
+void DvProviderAvOpenhomeOrgInternetRadio1::WritePropertyTransportState(IWriter& aWriter)
+{
+    iPropertyTransportState->Write(aWriter);
 }
 
 DvProviderAvOpenhomeOrgInternetRadio1::DvProviderAvOpenhomeOrgInternetRadio1(DvDevice& aDevice)

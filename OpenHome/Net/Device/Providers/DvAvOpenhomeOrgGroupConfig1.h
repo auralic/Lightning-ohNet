@@ -40,6 +40,12 @@ public:
      */
     void GetPropertyGroupMode(Brhz& aValue);
     /**
+     * Output the value of the GroupMode property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyGroupMode has previously been called.
+     */
+    void WritePropertyGroupMode(IWriter& aWriter);
+    /**
      * Set the value of the GroupName property
      *
      * Can only be called if EnablePropertyGroupName has previously been called.
@@ -54,6 +60,12 @@ public:
      */
     void GetPropertyGroupName(Brhz& aValue);
     /**
+     * Output the value of the GroupName property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyGroupName has previously been called.
+     */
+    void WritePropertyGroupName(IWriter& aWriter);
+    /**
      * Set the value of the GroupID property
      *
      * Can only be called if EnablePropertyGroupID has previously been called.
@@ -67,6 +79,12 @@ public:
      * Can only be called if EnablePropertyGroupID has previously been called.
      */
     void GetPropertyGroupID(Brhz& aValue);
+    /**
+     * Output the value of the GroupID property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyGroupID has previously been called.
+     */
+    void WritePropertyGroupID(IWriter& aWriter);
     /**
      * Set the value of the GroupVolume property
      *
@@ -109,6 +127,12 @@ public:
      * Can only be called if EnablePropertyGroupStatus has previously been called.
      */
     void GetPropertyGroupStatus(Brhz& aValue);
+    /**
+     * Output the value of the GroupStatus property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyGroupStatus has previously been called.
+     */
+    void WritePropertyGroupStatus(IWriter& aWriter);
     /**
      * Set the value of the BitPerfectMode property
      *

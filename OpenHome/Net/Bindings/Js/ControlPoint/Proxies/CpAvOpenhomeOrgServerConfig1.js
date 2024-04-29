@@ -18,10 +18,11 @@ var CpProxyAvOpenhomeOrgServerConfig1 = function(udn){
     
     // Collection of service properties
     this.serviceProperties = {};
+    this.serviceProperties["PlayCD"] = new ohnet.serviceproperty("PlayCD","bool");
     this.serviceProperties["Alive"] = new ohnet.serviceproperty("Alive","bool");
     this.serviceProperties["SubscriptValue"] = new ohnet.serviceproperty("SubscriptValue","string");
 
-                
+                      
 }
 
 
@@ -48,6 +49,19 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.unsubscribe = function () {
     
 
 /**
+* Adds a listener to handle "PlayCD" property change events
+* @method PlayCD_Changed
+* @param {Function} stateChangedFunction The handler for state changes
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.PlayCD_Changed = function (stateChangedFunction) {
+    this.serviceProperties.PlayCD.addListener(function (state) 
+    { 
+        stateChangedFunction(ohnet.soaprequest.readBoolParameter(state)); 
+    });
+}
+    
+
+/**
 * Adds a listener to handle "Alive" property change events
 * @method Alive_Changed
 * @param {Function} stateChangedFunction The handler for state changes
@@ -69,6 +83,27 @@ CpProxyAvOpenhomeOrgServerConfig1.prototype.SubscriptValue_Changed = function (s
     this.serviceProperties.SubscriptValue.addListener(function (state) 
     { 
         stateChangedFunction(ohnet.soaprequest.readStringParameter(state)); 
+    });
+}
+
+
+/**
+* A service action to SetPlayCD
+* @method SetPlayCD
+* @param {Boolean} PlayCD An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgServerConfig1.prototype.SetPlayCD = function(PlayCD, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetPlayCD", this.url, this.domain, this.type, this.version);     
+    request.writeBoolParameter("PlayCD", PlayCD);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
     });
 }
 

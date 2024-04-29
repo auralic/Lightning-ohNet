@@ -18,6 +18,7 @@ var CpProxyAvOpenhomeOrgHardwareConfig1 = function(udn){
     
     // Collection of service properties
     this.serviceProperties = {};
+    this.serviceProperties["MessageOut"] = new ohnet.serviceproperty("MessageOut","string");
     this.serviceProperties["Alive"] = new ohnet.serviceproperty("Alive","bool");
     this.serviceProperties["CurrentAction"] = new ohnet.serviceproperty("CurrentAction","int");
     this.serviceProperties["Restart"] = new ohnet.serviceproperty("Restart","bool");
@@ -42,7 +43,7 @@ var CpProxyAvOpenhomeOrgHardwareConfig1 = function(udn){
     this.serviceProperties["Time"] = new ohnet.serviceproperty("Time","string");
     this.serviceProperties["VolumeControl"] = new ohnet.serviceproperty("VolumeControl","bool");
 
-                                                                                                                                              
+                                                                                                                                                    
 }
 
 
@@ -66,6 +67,19 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.unsubscribe = function () {
 }
 
 
+    
+
+/**
+* Adds a listener to handle "MessageOut" property change events
+* @method MessageOut_Changed
+* @param {Function} stateChangedFunction The handler for state changes
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.MessageOut_Changed = function (stateChangedFunction) {
+    this.serviceProperties.MessageOut.addListener(function (state) 
+    { 
+        stateChangedFunction(ohnet.soaprequest.readStringParameter(state)); 
+    });
+}
     
 
 /**
@@ -363,6 +377,30 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.VolumeControl_Changed = function (
     this.serviceProperties.VolumeControl.addListener(function (state) 
     { 
         stateChangedFunction(ohnet.soaprequest.readBoolParameter(state)); 
+    });
+}
+
+
+/**
+* A service action to LogIn
+* @method LogIn
+* @param {String} ServiceName An action parameter
+* @param {String} MessageIn An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.LogIn = function(ServiceName, MessageIn, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("LogIn", this.url, this.domain, this.type, this.version);     
+    request.writeStringParameter("ServiceName", ServiceName);
+    request.writeStringParameter("MessageIn", MessageIn);
+    request.send(function(result){
+        result["MessageOut"] = ohnet.soaprequest.readStringParameter(result["MessageOut"]); 
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
     });
 }
 
@@ -1280,6 +1318,69 @@ CpProxyAvOpenhomeOrgHardwareConfig1.prototype.GetDACBalance = function(successFu
 CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetDACBalance = function(Balance, successFunction, errorFunction){ 
     var request = new ohnet.soaprequest("SetDACBalance", this.url, this.domain, this.type, this.version);     
     request.writeIntParameter("Balance", Balance);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetEnableResampler
+* @method SetEnableResampler
+* @param {Boolean} EnableResampler An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetEnableResampler = function(EnableResampler, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetEnableResampler", this.url, this.domain, this.type, this.version);     
+    request.writeBoolParameter("EnableResampler", EnableResampler);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetEnableSpeaker
+* @method SetEnableSpeaker
+* @param {Boolean} EnableSpeaker An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetEnableSpeaker = function(EnableSpeaker, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetEnableSpeaker", this.url, this.domain, this.type, this.version);     
+    request.writeBoolParameter("EnableSpeaker", EnableSpeaker);
+    request.send(function(result){
+    
+        if (successFunction){
+            successFunction(result);
+        }
+    }, function(message, transport) {
+        if (errorFunction) {errorFunction(message, transport);}
+    });
+}
+
+
+/**
+* A service action to SetEnableEqualizer
+* @method SetEnableEqualizer
+* @param {Boolean} EnableEqualizer An action parameter
+* @param {Function} successFunction The function that is executed when the action has completed successfully
+* @param {Function} errorFunction The function that is executed when the action has cause an error
+*/
+CpProxyAvOpenhomeOrgHardwareConfig1.prototype.SetEnableEqualizer = function(EnableEqualizer, successFunction, errorFunction){ 
+    var request = new ohnet.soaprequest("SetEnableEqualizer", this.url, this.domain, this.type, this.version);     
+    request.writeBoolParameter("EnableEqualizer", EnableEqualizer);
     request.send(function(result){
     
         if (successFunction){

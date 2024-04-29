@@ -1,11 +1,15 @@
 #include <OpenHome/Private/NetworkAdapterList.h>
 #include <OpenHome/Types.h>
+#include <OpenHome/Exception.h>
 #include <OpenHome/OsWrapper.h>
 #include <OpenHome/Private/Thread.h>
 #include <OpenHome/Private/Env.h>
-#include <algorithm>
 #include <OpenHome/Exception.h>
 #include <OpenHome/Private/Debug.h>
+
+#include <algorithm>
+#include <vector>
+#include <map>
 
 using namespace OpenHome;
 
@@ -109,12 +113,17 @@ void NetworkAdapterList::SetCurrentSubnet(TIpAddress aSubnet)
     }
 }
 
-TUint NetworkAdapterList::AddCurrentChangeListener(Functor aFunctor, TBool aInternalClient)
+void NetworkAdapterList::Refresh()
+{
+    HandleInterfaceListChanged();
+}
+
+TUint NetworkAdapterList::AddCurrentChangeListener(Functor aFunctor, const TChar* aId, TBool aInternalClient)
 {
     if (aInternalClient) {
-        return AddListener(aFunctor, iListenersCurrentInternal);
+        return AddListener(aFunctor, aId, iListenersCurrentInternal);
     }
-    return AddListener(aFunctor, iListenersCurrentExternal);
+    return AddListener(aFunctor, aId, iListenersCurrentExternal);
 }
 
 void NetworkAdapterList::RemoveCurrentChangeListener(TUint aId)
@@ -124,12 +133,12 @@ void NetworkAdapterList::RemoveCurrentChangeListener(TUint aId)
     }
 }
 
-TUint NetworkAdapterList::AddSubnetListChangeListener(Functor aFunctor, TBool aInternalClient)
+TUint NetworkAdapterList::AddSubnetListChangeListener(Functor aFunctor, const TChar* aId, TBool aInternalClient)
 {
     if (aInternalClient) {
-        return AddListener(aFunctor, iListenersSubnetInternal);
+        return AddListener(aFunctor, aId, iListenersSubnetInternal);
     }
-    return AddListener(aFunctor, iListenersSubnetExternal);
+    return AddListener(aFunctor, aId, iListenersSubnetExternal);
 }
 
 void NetworkAdapterList::RemoveSubnetListChangeListener(TUint aId)
@@ -139,9 +148,9 @@ void NetworkAdapterList::RemoveSubnetListChangeListener(TUint aId)
     }
 }
 
-TUint NetworkAdapterList::AddSubnetAddedListener(FunctorNetworkAdapter aFunctor)
+TUint NetworkAdapterList::AddSubnetAddedListener(FunctorNetworkAdapter aFunctor, const TChar* aId)
 {
-    return AddSubnetListener(aFunctor, iListenersAdded);
+    return AddSubnetListener(aFunctor, aId, iListenersAdded);
 }
 
 void NetworkAdapterList::RemoveSubnetAddedListener(TUint aId)
@@ -149,9 +158,9 @@ void NetworkAdapterList::RemoveSubnetAddedListener(TUint aId)
     RemoveSubnetListener(aId, iListenersAdded);
 }
 
-TUint NetworkAdapterList::AddSubnetRemovedListener(FunctorNetworkAdapter aFunctor)
+TUint NetworkAdapterList::AddSubnetRemovedListener(FunctorNetworkAdapter aFunctor, const TChar* aId)
 {
-    return AddSubnetListener(aFunctor, iListenersRemoved);
+    return AddSubnetListener(aFunctor, aId, iListenersRemoved);
 }
 
 void NetworkAdapterList::RemoveSubnetRemovedListener(TUint aId)
@@ -159,9 +168,9 @@ void NetworkAdapterList::RemoveSubnetRemovedListener(TUint aId)
     RemoveSubnetListener(aId, iListenersRemoved);
 }
 
-TUint NetworkAdapterList::AddNetworkAdapterChangeListener(FunctorNetworkAdapter aFunctor)
+TUint NetworkAdapterList::AddNetworkAdapterChangeListener(FunctorNetworkAdapter aFunctor, const TChar* aId)
 {
-    return AddSubnetListener(aFunctor, iListenersAdapterChanged);
+    return AddSubnetListener(aFunctor, aId, iListenersAdapterChanged);
 }
 
 void NetworkAdapterList::RemoveNetworkAdapterChangeListener(TUint aId)
@@ -180,7 +189,7 @@ void NetworkAdapterList::TempFailureRetry(Functor& aCallback)
             return;
         }
         catch (NetworkError&) {
-            LOG2(kNetwork, kError, "TempFailureRetry: error handling adapter change, try again in %ums\n", kDelaysMs[i]);
+            LOG_ERROR(kNetwork, "TempFailureRetry: error handling adapter change, try again in %ums\n", kDelaysMs[i]);
             Thread::Sleep(kDelaysMs[i]);
         }
     }
@@ -201,34 +210,40 @@ std::vector<NetworkAdapter*>* NetworkAdapterList::CreateSubnetListLocked() const
     return list;
 }
 
-TUint NetworkAdapterList::AddListener(Functor aFunctor, Map& aMap)
+TUint NetworkAdapterList::AddListener(Functor aFunctor, const TChar* aId, VectorListener& aList)
 {
     iListenerLock.Wait();
     TUint id = iNextListenerId;
-    aMap.insert(std::pair<TUint,Functor>(id, aFunctor));
+    Listener listener(aFunctor, aId);
+    aList.push_back(std::pair<TUint, Listener>(id, listener));
     iNextListenerId++;
     iListenerLock.Signal();
     return id;
 }
 
-TBool NetworkAdapterList::RemoveSubnetListChangeListener(TUint aId, Map& aMap)
+TBool NetworkAdapterList::RemoveSubnetListChangeListener(TUint aId, VectorListener& aList)
 {
     TBool removed = false;
     iListenerLock.Wait();
-    Map::iterator it = aMap.find(aId);
-    if (it != aMap.end()) {
-        aMap.erase(it);
-        removed = true;
+    VectorListener::iterator it = aList.begin();
+    while (it != aList.end()) {
+        if (it->first == aId) {
+            aList.erase(it);
+            removed = true;
+            break;
+        }
+        it++;
     }
     iListenerLock.Signal();
     return removed;
 }
 
-TUint NetworkAdapterList::AddSubnetListener(FunctorNetworkAdapter aFunctor, MapNetworkAdapter& aMap)
+TUint NetworkAdapterList::AddSubnetListener(FunctorNetworkAdapter aFunctor, const TChar* aId, MapNetworkAdapter& aMap)
 {
     iListenerLock.Wait();
     TUint id = iNextListenerId;
-    aMap.insert(std::pair<TUint,FunctorNetworkAdapter>(id, aFunctor));
+    ListenerNetworkAdapter listener(aFunctor, aId);
+    aMap.insert(std::pair<TUint, ListenerNetworkAdapter>(id, listener));
     iNextListenerId++;
     iListenerLock.Signal();
     return id;
@@ -249,6 +264,9 @@ void NetworkAdapterList::InterfaceListChanged(void* aPtr)
     try
     {
         reinterpret_cast<NetworkAdapterList*>(aPtr)->HandleInterfaceListChanged();
+    }
+    catch (AssertionFailed&) {
+        throw;
     }
     catch(Exception& e) {
         UnhandledExceptionHandler(e);
@@ -285,7 +303,7 @@ void NetworkAdapterList::UpdateCurrentAdapter()
         }
     }
     if (iCurrent == NULL) {
-        LOG(kTrace, "Subnet changed: none active\n");
+        LOG_TRACE(kAdapterChange, "Subnet changed: none active\n");
     }
 }
 
@@ -424,16 +442,16 @@ void NetworkAdapterList::HandleInterfaceListChanged()
     }
 }
 
-void NetworkAdapterList::RunCallbacks(Map& aMap)
+void NetworkAdapterList::RunCallbacks(const VectorListener& aCallbacks)
 {
     static const TUint kDelaysMs[] = { 100, 200, 400, 800, 1600, 3200, 5000, 10000, 20000, 20000, 30000 }; // roughly 90s worth of retries
     for (TUint i=0; i<sizeof(kDelaysMs)/sizeof(kDelaysMs[0]); i++) {
         try {
-            DoRunCallbacks(aMap);
+            DoRunCallbacks(aCallbacks);
             return;
         }
         catch (NetworkError&) {
-            LOG2(kNetwork, kError, "TempFailureRetry: error handling adapter change, try again in %ums\n", kDelaysMs[i]);
+            LOG_ERROR(kNetwork, "TempFailureRetry: error handling adapter change, try again in %ums\n", kDelaysMs[i]);
             Thread::Sleep(kDelaysMs[i]);
         }
     }
@@ -441,12 +459,13 @@ void NetworkAdapterList::RunCallbacks(Map& aMap)
 
 }
 
-void NetworkAdapterList::DoRunCallbacks(Map& aMap)
+void NetworkAdapterList::DoRunCallbacks(const VectorListener& aCallbacks)
 {
     AutoMutex a(iListenerLock);
-    Map::iterator it = aMap.begin();
-    while (it != aMap.end()) {
-        it->second();
+    VectorListener::const_iterator it = aCallbacks.begin();
+    while (it != aCallbacks.end()) {
+        LOG(kAdapterChange, "NetworkAdapterList::DoRunCallbacks - client is %s\n", it->second.iId);
+        it->second.iFunctor();
         it++;
     }
 }
@@ -456,7 +475,8 @@ void NetworkAdapterList::RunSubnetCallbacks(MapNetworkAdapter& aMap, NetworkAdap
     AutoMutex a(iListenerLock);
     MapNetworkAdapter::iterator it = aMap.begin();
     while (it != aMap.end()) {
-        it->second(aAdapter);
+        LOG(kAdapterChange, "NetworkAdapterList::RunSubnetCallbacks - client is %s\n", it->second.iId);
+        it->second.iFunctor(aAdapter);
         it++;
     }
 }
@@ -466,7 +486,7 @@ void NetworkAdapterList::TraceAdapter(const TChar* aPrefix, NetworkAdapter& aAda
     Endpoint ep(0, aAdapter.Address());
     Bws<Endpoint::kMaxAddressBytes> addr;
     ep.AppendAddress(addr);
-    LOG(kTrace, "%s: %s(%s)\n", aPrefix, aAdapter.Name(), (const TChar*)addr.Ptr());
+    LOG_TRACE(kNetwork, "%s: %s(%s)\n", aPrefix, aAdapter.Name(), (const TChar*)addr.Ptr());
 }
 
 void NetworkAdapterList::ListObjectDetails() const
@@ -570,7 +590,16 @@ void NetworkAdapterChangeNotifier::Run()
         UpdateBase* update = iList.front();
         iList.pop_front();
         iLock.Signal();
-        update->Update(iAdapterList);
+        try {
+            update->Update(iAdapterList);
+        }
+        catch (AssertionFailed&) {
+            throw;
+        }
+        catch (Exception& ex) {
+            LOG_ERROR(kAdapterChange, "NetworkAdapterChangeNotifier::Run() exception %s from %s:%u\n",
+                                      ex.Message(), ex.File(), ex.Line());
+        }
         delete update;
     }
 }

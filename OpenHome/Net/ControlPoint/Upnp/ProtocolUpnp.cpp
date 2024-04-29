@@ -31,18 +31,16 @@ InvocationUpnp::~InvocationUpnp()
 
 void InvocationUpnp::Invoke(const Uri& aUri)
 {
-    LOG(kService, "> InvocationUpnp::Invoke (%p, action ", &iInvocation);
-    LOG(kService, iInvocation.Action().Name());
-    LOG(kService, ")\n");
+    const Brx& actionName = iInvocation.Action().Name();
+    LOG(kService, "> InvocationUpnp::Invoke (%p, action %.*s, device %.*s)\n",
+                  &iInvocation, PBUF(actionName), PBUF(iInvocation.Udn()));
 
     iSocket.Open(iCpStack.Env());
     WriteRequest(aUri);
     iInvocation.SetInterruptHandler(this);
     ReadResponse();
 
-    LOG(kService, "< InvocationUpnp::Invoke (%p, action ", &iInvocation);
-    LOG(kService, iInvocation.Action().Name());
-    LOG(kService, ")\n");
+    LOG(kService, "< InvocationUpnp::Invoke (%p, action %.*s)\n", &iInvocation, PBUF(actionName));
 }
 
 void InvocationUpnp::WriteServiceType(IWriterAscii& aWriter, const Invocation& aInvocation)
@@ -73,7 +71,7 @@ void InvocationUpnp::WriteRequest(const Uri& aUri)
 
     try {
         InvocationBodyWriter::Write(iInvocation, body);
-        WriteHeaders(writerRequest, aUri, body.Bytes());
+        WriteHeaders(writerRequest, aUri, body.Bytes(), iCpStack.Env());
         writeBuffer.Write(body);
         writeBuffer.WriteFlush();
     }
@@ -95,11 +93,10 @@ void InvocationUpnp::ReadResponse()
     iReaderResponse.Read(kResponseTimeoutMs);
     const HttpStatus& status = iReaderResponse.Status();
     if (status != HttpStatus::kOk) {
-        LOG2(kService, kError, "InvocationUpnp::ReadResponse, http error %u ", status.Code());
-        LOG2(kService, kError, status.Reason());
-        LOG2(kService, kError, "\n");
+        const Brx& reason = status.Reason();
+        LOG_ERROR(kService, "InvocationUpnp::ReadResponse, http error %u %.*s\n", status.Code(), PBUF(reason));
         if (status != HttpStatus::kInternalServerError) {
-            iInvocation.SetError(Error::eHttp, status.Code(), status.Reason());
+            iInvocation.SetError(Error::eHttp, status.Code(), reason);
             THROW(HttpError);
         }
     }
@@ -121,7 +118,11 @@ void InvocationUpnp::ReadResponse()
         if (length != 0) {
             TUint remaining = length;
             do {
-                Brn buf = iReaderUntil.Read(kMaxReadBytes);
+                TUint bytes = remaining;
+                if (bytes > kMaxReadBytes) {
+                    bytes = kMaxReadBytes;
+                }
+                Brn buf = iReaderUntil.Read(bytes);
                 remaining -= buf.Bytes();
                 writer.Write(buf);
             } while (remaining > 0);
@@ -167,7 +168,7 @@ void InvocationUpnp::ReadResponse()
     }
 }
 
-void InvocationUpnp::WriteHeaders(WriterHttpRequest& aWriterRequest, const Uri& aUri, TUint aBodyBytes)
+void InvocationUpnp::WriteHeaders(WriterHttpRequest& aWriterRequest, const Uri& aUri, TUint aBodyBytes, Environment& aEnv)
 {
     ASSERT(aUri.Port()!=Uri::kPortNotSpecified);
     const Brn kContentType("text/xml; charset=\"utf-8\"");
@@ -178,6 +179,7 @@ void InvocationUpnp::WriteHeaders(WriterHttpRequest& aWriterRequest, const Uri& 
     Http::WriteHeaderHostAndPort(aWriterRequest, aUri.Host(), aUri.Port());
     Http::WriteHeaderContentLength(aWriterRequest, aBodyBytes);
     Http::WriteHeaderContentType(aWriterRequest, kContentType);
+    Http::WriteHeaderUserAgent(aWriterRequest, aEnv);
 
     IWriterAscii& writerField = aWriterRequest.WriteHeaderField(kSoapAction);
     writerField.Write('\"');
@@ -398,9 +400,8 @@ void EventUpnp::SubscribeReadResponse(Brh& aSid, TUint& aDurationSecs)
     readerResponse.Read(kSubscribeTimeoutMs);
     const HttpStatus& status = readerResponse.Status();
     if (status != HttpStatus::kOk) {
-        LOG2(kEvent, kError, "EventUpnp::SubscribeReadResponse, http error %u ", status.Code());
-        LOG2(kEvent, kError, status.Reason());
-        LOG2(kEvent, kError, "\n");
+        const Brx& reason = status.Reason();
+        LOG_ERROR(kEvent, "EventUpnp::SubscribeReadResponse, http error %u %.*s\n", status.Code(), PBUF(reason));
         THROW(HttpError);
     }
 
@@ -456,9 +457,8 @@ void EventUpnp::UnsubscribeReadResponse()
     readerResponse.Read(kUnsubscribeTimeoutMs);
     const HttpStatus& status = readerResponse.Status();
     if (status != HttpStatus::kOk) {
-        LOG2(kEvent, kError, "EventUpnp::Unsubscribe, http error %u ", status.Code());
-        LOG2(kEvent, kError, status.Reason());
-        LOG2(kEvent, kError, "\n");
+        const Brx& reason = status.Reason();
+        LOG_ERROR(kEvent, "EventUpnp::Unsubscribe, http error %u %.*s\n", status.Code(), PBUF(reason));
         // don't throw an exception here - clients will ignore any later events with unrecognised SIDs
     }
 }

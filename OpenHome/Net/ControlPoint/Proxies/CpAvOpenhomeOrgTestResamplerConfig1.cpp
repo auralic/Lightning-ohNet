@@ -7,19 +7,75 @@
 #include <OpenHome/Net/Private/Error.h>
 #include <OpenHome/Net/Private/CpiDevice.h>
 
-using namespace OpenHome;
-using namespace OpenHome::Net;
-
+namespace OpenHome {
+namespace Net {
 
 class SyncSetResamplerConfigAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
 {
 public:
     SyncSetResamplerConfigAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy);
     virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetResamplerConfigAvOpenhomeOrgTestResamplerConfig1() {}
 private:
     CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
 };
+
+class SyncGetResamplerConfigAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetResamplerConfigAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy, Brh& aResamplerConfig);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
+    Brh& iResamplerConfig;
+};
+
+class SyncSetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
+};
+
+class SyncGetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy, TBool& aPCMAutoDetect);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
+    TBool& iPCMAutoDetect;
+};
+
+class SyncSetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
+};
+
+class SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy, TBool& aDSDtoPCM);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
+    TBool& iDSDtoPCM;
+};
+
+} // namespace Net
+} // namespace OpenHome
+
+
+using namespace OpenHome;
+using namespace OpenHome::Net;
+
+
+// SyncSetResamplerConfigAvOpenhomeOrgTestResamplerConfig1
 
 SyncSetResamplerConfigAvOpenhomeOrgTestResamplerConfig1::SyncSetResamplerConfigAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy)
     : iService(aProxy)
@@ -31,17 +87,7 @@ void SyncSetResamplerConfigAvOpenhomeOrgTestResamplerConfig1::CompleteRequest(IA
     iService.EndSetResamplerConfig(aAsync);
 }
 
-
-class SyncGetResamplerConfigAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetResamplerConfigAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy, Brh& aResamplerConfig);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetResamplerConfigAvOpenhomeOrgTestResamplerConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
-    Brh& iResamplerConfig;
-};
+// SyncGetResamplerConfigAvOpenhomeOrgTestResamplerConfig1
 
 SyncGetResamplerConfigAvOpenhomeOrgTestResamplerConfig1::SyncGetResamplerConfigAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy, Brh& aResamplerConfig)
     : iService(aProxy)
@@ -54,16 +100,7 @@ void SyncGetResamplerConfigAvOpenhomeOrgTestResamplerConfig1::CompleteRequest(IA
     iService.EndGetResamplerConfig(aAsync, iResamplerConfig);
 }
 
-
-class SyncSetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
-};
+// SyncSetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1
 
 SyncSetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1::SyncSetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy)
     : iService(aProxy)
@@ -75,17 +112,7 @@ void SyncSetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1::CompleteRequest(IAsy
     iService.EndSetPCMAutoDetect(aAsync);
 }
 
-
-class SyncGetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy, TBool& aPCMAutoDetect);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
-    TBool& iPCMAutoDetect;
-};
+// SyncGetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1
 
 SyncGetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1::SyncGetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy, TBool& aPCMAutoDetect)
     : iService(aProxy)
@@ -98,16 +125,7 @@ void SyncGetPCMAutoDetectAvOpenhomeOrgTestResamplerConfig1::CompleteRequest(IAsy
     iService.EndGetPCMAutoDetect(aAsync, iPCMAutoDetect);
 }
 
-
-class SyncSetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
-};
+// SyncSetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1
 
 SyncSetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1::SyncSetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy)
     : iService(aProxy)
@@ -119,17 +137,7 @@ void SyncSetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1::CompleteRequest(IAsync& a
     iService.EndSetDSDtoPCM(aAsync);
 }
 
-
-class SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy, TBool& aDSDtoPCM);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgTestResamplerConfig1& iService;
-    TBool& iDSDtoPCM;
-};
+// SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1
 
 SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1::SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1(CpProxyAvOpenhomeOrgTestResamplerConfig1& aProxy, TBool& aDSDtoPCM)
     : iService(aProxy)
@@ -143,8 +151,10 @@ void SyncGetDSDtoPCMAvOpenhomeOrgTestResamplerConfig1::CompleteRequest(IAsync& a
 }
 
 
+// CpProxyAvOpenhomeOrgTestResamplerConfig1
+
 CpProxyAvOpenhomeOrgTestResamplerConfig1::CpProxyAvOpenhomeOrgTestResamplerConfig1(CpDevice& aDevice)
-    : CpProxy("av-openhome-org", "TestResamplerConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "TestResamplerConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -198,11 +208,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1::SyncSetResamplerConfig(const Brx&
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::BeginSetResamplerConfig(const Brx& aResamplerConfig, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetResamplerConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetResamplerConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetResamplerConfig->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aResamplerConfig));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::EndSetResamplerConfig(IAsync& aAsync)
@@ -228,11 +238,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1::SyncGetResamplerConfig(Brh& aResa
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::BeginGetResamplerConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetResamplerConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetResamplerConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetResamplerConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::EndGetResamplerConfig(IAsync& aAsync, Brh& aResamplerConfig)
@@ -260,11 +270,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1::SyncSetPCMAutoDetect(TBool aPCMAu
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::BeginSetPCMAutoDetect(TBool aPCMAutoDetect, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetPCMAutoDetect, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetPCMAutoDetect, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetPCMAutoDetect->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aPCMAutoDetect));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::EndSetPCMAutoDetect(IAsync& aAsync)
@@ -290,11 +300,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1::SyncGetPCMAutoDetect(TBool& aPCMA
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::BeginGetPCMAutoDetect(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetPCMAutoDetect, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetPCMAutoDetect, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetPCMAutoDetect->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::EndGetPCMAutoDetect(IAsync& aAsync, TBool& aPCMAutoDetect)
@@ -322,11 +332,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1::SyncSetDSDtoPCM(TBool aDSDtoPCM)
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::BeginSetDSDtoPCM(TBool aDSDtoPCM, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDSDtoPCM, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDSDtoPCM, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDSDtoPCM->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aDSDtoPCM));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::EndSetDSDtoPCM(IAsync& aAsync)
@@ -352,11 +362,11 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1::SyncGetDSDtoPCM(TBool& aDSDtoPCM)
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::BeginGetDSDtoPCM(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDSDtoPCM, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDSDtoPCM, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDSDtoPCM->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::EndGetDSDtoPCM(IAsync& aAsync, TBool& aDSDtoPCM)
@@ -377,15 +387,17 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1::EndGetDSDtoPCM(IAsync& aAsync, TB
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::SetPropertyCurrentActionChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iCurrentActionChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgTestResamplerConfig1::PropertyCurrentAction(TUint& aCurrentAction) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -393,4 +405,45 @@ void CpProxyAvOpenhomeOrgTestResamplerConfig1::CurrentActionPropertyChanged()
 {
     ReportEvent(iCurrentActionChanged);
 }
+
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgTestResamplerConfig1::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgTestResamplerConfig1::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgTestResamplerConfig1::Version() const
+{
+  return iCpProxy.Version();
+}
+
 

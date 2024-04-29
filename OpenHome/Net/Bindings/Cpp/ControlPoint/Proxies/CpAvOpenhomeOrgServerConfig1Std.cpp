@@ -13,6 +13,27 @@ using namespace OpenHome;
 using namespace OpenHome::Net;
 
 
+class SyncSetPlayCDAvOpenhomeOrgServerConfig1Cpp : public SyncProxyAction
+{
+public:
+    SyncSetPlayCDAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+    virtual ~SyncSetPlayCDAvOpenhomeOrgServerConfig1Cpp() {}
+private:
+    CpProxyAvOpenhomeOrgServerConfig1Cpp& iService;
+};
+
+SyncSetPlayCDAvOpenhomeOrgServerConfig1Cpp::SyncSetPlayCDAvOpenhomeOrgServerConfig1Cpp(CpProxyAvOpenhomeOrgServerConfig1Cpp& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetPlayCDAvOpenhomeOrgServerConfig1Cpp::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetPlayCD(aAsync);
+}
+
+
 class SyncSetServerNameAvOpenhomeOrgServerConfig1Cpp : public SyncProxyAction
 {
 public:
@@ -583,9 +604,13 @@ void SyncSetServerConfigAvOpenhomeOrgServerConfig1Cpp::CompleteRequest(IAsync& a
 
 
 CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "ServerConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "ServerConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
+
+    iActionSetPlayCD = new Action("SetPlayCD");
+    param = new OpenHome::Net::ParameterBool("PlayCD");
+    iActionSetPlayCD->AddInputParameter(param);
 
     iActionSetServerName = new Action("SetServerName");
     param = new OpenHome::Net::ParameterString("ServerName");
@@ -696,6 +721,9 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDev
     iActionSetServerConfig->AddInputParameter(param);
 
     Functor functor;
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1Cpp::PlayCDPropertyChanged);
+    iPlayCD = new PropertyBool("PlayCD", functor);
+    AddProperty(iPlayCD);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgServerConfig1Cpp::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
     AddProperty(iAlive);
@@ -707,6 +735,7 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::CpProxyAvOpenhomeOrgServerConfig1Cpp(CpDev
 CpProxyAvOpenhomeOrgServerConfig1Cpp::~CpProxyAvOpenhomeOrgServerConfig1Cpp()
 {
     DestroyService();
+    delete iActionSetPlayCD;
     delete iActionSetServerName;
     delete iActionGetServerVersion;
     delete iActionGetProgressInfo;
@@ -734,6 +763,36 @@ CpProxyAvOpenhomeOrgServerConfig1Cpp::~CpProxyAvOpenhomeOrgServerConfig1Cpp()
     delete iActionSetServerConfig;
 }
 
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetPlayCD(bool aPlayCD)
+{
+    SyncSetPlayCDAvOpenhomeOrgServerConfig1Cpp sync(*this);
+    BeginSetPlayCD(aPlayCD, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginSetPlayCD(bool aPlayCD, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetPlayCD, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetPlayCD->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aPlayCD));
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndSetPlayCD(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetPlayCD"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetServerName(const std::string& aServerName)
 {
     SyncSetServerNameAvOpenhomeOrgServerConfig1Cpp sync(*this);
@@ -743,14 +802,14 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetServerName(const std::string& 
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginSetServerName(const std::string& aServerName, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetServerName, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetServerName, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetServerName->InputParameters();
     {
         Brn buf((const TByte*)aServerName.c_str(), (TUint)aServerName.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndSetServerName(IAsync& aAsync)
@@ -776,11 +835,11 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetServerVersion(std::string& aSe
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetServerVersion(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetServerVersion, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetServerVersion, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetServerVersion->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetServerVersion(IAsync& aAsync, std::string& aServerVersion)
@@ -811,11 +870,11 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetProgressInfo(std::string& aPro
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetProgressInfo(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetProgressInfo, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetProgressInfo, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetProgressInfo->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetProgressInfo(IAsync& aAsync, std::string& aProgress)
@@ -846,11 +905,11 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetScanVersion(std::string& aScan
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetScanVersion(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetScanVersion, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetScanVersion, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetScanVersion->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetScanVersion(IAsync& aAsync, std::string& aScanVersion)
@@ -881,12 +940,12 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetWorkMode(std::string& aWorkMod
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetWorkMode(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetWorkMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetWorkMode, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetWorkMode->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetWorkMode(IAsync& aAsync, std::string& aWorkMode, std::string& aWorkModeList)
@@ -921,14 +980,14 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetWorkMode(const std::string& aW
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginSetWorkMode(const std::string& aWorkMode, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetWorkMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetWorkMode, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetWorkMode->InputParameters();
     {
         Brn buf((const TByte*)aWorkMode.c_str(), (TUint)aWorkMode.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndSetWorkMode(IAsync& aAsync)
@@ -954,8 +1013,8 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncDelAllLocalDB()
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginDelAllLocalDB(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionDelAllLocalDB, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionDelAllLocalDB, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndDelAllLocalDB(IAsync& aAsync)
@@ -981,8 +1040,8 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncInitHDD()
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginInitHDD(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionInitHDD, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionInitHDD, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndInitHDD(IAsync& aAsync)
@@ -1008,8 +1067,8 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncRescan()
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginRescan(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionRescan, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionRescan, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndRescan(IAsync& aAsync)
@@ -1035,8 +1094,8 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncHandMount()
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginHandMount(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionHandMount, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionHandMount, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndHandMount(IAsync& aAsync)
@@ -1062,8 +1121,8 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncHandUMount()
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginHandUMount(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionHandUMount, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionHandUMount, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndHandUMount(IAsync& aAsync)
@@ -1089,7 +1148,7 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetDiskInfo(bool& aIsConnected, s
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetDiskInfo(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDiskInfo, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDiskInfo, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDiskInfo->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
@@ -1097,7 +1156,7 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetDiskInfo(FunctorAsync& aFunct
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetDiskInfo(IAsync& aAsync, bool& aIsConnected, std::string& aStatusCode, std::string& aStatusInfo, std::string& aCapacity, std::string& aFileCount)
@@ -1141,13 +1200,13 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetSMBConfig(std::string& aSMBAdd
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetSMBConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetSMBConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetSMBConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetSMBConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetSMBConfig(IAsync& aAsync, std::string& aSMBAddr, std::string& aSMBUserName, std::string& aSMBPassWord)
@@ -1186,7 +1245,7 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetSMBConfig(const std::string& a
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginSetSMBConfig(const std::string& aSMBAddr, const std::string& aSMBUserName, const std::string& aSMBPassWord, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetSMBConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetSMBConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetSMBConfig->InputParameters();
     {
@@ -1201,7 +1260,7 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginSetSMBConfig(const std::string& 
         Brn buf((const TByte*)aSMBPassWord.c_str(), (TUint)aSMBPassWord.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndSetSMBConfig(IAsync& aAsync)
@@ -1227,11 +1286,11 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetDriveMountResult(bool& aDriveM
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetDriveMountResult(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDriveMountResult, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDriveMountResult, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDriveMountResult->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetDriveMountResult(IAsync& aAsync, bool& aDriveMountResult)
@@ -1259,14 +1318,14 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncEditTrack(const std::string& aEdi
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginEditTrack(const std::string& aEditValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionEditTrack, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionEditTrack, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionEditTrack->InputParameters();
     {
         Brn buf((const TByte*)aEditValue.c_str(), (TUint)aEditValue.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndEditTrack(IAsync& aAsync)
@@ -1292,11 +1351,11 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncScanVersionDiff(std::string& aSca
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginScanVersionDiff(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionScanVersionDiff, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionScanVersionDiff, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionScanVersionDiff->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndScanVersionDiff(IAsync& aAsync, std::string& aScanVersionDiffValue)
@@ -1327,11 +1386,11 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetInitHDDResult(bool& aInitHDDRe
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetInitHDDResult(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetInitHDDResult, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetInitHDDResult, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetInitHDDResult->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetInitHDDResult(IAsync& aAsync, bool& aInitHDDResult)
@@ -1359,11 +1418,11 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetHDDHasInited(bool& aHDDHasInit
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetHDDHasInited(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetHDDHasInited, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetHDDHasInited, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetHDDHasInited->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetHDDHasInited(IAsync& aAsync, bool& aHDDHasInited)
@@ -1391,8 +1450,8 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncUSBImport()
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginUSBImport(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionUSBImport, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionUSBImport, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndUSBImport(IAsync& aAsync)
@@ -1418,13 +1477,13 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetDISKCapacity(std::string& aDIS
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetDISKCapacity(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDISKCapacity, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDISKCapacity, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDISKCapacity->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetDISKCapacity(IAsync& aAsync, std::string& aDISKTotal, std::string& aDISKUsed, std::string& aDISKAvailable)
@@ -1463,8 +1522,8 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncForceRescan()
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginForceRescan(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionForceRescan, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionForceRescan, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndForceRescan(IAsync& aAsync)
@@ -1490,11 +1549,11 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetCurrentScanFile(std::string& a
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetCurrentScanFile(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetCurrentScanFile, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetCurrentScanFile, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetCurrentScanFile->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetCurrentScanFile(IAsync& aAsync, std::string& aScanFile)
@@ -1525,11 +1584,11 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncGetServerConfig(std::string& aGet
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginGetServerConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetServerConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetServerConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetServerConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndGetServerConfig(IAsync& aAsync, std::string& aGetValue)
@@ -1560,14 +1619,14 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::SyncSetServerConfig(const std::string
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::BeginSetServerConfig(const std::string& aSetValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetServerConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetServerConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetServerConfig->InputParameters();
     {
         Brn buf((const TByte*)aSetValue.c_str(), (TUint)aSetValue.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndSetServerConfig(IAsync& aAsync)
@@ -1584,33 +1643,58 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::EndSetServerConfig(IAsync& aAsync)
     }
 }
 
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SetPropertyPlayCDChanged(Functor& aFunctor)
+{
+    iCpProxy.GetLock().Wait();
+    iPlayCDChanged = aFunctor;
+    iCpProxy.GetLock().Signal();
+}
+
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::SetPropertyAliveChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iAliveChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::SetPropertySubscriptValueChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iSubscriptValueChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::PropertyPlayCD(bool& aPlayCD) const
+{
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
+    aPlayCD = iPlayCD->Value();
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::PropertyAlive(bool& aAlive) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::PropertySubscriptValue(std::string& aSubscriptValue) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iSubscriptValue->Value();
     aSubscriptValue.assign((const char*)val.Ptr(), val.Bytes());
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::PlayCDPropertyChanged()
+{
+    ReportEvent(iPlayCDChanged);
 }
 
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::AlivePropertyChanged()
@@ -1621,5 +1705,44 @@ void CpProxyAvOpenhomeOrgServerConfig1Cpp::AlivePropertyChanged()
 void CpProxyAvOpenhomeOrgServerConfig1Cpp::SubscriptValuePropertyChanged()
 {
     ReportEvent(iSubscriptValueChanged);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgServerConfig1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgServerConfig1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

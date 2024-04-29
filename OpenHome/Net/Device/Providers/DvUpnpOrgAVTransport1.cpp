@@ -20,6 +20,11 @@ void DvProviderUpnpOrgAVTransport1::GetPropertyLastChange(Brhz& aValue)
     aValue.Set(iPropertyLastChange->Value());
 }
 
+void DvProviderUpnpOrgAVTransport1::WritePropertyLastChange(IWriter& aWriter)
+{
+    iPropertyLastChange->Write(aWriter);
+}
+
 DvProviderUpnpOrgAVTransport1::DvProviderUpnpOrgAVTransport1(DvDevice& aDevice)
     : DvProvider(aDevice.Device(), "upnp.org", "AVTransport", 1)
 {

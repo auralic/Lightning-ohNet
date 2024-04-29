@@ -7,20 +7,547 @@
 #include <OpenHome/Net/Private/Error.h>
 #include <OpenHome/Net/Private/CpiDevice.h>
 
-using namespace OpenHome;
-using namespace OpenHome::Net;
+namespace OpenHome {
+namespace Net {
 
+class SyncLogInAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncLogInAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aMessageOut);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iMessageOut;
+};
+
+class SyncLogOutAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncLogOutAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncCancelLogInAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncCancelLogInAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
 
 class SyncIsAliveAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
 {
 public:
     SyncIsAliveAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TBool& aAlive);
     virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncIsAliveAvOpenhomeOrgHardwareConfig1() {}
 private:
     CpProxyAvOpenhomeOrgHardwareConfig1& iService;
     TBool& iAlive;
 };
+
+class SyncUpdateAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncUpdateAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncActiveAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncActiveAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetActiveStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetActiveStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aActiveStatus);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iActiveStatus;
+};
+
+class SyncCheckUpdateAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncCheckUpdateAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncResetDisplayAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncResetDisplayAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aHardWareInfo);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iHardWareInfo;
+};
+
+class SyncSetRoomNameAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetRoomNameAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetVolumeControlAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetVolumeControlAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TBool& aVolumeControl);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    TBool& iVolumeControl;
+};
+
+class SyncSetVolumeControlAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetVolumeControlAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetWaitingTimeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetWaitingTimeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aWaitingTime);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iWaitingTime;
+};
+
+class SyncSetWaitingTimeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetWaitingTimeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetOutChannelAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetOutChannelAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aChannelNum, Brh& aCurrentChannel, Brh& aOutChannel);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    TUint& iChannelNum;
+    Brh& iCurrentChannel;
+    Brh& iOutChannel;
+};
+
+class SyncSetOutChannelAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetOutChannelAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncSetUpnpTypeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetUpnpTypeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetUpnpTypeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetUpnpTypeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aUpnpType);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iUpnpType;
+};
+
+class SyncSetDsdNativeStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetDsdNativeStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetDsdNativeStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetDsdNativeStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aStatus, Brh& aSampleFormat);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iStatus;
+    Brh& iSampleFormat;
+};
+
+class SyncSetPasswordProtectAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetPasswordProtectAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetPasswordProtectAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetPasswordProtectAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aProtect, Brh& aProtectPassword);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iProtect;
+    Brh& iProtectPassword;
+};
+
+class SyncGetUpdateInfoAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetUpdateInfoAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aVersion, Brh& aProgress);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iVersion;
+    Brh& iProgress;
+};
+
+class SyncGetWirelessListAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetWirelessListAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aNumber, Brh& aCurrentUse, Brh& aWirelessList);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    TUint& iNumber;
+    Brh& iCurrentUse;
+    Brh& iWirelessList;
+};
+
+class SyncGetIpAddressAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetIpAddressAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aIpAddress, Brh& aNetMask, Brh& aGateWay, Brh& aDNS, Brh& aDHCP);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iIpAddress;
+    Brh& iNetMask;
+    Brh& iGateWay;
+    Brh& iDNS;
+    Brh& iDHCP;
+};
+
+class SyncSetNetWorkAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetNetWorkAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aInterfaceNum, Brh& aCurrentUse, Brh& aInterfaceList);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    TUint& iInterfaceNum;
+    Brh& iCurrentUse;
+    Brh& iInterfaceList;
+};
+
+class SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TBool& aHaltStatus);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    TBool& iHaltStatus;
+};
+
+class SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetFilterModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aFilterMode, Brh& aFilterModeList);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iFilterMode;
+    Brh& iFilterModeList;
+};
+
+class SyncSetFilterModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aVisibleInfo);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iVisibleInfo;
+};
+
+class SyncSetLEDModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetLEDModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aLEDMode, Brh& aLEDModeList);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iLEDMode;
+    Brh& iLEDModeList;
+};
+
+class SyncSetKeyModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetKeyModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iSideKeyMode;
+    Brh& iMiddleKeyMode;
+    Brh& iKeyModeList;
+};
+
+class SyncSetBrightnessAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetBrightnessAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aBrightness, Brh& aList);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iBrightness;
+    Brh& iList;
+};
+
+class SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aDisplayMode, Brh& aDisplayModeList);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    Brh& iDisplayMode;
+    Brh& iDisplayModeList;
+};
+
+class SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aPhase);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    TUint& iPhase;
+};
+
+class SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aBalance);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+    TUint& iBalance;
+};
+
+class SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+class SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
+};
+
+} // namespace Net
+} // namespace OpenHome
+
+
+using namespace OpenHome;
+using namespace OpenHome::Net;
+
+
+// SyncLogInAvOpenhomeOrgHardwareConfig1
+
+SyncLogInAvOpenhomeOrgHardwareConfig1::SyncLogInAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aMessageOut)
+    : iService(aProxy)
+    , iMessageOut(aMessageOut)
+{
+}
+
+void SyncLogInAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndLogIn(aAsync, iMessageOut);
+}
+
+// SyncLogOutAvOpenhomeOrgHardwareConfig1
+
+SyncLogOutAvOpenhomeOrgHardwareConfig1::SyncLogOutAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncLogOutAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndLogOut(aAsync);
+}
+
+// SyncCancelLogInAvOpenhomeOrgHardwareConfig1
+
+SyncCancelLogInAvOpenhomeOrgHardwareConfig1::SyncCancelLogInAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncCancelLogInAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndCancelLogIn(aAsync);
+}
+
+// SyncIsAliveAvOpenhomeOrgHardwareConfig1
 
 SyncIsAliveAvOpenhomeOrgHardwareConfig1::SyncIsAliveAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TBool& aAlive)
     : iService(aProxy)
@@ -33,16 +560,7 @@ void SyncIsAliveAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndIsAlive(aAsync, iAlive);
 }
 
-
-class SyncUpdateAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncUpdateAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncUpdateAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncUpdateAvOpenhomeOrgHardwareConfig1
 
 SyncUpdateAvOpenhomeOrgHardwareConfig1::SyncUpdateAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -54,16 +572,7 @@ void SyncUpdateAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndUpdate(aAsync);
 }
 
-
-class SyncActiveAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncActiveAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncActiveAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncActiveAvOpenhomeOrgHardwareConfig1
 
 SyncActiveAvOpenhomeOrgHardwareConfig1::SyncActiveAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -75,17 +584,7 @@ void SyncActiveAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndActive(aAsync);
 }
 
-
-class SyncGetActiveStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetActiveStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aActiveStatus);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetActiveStatusAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iActiveStatus;
-};
+// SyncGetActiveStatusAvOpenhomeOrgHardwareConfig1
 
 SyncGetActiveStatusAvOpenhomeOrgHardwareConfig1::SyncGetActiveStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aActiveStatus)
     : iService(aProxy)
@@ -98,16 +597,7 @@ void SyncGetActiveStatusAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aA
     iService.EndGetActiveStatus(aAsync, iActiveStatus);
 }
 
-
-class SyncCheckUpdateAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncCheckUpdateAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncCheckUpdateAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncCheckUpdateAvOpenhomeOrgHardwareConfig1
 
 SyncCheckUpdateAvOpenhomeOrgHardwareConfig1::SyncCheckUpdateAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -119,16 +609,7 @@ void SyncCheckUpdateAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync
     iService.EndCheckUpdate(aAsync);
 }
 
-
-class SyncResetDisplayAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncResetDisplayAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncResetDisplayAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncResetDisplayAvOpenhomeOrgHardwareConfig1
 
 SyncResetDisplayAvOpenhomeOrgHardwareConfig1::SyncResetDisplayAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -140,17 +621,7 @@ void SyncResetDisplayAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsyn
     iService.EndResetDisplay(aAsync);
 }
 
-
-class SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aHardWareInfo);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iHardWareInfo;
-};
+// SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1
 
 SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1::SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aHardWareInfo)
     : iService(aProxy)
@@ -163,16 +634,7 @@ void SyncGetHardWareInfoAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aA
     iService.EndGetHardWareInfo(aAsync, iHardWareInfo);
 }
 
-
-class SyncSetRoomNameAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetRoomNameAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetRoomNameAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetRoomNameAvOpenhomeOrgHardwareConfig1
 
 SyncSetRoomNameAvOpenhomeOrgHardwareConfig1::SyncSetRoomNameAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -184,17 +646,7 @@ void SyncSetRoomNameAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync
     iService.EndSetRoomName(aAsync);
 }
 
-
-class SyncGetVolumeControlAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetVolumeControlAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TBool& aVolumeControl);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetVolumeControlAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    TBool& iVolumeControl;
-};
+// SyncGetVolumeControlAvOpenhomeOrgHardwareConfig1
 
 SyncGetVolumeControlAvOpenhomeOrgHardwareConfig1::SyncGetVolumeControlAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TBool& aVolumeControl)
     : iService(aProxy)
@@ -207,16 +659,7 @@ void SyncGetVolumeControlAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& a
     iService.EndGetVolumeControl(aAsync, iVolumeControl);
 }
 
-
-class SyncSetVolumeControlAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetVolumeControlAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetVolumeControlAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetVolumeControlAvOpenhomeOrgHardwareConfig1
 
 SyncSetVolumeControlAvOpenhomeOrgHardwareConfig1::SyncSetVolumeControlAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -228,17 +671,7 @@ void SyncSetVolumeControlAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& a
     iService.EndSetVolumeControl(aAsync);
 }
 
-
-class SyncGetWaitingTimeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetWaitingTimeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aWaitingTime);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetWaitingTimeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iWaitingTime;
-};
+// SyncGetWaitingTimeAvOpenhomeOrgHardwareConfig1
 
 SyncGetWaitingTimeAvOpenhomeOrgHardwareConfig1::SyncGetWaitingTimeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aWaitingTime)
     : iService(aProxy)
@@ -251,16 +684,7 @@ void SyncGetWaitingTimeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAs
     iService.EndGetWaitingTime(aAsync, iWaitingTime);
 }
 
-
-class SyncSetWaitingTimeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetWaitingTimeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetWaitingTimeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetWaitingTimeAvOpenhomeOrgHardwareConfig1
 
 SyncSetWaitingTimeAvOpenhomeOrgHardwareConfig1::SyncSetWaitingTimeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -272,19 +696,7 @@ void SyncSetWaitingTimeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAs
     iService.EndSetWaitingTime(aAsync);
 }
 
-
-class SyncGetOutChannelAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetOutChannelAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aChannelNum, Brh& aCurrentChannel, Brh& aOutChannel);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetOutChannelAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    TUint& iChannelNum;
-    Brh& iCurrentChannel;
-    Brh& iOutChannel;
-};
+// SyncGetOutChannelAvOpenhomeOrgHardwareConfig1
 
 SyncGetOutChannelAvOpenhomeOrgHardwareConfig1::SyncGetOutChannelAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aChannelNum, Brh& aCurrentChannel, Brh& aOutChannel)
     : iService(aProxy)
@@ -299,16 +711,7 @@ void SyncGetOutChannelAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndGetOutChannel(aAsync, iChannelNum, iCurrentChannel, iOutChannel);
 }
 
-
-class SyncSetOutChannelAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetOutChannelAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetOutChannelAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetOutChannelAvOpenhomeOrgHardwareConfig1
 
 SyncSetOutChannelAvOpenhomeOrgHardwareConfig1::SyncSetOutChannelAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -320,16 +723,7 @@ void SyncSetOutChannelAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndSetOutChannel(aAsync);
 }
 
-
-class SyncSetUpnpTypeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetUpnpTypeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetUpnpTypeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetUpnpTypeAvOpenhomeOrgHardwareConfig1
 
 SyncSetUpnpTypeAvOpenhomeOrgHardwareConfig1::SyncSetUpnpTypeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -341,17 +735,7 @@ void SyncSetUpnpTypeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync
     iService.EndSetUpnpType(aAsync);
 }
 
-
-class SyncGetUpnpTypeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetUpnpTypeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aUpnpType);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetUpnpTypeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iUpnpType;
-};
+// SyncGetUpnpTypeAvOpenhomeOrgHardwareConfig1
 
 SyncGetUpnpTypeAvOpenhomeOrgHardwareConfig1::SyncGetUpnpTypeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aUpnpType)
     : iService(aProxy)
@@ -364,16 +748,7 @@ void SyncGetUpnpTypeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync
     iService.EndGetUpnpType(aAsync, iUpnpType);
 }
 
-
-class SyncSetDsdNativeStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetDsdNativeStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetDsdNativeStatusAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetDsdNativeStatusAvOpenhomeOrgHardwareConfig1
 
 SyncSetDsdNativeStatusAvOpenhomeOrgHardwareConfig1::SyncSetDsdNativeStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -385,18 +760,7 @@ void SyncSetDsdNativeStatusAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync&
     iService.EndSetDsdNativeStatus(aAsync);
 }
 
-
-class SyncGetDsdNativeStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetDsdNativeStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aStatus, Brh& aSampleFormat);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetDsdNativeStatusAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iStatus;
-    Brh& iSampleFormat;
-};
+// SyncGetDsdNativeStatusAvOpenhomeOrgHardwareConfig1
 
 SyncGetDsdNativeStatusAvOpenhomeOrgHardwareConfig1::SyncGetDsdNativeStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aStatus, Brh& aSampleFormat)
     : iService(aProxy)
@@ -410,16 +774,7 @@ void SyncGetDsdNativeStatusAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync&
     iService.EndGetDsdNativeStatus(aAsync, iStatus, iSampleFormat);
 }
 
-
-class SyncSetPasswordProtectAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetPasswordProtectAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetPasswordProtectAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetPasswordProtectAvOpenhomeOrgHardwareConfig1
 
 SyncSetPasswordProtectAvOpenhomeOrgHardwareConfig1::SyncSetPasswordProtectAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -431,18 +786,7 @@ void SyncSetPasswordProtectAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync&
     iService.EndSetPasswordProtect(aAsync);
 }
 
-
-class SyncGetPasswordProtectAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetPasswordProtectAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aProtect, Brh& aProtectPassword);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetPasswordProtectAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iProtect;
-    Brh& iProtectPassword;
-};
+// SyncGetPasswordProtectAvOpenhomeOrgHardwareConfig1
 
 SyncGetPasswordProtectAvOpenhomeOrgHardwareConfig1::SyncGetPasswordProtectAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aProtect, Brh& aProtectPassword)
     : iService(aProxy)
@@ -456,18 +800,7 @@ void SyncGetPasswordProtectAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync&
     iService.EndGetPasswordProtect(aAsync, iProtect, iProtectPassword);
 }
 
-
-class SyncGetUpdateInfoAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetUpdateInfoAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aVersion, Brh& aProgress);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetUpdateInfoAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iVersion;
-    Brh& iProgress;
-};
+// SyncGetUpdateInfoAvOpenhomeOrgHardwareConfig1
 
 SyncGetUpdateInfoAvOpenhomeOrgHardwareConfig1::SyncGetUpdateInfoAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aVersion, Brh& aProgress)
     : iService(aProxy)
@@ -481,19 +814,7 @@ void SyncGetUpdateInfoAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndGetUpdateInfo(aAsync, iVersion, iProgress);
 }
 
-
-class SyncGetWirelessListAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetWirelessListAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aNumber, Brh& aCurrentUse, Brh& aWirelessList);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetWirelessListAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    TUint& iNumber;
-    Brh& iCurrentUse;
-    Brh& iWirelessList;
-};
+// SyncGetWirelessListAvOpenhomeOrgHardwareConfig1
 
 SyncGetWirelessListAvOpenhomeOrgHardwareConfig1::SyncGetWirelessListAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aNumber, Brh& aCurrentUse, Brh& aWirelessList)
     : iService(aProxy)
@@ -508,21 +829,7 @@ void SyncGetWirelessListAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aA
     iService.EndGetWirelessList(aAsync, iNumber, iCurrentUse, iWirelessList);
 }
 
-
-class SyncGetIpAddressAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetIpAddressAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aIpAddress, Brh& aNetMask, Brh& aGateWay, Brh& aDNS, Brh& aDHCP);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetIpAddressAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iIpAddress;
-    Brh& iNetMask;
-    Brh& iGateWay;
-    Brh& iDNS;
-    Brh& iDHCP;
-};
+// SyncGetIpAddressAvOpenhomeOrgHardwareConfig1
 
 SyncGetIpAddressAvOpenhomeOrgHardwareConfig1::SyncGetIpAddressAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aIpAddress, Brh& aNetMask, Brh& aGateWay, Brh& aDNS, Brh& aDHCP)
     : iService(aProxy)
@@ -539,16 +846,7 @@ void SyncGetIpAddressAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsyn
     iService.EndGetIpAddress(aAsync, iIpAddress, iNetMask, iGateWay, iDNS, iDHCP);
 }
 
-
-class SyncSetNetWorkAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetNetWorkAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetNetWorkAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetNetWorkAvOpenhomeOrgHardwareConfig1
 
 SyncSetNetWorkAvOpenhomeOrgHardwareConfig1::SyncSetNetWorkAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -560,19 +858,7 @@ void SyncSetNetWorkAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndSetNetWork(aAsync);
 }
 
-
-class SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aInterfaceNum, Brh& aCurrentUse, Brh& aInterfaceList);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    TUint& iInterfaceNum;
-    Brh& iCurrentUse;
-    Brh& iInterfaceList;
-};
+// SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1
 
 SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1::SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aInterfaceNum, Brh& aCurrentUse, Brh& aInterfaceList)
     : iService(aProxy)
@@ -587,17 +873,7 @@ void SyncGetNetInterfaceAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aA
     iService.EndGetNetInterface(aAsync, iInterfaceNum, iCurrentUse, iInterfaceList);
 }
 
-
-class SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TBool& aHaltStatus);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    TBool& iHaltStatus;
-};
+// SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1
 
 SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1::SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TBool& aHaltStatus)
     : iService(aProxy)
@@ -610,16 +886,7 @@ void SyncGetHaltStatusAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndGetHaltStatus(aAsync, iHaltStatus);
 }
 
-
-class SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1
 
 SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1::SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -631,18 +898,7 @@ void SyncSetHaltStatusAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndSetHaltStatus(aAsync);
 }
 
-
-class SyncGetFilterModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aFilterMode, Brh& aFilterModeList);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetFilterModeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iFilterMode;
-    Brh& iFilterModeList;
-};
+// SyncGetFilterModeAvOpenhomeOrgHardwareConfig1
 
 SyncGetFilterModeAvOpenhomeOrgHardwareConfig1::SyncGetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aFilterMode, Brh& aFilterModeList)
     : iService(aProxy)
@@ -656,16 +912,7 @@ void SyncGetFilterModeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndGetFilterMode(aAsync, iFilterMode, iFilterModeList);
 }
 
-
-class SyncSetFilterModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetFilterModeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetFilterModeAvOpenhomeOrgHardwareConfig1
 
 SyncSetFilterModeAvOpenhomeOrgHardwareConfig1::SyncSetFilterModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -677,16 +924,7 @@ void SyncSetFilterModeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndSetFilterMode(aAsync);
 }
 
-
-class SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1
 
 SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1::SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -698,17 +936,7 @@ void SyncSetSourceVisibleAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& a
     iService.EndSetSourceVisible(aAsync);
 }
 
-
-class SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aVisibleInfo);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iVisibleInfo;
-};
+// SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1
 
 SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1::SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aVisibleInfo)
     : iService(aProxy)
@@ -721,16 +949,7 @@ void SyncGetSourceVisibleAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& a
     iService.EndGetSourceVisible(aAsync, iVisibleInfo);
 }
 
-
-class SyncSetLEDModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetLEDModeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetLEDModeAvOpenhomeOrgHardwareConfig1
 
 SyncSetLEDModeAvOpenhomeOrgHardwareConfig1::SyncSetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -742,18 +961,7 @@ void SyncSetLEDModeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndSetLEDMode(aAsync);
 }
 
-
-class SyncGetLEDModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aLEDMode, Brh& aLEDModeList);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetLEDModeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iLEDMode;
-    Brh& iLEDModeList;
-};
+// SyncGetLEDModeAvOpenhomeOrgHardwareConfig1
 
 SyncGetLEDModeAvOpenhomeOrgHardwareConfig1::SyncGetLEDModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aLEDMode, Brh& aLEDModeList)
     : iService(aProxy)
@@ -767,16 +975,7 @@ void SyncGetLEDModeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndGetLEDMode(aAsync, iLEDMode, iLEDModeList);
 }
 
-
-class SyncSetKeyModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetKeyModeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetKeyModeAvOpenhomeOrgHardwareConfig1
 
 SyncSetKeyModeAvOpenhomeOrgHardwareConfig1::SyncSetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -788,19 +987,7 @@ void SyncSetKeyModeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndSetKeyMode(aAsync);
 }
 
-
-class SyncGetKeyModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetKeyModeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iSideKeyMode;
-    Brh& iMiddleKeyMode;
-    Brh& iKeyModeList;
-};
+// SyncGetKeyModeAvOpenhomeOrgHardwareConfig1
 
 SyncGetKeyModeAvOpenhomeOrgHardwareConfig1::SyncGetKeyModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList)
     : iService(aProxy)
@@ -815,16 +1002,7 @@ void SyncGetKeyModeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
     iService.EndGetKeyMode(aAsync, iSideKeyMode, iMiddleKeyMode, iKeyModeList);
 }
 
-
-class SyncSetBrightnessAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetBrightnessAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetBrightnessAvOpenhomeOrgHardwareConfig1
 
 SyncSetBrightnessAvOpenhomeOrgHardwareConfig1::SyncSetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -836,18 +1014,7 @@ void SyncSetBrightnessAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndSetBrightness(aAsync);
 }
 
-
-class SyncGetBrightnessAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aBrightness, Brh& aList);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetBrightnessAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iBrightness;
-    Brh& iList;
-};
+// SyncGetBrightnessAvOpenhomeOrgHardwareConfig1
 
 SyncGetBrightnessAvOpenhomeOrgHardwareConfig1::SyncGetBrightnessAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aBrightness, Brh& aList)
     : iService(aProxy)
@@ -861,16 +1028,7 @@ void SyncGetBrightnessAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndGetBrightness(aAsync, iBrightness, iList);
 }
 
-
-class SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1
 
 SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1::SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -882,18 +1040,7 @@ void SyncSetDisplayModeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAs
     iService.EndSetDisplayMode(aAsync);
 }
 
-
-class SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aDisplayMode, Brh& aDisplayModeList);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    Brh& iDisplayMode;
-    Brh& iDisplayModeList;
-};
+// SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1
 
 SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1::SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, Brh& aDisplayMode, Brh& aDisplayModeList)
     : iService(aProxy)
@@ -907,17 +1054,7 @@ void SyncGetDisplayModeAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAs
     iService.EndGetDisplayMode(aAsync, iDisplayMode, iDisplayModeList);
 }
 
-
-class SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aPhase);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    TUint& iPhase;
-};
+// SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1
 
 SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1::SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aPhase)
     : iService(aProxy)
@@ -930,16 +1067,7 @@ void SyncGetDACPhaseAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync
     iService.EndGetDACPhase(aAsync, iPhase);
 }
 
-
-class SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1
 
 SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1::SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -951,17 +1079,7 @@ void SyncSetDACPhaseAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync
     iService.EndSetDACPhase(aAsync);
 }
 
-
-class SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aBalance);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-    TUint& iBalance;
-};
+// SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1
 
 SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1::SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy, TUint& aBalance)
     : iService(aProxy)
@@ -974,16 +1092,7 @@ void SyncGetDACBalanceAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndGetDACBalance(aAsync, iBalance);
 }
 
-
-class SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgHardwareConfig1& iService;
-};
+// SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1
 
 SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1::SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
     : iService(aProxy)
@@ -995,11 +1104,77 @@ void SyncSetDACBalanceAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsy
     iService.EndSetDACBalance(aAsync);
 }
 
+// SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1
+
+SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1::SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetEnableResampler(aAsync);
+}
+
+// SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1
+
+SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1::SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetEnableSpeaker(aAsync);
+}
+
+// SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1
+
+SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1::SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetEnableEqualizer(aAsync);
+}
+
+// SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1
+
+SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1::SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1(CpProxyAvOpenhomeOrgHardwareConfig1& aProxy)
+    : iService(aProxy)
+{
+}
+
+void SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1::CompleteRequest(IAsync& aAsync)
+{
+    iService.EndSetEnableDirac(aAsync);
+}
+
+
+// CpProxyAvOpenhomeOrgHardwareConfig1
 
 CpProxyAvOpenhomeOrgHardwareConfig1::CpProxyAvOpenhomeOrgHardwareConfig1(CpDevice& aDevice)
-    : CpProxy("av-openhome-org", "HardwareConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "HardwareConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
+
+    iActionLogIn = new Action("LogIn");
+    param = new OpenHome::Net::ParameterString("ServiceName");
+    iActionLogIn->AddInputParameter(param);
+    param = new OpenHome::Net::ParameterString("MessageIn");
+    iActionLogIn->AddInputParameter(param);
+    param = new OpenHome::Net::ParameterString("MessageOut");
+    iActionLogIn->AddOutputParameter(param);
+
+    iActionLogOut = new Action("LogOut");
+    param = new OpenHome::Net::ParameterString("ServiceName");
+    iActionLogOut->AddInputParameter(param);
+
+    iActionCancelLogIn = new Action("CancelLogIn");
+    param = new OpenHome::Net::ParameterString("ServiceName");
+    iActionCancelLogIn->AddInputParameter(param);
 
     iActionIsAlive = new Action("IsAlive");
     param = new OpenHome::Net::ParameterBool("Alive");
@@ -1235,7 +1410,26 @@ CpProxyAvOpenhomeOrgHardwareConfig1::CpProxyAvOpenhomeOrgHardwareConfig1(CpDevic
     param = new OpenHome::Net::ParameterUint("Balance");
     iActionSetDACBalance->AddInputParameter(param);
 
+    iActionSetEnableResampler = new Action("SetEnableResampler");
+    param = new OpenHome::Net::ParameterBool("EnableResampler");
+    iActionSetEnableResampler->AddInputParameter(param);
+
+    iActionSetEnableSpeaker = new Action("SetEnableSpeaker");
+    param = new OpenHome::Net::ParameterBool("EnableSpeaker");
+    iActionSetEnableSpeaker->AddInputParameter(param);
+
+    iActionSetEnableEqualizer = new Action("SetEnableEqualizer");
+    param = new OpenHome::Net::ParameterBool("EnableEqualizer");
+    iActionSetEnableEqualizer->AddInputParameter(param);
+
+    iActionSetEnableDirac = new Action("SetEnableDirac");
+    param = new OpenHome::Net::ParameterBool("EnableDirac");
+    iActionSetEnableDirac->AddInputParameter(param);
+
     Functor functor;
+    functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1::MessageOutPropertyChanged);
+    iMessageOut = new PropertyString("MessageOut", functor);
+    AddProperty(iMessageOut);
     functor = MakeFunctor(*this, &CpProxyAvOpenhomeOrgHardwareConfig1::AlivePropertyChanged);
     iAlive = new PropertyBool("Alive", functor);
     AddProperty(iAlive);
@@ -1310,6 +1504,9 @@ CpProxyAvOpenhomeOrgHardwareConfig1::CpProxyAvOpenhomeOrgHardwareConfig1(CpDevic
 CpProxyAvOpenhomeOrgHardwareConfig1::~CpProxyAvOpenhomeOrgHardwareConfig1()
 {
     DestroyService();
+    delete iActionLogIn;
+    delete iActionLogOut;
+    delete iActionCancelLogIn;
     delete iActionIsAlive;
     delete iActionUpdate;
     delete iActionActive;
@@ -1353,6 +1550,106 @@ CpProxyAvOpenhomeOrgHardwareConfig1::~CpProxyAvOpenhomeOrgHardwareConfig1()
     delete iActionSetDACPhase;
     delete iActionGetDACBalance;
     delete iActionSetDACBalance;
+    delete iActionSetEnableResampler;
+    delete iActionSetEnableSpeaker;
+    delete iActionSetEnableEqualizer;
+    delete iActionSetEnableDirac;
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SyncLogIn(const Brx& aServiceName, const Brx& aMessageIn, Brh& aMessageOut)
+{
+    SyncLogInAvOpenhomeOrgHardwareConfig1 sync(*this, aMessageOut);
+    BeginLogIn(aServiceName, aMessageIn, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::BeginLogIn(const Brx& aServiceName, const Brx& aMessageIn, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionLogIn, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionLogIn->InputParameters();
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aServiceName));
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aMessageIn));
+    TUint outIndex = 0;
+    const Action::VectorParameters& outParams = iActionLogIn->OutputParameters();
+    invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::EndLogIn(IAsync& aAsync, Brh& aMessageOut)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("LogIn"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+    TUint index = 0;
+    ((ArgumentString*)invocation.OutputArguments()[index++])->TransferTo(aMessageOut);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SyncLogOut(const Brx& aServiceName)
+{
+    SyncLogOutAvOpenhomeOrgHardwareConfig1 sync(*this);
+    BeginLogOut(aServiceName, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::BeginLogOut(const Brx& aServiceName, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionLogOut, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionLogOut->InputParameters();
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aServiceName));
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::EndLogOut(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("LogOut"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SyncCancelLogIn(const Brx& aServiceName)
+{
+    SyncCancelLogInAvOpenhomeOrgHardwareConfig1 sync(*this);
+    BeginCancelLogIn(aServiceName, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::BeginCancelLogIn(const Brx& aServiceName, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionCancelLogIn, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionCancelLogIn->InputParameters();
+    invocation->AddInput(new ArgumentString(*inParams[inIndex++], aServiceName));
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::EndCancelLogIn(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("CancelLogIn"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SyncIsAlive(TBool& aAlive)
@@ -1364,11 +1661,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncIsAlive(TBool& aAlive)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginIsAlive(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionIsAlive, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionIsAlive, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionIsAlive->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndIsAlive(IAsync& aAsync, TBool& aAlive)
@@ -1396,8 +1693,8 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncUpdate()
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginUpdate(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionUpdate, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionUpdate, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndUpdate(IAsync& aAsync)
@@ -1423,13 +1720,13 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncActive(TBool aIsSubscribe, const B
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginActive(TBool aIsSubscribe, const Brx& aRealName, const Brx& aEmail, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionActive, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionActive, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionActive->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aIsSubscribe));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aRealName));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aEmail));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndActive(IAsync& aAsync)
@@ -1455,11 +1752,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetActiveStatus(Brh& aActiveStatus
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetActiveStatus(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetActiveStatus, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetActiveStatus, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetActiveStatus->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetActiveStatus(IAsync& aAsync, Brh& aActiveStatus)
@@ -1487,8 +1784,8 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncCheckUpdate()
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginCheckUpdate(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionCheckUpdate, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionCheckUpdate, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndCheckUpdate(IAsync& aAsync)
@@ -1514,8 +1811,8 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncResetDisplay()
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginResetDisplay(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionResetDisplay, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionResetDisplay, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndResetDisplay(IAsync& aAsync)
@@ -1541,11 +1838,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetHardWareInfo(Brh& aHardWareInfo
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetHardWareInfo(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetHardWareInfo, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetHardWareInfo, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetHardWareInfo->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetHardWareInfo(IAsync& aAsync, Brh& aHardWareInfo)
@@ -1573,11 +1870,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetRoomName(const Brx& aRoomName)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetRoomName(const Brx& aRoomName, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetRoomName, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetRoomName, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetRoomName->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aRoomName));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetRoomName(IAsync& aAsync)
@@ -1603,11 +1900,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetVolumeControl(TBool& aVolumeCon
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetVolumeControl(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetVolumeControl, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetVolumeControl, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetVolumeControl->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetVolumeControl(IAsync& aAsync, TBool& aVolumeControl)
@@ -1635,11 +1932,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetVolumeControl(TBool aVolumeCont
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetVolumeControl(TBool aVolumeControl, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetVolumeControl, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetVolumeControl, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetVolumeControl->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aVolumeControl));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetVolumeControl(IAsync& aAsync)
@@ -1665,11 +1962,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetWaitingTime(Brh& aWaitingTime)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetWaitingTime(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetWaitingTime, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetWaitingTime, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetWaitingTime->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetWaitingTime(IAsync& aAsync, Brh& aWaitingTime)
@@ -1697,11 +1994,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetWaitingTime(const Brx& aWaiting
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetWaitingTime(const Brx& aWaitingTime, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetWaitingTime, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetWaitingTime, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetWaitingTime->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aWaitingTime));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetWaitingTime(IAsync& aAsync)
@@ -1727,13 +2024,13 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetOutChannel(TUint& aChannelNum, 
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetOutChannel(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetOutChannel, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetOutChannel, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetOutChannel->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetOutChannel(IAsync& aAsync, TUint& aChannelNum, Brh& aCurrentChannel, Brh& aOutChannel)
@@ -1763,11 +2060,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetOutChannel(const Brx& aChannel)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetOutChannel(const Brx& aChannel, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetOutChannel, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetOutChannel, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetOutChannel->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aChannel));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetOutChannel(IAsync& aAsync)
@@ -1793,11 +2090,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetUpnpType(const Brx& aUpnpType)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetUpnpType(const Brx& aUpnpType, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetUpnpType, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetUpnpType, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetUpnpType->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aUpnpType));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetUpnpType(IAsync& aAsync)
@@ -1823,11 +2120,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetUpnpType(Brh& aUpnpType)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetUpnpType(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetUpnpType, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetUpnpType, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetUpnpType->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetUpnpType(IAsync& aAsync, Brh& aUpnpType)
@@ -1855,12 +2152,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetDsdNativeStatus(const Brx& aSta
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetDsdNativeStatus(const Brx& aStatus, const Brx& aSampleFormat, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDsdNativeStatus, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDsdNativeStatus, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDsdNativeStatus->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aStatus));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aSampleFormat));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetDsdNativeStatus(IAsync& aAsync)
@@ -1886,12 +2183,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetDsdNativeStatus(Brh& aStatus, B
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetDsdNativeStatus(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDsdNativeStatus, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDsdNativeStatus, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDsdNativeStatus->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetDsdNativeStatus(IAsync& aAsync, Brh& aStatus, Brh& aSampleFormat)
@@ -1920,12 +2217,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetPasswordProtect(const Brx& aPro
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetPasswordProtect(const Brx& aProtect, const Brx& aProtectPassword, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetPasswordProtect, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetPasswordProtect, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetPasswordProtect->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aProtect));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aProtectPassword));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetPasswordProtect(IAsync& aAsync)
@@ -1951,12 +2248,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetPasswordProtect(Brh& aProtect, 
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetPasswordProtect(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetPasswordProtect, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetPasswordProtect, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetPasswordProtect->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetPasswordProtect(IAsync& aAsync, Brh& aProtect, Brh& aProtectPassword)
@@ -1985,12 +2282,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetUpdateInfo(Brh& aVersion, Brh& 
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetUpdateInfo(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetUpdateInfo, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetUpdateInfo, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetUpdateInfo->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetUpdateInfo(IAsync& aAsync, Brh& aVersion, Brh& aProgress)
@@ -2019,7 +2316,7 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetWirelessList(const Brx& aInterF
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetWirelessList(const Brx& aInterFace, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetWirelessList, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetWirelessList, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionGetWirelessList->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aInterFace));
@@ -2028,7 +2325,7 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetWirelessList(const Brx& aInter
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetWirelessList(IAsync& aAsync, TUint& aNumber, Brh& aCurrentUse, Brh& aWirelessList)
@@ -2058,7 +2355,7 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetIpAddress(const Brx& aInterFace
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetIpAddress(const Brx& aInterFace, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetIpAddress, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetIpAddress, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionGetIpAddress->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aInterFace));
@@ -2069,7 +2366,7 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetIpAddress(const Brx& aInterFac
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetIpAddress(IAsync& aAsync, Brh& aIpAddress, Brh& aNetMask, Brh& aGateWay, Brh& aDNS, Brh& aDHCP)
@@ -2101,7 +2398,7 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetNetWork(const Brx& aInterFace, 
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetNetWork(const Brx& aInterFace, const Brx& aIpAddress, const Brx& aNetMask, const Brx& aGateWay, const Brx& aDNS, const Brx& aSsid, const Brx& aPassWord, const Brx& aEncrypType, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetNetWork, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetNetWork, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetNetWork->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aInterFace));
@@ -2112,7 +2409,7 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetNetWork(const Brx& aInterFace,
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aSsid));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aPassWord));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aEncrypType));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetNetWork(IAsync& aAsync)
@@ -2138,13 +2435,13 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetNetInterface(TUint& aInterfaceN
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetNetInterface(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetNetInterface, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetNetInterface, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetNetInterface->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetNetInterface(IAsync& aAsync, TUint& aInterfaceNum, Brh& aCurrentUse, Brh& aInterfaceList)
@@ -2174,11 +2471,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetHaltStatus(TBool& aHaltStatus)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetHaltStatus(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetHaltStatus, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetHaltStatus, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetHaltStatus->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetHaltStatus(IAsync& aAsync, TBool& aHaltStatus)
@@ -2206,11 +2503,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetHaltStatus(TBool aHaltStatus)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetHaltStatus(TBool aHaltStatus, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetHaltStatus, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetHaltStatus, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetHaltStatus->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aHaltStatus));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetHaltStatus(IAsync& aAsync)
@@ -2236,12 +2533,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetFilterMode(Brh& aFilterMode, Br
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetFilterMode(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetFilterMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetFilterMode, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetFilterMode->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetFilterMode(IAsync& aAsync, Brh& aFilterMode, Brh& aFilterModeList)
@@ -2270,11 +2567,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetFilterMode(const Brx& aFilterMo
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetFilterMode(const Brx& aFilterMode, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetFilterMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetFilterMode, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetFilterMode->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aFilterMode));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetFilterMode(IAsync& aAsync)
@@ -2300,12 +2597,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetSourceVisible(const Brx& aSourc
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetSourceVisible(const Brx& aSourceName, TBool aVisible, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetSourceVisible, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetSourceVisible, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetSourceVisible->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aSourceName));
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aVisible));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetSourceVisible(IAsync& aAsync)
@@ -2331,11 +2628,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetSourceVisible(Brh& aVisibleInfo
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetSourceVisible(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetSourceVisible, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetSourceVisible, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetSourceVisible->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetSourceVisible(IAsync& aAsync, Brh& aVisibleInfo)
@@ -2363,11 +2660,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetLEDMode(const Brx& aLEDMode)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetLEDMode(const Brx& aLEDMode, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetLEDMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetLEDMode, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetLEDMode->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aLEDMode));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetLEDMode(IAsync& aAsync)
@@ -2393,12 +2690,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetLEDMode(Brh& aLEDMode, Brh& aLE
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetLEDMode(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetLEDMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetLEDMode, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetLEDMode->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetLEDMode(IAsync& aAsync, Brh& aLEDMode, Brh& aLEDModeList)
@@ -2427,12 +2724,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetKeyMode(const Brx& aKeyName, co
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetKeyMode(const Brx& aKeyName, const Brx& aKeyMode, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetKeyMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetKeyMode, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetKeyMode->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aKeyName));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aKeyMode));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetKeyMode(IAsync& aAsync)
@@ -2458,13 +2755,13 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetKeyMode(Brh& aSideKeyMode, Brh&
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetKeyMode(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetKeyMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetKeyMode, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetKeyMode->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetKeyMode(IAsync& aAsync, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList)
@@ -2494,11 +2791,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetBrightness(const Brx& aBrightne
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetBrightness(const Brx& aBrightness, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetBrightness, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetBrightness, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetBrightness->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aBrightness));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetBrightness(IAsync& aAsync)
@@ -2524,12 +2821,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetBrightness(Brh& aBrightness, Br
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetBrightness(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetBrightness, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetBrightness, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetBrightness->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetBrightness(IAsync& aAsync, Brh& aBrightness, Brh& aList)
@@ -2558,11 +2855,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetDisplayMode(const Brx& aDisplay
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetDisplayMode(const Brx& aDisplayMode, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDisplayMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDisplayMode, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDisplayMode->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aDisplayMode));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetDisplayMode(IAsync& aAsync)
@@ -2588,12 +2885,12 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetDisplayMode(Brh& aDisplayMode, 
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetDisplayMode(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDisplayMode, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDisplayMode, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDisplayMode->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetDisplayMode(IAsync& aAsync, Brh& aDisplayMode, Brh& aDisplayModeList)
@@ -2622,11 +2919,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetDACPhase(TUint& aPhase)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetDACPhase(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDACPhase, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDACPhase, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDACPhase->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetDACPhase(IAsync& aAsync, TUint& aPhase)
@@ -2654,11 +2951,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetDACPhase(TUint aPhase)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetDACPhase(TUint aPhase, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDACPhase, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDACPhase, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDACPhase->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aPhase));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetDACPhase(IAsync& aAsync)
@@ -2684,11 +2981,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncGetDACBalance(TUint& aBalance)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginGetDACBalance(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDACBalance, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDACBalance, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDACBalance->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndGetDACBalance(IAsync& aAsync, TUint& aBalance)
@@ -2716,11 +3013,11 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetDACBalance(TUint aBalance)
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetDACBalance(TUint aBalance, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDACBalance, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDACBalance, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDACBalance->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aBalance));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetDACBalance(IAsync& aAsync)
@@ -2737,326 +3034,513 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetDACBalance(IAsync& aAsync)
     }
 }
 
+void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetEnableResampler(TBool aEnableResampler)
+{
+    SyncSetEnableResamplerAvOpenhomeOrgHardwareConfig1 sync(*this);
+    BeginSetEnableResampler(aEnableResampler, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetEnableResampler(TBool aEnableResampler, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetEnableResampler, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetEnableResampler->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aEnableResampler));
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetEnableResampler(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetEnableResampler"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetEnableSpeaker(TBool aEnableSpeaker)
+{
+    SyncSetEnableSpeakerAvOpenhomeOrgHardwareConfig1 sync(*this);
+    BeginSetEnableSpeaker(aEnableSpeaker, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetEnableSpeaker(TBool aEnableSpeaker, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetEnableSpeaker, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetEnableSpeaker->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aEnableSpeaker));
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetEnableSpeaker(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetEnableSpeaker"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetEnableEqualizer(TBool aEnableEqualizer)
+{
+    SyncSetEnableEqualizerAvOpenhomeOrgHardwareConfig1 sync(*this);
+    BeginSetEnableEqualizer(aEnableEqualizer, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetEnableEqualizer(TBool aEnableEqualizer, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetEnableEqualizer, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetEnableEqualizer->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aEnableEqualizer));
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetEnableEqualizer(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetEnableEqualizer"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SyncSetEnableDirac(TBool aEnableDirac)
+{
+    SyncSetEnableDiracAvOpenhomeOrgHardwareConfig1 sync(*this);
+    BeginSetEnableDirac(aEnableDirac, sync.Functor());
+    sync.Wait();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::BeginSetEnableDirac(TBool aEnableDirac, FunctorAsync& aFunctor)
+{
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetEnableDirac, aFunctor);
+    TUint inIndex = 0;
+    const Action::VectorParameters& inParams = iActionSetEnableDirac->InputParameters();
+    invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aEnableDirac));
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::EndSetEnableDirac(IAsync& aAsync)
+{
+    ASSERT(((Async&)aAsync).Type() == Async::eInvocation);
+    Invocation& invocation = (Invocation&)aAsync;
+    ASSERT(invocation.Action().Name() == Brn("SetEnableDirac"));
+
+    Error::ELevel level;
+    TUint code;
+    const TChar* ignore;
+    if (invocation.Error(level, code, ignore)) {
+        THROW_PROXYERROR(level, code);
+    }
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyMessageOutChanged(Functor& aFunctor)
+{
+    iCpProxy.GetLock().Wait();
+    iMessageOutChanged = aFunctor;
+    iCpProxy.GetLock().Signal();
+}
+
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyAliveChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iAliveChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyCurrentActionChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iCurrentActionChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyRestartChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iRestartChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyNumberChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iNumberChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyRoomNameChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iRoomNameChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyInterFaceChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iInterFaceChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyNetMaskChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iNetMaskChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyGateWayChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iGateWayChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyDNSChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iDNSChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyDHCPChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iDHCPChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertySsidChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iSsidChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyPassWordChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iPassWordChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyEncrypTypeChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iEncrypTypeChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyChannelChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iChannelChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyUpnpTypeChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iUpnpTypeChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyStatusChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iStatusChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertySampleFormatChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iSampleFormatChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyIpAddressChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iIpAddressChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyProtectChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iProtectChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyProtectPasswordChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iProtectPasswordChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyActiveStatusChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iActiveStatusChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyTimeChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iTimeChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyVolumeControlChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iVolumeControlChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyMessageOut(Brhz& aMessageOut) const
+{
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
+    aMessageOut.Set(iMessageOut->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyAlive(TBool& aAlive) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyCurrentAction(TUint& aCurrentAction) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aCurrentAction = iCurrentAction->Value();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyRestart(TBool& aRestart) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aRestart = iRestart->Value();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyNumber(TUint& aNumber) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aNumber = iNumber->Value();
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyRoomName(Brhz& aRoomName) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aRoomName.Set(iRoomName->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyInterFace(Brhz& aInterFace) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aInterFace.Set(iInterFace->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyNetMask(Brhz& aNetMask) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aNetMask.Set(iNetMask->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyGateWay(Brhz& aGateWay) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aGateWay.Set(iGateWay->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyDNS(Brhz& aDNS) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aDNS.Set(iDNS->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyDHCP(Brhz& aDHCP) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aDHCP.Set(iDHCP->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertySsid(Brhz& aSsid) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aSsid.Set(iSsid->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyPassWord(Brhz& aPassWord) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aPassWord.Set(iPassWord->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyEncrypType(Brhz& aEncrypType) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aEncrypType.Set(iEncrypType->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyChannel(Brhz& aChannel) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aChannel.Set(iChannel->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyUpnpType(Brhz& aUpnpType) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aUpnpType.Set(iUpnpType->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyStatus(Brhz& aStatus) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aStatus.Set(iStatus->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertySampleFormat(Brhz& aSampleFormat) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aSampleFormat.Set(iSampleFormat->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyIpAddress(Brhz& aIpAddress) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aIpAddress.Set(iIpAddress->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyProtect(Brhz& aProtect) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aProtect.Set(iProtect->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyProtectPassword(Brhz& aProtectPassword) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aProtectPassword.Set(iProtectPassword->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyActiveStatus(Brhz& aActiveStatus) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aActiveStatus.Set(iActiveStatus->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyTime(Brhz& aTime) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aTime.Set(iTime->Value());
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::PropertyVolumeControl(TBool& aVolumeControl) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aVolumeControl = iVolumeControl->Value();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::MessageOutPropertyChanged()
+{
+    ReportEvent(iMessageOutChanged);
 }
 
 void CpProxyAvOpenhomeOrgHardwareConfig1::AlivePropertyChanged()
@@ -3173,4 +3657,45 @@ void CpProxyAvOpenhomeOrgHardwareConfig1::VolumeControlPropertyChanged()
 {
     ReportEvent(iVolumeControlChanged);
 }
+
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgHardwareConfig1::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgHardwareConfig1::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgHardwareConfig1::Version() const
+{
+  return iCpProxy.Version();
+}
+
 

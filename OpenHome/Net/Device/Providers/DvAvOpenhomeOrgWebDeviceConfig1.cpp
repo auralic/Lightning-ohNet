@@ -32,6 +32,11 @@ void DvProviderAvOpenhomeOrgWebDeviceConfig1::GetPropertyDeviceConfig(Brhz& aVal
     aValue.Set(iPropertyDeviceConfig->Value());
 }
 
+void DvProviderAvOpenhomeOrgWebDeviceConfig1::WritePropertyDeviceConfig(IWriter& aWriter)
+{
+    iPropertyDeviceConfig->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgWebDeviceConfig1::SetPropertyCurrentAction(TUint aValue)
 {
     ASSERT(iPropertyCurrentAction != NULL);

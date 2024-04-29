@@ -28,6 +28,20 @@ class DvProviderAvOpenhomeOrgServerConfig1Cpp : public DvProvider
 public:
     virtual ~DvProviderAvOpenhomeOrgServerConfig1Cpp() {}
     /**
+     * Set the value of the PlayCD property
+     *
+     * Can only be called if EnablePropertyPlayCD has previously been called.
+     *
+     * @return  true if the value has been updated; false if aValue was the same as the previous value
+     */
+    bool SetPropertyPlayCD(bool aValue);
+    /**
+     * Get a copy of the value of the PlayCD property
+     *
+     * Can only be called if EnablePropertyPlayCD has previously been called.
+     */
+    void GetPropertyPlayCD(bool& aValue);
+    /**
      * Set the value of the Alive property
      *
      * Can only be called if EnablePropertyAlive has previously been called.
@@ -63,6 +77,10 @@ protected:
      */
     DvProviderAvOpenhomeOrgServerConfig1Cpp(DvDeviceStd& aDevice);
     /**
+     * Enable the PlayCD property.
+     */
+    void EnablePropertyPlayCD();
+    /**
      * Enable the Alive property.
      */
     void EnablePropertyAlive();
@@ -70,6 +88,12 @@ protected:
      * Enable the SubscriptValue property.
      */
     void EnablePropertySubscriptValue();
+    /**
+     * Signal that the action SetPlayCD is supported.
+     * The action's availability will be published in the device's service.xml.
+     * SetPlayCD must be overridden if this is called.
+     */
+    void EnableActionSetPlayCD();
     /**
      * Signal that the action SetServerName is supported.
      * The action's availability will be published in the device's service.xml.
@@ -221,6 +245,14 @@ protected:
      */
     void EnableActionSetServerConfig();
 private:
+    /**
+     * SetPlayCD action.
+     *
+     * Will be called when the device stack receives an invocation of the
+     * SetPlayCD action for the owning device.
+     * Must be implemented iff EnableActionSetPlayCD was called.
+     */
+    virtual void SetPlayCD(IDvInvocationStd& aInvocation, bool aPlayCD);
     /**
      * SetServerName action.
      *
@@ -423,6 +455,7 @@ private:
     virtual void SetServerConfig(IDvInvocationStd& aInvocation, const std::string& aSetValue);
 private:
     DvProviderAvOpenhomeOrgServerConfig1Cpp();
+    void DoSetPlayCD(IDviInvocation& aInvocation);
     void DoSetServerName(IDviInvocation& aInvocation);
     void DoGetServerVersion(IDviInvocation& aInvocation);
     void DoGetProgressInfo(IDviInvocation& aInvocation);
@@ -449,6 +482,7 @@ private:
     void DoGetServerConfig(IDviInvocation& aInvocation);
     void DoSetServerConfig(IDviInvocation& aInvocation);
 private:
+    PropertyBool* iPropertyPlayCD;
     PropertyBool* iPropertyAlive;
     PropertyString* iPropertySubscriptValue;
 };

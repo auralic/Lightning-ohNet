@@ -120,18 +120,6 @@ const Brx& HeaderCallback::Uri() const
     return iUri;
 }
 
-void HeaderCallback::Log()
-{
-    if (!Received()) {
-        LOG(kDvEvent, "(null)");
-        return;
-    }
-    Endpoint::EndpointBuf buf;
-    iEndpoint.AppendEndpoint(buf);
-    LOG(kDvEvent, buf);
-    LOG(kDvEvent, iUri);
-}
-
 TBool HeaderCallback::Recognise(const Brx& aHeader)
 {
     return Ascii::CaseInsensitiveEquals(aHeader, kUpnpHeaderCallback);
@@ -295,6 +283,26 @@ const Http::EVersion SubscriptionDataUpnp::HttpVersion() const
     return iHttpVersion;
 }
 
+void SubscriptionDataUpnp::Log(IWriter& aWriter) const
+{
+    aWriter.Write(Brn(", subscriber: "));
+    Endpoint::EndpointBuf epBuf;
+    iSubscriber.AppendEndpoint(epBuf);
+    aWriter.Write(epBuf);
+    aWriter.Write(iSubscriberPath);
+    aWriter.Write(Brn(" (HTTP/"));
+    if (iHttpVersion == Http::eHttp11) {
+        aWriter.Write(Brn("1.1"));
+    }
+    if (iHttpVersion == Http::eHttp10) {
+        aWriter.Write(Brn("1.0"));
+    }
+    if (iHttpVersion == Http::eHttp09) {
+        aWriter.Write(Brn("0.9"));
+    }
+    aWriter.Write(Brn(")"));
+}
+
 const void* SubscriptionDataUpnp::Data() const
 {
     return this;
@@ -308,113 +316,127 @@ void SubscriptionDataUpnp::Release()
 
 // PropertyWriterUpnp
 
-PropertyWriterUpnp* PropertyWriterUpnp::Create(DvStack& aDvStack, const Endpoint& aPublisher, const Endpoint& aSubscriber,
-                                               const Brx& aSubscriberPath, const Http::EVersion aHttpVersion, const Brx& aSid, TUint aSequenceNumber)
-{ // static
-    PropertyWriterUpnp* self = new PropertyWriterUpnp(aDvStack);
-    try {
-        self->Connect(aSubscriber);
-        self->WriteHeaders(aPublisher, aSubscriberPath, aHttpVersion, aSid, aSequenceNumber);
-    }
-    catch (NetworkTimeout&) {
-        delete self;
-        throw;
-    }
-    catch (NetworkError&) {
-        delete self;
-        throw;
-    }
-    catch (WriterError&) {
-        delete self;
-        throw;
-    }
-    return self;
-}
-
-PropertyWriterUpnp::PropertyWriterUpnp(DvStack& aDvStack)
-    : iDvStack(aDvStack)
-    , iWriteBuffer(NULL)
-    , iWriterEvent(NULL)
-    , iWriterChunked(NULL)
+PropertyWriterUpnp::PropertyWriterUpnp(Environment& aEnv)
+    : iEnv(aEnv)
+    , iEventBody(kWriteGranularity)
 {
+    iWriteBuffer = new Sws<kWriteGranularity>(iSocket);
+    iWriterEvent = new WriterHttpRequest(*iWriteBuffer);
+    SetWriter(iEventBody);
 }
 
-void PropertyWriterUpnp::Connect(const Endpoint& aSubscriber)
+void PropertyWriterUpnp::Initialise(const Endpoint& aPublisher, const Endpoint& aSubscriber,
+                                    const Brx& aSubscriberPath, Http::EVersion aHttpVersion,
+                                    const Brx& aSid, TUint aSequenceNumber)
+{
+    iPublisher = aPublisher;
+    iSubscriber = aSubscriber;
+    iSubscriberPath.Set(aSubscriberPath);
+    iHttpVersion = aHttpVersion;
+    iSid.Set(aSid);
+    iSequenceNumber = aSequenceNumber;
+
+    iEventBody.Write("<?xml version=\"1.0\"?>");
+    iEventBody.Write("<e:propertyset xmlns:e=\"urn:schemas-upnp-org:event-1-0\">");
+}
+
+void PropertyWriterUpnp::Reset()
+{
+    try {
+        iSocket.Close();
+    }
+    catch (NetworkError&) {}
+    iEventBody.Reset();
+}
+
+void PropertyWriterUpnp::Connect()
 {
 #if 0
     Endpoint::AddressBuf buf;
-    aSubscriber.AppendAddress(buf);
+    iSubscriber.AppendAddress(buf);
     Log::Print("PropertyWriterUpnp connecting to %s\n", buf.Ptr());
 #endif
-    iSocket.Open(iDvStack.Env());
-    iSocket.Connect(aSubscriber, iDvStack.Env().InitParams()->TcpConnectTimeoutMs());
+    iSocket.Open(iEnv);
+    iSocket.Connect(iSubscriber, iEnv.InitParams()->TcpConnectTimeoutMs());
+    //iSocket.LogVerbose(true);
 }
 
-void PropertyWriterUpnp::WriteHeaders(const Endpoint& aPublisher, const Brx& aSubscriberPath,
-                                      const Http::EVersion aHttpVersion, const Brx& aSid, TUint aSequenceNumber)
+void PropertyWriterUpnp::WriteHeaders(TUint aContentLength)
 {
-    iWriterChunked = new WriterHttpChunked(iSocket);
-    iWriteBuffer = new Sws<kMaxRequestBytes>(*iWriterChunked);
-    iWriterEvent = new WriterHttpRequest(*iWriteBuffer);
-    SetWriter(*iWriteBuffer);
-
-    iWriterEvent->WriteMethod(kUpnpMethodNotify, aSubscriberPath, Http::eHttp11);
+    iWriterEvent->WriteMethod(kUpnpMethodNotify, iSubscriberPath, iHttpVersion);
 
     IWriterAscii& writer = iWriterEvent->WriteHeaderField(Http::kHeaderHost);
     Endpoint::EndpointBuf buf;
-    aPublisher.AppendEndpoint(buf);
+    iPublisher.AppendEndpoint(buf);
     writer.Write(buf);
     writer.WriteFlush();
 
     iWriterEvent->WriteHeader(Http::kHeaderContentType, Brn("text/xml; charset=\"utf-8\""));
+    Http::WriteHeaderContentLength(*iWriterEvent, aContentLength);
     iWriterEvent->WriteHeader(kUpnpHeaderNt, Brn("upnp:event"));
     iWriterEvent->WriteHeader(kUpnpHeaderNts, Brn("upnp:propchange"));
 
     writer = iWriterEvent->WriteHeaderField(HeaderSid::kHeaderSid);
     writer.Write(HeaderSid::kFieldSidPrefix);
-    writer.Write(aSid);
+    writer.Write(iSid);
     writer.WriteFlush();
 
-    if (aHttpVersion == Http::eHttp11) {
-        iWriterEvent->WriteHeader(Http::kHeaderTransferEncoding, Http::kTransferEncodingChunked);
-    }
-
     writer = iWriterEvent->WriteHeaderField(kUpnpHeaderSeq);
-    writer.WriteUint(aSequenceNumber);
+    writer.WriteUint(iSequenceNumber);
     writer.WriteFlush();
 
     iWriterEvent->WriteHeader(Http::kHeaderConnection, Http::kConnectionClose);
     iWriterEvent->WriteFlush();
-    if (aHttpVersion == Http::eHttp11) {
-        iWriterChunked->SetChunked(true);
-    }
-
-    iWriteBuffer->Write(Brn("<?xml version=\"1.0\"?>"));
-    iWriteBuffer->Write(Brn("<e:propertyset xmlns:e=\"urn:schemas-upnp-org:event-1-0\">"));
 }
 
 PropertyWriterUpnp::~PropertyWriterUpnp()
 {
     delete iWriterEvent;
     delete iWriteBuffer;
-    delete iWriterChunked;
-    iSocket.Close();
+    try {
+        iSocket.Close();
+    }
+    catch (NetworkError&) {}
 }
 
 void PropertyWriterUpnp::PropertyWriteEnd()
 {
-    iWriteBuffer->Write(Brn("</e:propertyset>"));
-    iWriteBuffer->WriteFlush();
+    iEventBody.Write("</e:propertyset>");
+
+    Endpoint::AddressBuf subscriberAddress;
+    iSubscriber.AppendAddress(subscriberAddress);
+    try {
+        Connect();
+        //iSocket.LogVerbose(true);
+        const Brx& body = iEventBody.Buffer();
+        WriteHeaders(body.Bytes());
+        iSocket.Write(body);
+    }
+    catch (NetworkTimeout&) {
+        LOG_ERROR(kDvEvent, "PropertyWriterUpnp - NetworkTimeout eventing to %.*s\n", PBUF(subscriberAddress));
+        throw;
+    }
+    catch (NetworkError&) {
+        LOG_ERROR(kDvEvent, "PropertyWriterUpnp - NetworkError eventing to %.*s\n", PBUF(subscriberAddress));
+        THROW(WriterError);
+    }
+    catch (HttpError&) {
+        LOG_ERROR(kDvEvent, "PropertyWriterUpnp - HttpError eventing to %.*s\n", PBUF(subscriberAddress));
+        THROW(WriterError);
+    }
+    catch (WriterError&) {
+        LOG_ERROR(kDvEvent, "PropertyWriterUpnp - WriterError eventing to %.*s\n", PBUF(subscriberAddress));
+        throw;
+    }
 
     Srs<kMaxResponseBytes> readBuffer(iSocket);
     ReaderUntilS<kMaxResponseBytes> readerUntil(readBuffer);
-    ReaderHttpResponse readerResponse(iDvStack.Env(), readerUntil);
+    ReaderHttpResponse readerResponse(iEnv, readerUntil);
     readerResponse.Read(kReadTimeoutMs);
     const HttpStatus& status = readerResponse.Status();
     if (status != HttpStatus::kOk) {
-        LOG2(kDvEvent, kError, "PropertyWriter, http error %u ", status.Code());
-        LOG2(kDvEvent, kError, status.Reason());
-        LOG2(kDvEvent, kError, "\n");
+        const Brx& reason = status.Reason();
+        LOG_ERROR(kDvEvent, "PropertyWriter, http error %u %.*s\n", status.Code(), PBUF(reason));
     }
 }
 
@@ -428,15 +450,26 @@ PropertyWriterFactory::PropertyWriterFactory(DvStack& aDvStack, TIpAddress aAdap
     , iAdapter(aAdapter)
     , iPort(aPort)
     , iSubscriptionMapLock("DMSL")
+    , iFifo(aDvStack.Env().InitParams()->DvNumPublisherThreads())
 {
+    const TUint numWriters = iFifo.Slots();
+    for (TUint i=0; i<numWriters; i++) {
+        iFifo.Write(new PropertyWriterUpnp(aDvStack.Env()));
+    }
+}
+
+TUint PropertyWriterFactory::Adapter() const
+{
+    return iAdapter;
 }
 
 void PropertyWriterFactory::SubscriptionAdded(DviSubscription& aSubscription)
 {
-    iSubscriptionMapLock.Wait();
-    Brn sidBuf(aSubscription.Sid());
-    iSubscriptionMap.insert(std::pair<Brn,DviSubscription*>(sidBuf, &aSubscription));
-    iSubscriptionMapLock.Signal();
+    {
+        AutoMutex _(iSubscriptionMapLock);
+        Brn sidBuf(aSubscription.Sid());
+        iSubscriptionMap.insert(std::pair<Brn, DviSubscription*>(sidBuf, &aSubscription));
+    }
     AddRef();
 }
 
@@ -446,17 +479,18 @@ void PropertyWriterFactory::Disable()
     lock.Wait();
     iEnabled = false;
     lock.Signal();
-    iSubscriptionMapLock.Wait();
     std::vector<DviSubscription*> subscriptions;
-    SubscriptionMap::iterator it = iSubscriptionMap.begin();
-    if (it != iSubscriptionMap.end()) {
-        DviSubscription* subscription = it->second;
-        if (subscription->TryAddRef()) {
-            subscriptions.push_back(subscription);
+    {
+        AutoMutex _(iSubscriptionMapLock);
+        SubscriptionMap::iterator it = iSubscriptionMap.begin();
+        if (it != iSubscriptionMap.end()) {
+            DviSubscription* subscription = it->second;
+            if (subscription->TryAddRef()) {
+                subscriptions.push_back(subscription);
+            }
+            it++;
         }
-        it++;
     }
-    iSubscriptionMapLock.Signal();
     for (TUint i=0; i<(TUint)subscriptions.size(); i++) {
         DviSubscription* subscription = subscriptions[i];
         subscription->Remove();
@@ -465,7 +499,7 @@ void PropertyWriterFactory::Disable()
     RemoveRef();
 }
 
-IPropertyWriter* PropertyWriterFactory::CreateWriter(const IDviSubscriptionUserData* aUserData, const Brx& aSid, TUint aSequenceNumber)
+IPropertyWriter* PropertyWriterFactory::ClaimWriter(const IDviSubscriptionUserData* aUserData, const Brx& aSid, TUint aSequenceNumber)
 {
     Mutex& lock = iDvStack.Env().Mutex();
     lock.Wait();
@@ -476,7 +510,16 @@ IPropertyWriter* PropertyWriterFactory::CreateWriter(const IDviSubscriptionUserD
     }
     Endpoint publisher(iPort, iAdapter);
     const SubscriptionDataUpnp* data = reinterpret_cast<const SubscriptionDataUpnp*>(aUserData->Data());
-    return PropertyWriterUpnp::Create(iDvStack, publisher, data->Subscriber(), data->SubscriberPath(), data->HttpVersion(), aSid, aSequenceNumber);
+    PropertyWriterUpnp* writer = iFifo.Read();
+    writer->Initialise(publisher, data->Subscriber(), data->SubscriberPath(), data->HttpVersion(), aSid, aSequenceNumber);
+    return writer;
+}
+
+void PropertyWriterFactory::ReleaseWriter(IPropertyWriter* aWriter)
+{
+    PropertyWriterUpnp* writer = static_cast<PropertyWriterUpnp*>(aWriter);
+    writer->Reset();
+    iFifo.Write(writer);
 }
 
 void PropertyWriterFactory::NotifySubscriptionCreated(const Brx& /*aSid*/)
@@ -486,14 +529,15 @@ void PropertyWriterFactory::NotifySubscriptionCreated(const Brx& /*aSid*/)
 void PropertyWriterFactory::NotifySubscriptionDeleted(const Brx& aSid)
 {
     AddRef();
-    iSubscriptionMapLock.Wait();
-    Brn sid(aSid);
-    SubscriptionMap::iterator it = iSubscriptionMap.find(sid);
-    if (it != iSubscriptionMap.end()) {
-        iSubscriptionMap.erase(it);
-        RemoveRef();
+    {
+        AutoMutex _(iSubscriptionMapLock);
+        Brn sid(aSid);
+        SubscriptionMap::iterator it = iSubscriptionMap.find(sid);
+        if (it != iSubscriptionMap.end()) {
+            iSubscriptionMap.erase(it);
+            RemoveRef();
+        }
     }
-    iSubscriptionMapLock.Signal();
     RemoveRef();
 }
 
@@ -501,8 +545,18 @@ void PropertyWriterFactory::NotifySubscriptionExpired(const Brx& /*aSid*/)
 {
 }
 
+void PropertyWriterFactory::LogUserData(IWriter& aWriter, const IDviSubscriptionUserData& aUserData)
+{
+    const SubscriptionDataUpnp* data = reinterpret_cast<const SubscriptionDataUpnp*>(aUserData.Data());
+    data->Log(aWriter);
+}
+
 PropertyWriterFactory::~PropertyWriterFactory()
 {
+    const TUint numWriters = iFifo.Slots();
+    for (TUint i=0; i<numWriters; i++) {
+        delete iFifo.Read();
+    }
 }
 
 void PropertyWriterFactory::AddRef()
@@ -528,15 +582,19 @@ void PropertyWriterFactory::RemoveRef()
 
 // DviSessionUpnp
 
-DviSessionUpnp::DviSessionUpnp(DvStack& aDvStack, TIpAddress aInterface, TUint aPort, IRedirector& aRedirector)
+DviSessionUpnp::DviSessionUpnp(DvStack& aDvStack, TIpAddress aInterface, TUint aPort,
+                               PropertyWriterFactory& aPropertyWriterFactory,
+                               IPathMapperUpnp& aPathMapper, IRedirector& aRedirector)
     : iDvStack(aDvStack)
     , iInterface(aInterface)
     , iPort(aPort)
+    , iPropertyWriterFactory(aPropertyWriterFactory)
+    , iPathMapper(aPathMapper)
     , iRedirector(aRedirector)
     , iShutdownSem("DSUS", 1)
 {
     iReadBuffer = new Srs<1024>(*this);
-    iReaderUntil = new ReaderUntilS<1024>(*iReadBuffer);
+    iReaderUntil = new ReaderUntilS<4096>(*iReadBuffer);
     iReaderRequest = new ReaderHttpRequest(aDvStack.Env(), *iReaderUntil);
     iDechunker = new ReaderHttpChunked(*iReaderUntil);
     iWriterChunked = new WriterHttpChunked(*this);
@@ -560,14 +618,12 @@ DviSessionUpnp::DviSessionUpnp(DvStack& aDvStack, TIpAddress aInterface, TUint a
     iReaderRequest->AddHeader(iHeaderNt);
     iReaderRequest->AddHeader(iHeaderCallback);
     iReaderRequest->AddHeader(iHeaderAcceptLanguage);
-
-    iPropertyWriterFactory = new PropertyWriterFactory(iDvStack, aInterface, aPort);
+    iReaderRequest->AddHeader(iHeaderUserAgent);
 }
 
 DviSessionUpnp::~DviSessionUpnp()
 {
     Interrupt(true);
-    iPropertyWriterFactory->Disable();
     iShutdownSem.Wait();
     delete iWriterResponse;
     delete iWriterBuffer;
@@ -591,6 +647,8 @@ void DviSessionUpnp::Run()
     iDechunker->ReadFlush();
     iResponseStarted = false;
     iResponseEnded = false;
+    Brn method;
+    Brn reqUri;
     // check headers
     try {
         try {
@@ -602,17 +660,13 @@ void DviSessionUpnp::Run()
         if (iReaderRequest->MethodNotAllowed()) {
             Error(HttpStatus::kMethodNotAllowed);
         }
-        const Brx& method = iReaderRequest->Method();
+        method.Set(iReaderRequest->Method());
         iReaderRequest->UnescapeUri();
 
-        Mutex& lock = iDvStack.Env().Mutex();
-        lock.Wait();
-        LOG(kDvDevice, "Method: ");
-        LOG(kDvDevice, method);
-        LOG(kDvDevice, ", uri: ");
-        LOG(kDvDevice, iReaderRequest->Uri());
-        LOG(kDvDevice, "\n");
-        lock.Signal();
+        reqUri.Set(iReaderRequest->Uri());
+        LOG(kDvDevice, "Method: %.*s, uri: %.*s\n", PBUF(method), PBUF(reqUri));
+
+        iDvStack.NotifyControlPointUsed(iHeaderUserAgent.UserAgent());
 
         if (method == Http::kMethodGet) {
             Get();
@@ -632,16 +686,24 @@ void DviSessionUpnp::Run()
         }
     }
     catch (HttpError&) {
+        LOG(/*kDvDevice|*/kDvEvent, "HttpError handling %.*s for %.*s\n", PBUF(method), PBUF(reqUri));
         if (iErrorStatus == &HttpStatus::kOk) {
             iErrorStatus = &HttpStatus::kBadRequest;
         }
     }
     catch (ReaderError&) {
+        if(OpenHome::Debug::TestLevel(OpenHome::Debug::kDvDevice|OpenHome::Debug::kDvDevice)) {
+            Log::Print("ReaderError handling %.*s for %.*s\n", PBUF(method), PBUF(reqUri));
+        }
+        
         if (iErrorStatus == &HttpStatus::kOk) {
             iErrorStatus = &HttpStatus::kBadRequest;
         }
     }
     catch (WriterError&) {
+        if(OpenHome::Debug::TestLevel(OpenHome::Debug::kDvDevice|OpenHome::Debug::kDvDevice)) {
+            Log::Print("WriterError handling %.*s for %.*s\n", PBUF(method), PBUF(reqUri));
+        }
     }
     try {
         if (!iResponseStarted) {
@@ -656,7 +718,11 @@ void DviSessionUpnp::Run()
             iWriterResponse->WriteFlush();
         }
     }
-    catch (WriterError&) {}
+    catch (WriterError&) {
+        if(OpenHome::Debug::TestLevel(OpenHome::Debug::kDvDevice|OpenHome::Debug::kDvDevice)) {
+           Log::Print("WriterError(2) handling %.*s for %.*s\n", PBUF(method), PBUF(reqUri));
+        }
+    }
     iShutdownSem.Signal();
 }
 
@@ -692,16 +758,12 @@ void DviSessionUpnp::Get()
         iWriterResponse->WriteFlush();
         iResponseEnded = true;
     }
-    if (iResponseStarted) {
-        ASSERT(iResponseEnded);
-    }
 }
 
 void DviSessionUpnp::Post()
 {
-    LOG(kDvInvocation, "Action called: ");
-    LOG(kDvInvocation, iHeaderSoapAction.Action());
-    LOG(kDvInvocation, "\n");
+    const Brx& action = iHeaderSoapAction.Action();
+    LOG(kDvInvocation, "UPnP Action called: %.*s\n", PBUF(action));
 
     if (iReaderRequest->Version() == Http::eHttp11) {
         if (!iHeaderHost.Received()) {
@@ -710,7 +772,9 @@ void DviSessionUpnp::Post()
     }
 
     ParseRequestUri(DviProtocolUpnp::kControlUrlTail, &iInvocationDevice, &iInvocationService);
+    AutoDeviceRef d(iInvocationDevice);
     if (iInvocationDevice != NULL && iInvocationService != NULL) {
+        AutoServiceRef s(iInvocationService);
         try {
             if (iHeaderExpect.Continue()) {
                 iWriterResponse->WriteStatus(HttpStatus::kContinue, Http::eHttp11);
@@ -758,64 +822,81 @@ void DviSessionUpnp::Post()
 
 void DviSessionUpnp::Subscribe()
 {
-    LOG(kDvEvent, "Subscription request ");
-    LOG(kDvEvent, iReaderRequest->Uri());
-    LOG(kDvEvent, " from ");
-    iHeaderCallback.Log();
-    LOG(kDvEvent, "\n");
+    {
+        Endpoint::EndpointBuf ep;
+        iHeaderCallback.Endpoint().AppendEndpoint(ep);
+        const Brx& callback = iHeaderCallback.Uri();
+        LOG(kDvEvent, "Subscription request from %s%.*s for %.*s\n",
+                      reinterpret_cast<const TChar*>(ep.Ptr()),
+                      PBUF(callback),
+                      PBUF(iReaderRequest->Uri()));
+    }
     if (iHeaderSid.Received()) {
         try {
             Renew();
         }
         catch (DvSubscriptionError&) {
+            LOG_ERROR(kDvEvent, "DvSubscriptionError\n");
             iErrorStatus = &HttpStatus::kPreconditionFailed;
         }
         return;
     }
 
-    if (!iHeaderCallback.Received() || !iHeaderNt.Received() || !iHeaderTimeout.Received()) {
+    if (!iHeaderCallback.Received() || !iHeaderNt.Received()) {
         Error(HttpStatus::kPreconditionFailed);
     }
     DviDevice* device;
     DviService* service;
     ParseRequestUri(DviProtocolUpnp::kEventUrlTail, &device, &service);
-    if (device == NULL || service == NULL) {
+    AutoDeviceRef d(device);
+    AutoServiceRef s(service);
+    if (device == NULL || !device->Enabled() || service == NULL) {
         Error(HttpStatus::kPreconditionFailed);
     }
-    TUint duration = iHeaderTimeout.Timeout();
+    TUint duration = (iHeaderTimeout.Received()? iHeaderTimeout.Timeout() : iDvStack.Env().InitParams()->DvMaxUpdateTimeSecs());
     Brh sid;
     device->CreateSid(sid);
     SubscriptionDataUpnp* data = new SubscriptionDataUpnp(iHeaderCallback.Endpoint(), iHeaderCallback.Uri(), iReaderRequest->Version());
-    DviSubscription* subscription = new DviSubscription(iDvStack, *device, *iPropertyWriterFactory, data, sid);
-    iPropertyWriterFactory->SubscriptionAdded(*subscription);
+    DviSubscription* subscription = new DviSubscription(iDvStack, *device, iPropertyWriterFactory, data, sid);
+    iPropertyWriterFactory.SubscriptionAdded(*subscription);
     iDvStack.SubscriptionManager().AddSubscription(*subscription);
     subscription->SetDuration(duration);
 
-    if (iHeaderExpect.Continue()) {
-        iWriterResponse->WriteStatus(HttpStatus::kContinue, Http::eHttp11);
+    try {
+        if (iHeaderExpect.Continue()) {
+            iWriterResponse->WriteStatus(HttpStatus::kContinue, Http::eHttp11);
+            iWriterResponse->WriteFlush();
+        }
+        // respond to subscription request
+        iResponseStarted = true;
+        iWriterResponse->WriteStatus(HttpStatus::kOk, Http::eHttp11);
+        WriteServerHeader(*iWriterResponse);
+        IWriterAscii& writerSid = iWriterResponse->WriteHeaderField(HeaderSid::kHeaderSid);
+        writerSid.Write(HeaderSid::kFieldSidPrefix);
+        writerSid.Write(subscription->Sid());
+        writerSid.WriteFlush();
+        IWriterAscii& writerTimeout = iWriterResponse->WriteHeaderField(HeaderTimeout::kHeaderTimeout);
+        writerTimeout.Write(HeaderTimeout::kFieldTimeoutPrefix);
+        writerTimeout.WriteUint(duration);
+        writerTimeout.WriteFlush();
+        iWriterResponse->WriteHeader(Http::kHeaderConnection, Http::kConnectionClose);
         iWriterResponse->WriteFlush();
+        iResponseEnded = true;
     }
-    // respond to subscription request
-    iResponseStarted = true;
-    iWriterResponse->WriteStatus(HttpStatus::kOk, Http::eHttp11);
-    WriteServerHeader(*iWriterResponse);
-    IWriterAscii& writerSid = iWriterResponse->WriteHeaderField(HeaderSid::kHeaderSid);
-    writerSid.Write(HeaderSid::kFieldSidPrefix);
-    writerSid.Write(subscription->Sid());
-    writerSid.WriteFlush();
-    IWriterAscii& writerTimeout = iWriterResponse->WriteHeaderField(HeaderTimeout::kHeaderTimeout);
-    writerTimeout.Write(HeaderTimeout::kFieldTimeoutPrefix);
-    writerTimeout.WriteUint(duration);
-    writerTimeout.WriteFlush();
-    iWriterResponse->WriteHeader(Http::kHeaderConnection, Http::kConnectionClose);
-    iWriterResponse->WriteFlush();
-    iResponseEnded = true;
+    catch (AssertionFailed&) {
+        throw;
+    }
+    catch (Exception&) {
+        iDvStack.SubscriptionManager().RemoveSubscription(*subscription);
+        subscription->RemoveRef();
+        throw;
+    }
 
-    LOG(kDvEvent, "Subscription complete for ");
-    iHeaderCallback.Log();
-    LOG(kDvEvent, ", sid is ");
-    LOG(kDvEvent, subscription->Sid());
-    LOG(kDvEvent, "\n");
+    {
+        const Brx& callback2 = iHeaderCallback.Uri();
+        const Brx& sid2 = subscription->Sid();
+        LOG(kDvEvent, "Subscription complete for  %.*s, sid is %.*s\n", PBUF(callback2), PBUF(sid2));
+    }
 
     // Start subscription, prompting delivery of the first update (covering all state variables)
     service->AddSubscription(subscription);
@@ -823,31 +904,30 @@ void DviSessionUpnp::Subscribe()
 
 void DviSessionUpnp::Unsubscribe()
 {
-    LOG(kDvEvent, "Unsubscribe request: ");
-    LOG(kDvEvent, iHeaderSid.Sid());
-    LOG(kDvEvent, "\n");
-
     if (!iHeaderSid.Received()) {
-        LOG2(kDvEvent, kError, "Unsubscribe failed - no sid\n");
+        LOG_ERROR(kDvEvent, "Unsubscribe failed - no sid\n");
         Error(HttpStatus::kPreconditionFailed);
     }
+    const Brx& sid = iHeaderSid.Sid();
+    LOG(kDvEvent, "Unsubscribe request: %.*s in thread %.*s\n",
+                  PBUF(sid), PBUF(Thread::CurrentThreadName()));
 
     DviDevice* device;
     DviService* service;
     ParseRequestUri(DviProtocolUpnp::kEventUrlTail, &device, &service);
-    if (device == NULL || service == NULL) {
-        LOG2(kDvEvent, kError, "Unsubscribe failed - device=%p, service=%p\n", device, service);
+    AutoDeviceRef d(device);
+    AutoServiceRef s(service);
+    if (device == NULL  || !device->Enabled()|| service == NULL) {
+        LOG_ERROR(kDvEvent, "Unsubscribe failed - device=%p, service=%p\n", device, service);
         Error(HttpStatus::kPreconditionFailed);
     }
-    DviSubscription* subscription = iDvStack.SubscriptionManager().Find(iHeaderSid.Sid());
+    DviSubscription* subscription = iDvStack.SubscriptionManager().Find(sid);
     if (subscription == NULL) {
-        LOG2(kDvEvent, kError, "Unsubscribe failed - couldn't match sid ");
-        LOG2(kDvEvent, kError, iHeaderSid.Sid());
-        LOG2(kDvEvent, kError, "\n");
+        LOG_ERROR(kDvEvent, "Unsubscribe failed - couldn't match sid %.*s\n", PBUF(sid));
         Error(HttpStatus::kPreconditionFailed);
     }
+    service->RemoveSubscription(sid);
     subscription->RemoveRef();
-    service->RemoveSubscription(iHeaderSid.Sid());
 
     if (iHeaderExpect.Continue()) {
         iWriterResponse->WriteStatus(HttpStatus::kContinue, Http::eHttp11);
@@ -859,16 +939,13 @@ void DviSessionUpnp::Unsubscribe()
     iWriterResponse->WriteFlush();
     iResponseEnded = true;
 
-    LOG(kDvEvent, "Unsubscribe complete: ");
-    LOG(kDvEvent, iHeaderSid.Sid());
-    LOG(kDvEvent, "\n");
+    LOG(kDvEvent, "Unsubscribe complete: %.*s\n", PBUF(sid));
 }
 
 void DviSessionUpnp::Renew()
 {
-    LOG(kDvEvent, "Renew subscription (request): ");
-    LOG(kDvEvent, iHeaderSid.Sid());
-    LOG(kDvEvent, "for %u secs\n", iHeaderTimeout.Timeout());
+    const Brx& sid = iHeaderSid.Value();
+    LOG_DEBUG(kDvEvent, "Renew subscription (request): %.*s for %u secs\n", PBUF(sid), iHeaderTimeout.Timeout());
 
     if (iHeaderCallback.Received() || iHeaderNt.Received()) {
         Error(HttpStatus::kBadRequest);
@@ -877,7 +954,9 @@ void DviSessionUpnp::Renew()
     DviDevice* device;
     DviService* service;
     ParseRequestUri(DviProtocolUpnp::kEventUrlTail, &device, &service);
-    if (device == NULL || service == NULL) {
+    AutoDeviceRef d(device);
+    AutoServiceRef s(service);
+    if (device == NULL  || !device->Enabled()|| service == NULL) {
         Error(HttpStatus::kPreconditionFailed);
     }
 
@@ -910,14 +989,16 @@ void DviSessionUpnp::Renew()
     iWriterResponse->WriteFlush();
     iResponseEnded = true;
 
-    LOG(kDvEvent, "Renew subscription (complete): ");
-    LOG(kDvEvent, iHeaderSid.Sid());
-    LOG(kDvEvent, "for %u secs\n", duration);
+    LOG_DEBUG(kDvEvent, "Renew subscription (complete): %.*s for %u secs\n", PBUF(sid), duration);
 }
 
 void DviSessionUpnp::ParseRequestUri(const Brx& aUrlTail, DviDevice** aDevice, DviService** aService)
 {
     Parser parser(iReaderRequest->Uri());
+    if (iPathMapper.TryMapPath(iReaderRequest->Uri(), iMappedRequestUri)) {
+        parser.Set(iMappedRequestUri);
+    }
+
     Brn tmp = parser.Next('/');
     if (tmp.Bytes() > 0) {
         Error(HttpStatus::kPreconditionFailed);
@@ -925,21 +1006,14 @@ void DviSessionUpnp::ParseRequestUri(const Brx& aUrlTail, DviDevice** aDevice, D
     Brn udn = parser.Next('/');
     DviDevice* device = iDvStack.DeviceMap().Find(udn);
     *aDevice = device;
-    if (device == NULL) {
+    if (device == NULL || !device->Enabled()) {
         Error(HttpStatus::kPreconditionFailed);
     }
     Brn serviceName = parser.Next('/');
     if (parser.Remaining() != aUrlTail) {
         Error(HttpStatus::kPreconditionFailed);
     }
-    const TUint count = device->ServiceCount();
-    for (TUint i=0; i<count; i++) {
-        DviService& service = device->Service(i);
-        if (service.ServiceType().PathUpnp() == serviceName) {
-            *aService = &service;
-            break;
-        }
-    }
+    *aService = device->ServiceReference(serviceName);
 }
 
 void DviSessionUpnp::WriteServerHeader(IWriterHttpHeader& aWriter)
@@ -1053,6 +1127,14 @@ Endpoint DviSessionUpnp::ClientEndpoint() const
     return ep;
 }
 
+const Brx& DviSessionUpnp::ClientUserAgent() const
+{
+    if (!iHeaderUserAgent.Received()) {
+        return Brx::Empty();
+    }
+    return iHeaderUserAgent.UserAgent();
+}
+
 void DviSessionUpnp::InvocationReadStart()
 {
     try {
@@ -1085,7 +1167,7 @@ TBool DviSessionUpnp::InvocationReadBool(const TChar* aName)
         }
     }
     catch (XmlError&) {
-        InvocationReportError(501, Brn("Invalid XML"));
+        InvocationReportError(402, Brn("Invalid Args"));
     }
     return false;
 }
@@ -1103,7 +1185,7 @@ void DviSessionUpnp::InvocationReadString(const TChar* aName, Brhz& aString)
         writable.TransferTo(aString);
     }
     catch (XmlError&) {
-        InvocationReportError(501, Brn("Invalid XML"));
+        InvocationReportError(402, Brn("Invalid Args"));
     }
 }
 
@@ -1115,10 +1197,10 @@ TInt DviSessionUpnp::InvocationReadInt(const TChar* aName)
         return num;
     }
     catch (XmlError&) {
-        InvocationReportError(501, Brn("Invalid XML"));
+        InvocationReportError(402, Brn("Invalid Args"));
     }
     catch (AsciiError&) {
-        InvocationReportError(501, Brn("Invalid XML"));
+        InvocationReportError(402, Brn("Invalid Args"));
     }
     return 0;
 }
@@ -1131,10 +1213,10 @@ TUint DviSessionUpnp::InvocationReadUint(const TChar* aName)
         return num;
     }
     catch (XmlError&) {
-        InvocationReportError(501, Brn("Invalid XML"));
+        InvocationReportError(402, Brn("Invalid Args"));
     }
     catch (AsciiError&) {
-        InvocationReportError(501, Brn("Invalid XML"));
+        InvocationReportError(402, Brn("Invalid Args"));
     }
     return 0;
 }
@@ -1151,7 +1233,7 @@ void DviSessionUpnp::InvocationReadBinary(const TChar* aName, Brh& aData)
         }
     }
     catch (XmlError&) {
-        InvocationReportError(501, Brn("Invalid XML"));
+        InvocationReportError(402, Brn("Invalid Args"));
     }
 }
 
@@ -1170,9 +1252,8 @@ void DviSessionUpnp::InvocationReportErrorNoThrow(TUint aCode, const Brx& aDescr
         return;
     }
 
-    LOG(kDvInvocation, "Failure processing action: ");
-    LOG(kDvInvocation, iHeaderSoapAction.Action());
-    LOG(kDvInvocation, "\n");
+    const Brx& action = iHeaderSoapAction.Action();
+    LOG(kDvInvocation, "Failure processing action: %.*s\n", PBUF(action));
 
     iResponseStarted = true;
     iWriterResponse->WriteStatus(HttpStatus::kInternalServerError, Http::eHttp11);
@@ -1238,7 +1319,7 @@ void DviSessionUpnp::InvocationWriteBool(const TChar* aName, TBool aValue)
     Brn name(aName);
     iWriterBuffer->Write('<');
     iWriterBuffer->Write(name);
-    iWriterBuffer->Write(aValue ? Brn(">true</") : Brn(">false</"));
+    iWriterBuffer->Write(aValue ? Brn(">1</") : Brn(">0</"));
     iWriterBuffer->Write(name);
     iWriterBuffer->Write('>');
 }
@@ -1337,9 +1418,8 @@ void DviSessionUpnp::InvocationWriteEnd()
     iWriterBuffer->Write(Brn("Response></s:Body></s:Envelope>"));
     iWriterBuffer->WriteFlush();
 
-    LOG(kDvInvocation, "Completed action: ");
-    LOG(kDvInvocation, iHeaderSoapAction.Action());
-    LOG(kDvInvocation, "\n");
+    const Brx& action = iHeaderSoapAction.Action();
+    LOG(kDvInvocation, "Completed UPnP action: %.*s\n", PBUF(action));
 }
 
 
@@ -1348,8 +1428,22 @@ void DviSessionUpnp::InvocationWriteEnd()
 DviServerUpnp::DviServerUpnp(DvStack& aDvStack, TUint aPort)
     : DviServer(aDvStack)
     , iPort(aPort)
+    , iPathMapper(NULL)
 {
     Initialise();
+}
+
+DviServerUpnp::~DviServerUpnp()
+{
+    Deinitialise();
+    delete iPathMapper;
+}
+
+void DviServerUpnp::SetPathMapper(IPathMapperUpnp* aPathMapper)
+{
+    ASSERT(iPathMapper == NULL);
+    ASSERT(aPathMapper != NULL);
+    iPathMapper = aPathMapper;
 }
 
 void DviServerUpnp::Redirect(const Brx& aUriRequested, const Brx& aUriRedirectedTo)
@@ -1365,14 +1459,35 @@ void DviServerUpnp::Redirect(const Brx& aUriRequested, const Brx& aUriRedirected
 SocketTcpServer* DviServerUpnp::CreateServer(const NetworkAdapter& aNif)
 {
     SocketTcpServer* server = new SocketTcpServer(iDvStack.Env(), "UpnpServer", iPort, aNif.Address());
+    PropertyWriterFactory* pwf = new PropertyWriterFactory(iDvStack, aNif.Address(), server->Port());
+    iPropertyWriterFactories.push_back(pwf);
     const TUint numWsThreads = iDvStack.Env().InitParams()->DvNumServerThreads();
     for (TUint i=0; i<numWsThreads; i++) {
         Bws<Thread::kMaxNameBytes+1> thName;
         thName.AppendPrintf("UpnpSession %d", i);
         thName.PtrZ();
-        server->Add((const TChar*)thName.Ptr(), new DviSessionUpnp(iDvStack, aNif.Address(), server->Port(), *this));
+        server->Add((const TChar*)thName.Ptr(), new DviSessionUpnp(iDvStack, aNif.Address(), server->Port(), *pwf, *this, *this));
     }
     return server;
+}
+
+void DviServerUpnp::NotifyServerDeleted(TIpAddress aInterface)
+{
+    for (std::vector<PropertyWriterFactory*>::iterator it=iPropertyWriterFactories.begin(); it!=iPropertyWriterFactories.end(); ++it) {
+        if ((*it)->Adapter() == aInterface) {
+            (*it)->Disable();
+            iPropertyWriterFactories.erase(it);
+            break;
+        }
+    }
+}
+
+TBool DviServerUpnp::TryMapPath(const Brx& aReqPath, Bwx& aMappedPath)
+{
+    if (iPathMapper == NULL) {
+        return false;
+    }
+    return iPathMapper->TryMapPath(aReqPath, aMappedPath);
 }
 
 TBool DviServerUpnp::RedirectUri(const Brx& aUri, Brn& aRedirectTo)

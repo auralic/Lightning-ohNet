@@ -2,6 +2,13 @@
 #include <OpenHome/Types.h>
 #include <OpenHome/Buffer.h>
 #include <OpenHome/Private/Stream.h>
+#include <OpenHome/Private/Printer.h>
+
+extern "C"
+{
+#include "../thirdparty/libb64/cencode.h"
+#include "../thirdparty/libb64/cdecode.h"
+}
 
 using namespace OpenHome;
 
@@ -23,6 +30,16 @@ void Converter::ToXmlEscaped(IWriter& aWriter, TByte aValue)
     case '\"':
         aWriter.Write(Brn("&quot;"));
         break;
+#if 0
+    // (May 2016) Disable escaping line breaks for now.
+    // Devices that use this will require that control points are able to unescape.
+    // CPs that use ohNet won't be able to unescape until they update their ohNet version.
+    // This can be re-enabled once CPs have had a reasonable time to update.
+    case '\r':
+    case '\n':
+        aWriter.Write(Brn("&#xA;"));
+        break;
+#endif
     default:
         aWriter.Write(aValue);
         break;
@@ -50,6 +67,7 @@ TBool Converter::IsMultiByteChar(TByte aChar, TUint& aBytes)
 void Converter::ToXmlEscaped(IWriter& aWriter, const Brx& aValue)
 {
     TUint utf8CharBytesRemaining = 0;
+    TBool lastCharWasCr = false;
     for(TUint i = 0; i < aValue.Bytes(); ++i) {
         TByte ch = aValue[i];
         if (utf8CharBytesRemaining == 0) {
@@ -58,9 +76,24 @@ void Converter::ToXmlEscaped(IWriter& aWriter, const Brx& aValue)
                 utf8CharBytesRemaining = bytes;
             }
         }
+
+        const TBool charWasCr = lastCharWasCr;
+        lastCharWasCr = false;
         if (utf8CharBytesRemaining > 0) {
             utf8CharBytesRemaining--;
             aWriter.Write(ch);
+        }
+        else if (ch == '\n' || ch == '\r') {
+            // Encode any line ending into a single line feed.
+            // Set a marker so that single '\n' is output for '\r\n'.
+
+            if (ch == '\r' || !charWasCr) {
+                ToXmlEscaped(aWriter, '\n');
+            }
+
+            if (ch == '\r') {
+                lastCharWasCr = true;
+            }
         }
         else {
             ToXmlEscaped(aWriter, aValue[i]);
@@ -68,110 +101,51 @@ void Converter::ToXmlEscaped(IWriter& aWriter, const Brx& aValue)
     }
 }
 
-static const TByte kBase64[64] = {
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-        'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-        'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-        'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-        'w', 'x', 'y', 'z', '0', '1', '2', '3',
-        '4', '5', '6', '7', '8', '9', '+', '/'
-};
-
-static const TByte kDecode64[256] = {
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3e, 0xff, 0xff, 0xff, 0x3f, // + /
-        0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // 0 - 9 =
-        0xff, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, // A - O
-        0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0xff, 0xff, 0xff, 0xff, 0xff, // P - Z
-        0xff, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, // a - o
-        0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0xff, 0xff, 0xff, 0xff, 0xff, // p - z
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-};
-
 void Converter::ToBase64(IWriter& aWriter, const Brx& aValue)
 {
-    TUint b = 0;
-    TByte block[3];
+    base64_encodestate state;
+    base64_init_encodestate(&state);
 
-    for(TUint i = 0; i < aValue.Bytes(); ++i) {
+    static const TUint kBlockSize = 1024;
+    Bws<kBlockSize> buf;
+    const char* src = (const char*)aValue.Ptr();
+    char* dest = (char*)buf.Ptr();
 
-        block[b++] = aValue[i];
-
-        if (b >= 3) {
-            TByte index0 = block[0] >> 2;
-            TByte index1 = (block[0] & 0x03) << 4 | block[1] >> 4;
-            TByte index2 = (block[1] & 0x0f) << 2 | block[2] >> 6;
-            TByte index3 = (block[2] & 0x3f);
-
-            aWriter.Write(kBase64[index0]);
-            aWriter.Write(kBase64[index1]);
-            aWriter.Write(kBase64[index2]);
-            aWriter.Write(kBase64[index3]);
-
-            b = 0;
-        }
+    TUint remaining = aValue.Bytes();
+    while (remaining > 0) {
+        const TUint inputLen = (remaining > kBlockSize/4? kBlockSize/4 : remaining);
+        const TUint len = base64_encode_block(src, inputLen, dest, &state);
+        src += inputLen;
+        remaining -= inputLen;
+        buf.SetBytes(len);
+        aWriter.Write(buf);
     }
 
-    if (b == 1) {
-        TByte index0 = block[0] >> 2;
-        TByte index1 = (block[0] & 0x03) << 4;
-        aWriter.Write(kBase64[index0]);
-        aWriter.Write(kBase64[index1]);
-        aWriter.Write('=');
-        aWriter.Write('=');
-    }
-    else if (b == 2) {
-        TByte index0 = block[0] >> 2;
-        TByte index1 = (block[0] & 0x03) << 4 | block[1] >> 4;
-        TByte index2 = (block[1] & 0x0f) << 2;
-        aWriter.Write(kBase64[index0]);
-        aWriter.Write(kBase64[index1]);
-        aWriter.Write(kBase64[index2]);
-        aWriter.Write('=');
-    }
+    const TUint len = base64_encode_blockend(dest, &state);
+    buf.SetBytes(len);
+    aWriter.Write(buf);
 }
 
 void Converter::FromBase64(Bwx& aValue)
 {
-    TUint bytes = aValue.Bytes();
+    base64_decodestate state;
+    base64_init_decodestate(&state);
 
-    TUint j = 0;
-    TUint b = 0;
-    TByte block[4];
+    static const TUint kBlockSize = 512;
+    Bws<kBlockSize> buf;
+    const char* src = (const char*)aValue.Ptr();
+    char* dest = (char*)buf.Ptr();
+    TUint remaining = aValue.Bytes();
+    aValue.SetBytes(0);
 
-    for (TUint i = 0; i < bytes; i++) {
-
-        TByte d = kDecode64[aValue[i]];
-        if (d > 64) {
-            continue;
-        }
-        block[b++] = d;
-        if (b >= 4) {
-            aValue[j++] = block[0] << 2 | block[1] >> 4;
-            aValue[j++] = block[1] << 4 | block[2] >> 2;
-            aValue[j++] = block[2] << 6 | block[3];
-            b = 0;
-        }
+    while (remaining > 0) {
+        const TUint inputLen = (remaining > kBlockSize? kBlockSize : remaining);
+        const TUint len = base64_decode_block(src, inputLen, dest, &state);
+        src += inputLen;
+        remaining -= inputLen;
+        Brn destBuf((const TByte*)dest, len);
+        aValue.Append(destBuf);
     }
-
-    if (b > 1) {
-        aValue[j++] = block[0] << 2 | block[1] >> 4;
-    }
-    if (b > 2) {
-        aValue[j++] = block[1] << 4 | block[2] >> 2;
-    }
-
-    aValue.SetBytes(j);
 }
 
 void Converter::FromXmlEscaped(Bwx& aValue)
@@ -183,9 +157,9 @@ void Converter::FromXmlEscaped(Bwx& aValue)
     for (TUint i = 0; i < bytes; i++) {
         TByte ch = aValue[i];
         if (utf8CharBytesRemaining == 0) {
-            TUint bytes;
-            if (IsMultiByteChar(ch, bytes)) {
-                utf8CharBytesRemaining = bytes;
+            TUint multibytes = 0;
+            if (IsMultiByteChar(ch, multibytes)) {
+                utf8CharBytesRemaining = multibytes;
             }
         }
         if (utf8CharBytesRemaining > 0) {
@@ -275,6 +249,34 @@ void Converter::FromXmlEscaped(Bwx& aValue)
                     }
                 }
             }
+            else if (aValue[i] == '#') {
+                if (++i < bytes) {
+                    if (aValue[i] == 'x') {
+                        if (++i < bytes) {
+                            if (aValue[i] == 'A') {
+                                if (++i < bytes) {
+                                    if (aValue[i] == ';') {
+                                        aValue[j++] = '\n';
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (aValue[i] == '1') {
+                        if (++i < bytes) {
+                            if (aValue[i] == '0') {
+                                if (++i < bytes) {
+                                    if (aValue[i] == ';') {
+                                        aValue[j++] = '\n';
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     aValue.SetBytes(j);
@@ -324,4 +326,66 @@ TUint16 Converter::LeUint16At(const Brx& aBuf, TUint aIndex)
         b[i] = aBuf[aIndex++];
     }
     return (TUint16)((b[1] << 8) | b[0]);
+}
+
+void Converter::ToUtf8(TUint aCodePoint, IWriter& aWriter)
+{
+    Bws<6> buf;
+    ToUtf8(aCodePoint, buf);
+    aWriter.Write(buf);
+}
+
+void Converter::ToUtf8(TUint aCodePoint, Bwx& aBuf)
+{
+    if (aCodePoint>0x3ffffff)
+    {
+        // 31 bits
+        aBuf.SetBytes(6);
+        aBuf[0] = (TByte)((aCodePoint>>30)&0x01) | 0xfc; // bit 30  (1 bit)
+        aBuf[1] = (TByte)((aCodePoint>>24)&0x3f) | 0x80; // bits 29-24 (6 bits)
+        aBuf[2] = (TByte)((aCodePoint>>18)&0x3f) | 0x80; // bits 23-18 (6 bits)
+        aBuf[3] = (TByte)((aCodePoint>>12)&0x3f) | 0x80; // bits 17-12 (6 bits)
+        aBuf[4] = (TByte)((aCodePoint>>6)&0x3f) | 0x80;  // bits 11-6 (6 bits)
+        aBuf[5] = (TByte)(aCodePoint&0x3f) | 0x80;       // bits 5-0 (6 bits)
+    }
+    else if (aCodePoint>0x1fffff)
+    {
+        // 26 bits
+        aBuf.SetBytes(5);
+        aBuf[0] = (TByte)((aCodePoint>>24)&0x03) | 0xf8; // bits 25-24 (2 bits)
+        aBuf[1] = (TByte)((aCodePoint>>18)&0x3f) | 0x80; // bits 23-18 (6 bits)
+        aBuf[2] = (TByte)((aCodePoint>>12)&0x3f) | 0x80; // bits 17-12 (6 bits)
+        aBuf[3] = (TByte)((aCodePoint>>6)&0x3f) | 0x80;  // bits 11-6 (6 bits)
+        aBuf[4] = (TByte)(aCodePoint&0x3f) | 0x80;       // bits 5-0 (6 bits)
+    }
+    else if (aCodePoint>0xffff)
+    {
+        // 21 bits
+        aBuf.SetBytes(4);
+        aBuf[0] = (TByte)((aCodePoint>>18)&0x07) | 0xf0; // bits 20-18 (3 bits)
+        aBuf[1] = (TByte)((aCodePoint>>12)&0x3f) | 0x80; // bits 17-12 (6 bits)
+        aBuf[2] = (TByte)((aCodePoint>>6)&0x3f) | 0x80;  // bits 11-6 (6 bits)
+        aBuf[3] = (TByte)(aCodePoint&0x3f) | 0x80;       // bits 5-0 (6 bits)
+    }
+    else if (aCodePoint>0x7ff)
+    {
+        // 16 bits
+        aBuf.SetBytes(3);
+        aBuf[0] = (TByte)((aCodePoint>>12)&0x0f) | 0xe0; // bits 15-12 (4 bits)
+        aBuf[1] = (TByte)((aCodePoint>>6)&0x3f) | 0x80;  // bits 11-6 (6 bits)
+        aBuf[2] = (TByte)(aCodePoint&0x3f) | 0x80;       // bits 5-0 (6 bits)
+    }
+    else if (aCodePoint>0x7f)
+    {
+        // 11 bits
+        aBuf.SetBytes(2);
+        aBuf[0] = (TByte)((aCodePoint>>6)&0x1f) | 0xc0;  // bits 10-6 (5 bits)
+        aBuf[1] = (TByte)(aCodePoint&0x3f) | 0x80;       // bits 5-0 (6 bits)
+    }
+    else
+    {
+        // 7 bits
+        aBuf.SetBytes(1);
+        aBuf[0] = (TByte)(aCodePoint&0x7f);
+    }
 }

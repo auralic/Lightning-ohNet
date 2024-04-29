@@ -39,6 +39,12 @@ public:
      * Can only be called if EnablePropertyLastChange has previously been called.
      */
     void GetPropertyLastChange(Brhz& aValue);
+    /**
+     * Output the value of the LastChange property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyLastChange has previously been called.
+     */
+    void WritePropertyLastChange(IWriter& aWriter);
 protected:
     /**
      * Constructor

@@ -99,6 +99,46 @@ void DvProviderAvOpenhomeOrgPlaylist1Cpp::GetPropertyProtocolInfo(std::string& a
     aValue.assign((const char*)val.Ptr(), val.Bytes());
 }
 
+bool DvProviderAvOpenhomeOrgPlaylist1Cpp::SetPropertyAutoPlay(bool aValue)
+{
+    ASSERT(iPropertyAutoPlay != NULL);
+    return SetPropertyBool(*iPropertyAutoPlay, aValue);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::GetPropertyAutoPlay(bool& aValue)
+{
+    ASSERT(iPropertyAutoPlay != NULL);
+    aValue = iPropertyAutoPlay->Value();
+}
+
+bool DvProviderAvOpenhomeOrgPlaylist1Cpp::SetPropertyQobuzTracks(const std::string& aValue)
+{
+    ASSERT(iPropertyQobuzTracks != NULL);
+    Brn buf((const TByte*)aValue.c_str(), (TUint)aValue.length());
+    return SetPropertyString(*iPropertyQobuzTracks, buf);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::GetPropertyQobuzTracks(std::string& aValue)
+{
+    ASSERT(iPropertyQobuzTracks != NULL);
+    const Brx& val = iPropertyQobuzTracks->Value();
+    aValue.assign((const char*)val.Ptr(), val.Bytes());
+}
+
+bool DvProviderAvOpenhomeOrgPlaylist1Cpp::SetPropertyTuneInUrl(const std::string& aValue)
+{
+    ASSERT(iPropertyTuneInUrl != NULL);
+    Brn buf((const TByte*)aValue.c_str(), (TUint)aValue.length());
+    return SetPropertyString(*iPropertyTuneInUrl, buf);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::GetPropertyTuneInUrl(std::string& aValue)
+{
+    ASSERT(iPropertyTuneInUrl != NULL);
+    const Brx& val = iPropertyTuneInUrl->Value();
+    aValue.assign((const char*)val.Ptr(), val.Bytes());
+}
+
 DvProviderAvOpenhomeOrgPlaylist1Cpp::DvProviderAvOpenhomeOrgPlaylist1Cpp(DvDeviceStd& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "Playlist", 1)
 {
@@ -109,6 +149,9 @@ DvProviderAvOpenhomeOrgPlaylist1Cpp::DvProviderAvOpenhomeOrgPlaylist1Cpp(DvDevic
     iPropertyIdArray = NULL;
     iPropertyTracksMax = NULL;
     iPropertyProtocolInfo = NULL;
+    iPropertyAutoPlay = NULL;
+    iPropertyQobuzTracks = NULL;
+    iPropertyTuneInUrl = NULL;
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnablePropertyTransportState()
@@ -159,6 +202,24 @@ void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnablePropertyProtocolInfo()
 {
     iPropertyProtocolInfo = new PropertyString(new ParameterString("ProtocolInfo"));
     iService->AddProperty(iPropertyProtocolInfo); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnablePropertyAutoPlay()
+{
+    iPropertyAutoPlay = new PropertyBool(new ParameterBool("AutoPlay"));
+    iService->AddProperty(iPropertyAutoPlay); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnablePropertyQobuzTracks()
+{
+    iPropertyQobuzTracks = new PropertyString(new ParameterString("QobuzTracks"));
+    iService->AddProperty(iPropertyQobuzTracks); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnablePropertyTuneInUrl()
+{
+    iPropertyTuneInUrl = new PropertyString(new ParameterString("TuneInUrl"));
+    iService->AddProperty(iPropertyTuneInUrl); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1Cpp::EnableActionPlay()

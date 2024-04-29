@@ -79,6 +79,9 @@ objects_proxies = \
                   $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgDACConfig1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgDACConfig1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgCredentials1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgCredentials1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgCredentials1Std.$(objext) \
                   $(objdir)CpAvOpenhomeOrgServerConfig1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgServerConfig1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgServerConfig1Std.$(objext) \
@@ -94,6 +97,21 @@ objects_proxies = \
                   $(objdir)CpAvOpenhomeOrgRoon1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgRoon1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgRoon1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgTidalConnect1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgTidalConnect1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgTidalConnect1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgBluetooth1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgBluetooth1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgBluetooth1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgAirplay1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgAirplay1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgAirplay1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgMusicStation1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgMusicStation1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgMusicStation1Std.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgSpotify1.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgSpotify1C.$(objext) \
+                  $(objdir)CpAvOpenhomeOrgSpotify1Std.$(objext) \
                   $(objdir)CpAvOpenhomeOrgInternetRadio1.$(objext) \
                   $(objdir)CpAvOpenhomeOrgInternetRadio1C.$(objext) \
                   $(objdir)CpAvOpenhomeOrgInternetRadio1Std.$(objext) \
@@ -170,11 +188,17 @@ proxy_dotnet_assemblies = \
         CpAvOpenhomeOrgWebDACConfig1.net.dll \
         CpAvOpenhomeOrgWebClockConfig1.net.dll \
         CpAvOpenhomeOrgDACConfig1.net.dll \
+        CpAvOpenhomeOrgCredentials1.net.dll \
         CpAvOpenhomeOrgServerConfig1.net.dll \
         CpAvOpenhomeOrgMessageCenter1.net.dll \
         CpAvOpenhomeOrgRenderingInfo1.net.dll \
         CpAvOpenhomeOrgGroupConfig1.net.dll \
         CpAvOpenhomeOrgRoon1.net.dll \
+        CpAvOpenhomeOrgTidalConnect1.net.dll \
+        CpAvOpenhomeOrgBluetooth1.net.dll \
+        CpAvOpenhomeOrgAirplay1.net.dll \
+        CpAvOpenhomeOrgMusicStation1.net.dll \
+        CpAvOpenhomeOrgSpotify1.net.dll \
         CpAvOpenhomeOrgInternetRadio1.net.dll \
         CpAvOpenhomeOrgStreaming1.net.dll \
         CpAvOpenhomeOrgProduct1.net.dll \
@@ -214,11 +238,17 @@ proxy_dotnet_assemblies_with_path = \
         $(objdir)CpAvOpenhomeOrgWebDACConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgWebClockConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgDACConfig1.net.dll \
+        $(objdir)CpAvOpenhomeOrgCredentials1.net.dll \
         $(objdir)CpAvOpenhomeOrgServerConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgMessageCenter1.net.dll \
         $(objdir)CpAvOpenhomeOrgRenderingInfo1.net.dll \
         $(objdir)CpAvOpenhomeOrgGroupConfig1.net.dll \
         $(objdir)CpAvOpenhomeOrgRoon1.net.dll \
+        $(objdir)CpAvOpenhomeOrgTidalConnect1.net.dll \
+        $(objdir)CpAvOpenhomeOrgBluetooth1.net.dll \
+        $(objdir)CpAvOpenhomeOrgAirplay1.net.dll \
+        $(objdir)CpAvOpenhomeOrgMusicStation1.net.dll \
+        $(objdir)CpAvOpenhomeOrgSpotify1.net.dll \
         $(objdir)CpAvOpenhomeOrgInternetRadio1.net.dll \
         $(objdir)CpAvOpenhomeOrgStreaming1.net.dll \
         $(objdir)CpAvOpenhomeOrgProduct1.net.dll \
@@ -258,11 +288,17 @@ proxy_java_classes_with_path = \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebDACConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebClockConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgDACConfig1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgCredentials1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgServerConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgMessageCenter1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgRenderingInfo1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgGroupConfig1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgRoon1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgTidalConnect1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgBluetooth1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgAirplay1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgMusicStation1.class \
+        $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgSpotify1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgInternetRadio1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgStreaming1.class \
         $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgProduct1.class \
@@ -429,6 +465,12 @@ $(objdir)CpAvOpenhomeOrgDACConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgDACConfi
 	$(compiler)CpAvOpenhomeOrgDACConfig1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgDACConfig1C.cpp
 $(objdir)CpAvOpenhomeOrgDACConfig1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgDACConfig1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgDACConfig1.h
 	$(compiler)CpAvOpenhomeOrgDACConfig1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgDACConfig1Std.cpp
+$(objdir)CpAvOpenhomeOrgCredentials1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgCredentials1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgCredentials1.h
+	$(compiler)CpAvOpenhomeOrgCredentials1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgCredentials1.cpp
+$(objdir)CpAvOpenhomeOrgCredentials1C.$(objext) : $(proxyC)CpAvOpenhomeOrgCredentials1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgCredentials1.h
+	$(compiler)CpAvOpenhomeOrgCredentials1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgCredentials1C.cpp
+$(objdir)CpAvOpenhomeOrgCredentials1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgCredentials1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgCredentials1.h
+	$(compiler)CpAvOpenhomeOrgCredentials1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgCredentials1Std.cpp
 $(objdir)CpAvOpenhomeOrgServerConfig1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgServerConfig1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgServerConfig1.h
 	$(compiler)CpAvOpenhomeOrgServerConfig1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgServerConfig1.cpp
 $(objdir)CpAvOpenhomeOrgServerConfig1C.$(objext) : $(proxyC)CpAvOpenhomeOrgServerConfig1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgServerConfig1.h
@@ -459,6 +501,36 @@ $(objdir)CpAvOpenhomeOrgRoon1C.$(objext) : $(proxyC)CpAvOpenhomeOrgRoon1C.cpp $(
 	$(compiler)CpAvOpenhomeOrgRoon1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgRoon1C.cpp
 $(objdir)CpAvOpenhomeOrgRoon1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgRoon1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgRoon1.h
 	$(compiler)CpAvOpenhomeOrgRoon1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgRoon1Std.cpp
+$(objdir)CpAvOpenhomeOrgTidalConnect1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgTidalConnect1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgTidalConnect1.h
+	$(compiler)CpAvOpenhomeOrgTidalConnect1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgTidalConnect1.cpp
+$(objdir)CpAvOpenhomeOrgTidalConnect1C.$(objext) : $(proxyC)CpAvOpenhomeOrgTidalConnect1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgTidalConnect1.h
+	$(compiler)CpAvOpenhomeOrgTidalConnect1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgTidalConnect1C.cpp
+$(objdir)CpAvOpenhomeOrgTidalConnect1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgTidalConnect1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgTidalConnect1.h
+	$(compiler)CpAvOpenhomeOrgTidalConnect1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgTidalConnect1Std.cpp
+$(objdir)CpAvOpenhomeOrgBluetooth1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgBluetooth1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgBluetooth1.h
+	$(compiler)CpAvOpenhomeOrgBluetooth1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgBluetooth1.cpp
+$(objdir)CpAvOpenhomeOrgBluetooth1C.$(objext) : $(proxyC)CpAvOpenhomeOrgBluetooth1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgBluetooth1.h
+	$(compiler)CpAvOpenhomeOrgBluetooth1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgBluetooth1C.cpp
+$(objdir)CpAvOpenhomeOrgBluetooth1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgBluetooth1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgBluetooth1.h
+	$(compiler)CpAvOpenhomeOrgBluetooth1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgBluetooth1Std.cpp
+$(objdir)CpAvOpenhomeOrgAirplay1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgAirplay1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgAirplay1.h
+	$(compiler)CpAvOpenhomeOrgAirplay1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgAirplay1.cpp
+$(objdir)CpAvOpenhomeOrgAirplay1C.$(objext) : $(proxyC)CpAvOpenhomeOrgAirplay1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgAirplay1.h
+	$(compiler)CpAvOpenhomeOrgAirplay1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgAirplay1C.cpp
+$(objdir)CpAvOpenhomeOrgAirplay1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgAirplay1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgAirplay1.h
+	$(compiler)CpAvOpenhomeOrgAirplay1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgAirplay1Std.cpp
+$(objdir)CpAvOpenhomeOrgMusicStation1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgMusicStation1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgMusicStation1.h
+	$(compiler)CpAvOpenhomeOrgMusicStation1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgMusicStation1.cpp
+$(objdir)CpAvOpenhomeOrgMusicStation1C.$(objext) : $(proxyC)CpAvOpenhomeOrgMusicStation1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgMusicStation1.h
+	$(compiler)CpAvOpenhomeOrgMusicStation1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgMusicStation1C.cpp
+$(objdir)CpAvOpenhomeOrgMusicStation1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgMusicStation1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgMusicStation1.h
+	$(compiler)CpAvOpenhomeOrgMusicStation1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgMusicStation1Std.cpp
+$(objdir)CpAvOpenhomeOrgSpotify1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgSpotify1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgSpotify1.h
+	$(compiler)CpAvOpenhomeOrgSpotify1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgSpotify1.cpp
+$(objdir)CpAvOpenhomeOrgSpotify1C.$(objext) : $(proxyC)CpAvOpenhomeOrgSpotify1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgSpotify1.h
+	$(compiler)CpAvOpenhomeOrgSpotify1C.$(objext) -c $(cppflags) $(includes) $(proxyC)CpAvOpenhomeOrgSpotify1C.cpp
+$(objdir)CpAvOpenhomeOrgSpotify1Std.$(objext) : $(proxyCppStd)CpAvOpenhomeOrgSpotify1Std.cpp $(headers_proxy) OpenHome/Net/Bindings/Cpp/ControlPoint/Proxies/CpAvOpenhomeOrgSpotify1.h
+	$(compiler)CpAvOpenhomeOrgSpotify1Std.$(objext) -c $(cppflags) $(includes) $(proxyCppStd)CpAvOpenhomeOrgSpotify1Std.cpp
 $(objdir)CpAvOpenhomeOrgInternetRadio1.$(objext) : $(proxyCppCore)CpAvOpenhomeOrgInternetRadio1.cpp $(headers_proxy) OpenHome/Net/ControlPoint/Proxies/CpAvOpenhomeOrgInternetRadio1.h
 	$(compiler)CpAvOpenhomeOrgInternetRadio1.$(objext) -c $(cppflags) $(includes) $(proxyCppCore)CpAvOpenhomeOrgInternetRadio1.cpp
 $(objdir)CpAvOpenhomeOrgInternetRadio1C.$(objext) : $(proxyC)CpAvOpenhomeOrgInternetRadio1C.cpp $(headers_proxy) OpenHome/Net/Bindings/C/ControlPoint/Proxies/CpAvOpenhomeOrgInternetRadio1.h
@@ -558,11 +630,17 @@ proxy_dlls = \
              CpAvOpenhomeOrgWebDACConfig1Dll \
              CpAvOpenhomeOrgWebClockConfig1Dll \
              CpAvOpenhomeOrgDACConfig1Dll \
+             CpAvOpenhomeOrgCredentials1Dll \
              CpAvOpenhomeOrgServerConfig1Dll \
              CpAvOpenhomeOrgMessageCenter1Dll \
              CpAvOpenhomeOrgRenderingInfo1Dll \
              CpAvOpenhomeOrgGroupConfig1Dll \
              CpAvOpenhomeOrgRoon1Dll \
+             CpAvOpenhomeOrgTidalConnect1Dll \
+             CpAvOpenhomeOrgBluetooth1Dll \
+             CpAvOpenhomeOrgAirplay1Dll \
+             CpAvOpenhomeOrgMusicStation1Dll \
+             CpAvOpenhomeOrgSpotify1Dll \
              CpAvOpenhomeOrgInternetRadio1Dll \
              CpAvOpenhomeOrgStreaming1Dll \
              CpAvOpenhomeOrgProduct1Dll \
@@ -653,6 +731,9 @@ $(objdir)$(dllprefix)CpAvOpenhomeOrgWebClockConfig1.$(dllext) : ZappUpnpDll $(ob
 CpAvOpenhomeOrgDACConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgDACConfig1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgDACConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgDACConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgDACConfig1.$(objext)
+CpAvOpenhomeOrgCredentials1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgCredentials1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgCredentials1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgCredentials1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgCredentials1.$(dllext) $(objdir)CpAvOpenhomeOrgCredentials1.$(objext)
 CpAvOpenhomeOrgServerConfig1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgServerConfig1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgServerConfig1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgServerConfig1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgServerConfig1.$(dllext) $(objdir)CpAvOpenhomeOrgServerConfig1.$(objext)
@@ -668,6 +749,21 @@ $(objdir)$(dllprefix)CpAvOpenhomeOrgGroupConfig1.$(dllext) : ZappUpnpDll $(objdi
 CpAvOpenhomeOrgRoon1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgRoon1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgRoon1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgRoon1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgRoon1.$(dllext) $(objdir)CpAvOpenhomeOrgRoon1.$(objext)
+CpAvOpenhomeOrgTidalConnect1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgTidalConnect1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgTidalConnect1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgTidalConnect1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgTidalConnect1.$(dllext) $(objdir)CpAvOpenhomeOrgTidalConnect1.$(objext)
+CpAvOpenhomeOrgBluetooth1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgBluetooth1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgBluetooth1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgBluetooth1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgBluetooth1.$(dllext) $(objdir)CpAvOpenhomeOrgBluetooth1.$(objext)
+CpAvOpenhomeOrgAirplay1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgAirplay1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgAirplay1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgAirplay1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgAirplay1.$(dllext) $(objdir)CpAvOpenhomeOrgAirplay1.$(objext)
+CpAvOpenhomeOrgMusicStation1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgMusicStation1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgMusicStation1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgMusicStation1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgMusicStation1.$(dllext) $(objdir)CpAvOpenhomeOrgMusicStation1.$(objext)
+CpAvOpenhomeOrgSpotify1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgSpotify1.$(dllext)
+$(objdir)$(dllprefix)CpAvOpenhomeOrgSpotify1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgSpotify1.$(objext)
+	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgSpotify1.$(dllext) $(objdir)CpAvOpenhomeOrgSpotify1.$(objext)
 CpAvOpenhomeOrgInternetRadio1Dll: $(objdir)$(dllprefix)CpAvOpenhomeOrgInternetRadio1.$(dllext)
 $(objdir)$(dllprefix)CpAvOpenhomeOrgInternetRadio1.$(dllext) : ZappUpnpDll $(objdir)CpAvOpenhomeOrgInternetRadio1.$(objext)
 	$(link_dll_service) $(linkoutput)$(objdir)$(dllprefix)CpAvOpenhomeOrgInternetRadio1.$(dllext) $(objdir)CpAvOpenhomeOrgInternetRadio1.$(objext)
@@ -834,6 +930,11 @@ $(objdir)CpAvOpenhomeOrgDACConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpA
         /out:$(objdir)CpAvOpenhomeOrgDACConfig1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(proxyCs)CpAvOpenhomeOrgDACConfig1.cs
+$(objdir)CpAvOpenhomeOrgCredentials1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgCredentials1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgCredentials1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgCredentials1.cs
 $(objdir)CpAvOpenhomeOrgServerConfig1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgServerConfig1.cs
 	$(csharp) /t:library \
         /out:$(objdir)CpAvOpenhomeOrgServerConfig1.net.dll \
@@ -859,6 +960,31 @@ $(objdir)CpAvOpenhomeOrgRoon1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpen
         /out:$(objdir)CpAvOpenhomeOrgRoon1.net.dll \
         /reference:$(objdir)ohNet.net.dll \
         $(proxyCs)CpAvOpenhomeOrgRoon1.cs
+$(objdir)CpAvOpenhomeOrgTidalConnect1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgTidalConnect1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgTidalConnect1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgTidalConnect1.cs
+$(objdir)CpAvOpenhomeOrgBluetooth1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgBluetooth1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgBluetooth1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgBluetooth1.cs
+$(objdir)CpAvOpenhomeOrgAirplay1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgAirplay1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgAirplay1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgAirplay1.cs
+$(objdir)CpAvOpenhomeOrgMusicStation1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgMusicStation1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgMusicStation1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgMusicStation1.cs
+$(objdir)CpAvOpenhomeOrgSpotify1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgSpotify1.cs
+	$(csharp) /t:library \
+        /out:$(objdir)CpAvOpenhomeOrgSpotify1.net.dll \
+        /reference:$(objdir)ohNet.net.dll \
+        $(proxyCs)CpAvOpenhomeOrgSpotify1.cs
 $(objdir)CpAvOpenhomeOrgInternetRadio1.net.dll: $(objdir)ohNet.net.dll $(proxyCs)CpAvOpenhomeOrgInternetRadio1.cs
 	$(csharp) /t:library \
         /out:$(objdir)CpAvOpenhomeOrgInternetRadio1.net.dll \
@@ -974,6 +1100,8 @@ $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgWebClockConfi
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgWebClockConfig1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgDACConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgDACConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgDACConfig1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgCredentials1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgCredentials1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgCredentials1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgServerConfig1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgServerConfig1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgServerConfig1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgMessageCenter1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgMessageCenter1.java
@@ -984,6 +1112,16 @@ $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgGroupConfig1.
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgGroupConfig1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgRoon1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgRoon1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgRoon1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgTidalConnect1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgTidalConnect1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgTidalConnect1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgBluetooth1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgBluetooth1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgBluetooth1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgAirplay1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgAirplay1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgAirplay1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgMusicStation1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgMusicStation1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgMusicStation1.java
+$(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgSpotify1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgSpotify1.java
+	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgSpotify1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgInternetRadio1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgInternetRadio1.java
 	$(javac) -classpath $(objdir)ohnet.jar -d $(objdir) $(proxyJava)CpProxyAvOpenhomeOrgInternetRadio1.java
 $(objdir)org/openhome/net/controlpoint/proxies/CpProxyAvOpenhomeOrgStreaming1.class : $(objdir)ohnet.jar $(proxyJava)CpProxyAvOpenhomeOrgStreaming1.java

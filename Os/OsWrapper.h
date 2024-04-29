@@ -17,7 +17,7 @@ namespace OpenHome {
 class Os
 {
 public:
-    inline static OsContext* Create();
+    inline static OsContext* Create(Net::InitialisationParams::EThreadScheduling aSchedulerPolicy);
     inline static void Destroy(OsContext* aContext);
     inline static void Quit(OsContext* aContext);
     static THandle StackTraceInitialise(OsContext* aContext);
@@ -39,8 +39,11 @@ public:
     inline static void MutexDestroy(THandle aMutex);
     inline static TInt MutexLock(THandle aMutex);
     inline static void MutexUnlock(THandle aMutex);
+    static void ThreadGetPriorityRange(OsContext* aContext, TUint& aHostMin, TUint& aHostMax);
     inline static THandle ThreadCreate(OsContext* aContext, const TChar* aName, TUint aPriority,
                                        TUint aStackBytes, ThreadEntryPoint aEntryPoint, void* aArg);
+    inline static void ThreadWait(THandle aHandle, TBool aConsumeAll);
+    inline static void ThreadSignal(THandle aHandle);
     inline static void ThreadInstallSignalHandlers();
     inline static void* ThreadTls(OsContext* aContext);
     inline static void ThreadDestroy(THandle aThread);

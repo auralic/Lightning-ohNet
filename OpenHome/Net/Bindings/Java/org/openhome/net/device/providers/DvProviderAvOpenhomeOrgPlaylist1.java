@@ -120,6 +120,54 @@ interface IDvProviderAvOpenhomeOrgPlaylist1
      * @return value of the ProtocolInfo property.
      */
     public String getPropertyProtocolInfo();
+
+    /**
+     * Set the value of the AutoPlay property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyAutoPlay(boolean aValue);
+
+    /**
+     * Get a copy of the value of the AutoPlay property
+     *
+     * @return value of the AutoPlay property.
+     */
+    public boolean getPropertyAutoPlay();
+
+    /**
+     * Set the value of the QobuzTracks property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyQobuzTracks(String aValue);
+
+    /**
+     * Get a copy of the value of the QobuzTracks property
+     *
+     * @return value of the QobuzTracks property.
+     */
+    public String getPropertyQobuzTracks();
+
+    /**
+     * Set the value of the TuneInUrl property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyTuneInUrl(String aValue);
+
+    /**
+     * Get a copy of the value of the TuneInUrl property
+     *
+     * @return value of the TuneInUrl property.
+     */
+    public String getPropertyTuneInUrl();
         
 }
 
@@ -208,6 +256,9 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
     private PropertyBinary iPropertyIdArray;
     private PropertyUint iPropertyTracksMax;
     private PropertyString iPropertyProtocolInfo;
+    private PropertyBool iPropertyAutoPlay;
+    private PropertyString iPropertyQobuzTracks;
+    private PropertyString iPropertyTuneInUrl;
 
     /**
      * Constructor
@@ -287,6 +338,35 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
         List<String> allowedValues = new LinkedList<String>();
         iPropertyProtocolInfo = new PropertyString(new ParameterString("ProtocolInfo", allowedValues));
         addProperty(iPropertyProtocolInfo);
+    }
+
+    /**
+     * Enable the AutoPlay property.
+     */
+    public void enablePropertyAutoPlay()
+    {
+        iPropertyAutoPlay = new PropertyBool(new ParameterBool("AutoPlay"));
+        addProperty(iPropertyAutoPlay);
+    }
+
+    /**
+     * Enable the QobuzTracks property.
+     */
+    public void enablePropertyQobuzTracks()
+    {
+        List<String> allowedValues = new LinkedList<String>();
+        iPropertyQobuzTracks = new PropertyString(new ParameterString("QobuzTracks", allowedValues));
+        addProperty(iPropertyQobuzTracks);
+    }
+
+    /**
+     * Enable the TuneInUrl property.
+     */
+    public void enablePropertyTuneInUrl()
+    {
+        List<String> allowedValues = new LinkedList<String>();
+        iPropertyTuneInUrl = new PropertyString(new ParameterString("TuneInUrl", allowedValues));
+        addProperty(iPropertyTuneInUrl);
     }
 
     /**
@@ -441,6 +521,72 @@ public class DvProviderAvOpenhomeOrgPlaylist1 extends DvProvider implements IDvP
     public String getPropertyProtocolInfo()
     {
         return iPropertyProtocolInfo.getValue();
+    }
+
+    /**
+     * Set the value of the AutoPlay property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyAutoPlay(boolean aValue)
+    {
+        return setPropertyBool(iPropertyAutoPlay, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the AutoPlay property
+     *
+     * @return  value of the AutoPlay property.
+     */
+    public boolean getPropertyAutoPlay()
+    {
+        return iPropertyAutoPlay.getValue();
+    }
+
+    /**
+     * Set the value of the QobuzTracks property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyQobuzTracks(String aValue)
+    {
+        return setPropertyString(iPropertyQobuzTracks, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the QobuzTracks property
+     *
+     * @return  value of the QobuzTracks property.
+     */
+    public String getPropertyQobuzTracks()
+    {
+        return iPropertyQobuzTracks.getValue();
+    }
+
+    /**
+     * Set the value of the TuneInUrl property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyTuneInUrl(String aValue)
+    {
+        return setPropertyString(iPropertyTuneInUrl, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the TuneInUrl property
+     *
+     * @return  value of the TuneInUrl property.
+     */
+    public String getPropertyTuneInUrl()
+    {
+        return iPropertyTuneInUrl.getValue();
     }
 
     /**

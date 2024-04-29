@@ -15,6 +15,16 @@ EXCEPTION(NetworkError)
 EXCEPTION(NetworkAddressInUse)
 EXCEPTION(NetworkTimeout)
 
+#ifdef DEFINE_BIG_ENDIAN
+# define MakeIpAddress(aByte1, aByte2, aByte3, aByte4) \
+        (aByte4 | (aByte3<<8) | (aByte2<<16) | (aByte1<<24))
+#elif defined(DEFINE_LITTLE_ENDIAN)
+# define MakeIpAddress(aByte1, aByte2, aByte3, aByte4) \
+        (aByte1 | (aByte2<<8) | (aByte3<<16) | (aByte4<<24))
+#else
+# error "Endianness must be defined."
+#endif
+
 namespace OpenHome {
 
 enum ESocketType
@@ -46,6 +56,7 @@ public:
     void SetAddress(const Endpoint& aEndpoint);          // set address from other endpoint
     void Replace(const Endpoint& aEndpoint);             // set endpoint from other endpoint
     TBool Equals(const Endpoint& aEndpoint) const;       // test if this endpoint is equal to the specified endpoint
+    inline TBool operator==(const Endpoint& aEndpoint) const { return Equals(aEndpoint); }
     TIpAddress Address() const;
     TUint16 Port() const;                                // return port as a network order uint16
     void AppendAddress(Bwx& aAddress) const;
@@ -60,7 +71,13 @@ private:
 class Socket : public INonCopyable
 {
 public:
+    /**
+     * Close the socket, freeing any associated memory.
+     * Can only be called after any other calls to this socket from other
+     * threads have returned.
+     */
     void Close();
+    void CloseThrows();
     void Interrupt(TBool aInterrupt);
     void SetSendBufBytes(TUint aBytes);
     void SetRecvBufBytes(TUint aBytes);
@@ -69,7 +86,6 @@ public:
 protected:
     Socket();
     virtual ~Socket() {}
-    TBool TryClose();
     void Send(const Brx& aBuffer);
     void SendTo(const Brx& aBuffer, const Endpoint& aEndpoint);
     void Receive(Bwx& aBuffer);
@@ -105,6 +121,20 @@ public:
     ~AutoSocket();
 private:
     Socket& iSocket;
+};
+
+/**
+* Utility class.
+*
+* Calls ReadFlush() on its IReader and Close() on its Socket on destruction.
+*/
+class AutoSocketReader : public AutoSocket
+{
+public:
+    AutoSocketReader(Socket& aSocket, IReader& aReader);
+    ~AutoSocketReader();
+private:
+    IReader& iReader;
 };
 
 /// Shared Tcp client / Tcp session base class
@@ -148,8 +178,8 @@ class Environment;
 class SocketTcpClient : public SocketTcp
 {
 public:
-    void Open(Environment& aEnv);                              /// Open
-    void Connect(const Endpoint& aEndpoint, TUint aTimeout);    /// Connect to a given IP address and port number (timeout in milliseconds)
+    void Open(Environment& aEnv);
+    void Connect(const Endpoint& aEndpoint, TUint aTimeoutMs);
 };
 
 /// Tcp Session
@@ -215,9 +245,9 @@ public:
     Endpoint Receive(Bwx& aBuffer);
     TUint Port() const;
     ~SocketUdpBase();
+    void ReCreate();
 protected:
     SocketUdpBase(Environment& aEnv);
-    void ReCreate();
 private:
     void Create();
 protected:

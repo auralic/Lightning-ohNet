@@ -7,7 +7,6 @@
 #include <OpenHome/Net/Private/DviStack.h>
 #include <OpenHome/Net/Private/DviProviderSubscriptionLongPoll.h>
 #include <OpenHome/Net/Private/DviProtocolUpnp.h> // for DviProtocolUpnp ctor only
-#include <OpenHome/Net/Private/DviProtocolLpec.h> // for DviProtocolLpec ctor only
 
 using namespace OpenHome;
 using namespace OpenHome::Net;
@@ -21,6 +20,7 @@ DviDevice::DviDevice(OpenHome::Net::DvStack& aDvStack, const Brx& aUdn)
     , iLock("DDVM")
     , iServiceLock("DVM2")
     , iResourceManager(NULL)
+    , iDisableLock("DVM3")
     , iShutdownSem("DVSD", 1)
 {
     Construct(aUdn);
@@ -31,6 +31,7 @@ DviDevice::DviDevice(OpenHome::Net::DvStack& aDvStack, const Brx& aUdn, IResourc
     , iLock("DDVM")
     , iServiceLock("DVM2")
     , iResourceManager(&aResourceManager)
+    , iDisableLock("DVM3")
     , iShutdownSem("DVSD", 1)
 {
     Construct(aUdn);
@@ -64,8 +65,8 @@ DviDevice::~DviDevice()
 
 void DviDevice::Destroy()
 {
-    iLock.Wait();
     iDvStack.DeviceMap().Remove(*this);
+    iLock.Wait();
     for (TUint i=0; i<iDevices.size(); i++) {
         iDevices[i]->Destroy();
     }
@@ -125,30 +126,8 @@ TBool DviDevice::Enabled() const
 void DviDevice::SetEnabled()
 {
     ASSERT(iEnabled != eEnabled);
-    iLock.Wait();
-    if (iProtocolDisableCount != 0) {
-        // We're in the unusual situation of having the client Enable this device while its in the process of disabling.
-        // It'd be potentially fiddly for each protocol to halt a disable.
-        // ...so we prefer to waste a little time but avoid complex code by waiting for the disable to complete
-        iDisableComplete = MakeFunctor(*this, &DviDevice::DisableComplete);
-        iLock.Signal();
-        iShutdownSem.Wait();
-        iLock.Wait();
-    }
-    iEnabled = eEnabled;
-    iConfigUpdated = false;
-    iShutdownSem.Clear();
-    iLock.Signal();
-    TUint i;
-    for (i=0; i<(TUint)iProtocols.size(); i++) {
-        iProtocols[i]->Enable();
-    }
-    // queue updates for all service properties
-    // nothing may have changed but individual subscriptions will spot this and skip any update message
-    for (i=0; i<iServices.size(); i++) {
-        iServices[i]->Enable();
-        iServices[i]->PublishPropertyUpdates();
-    }
+    AutoMutex _(iLock);
+    SetEnabledLocked();
 }
 
 void DviDevice::SetDisabled(Functor aCompleted)
@@ -178,19 +157,27 @@ void DviDevice::SetAttribute(const TChar* aKey, const TChar* aValue)
     Parser parser(key);
     Brn name = parser.Next('.');
     aKey += name.Bytes() + 1;
-    // assume keys starting 'Test' are a special case which can be updated at any time
-    if (strlen(aKey) < 4 || strncmp(aKey, "Test", 4) != 0) {
-        ASSERT(iEnabled == eDisabled);
-    }
     if (name == Brn("Core")) {
         static const char* longPollEnable = "LongPollEnable";
-        if (iProviderSubscriptionLongPoll == NULL && 
+        if (iProviderSubscriptionLongPoll == NULL &&
             strncmp(aKey, longPollEnable, sizeof(longPollEnable)-1) == 0) {
             iProviderSubscriptionLongPoll = new DviProviderSubscriptionLongPoll(*this);
             ConfigChanged();
         }
     }
     else {
+        AutoMutex _(iLock);
+        TBool reEnable = false;
+        // assume keys starting 'Test' are a special case which can be updated at any time
+        if (iEnabled == eEnabled && strncmp(aKey, "Test", 4) != 0) {
+            Semaphore sem("DVSA", 0);
+            SetDisabled(MakeFunctor(sem, &Semaphore::Signal), true);
+            iLock.Signal();
+            sem.Wait();
+            iLock.Wait();
+            reEnable = true;
+        }
+
         for (TUint i=0; i<(TUint)iProtocols.size(); i++) {
             IDvProtocol* protocol = iProtocols[i];
             if (protocol->ProtocolName() == name) {
@@ -198,6 +185,10 @@ void DviDevice::SetAttribute(const TChar* aKey, const TChar* aValue)
                 ConfigChanged();
                 break;
             }
+        }
+
+        if (reEnable) {
+            SetEnabledLocked();
         }
     }
 }
@@ -228,14 +219,65 @@ DviService* DviDevice::ServiceReference(const ServiceType& aServiceType)
 {
     DviService* service = NULL;
     iServiceLock.Wait();
-    const Brx& fullNameUpnp = aServiceType.FullNameUpnp();
+
+    // ServiceType::Domain() should be dot-separated, but some control point
+    // proxies are generated with UPnP-style domains. For ease, convert both
+    // domains into UPnP-style domains here for comparison purposes.
+    Bwh upnpDomain(aServiceType.Domain().Bytes() + 10);
+    Ssdp::CanonicalDomainToUpnp(aServiceType.Domain(), upnpDomain);
+    const Brx& name = aServiceType.Name();
+    const TUint version = aServiceType.Version();
     const TUint count = (TUint)iServices.size();
     for (TUint i=0; i<count; i++) {
         DviService* s = iServices[i];
-        if (s->ServiceType().FullNameUpnp() == fullNameUpnp) {
-            s->AddRef();
-            service = s;
-            break;
+        ServiceType type = s->ServiceType();
+        Bwh serviceUpnpDomain(type.Domain().Bytes() + 10);
+        Ssdp::CanonicalDomainToUpnp(type.Domain(), serviceUpnpDomain);
+
+        if (serviceUpnpDomain == upnpDomain && type.Name() == name) {
+            if (type.Version() >= version) {
+                s->AddRef();
+                service = s;
+                break;
+            }
+        }
+    }
+    iServiceLock.Signal();
+    return service;
+}
+
+DviService* DviDevice::ServiceReference(const Brx& aServiceName)
+{
+    DviService* service = NULL;
+    iServiceLock.Wait();
+
+    Parser p(aServiceName);
+    const Brn domain = p.Next('-');
+    Bwh upnpDomain(domain.Bytes() + 10);
+    Ssdp::CanonicalDomainToUpnp(domain, upnpDomain);
+    const Brn name = p.Next('-');
+    const Brn versionBuf = p.Next();
+    TUint version = 0;
+    try {
+        version = Ascii::Uint(versionBuf);
+    }
+    catch (AsciiError&) {
+        return service;
+    }
+
+    const TUint count = (TUint)iServices.size();
+    for (TUint i=0; i<count; i++) {
+        DviService* s = iServices[i];
+        ServiceType type = s->ServiceType();
+        Bwh serviceUpnpDomain(type.Domain().Bytes() + 10);
+        Ssdp::CanonicalDomainToUpnp(type.Domain(), serviceUpnpDomain);
+
+        if (serviceUpnpDomain == upnpDomain && type.Name() == name) {
+            if (type.Version() >= version) {
+                s->AddRef();
+                service = s;
+                break;
+            }
         }
     }
     iServiceLock.Signal();
@@ -372,35 +414,72 @@ DviDevice* DviDevice::Root() const
     return const_cast<DviDevice*>(root);
 }
 
+void DviDevice::SetEnabledLocked()
+{
+    if (iProtocolDisableCount != 0) {
+        // We're in the unusual situation of having the client Enable this device while its in the process of disabling.
+        // It'd be potentially fiddly for each protocol to halt a disable.
+        // ...so we prefer to waste a little time but avoid complex code by waiting for the disable to complete
+        Semaphore sem("DSEL", 0);
+        iDisableComplete.push_back(MakeFunctor(sem, &Semaphore::Signal));
+        iLock.Signal();
+        sem.Wait();
+        iLock.Wait();
+    }
+    iEnabled = eEnabled;
+    iConfigUpdated = false;
+    iDisableLock.Wait();
+    iShutdownSem.Clear();
+    iDisableLock.Signal();
+    iLock.Signal();
+    TUint i;
+    for (i=0; i<(TUint)iProtocols.size(); i++) {
+        iProtocols[i]->Enable();
+    }
+    // queue updates for all service properties
+    // nothing may have changed but individual subscriptions will spot this and skip any update message
+    for (i=0; i<iServices.size(); i++) {
+        iServices[i]->Enable();
+        iServices[i]->PublishPropertyUpdates();
+    }
+    iLock.Wait();
+}
+
 void DviDevice::SetDisabled(Functor aCompleted, bool aLocked)
 {
     if (!aLocked) {
         iLock.Wait();
     }
-    iDisableComplete = aCompleted;
-    switch (iEnabled)
-    {
-    case eDisabled:
-        iProtocolDisableCount = 0;
-        break;
-    case eDisabling:
-        ASSERTS();
-        break;
-    case eEnabled:
+    iDisableLock.Wait();
+    TBool changedState = false;
+    if (iEnabled == eEnabled) {
         iEnabled = eDisabling;
         iProtocolDisableCount = (TUint)iProtocols.size();
-        break;
+        if (iProtocolDisableCount == 0) {
+            iEnabled = eDisabled;
+        }
+        changedState = true;
     }
+    const TBool disabled = (iEnabled == eDisabled);
+    if (!disabled) {
+        iDisableComplete.push_back(aCompleted);
+    }
+    iDisableLock.Signal();
     if (!aLocked) {
         iLock.Signal();
     }
-    if (iProtocolDisableCount == 0) {
-        if (iDisableComplete) {
-            iDisableComplete();
+
+    if (disabled) {
+        if (aCompleted) {
+            aCompleted();
         }
-        iShutdownSem.Signal();
+        if (changedState) {
+            iDisableLock.Wait();
+            iShutdownSem.Signal();
+            iDisableLock.Signal();
+        }
     }
-    else {
+    else if (changedState) {
         if (aLocked) {
             // unlock around calls to Disable in case any call back to ProtocolDisabled synchronously
             iLock.Signal();
@@ -413,6 +492,7 @@ void DviDevice::SetDisabled(Functor aCompleted, bool aLocked)
             iLock.Wait();
         }
     }
+
     // Tell services not to accept further action invocations
     for (TUint i=0; i<iServices.size(); i++) {
         iServices[i]->Disable();
@@ -421,21 +501,19 @@ void DviDevice::SetDisabled(Functor aCompleted, bool aLocked)
 
 void DviDevice::ProtocolDisabled()
 {
-    iLock.Wait();
+    AutoMutex _(iDisableLock);
     ASSERT(iProtocolDisableCount != 0);
     if (--iProtocolDisableCount == 0) {
         iEnabled = eDisabled;
-        if (iDisableComplete) {
-            iDisableComplete();
+        for (TUint i=0; i<iDisableComplete.size(); i++) {
+            Functor& f = iDisableComplete[i];
+            if (f) {
+                f();
+            }
         }
+        iDisableComplete.clear();
         iShutdownSem.Signal();
     }
-    iLock.Signal();
-}
-
-void DviDevice::DisableComplete()
-{
-    iShutdownSem.Signal();
 }
 
 TBool DviDevice::HasService(const OpenHome::Net::ServiceType& aServiceType) const
@@ -479,9 +557,7 @@ TUint DviDevice::SubscriptionId()
 
 void DviDevice::ListObjectDetails() const
 {
-    Log::Print("  DviDevice: addr=%p, udn=", this);
-    Log::Print(iUdn);
-    Log::Print(", refCount=%u\n", iRefCount);
+    Log::Print("  DviDevice: addr=%p, udn=%.*s, refCount=%u\n", this, PBUF(iUdn), iRefCount);
 }
 
 
@@ -546,8 +622,9 @@ DviDeviceStandard::DviDeviceStandard(OpenHome::Net::DvStack& aDvStack, const Brx
 void DviDeviceStandard::Construct()
 {
     AddProtocol(new DviProtocolUpnp(*this));
-    if (iDvStack.Env().InitParams()->DvNumLpecThreads() > 0) {
-        AddProtocol(new DviProtocolLpec(*this));
+    std::vector<IDvProtocolFactory*>& protocolFactories = iDvStack.ProtocolFactories();
+    for (TUint i=0; i<protocolFactories.size(); i++) {
+        AddProtocol(protocolFactories[i]->CreateProtocol(*this));
     }
 }
 
@@ -574,6 +651,22 @@ const TChar* AttributeMap::Attribute::Value() const
 void AttributeMap::Attribute::UpdateValue(const TChar* aValue)
 {
     iValue.Set(aValue);
+}
+
+
+// AutoDeviceRef
+
+AutoDeviceRef::AutoDeviceRef(DviDevice*& aDevice)
+    : iDevice(aDevice)
+{
+}
+
+AutoDeviceRef::~AutoDeviceRef()
+{
+    if (iDevice != NULL) {
+        iDevice->RemoveWeakRef();
+        iDevice = NULL;
+    }
 }
 
 
@@ -609,15 +702,15 @@ void DviDeviceMap::Remove(DviDevice& aDevice)
 
 DviDevice* DviDeviceMap::Find(const Brx& aUdn)
 {
-    DviDevice* device = NULL;
-    iLock.Wait();
+    AutoMutex _(iLock);
     Brn udn(aUdn);
     Map::iterator it = iMap.find(udn);
-    if (it != iMap.end()) {
-        device = it->second;
+    if (it != iMap.end() && it->second->Enabled()) {
+        DviDevice* device = it->second;
+        device->AddWeakRef();
+        return device;
     }
-    iLock.Signal();
-    return device;
+    return NULL;
 }
 
 std::map<Brn,DviDevice*,BufferCmp> DviDeviceMap::CopyMap() const
@@ -628,6 +721,14 @@ std::map<Brn,DviDevice*,BufferCmp> DviDeviceMap::CopyMap() const
         it++;
     }
     return iMap;
+}
+
+void DviDeviceMap::ClearMap(std::map<Brn, DviDevice*, BufferCmp>& aMap)
+{
+    for (Map::iterator it=aMap.begin(); it!=aMap.end(); ++it) {
+        it->second->RemoveWeakRef();
+    }
+    aMap.clear();
 }
 
 void DviDeviceMap::WriteResource(const Brx& aUriTail, TIpAddress aInterface, std::vector<char*>& aLanguageList, IResourceWriter& aResourceWriter)
@@ -641,7 +742,9 @@ void DviDeviceMap::WriteResource(const Brx& aUriTail, TIpAddress aInterface, std
         if (it != iMap.end()) {
             DviDevice* device = it->second;
             iLock.Signal();
-            device->WriteResource(parser.Remaining(), aInterface, aLanguageList, aResourceWriter);
+            if (it->second->Enabled()) {
+                device->WriteResource(parser.Remaining(), aInterface, aLanguageList, aResourceWriter);
+            }
             return;
         }
     }

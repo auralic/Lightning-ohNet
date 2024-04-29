@@ -544,7 +544,7 @@ void SyncProtocolInfoAvOpenhomeOrgStreaming1Cpp::CompleteRequest(IAsync& aAsync)
 
 
 CpProxyAvOpenhomeOrgStreaming1Cpp::CpProxyAvOpenhomeOrgStreaming1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "Streaming", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "Streaming", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
     TChar** allowedValues;
@@ -719,8 +719,8 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncPlay()
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginPlay(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionPlay, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionPlay, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndPlay(IAsync& aAsync)
@@ -746,8 +746,8 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncPause()
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginPause(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionPause, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionPause, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndPause(IAsync& aAsync)
@@ -773,8 +773,8 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncStop()
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginStop(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionStop, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionStop, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndStop(IAsync& aAsync)
@@ -800,8 +800,8 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncNext()
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginNext(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionNext, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionNext, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndNext(IAsync& aAsync)
@@ -827,8 +827,8 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncPrevious()
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginPrevious(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionPrevious, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionPrevious, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndPrevious(IAsync& aAsync)
@@ -854,11 +854,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncSetRepeat(bool aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginSetRepeat(bool aValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetRepeat, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetRepeat, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetRepeat->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aValue));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndSetRepeat(IAsync& aAsync)
@@ -884,11 +884,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncRepeat(bool& aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginRepeat(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionRepeat, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionRepeat, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionRepeat->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndRepeat(IAsync& aAsync, bool& aValue)
@@ -916,11 +916,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncSetShuffle(bool aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginSetShuffle(bool aValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetShuffle, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetShuffle, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetShuffle->InputParameters();
     invocation->AddInput(new ArgumentBool(*inParams[inIndex++], aValue));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndSetShuffle(IAsync& aAsync)
@@ -946,11 +946,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncShuffle(bool& aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginShuffle(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionShuffle, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionShuffle, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionShuffle->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndShuffle(IAsync& aAsync, bool& aValue)
@@ -978,11 +978,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncSeekSecondAbsolute(uint32_t aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginSeekSecondAbsolute(uint32_t aValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSeekSecondAbsolute, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSeekSecondAbsolute, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSeekSecondAbsolute->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aValue));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndSeekSecondAbsolute(IAsync& aAsync)
@@ -1008,11 +1008,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncSeekSecondRelative(int32_t aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginSeekSecondRelative(int32_t aValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSeekSecondRelative, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSeekSecondRelative, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSeekSecondRelative->InputParameters();
     invocation->AddInput(new ArgumentInt(*inParams[inIndex++], aValue));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndSeekSecondRelative(IAsync& aAsync)
@@ -1038,11 +1038,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncSeekId(uint32_t aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginSeekId(uint32_t aValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSeekId, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSeekId, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSeekId->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aValue));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndSeekId(IAsync& aAsync)
@@ -1068,11 +1068,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncSeekIndex(uint32_t aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginSeekIndex(uint32_t aValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSeekIndex, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSeekIndex, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSeekIndex->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aValue));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndSeekIndex(IAsync& aAsync)
@@ -1098,11 +1098,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncTransportState(std::string& aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginTransportState(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionTransportState, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionTransportState, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionTransportState->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndTransportState(IAsync& aAsync, std::string& aValue)
@@ -1133,11 +1133,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncId(uint32_t& aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginId(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionId, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionId, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionId->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndId(IAsync& aAsync, uint32_t& aValue)
@@ -1165,7 +1165,7 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncRead(uint32_t aId, std::string& aUri
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginRead(uint32_t aId, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionRead, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionRead, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionRead->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aId));
@@ -1173,7 +1173,7 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginRead(uint32_t aId, FunctorAsync& aF
     const Action::VectorParameters& outParams = iActionRead->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndRead(IAsync& aAsync, std::string& aUri, std::string& aMetadata)
@@ -1208,7 +1208,7 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncReadList(const std::string& aIdList,
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginReadList(const std::string& aIdList, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionReadList, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionReadList, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionReadList->InputParameters();
     {
@@ -1218,7 +1218,7 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginReadList(const std::string& aIdList
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionReadList->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndReadList(IAsync& aAsync, std::string& aTrackList)
@@ -1249,7 +1249,7 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncInsert(uint32_t aAfterId, const std:
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginInsert(uint32_t aAfterId, const std::string& aUri, const std::string& aMetadata, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionInsert, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionInsert, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionInsert->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aAfterId));
@@ -1264,7 +1264,7 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginInsert(uint32_t aAfterId, const std
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionInsert->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndInsert(IAsync& aAsync, uint32_t& aNewId)
@@ -1292,11 +1292,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncDeleteId(uint32_t aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginDeleteId(uint32_t aValue, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionDeleteId, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionDeleteId, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionDeleteId->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aValue));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndDeleteId(IAsync& aAsync)
@@ -1322,8 +1322,8 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncDeleteAll()
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginDeleteAll(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionDeleteAll, aFunctor);
-    iInvocable.InvokeAction(*invocation);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionDeleteAll, aFunctor);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndDeleteAll(IAsync& aAsync)
@@ -1349,11 +1349,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncTracksMax(uint32_t& aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginTracksMax(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionTracksMax, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionTracksMax, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionTracksMax->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndTracksMax(IAsync& aAsync, uint32_t& aValue)
@@ -1381,12 +1381,12 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncIdArray(uint32_t& aToken, std::strin
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginIdArray(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionIdArray, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionIdArray, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionIdArray->OutputParameters();
     invocation->AddOutput(new ArgumentUint(*outParams[outIndex++]));
     invocation->AddOutput(new ArgumentBinary(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndIdArray(IAsync& aAsync, uint32_t& aToken, std::string& aArray)
@@ -1418,14 +1418,14 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncIdArrayChanged(uint32_t aToken, bool
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginIdArrayChanged(uint32_t aToken, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionIdArrayChanged, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionIdArrayChanged, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionIdArrayChanged->InputParameters();
     invocation->AddInput(new ArgumentUint(*inParams[inIndex++], aToken));
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionIdArrayChanged->OutputParameters();
     invocation->AddOutput(new ArgumentBool(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndIdArrayChanged(IAsync& aAsync, bool& aValue)
@@ -1453,11 +1453,11 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::SyncProtocolInfo(std::string& aValue)
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::BeginProtocolInfo(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionProtocolInfo, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionProtocolInfo, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionProtocolInfo->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::EndProtocolInfo(IAsync& aAsync, std::string& aValue)
@@ -1481,101 +1481,115 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::EndProtocolInfo(IAsync& aAsync, std::str
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::SetPropertyTransportStateChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iTransportStateChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::SetPropertyRepeatChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iRepeatChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::SetPropertyShuffleChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iShuffleChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::SetPropertyIdChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iIdChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::SetPropertyIdArrayChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iIdArrayChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::SetPropertyTracksMaxChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iTracksMaxChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::SetPropertyProtocolInfoChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iProtocolInfoChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::PropertyTransportState(std::string& aTransportState) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iTransportState->Value();
     aTransportState.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::PropertyRepeat(bool& aRepeat) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aRepeat = iRepeat->Value();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::PropertyShuffle(bool& aShuffle) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aShuffle = iShuffle->Value();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::PropertyId(uint32_t& aId) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aId = iId->Value();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::PropertyIdArray(std::string& aIdArray) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iIdArray->Value();
     aIdArray.assign((const char*)val.Ptr(), val.Bytes());
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::PropertyTracksMax(uint32_t& aTracksMax) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aTracksMax = iTracksMax->Value();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1Cpp::PropertyProtocolInfo(std::string& aProtocolInfo) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iProtocolInfo->Value();
     aProtocolInfo.assign((const char*)val.Ptr(), val.Bytes());
 }
@@ -1613,5 +1627,44 @@ void CpProxyAvOpenhomeOrgStreaming1Cpp::TracksMaxPropertyChanged()
 void CpProxyAvOpenhomeOrgStreaming1Cpp::ProtocolInfoPropertyChanged()
 {
     ReportEvent(iProtocolInfoChanged);
+}
+
+void CpProxyAvOpenhomeOrgStreaming1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgStreaming1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgStreaming1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgStreaming1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgStreaming1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgStreaming1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgStreaming1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgStreaming1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

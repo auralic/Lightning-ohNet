@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyManufacturerName(Brhz& aVal
     aValue.Set(iPropertyManufacturerName->Value());
 }
 
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyManufacturerName(IWriter& aWriter)
+{
+    iPropertyManufacturerName->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyManufacturerInfo(const Brx& aValue)
 {
     ASSERT(iPropertyManufacturerInfo != NULL);
@@ -30,6 +35,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyManufacturerInfo(Brhz& aVal
 {
     ASSERT(iPropertyManufacturerInfo != NULL);
     aValue.Set(iPropertyManufacturerInfo->Value());
+}
+
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyManufacturerInfo(IWriter& aWriter)
+{
+    iPropertyManufacturerInfo->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyManufacturerUrl(const Brx& aValue)
@@ -44,6 +54,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyManufacturerUrl(Brhz& aValu
     aValue.Set(iPropertyManufacturerUrl->Value());
 }
 
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyManufacturerUrl(IWriter& aWriter)
+{
+    iPropertyManufacturerUrl->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyManufacturerImageUri(const Brx& aValue)
 {
     ASSERT(iPropertyManufacturerImageUri != NULL);
@@ -54,6 +69,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyManufacturerImageUri(Brhz& 
 {
     ASSERT(iPropertyManufacturerImageUri != NULL);
     aValue.Set(iPropertyManufacturerImageUri->Value());
+}
+
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyManufacturerImageUri(IWriter& aWriter)
+{
+    iPropertyManufacturerImageUri->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyModelName(const Brx& aValue)
@@ -68,6 +88,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyModelName(Brhz& aValue)
     aValue.Set(iPropertyModelName->Value());
 }
 
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyModelName(IWriter& aWriter)
+{
+    iPropertyModelName->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyModelInfo(const Brx& aValue)
 {
     ASSERT(iPropertyModelInfo != NULL);
@@ -78,6 +103,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyModelInfo(Brhz& aValue)
 {
     ASSERT(iPropertyModelInfo != NULL);
     aValue.Set(iPropertyModelInfo->Value());
+}
+
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyModelInfo(IWriter& aWriter)
+{
+    iPropertyModelInfo->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyModelUrl(const Brx& aValue)
@@ -92,6 +122,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyModelUrl(Brhz& aValue)
     aValue.Set(iPropertyModelUrl->Value());
 }
 
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyModelUrl(IWriter& aWriter)
+{
+    iPropertyModelUrl->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyModelImageUri(const Brx& aValue)
 {
     ASSERT(iPropertyModelImageUri != NULL);
@@ -102,6 +137,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyModelImageUri(Brhz& aValue)
 {
     ASSERT(iPropertyModelImageUri != NULL);
     aValue.Set(iPropertyModelImageUri->Value());
+}
+
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyModelImageUri(IWriter& aWriter)
+{
+    iPropertyModelImageUri->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyProductName(const Brx& aValue)
@@ -116,6 +156,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyProductName(Brhz& aValue)
     aValue.Set(iPropertyProductName->Value());
 }
 
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyProductName(IWriter& aWriter)
+{
+    iPropertyProductName->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyProductInfo(const Brx& aValue)
 {
     ASSERT(iPropertyProductInfo != NULL);
@@ -126,6 +171,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyProductInfo(Brhz& aValue)
 {
     ASSERT(iPropertyProductInfo != NULL);
     aValue.Set(iPropertyProductInfo->Value());
+}
+
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyProductInfo(IWriter& aWriter)
+{
+    iPropertyProductInfo->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyProductUrl(const Brx& aValue)
@@ -140,6 +190,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyProductUrl(Brhz& aValue)
     aValue.Set(iPropertyProductUrl->Value());
 }
 
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyProductUrl(IWriter& aWriter)
+{
+    iPropertyProductUrl->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyProductImageUri(const Brx& aValue)
 {
     ASSERT(iPropertyProductImageUri != NULL);
@@ -152,6 +207,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyProductImageUri(Brhz& aValu
     aValue.Set(iPropertyProductImageUri->Value());
 }
 
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyProductImageUri(IWriter& aWriter)
+{
+    iPropertyProductImageUri->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyAttributes(const Brx& aValue)
 {
     ASSERT(iPropertyAttributes != NULL);
@@ -162,6 +222,11 @@ void DvProviderAvOpenhomeOrgMediaServer1::GetPropertyAttributes(Brhz& aValue)
 {
     ASSERT(iPropertyAttributes != NULL);
     aValue.Set(iPropertyAttributes->Value());
+}
+
+void DvProviderAvOpenhomeOrgMediaServer1::WritePropertyAttributes(IWriter& aWriter)
+{
+    iPropertyAttributes->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgMediaServer1::SetPropertyQueryPort(TUint aValue)

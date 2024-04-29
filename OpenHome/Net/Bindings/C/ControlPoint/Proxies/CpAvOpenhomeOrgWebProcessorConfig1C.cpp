@@ -202,14 +202,14 @@ void CpProxyAvOpenhomeOrgWebProcessorConfig1C::SetPropertyProcessorConfigChanged
 void CpProxyAvOpenhomeOrgWebProcessorConfig1C::PropertyAlive(TBool& aAlive) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebProcessorConfig1C::PropertyProcessorConfig(Brhz& aProcessorConfig) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aProcessorConfig.Set(iProcessorConfig->Value());
 }
 
@@ -335,21 +335,33 @@ void STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1SetPropertyProcessorConfigCh
     proxyC->SetPropertyProcessorConfigChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
 {
     CpProxyAvOpenhomeOrgWebProcessorConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebProcessorConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Alive;
-    proxyC->PropertyAlive(Alive);
+    try {
+        proxyC->PropertyAlive(Alive);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aAlive = Alive? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1PropertyProcessorConfig(THandle aHandle, char** aProcessorConfig)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebProcessorConfig1PropertyProcessorConfig(THandle aHandle, char** aProcessorConfig)
 {
     CpProxyAvOpenhomeOrgWebProcessorConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebProcessorConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aProcessorConfig;
-    proxyC->PropertyProcessorConfig(buf_aProcessorConfig);
+    try {
+        proxyC->PropertyProcessorConfig(buf_aProcessorConfig);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aProcessorConfig = buf_aProcessorConfig.Transfer();
+    return 0;
 }
 

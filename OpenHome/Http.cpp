@@ -5,6 +5,7 @@
 #include <OpenHome/Private/Debug.h>
 #include <OpenHome/Private/Timer.h>
 #include <OpenHome/Private/Uri.h>
+#include <OpenHome/Net/Core/OhNet.h>
 
 #include <ctype.h>
 #include <algorithm>
@@ -157,8 +158,10 @@ void Http::WriteHeaderHostAndPort(WriterHttpHeader& aWriter, const Brx& aHost, T
 {
     IWriterAscii& writer = aWriter.WriteHeaderField(Http::kHeaderHost);
     writer.Write(aHost);
-    writer.Write(':');
-    writer.WriteUint(aPort);
+    if (aPort != Http::kPortDefault) {
+        writer.Write(':');
+        writer.WriteUint(aPort);
+    }
     writer.WriteNewline();
 }
 
@@ -178,6 +181,16 @@ void Http::WriteHeaderConnectionClose(WriterHttpHeader& aWriter)
 {
     aWriter.WriteHeader(Http::kHeaderConnection, Http::kConnectionClose);
 }
+
+void Http::WriteHeaderUserAgent(WriterHttpHeader& aWriter, Environment& aEnv)
+{
+    if (aEnv.HasHttpUserAgent()) {
+        IWriterAscii& writer = aWriter.WriteHeaderField(Http::kHeaderUserAgent);
+        aEnv.WriteHttpUserAgent(writer);
+        writer.WriteNewline();
+    }
+}
+
 
 // HttpStatus
 
@@ -315,17 +328,14 @@ void ReaderHttpRequest::Read(TUint aTimeoutMs)
     ResetHeaders();
 
     for (;;) {
-        Brn line;
-        {
-            if (aTimeoutMs > 0) {
-                iTimer->FireIn(aTimeoutMs);
-            }
-            line.Set(Ascii::Trim(iReader.ReadUntil(Ascii::kLf)));
+        if (aTimeoutMs > 0) {
+            iTimer->FireIn(aTimeoutMs);
+        }
+        Brn line = Ascii::Trim(iReader.ReadUntil(Ascii::kLf));
+        if (aTimeoutMs > 0) {
             iTimer->Cancel();
         }
-//        LOG(kHttp, "HTTP Read Request   ");
-//        LOG(kHttp, line);
-//        LOG(kHttp, "\n");
+//        LOG(kHttp, "HTTP Read Request    %.*s\n", PBUF(line));
         TUint bytes = line.Bytes();
         if (!bytes) {
             if (count == 0) {
@@ -360,7 +370,7 @@ void ReaderHttpRequest::Read(TUint aTimeoutMs)
 
 void ReaderHttpRequest::ReadTimeout()
 {
-    LOG2(kHttp, kError, "HTTP read timeout\n");
+    LOG_ERROR(kHttp, "HTTP read timeout\n");
     iReader.ReadInterrupt();
 }
 
@@ -416,9 +426,7 @@ void ReaderHttpRequest::ProcessMethod(const Brx& aMethod, const Brx& aUri, const
         }
     }
 
-    LOG2(kHttp, kError, "Unsupported method - ");
-    LOG2(kHttp, kError, aMethod);
-    LOG2(kHttp, kError, "\n");
+    LOG_ERROR(kHttp, "Unsupported method - %.*s\n", PBUF(aMethod));
     THROW(HttpError);
 }
 
@@ -463,17 +471,14 @@ void ReaderHttpResponse::Read(TUint aTimeoutMs)
     ResetHeaders();
     TUint count = 0;
     for (;;) {
-        Brn line;
-        {
-            if (aTimeoutMs > 0) {
-                iTimer->FireIn(aTimeoutMs);
-            }
-            line.Set(Ascii::Trim(iReader.ReadUntil(Ascii::kLf)));
+        if (aTimeoutMs > 0) {
+            iTimer->FireIn(aTimeoutMs);
+        }
+        Brn line = Ascii::Trim(iReader.ReadUntil(Ascii::kLf));
+        if (aTimeoutMs > 0) {
             iTimer->Cancel();
         }
-        LOG(kHttp, "HTTP Read Response  ");
-        LOG(kHttp, line);
-        LOG(kHttp, "\n");
+        LOG(kHttp, "HTTP Read Response   %.*s\n", PBUF(line));
         TUint bytes = line.Bytes();
         if (!bytes) {
             if (count == 0) {
@@ -507,6 +512,7 @@ void ReaderHttpResponse::Read(TUint aTimeoutMs)
 
 void ReaderHttpResponse::ReadTimeout()
 {
+    LOG_ERROR(kHttp, "HTTP response read timeout\n");
     iReader.ReadInterrupt();
 }
 
@@ -569,13 +575,11 @@ WriterHttpField::WriterHttpField(IWriter& aWriter)
 
 void WriterHttpField::Write(TByte aValue)
 {
-    LOG(kHttp, Brn(&aValue, 1));
     WriterAscii::Write(aValue);
 }
 
 void WriterHttpField::Write(const Brx& aBuffer)
 {
-    LOG(kHttp, aBuffer);
     WriterAscii::Write(aBuffer);
 }
 
@@ -616,7 +620,7 @@ void WriterHttpHeader::WriteFlush()
 
 void WriterHttpHeader::WriteHeader(const Brx& aField, const Brx& aValue)
 {
-    LOG(kHttp, "Http Write Header   ");
+    LOG(kHttp, "Http Write Header %.*s: %.*s\n", PBUF(aField), PBUF(aValue));
 
     iWriter.Write(aField);
     iWriter.Write(Http::kHeaderSeparator);
@@ -636,7 +640,7 @@ void WriterHttpHeader::WriteHeaderBase64(const Brx& aField, const Brx& aValue)
 
 IWriterAscii& WriterHttpHeader::WriteHeaderField(const Brx& aField)
 {
-    LOG(kHttp, "Http Write Header  ");
+    LOG(kHttp, "Http Write Header %.*s\n", PBUF(aField));
 
     iWriter.Write(aField);
     iWriter.Write(Http::kHeaderSeparator);
@@ -652,7 +656,7 @@ WriterHttpRequest::WriterHttpRequest(IWriter& aWriter) : WriterHttpHeader(aWrite
 
 void WriterHttpRequest::WriteMethod(const Brx& aMethod, const Brx& aUri, Http::EVersion aVersion)
 {
-    LOG(kHttp, "Http Write Method   ");
+    LOG(kHttp, "Http Write Method - %.*s  ", PBUF(aMethod));
 
     iWriter.Write(aMethod);
     iWriter.WriteSpace();
@@ -670,7 +674,7 @@ WriterHttpResponse::WriterHttpResponse(IWriter& aWriter) : WriterHttpHeader(aWri
 
 void WriterHttpResponse::WriteStatus(const HttpStatus& aStatus, Http::EVersion aVersion)
 {
-    LOG(kHttp, "Http Write Status   ");
+    LOG(kHttp, "Http Write Status %u %.*s  ", aStatus.Code(), PBUF(aStatus.Reason()));
 
     iWriter.Write(Http::Version(aVersion));
     iWriter.WriteSpace();
@@ -888,7 +892,7 @@ void HttpHeaderConnection::Process(const Brx& aValue)
 {
     iClose = false;
     iUpgrade = false;
-    if (aValue == Http::kConnectionClose) {
+    if (Ascii::CaseInsensitiveEquals(aValue, Http::kConnectionClose)) {
         iClose = true;
         SetReceived();
     }
@@ -937,6 +941,29 @@ void HttpHeaderAccessControlRequestMethod::Process(const Brx& aValue)
 }
 
 
+// HttpHeaderUserAgent
+
+const Brx& HttpHeaderUserAgent::UserAgent() const
+{
+    return iUserAgent;
+}
+
+TBool HttpHeaderUserAgent::Recognise(const Brx& aHeader)
+{
+    return Ascii::CaseInsensitiveEquals(aHeader, Http::kHeaderUserAgent);
+}
+
+void HttpHeaderUserAgent::Process(const Brx& aValue)
+{
+    try {
+        iUserAgent.ReplaceThrow(aValue);
+        SetReceived();
+    }
+    catch (BufferOverflow&) {
+    }
+}
+
+
 // ReaderHttpChunked
 
 ReaderHttpChunked::ReaderHttpChunked(IReader& aReader)
@@ -951,6 +978,11 @@ void ReaderHttpChunked::SetChunked(TBool aChunked)
 {
     iChunked = aChunked;
     iChunkBytesRemaining = 0;
+}
+
+TBool ReaderHttpChunked::IsChunked() const
+{
+    return iChunked;
 }
 
 Brn ReaderHttpChunked::Read(TUint aBytes)
@@ -1042,227 +1074,4 @@ void WriterHttpChunked::WriteFlush()
         iBuffer.Write(Http::kHeaderTerminator);
     }
     iBuffer.WriteFlush();
-}
-
-
-// HttpReader
-
-HttpReader::HttpReader(Environment& aEnv)
-    : iEnv(aEnv)
-    , iReadBuffer(iTcpClient)
-    , iReaderUntil(iReadBuffer)
-    , iReaderResponse(aEnv, iReaderUntil)
-    , iWriteBuffer(iTcpClient)
-    , iWriterRequest(iWriteBuffer)
-    , iDechunker(iReaderUntil)
-    , iSocketIsOpen(false)
-    , iConnected(false)
-    , iTotalBytes(0)
-{
-    iReaderResponse.AddHeader(iHeaderContentLength);
-    iReaderResponse.AddHeader(iHeaderLocation);
-    iReaderResponse.AddHeader(iHeaderTransferEncoding);
-}
-
-HttpReader::HttpReader(Environment& aEnv, const Brx& aUserAgent)
-    : iEnv(aEnv)
-    , iUserAgent(aUserAgent)
-    , iReadBuffer(iTcpClient)
-    , iReaderUntil(iReadBuffer)
-    , iReaderResponse(aEnv, iReaderUntil)
-    , iWriteBuffer(iTcpClient)
-    , iWriterRequest(iWriteBuffer)
-    , iDechunker(iReaderUntil)
-    , iSocketIsOpen(false)
-    , iConnected(false)
-    , iTotalBytes(0)
-{
-    iReaderResponse.AddHeader(iHeaderContentLength);
-    iReaderResponse.AddHeader(iHeaderLocation);
-    iReaderResponse.AddHeader(iHeaderTransferEncoding);
-}
-
-HttpReader::~HttpReader()
-{
-    if (iSocketIsOpen) {
-        Close();
-    }
-}
-
-TUint HttpReader::Connect(const Uri& aUri)
-{
-    if (iConnected) {
-        Close();
-    }
-
-    TUint code = ConnectAndProcessHeader(aUri);
-    if (code == 0) {
-        Close();
-        return code;
-    }
-    iConnected = true;
-
-    return code;
-}
-
-void HttpReader::Close()
-{
-    LOG(kHttp, "HttpReader::Close\n");
-
-    if (iSocketIsOpen) {
-        iSocketIsOpen = false;
-        iConnected = false;
-        iTcpClient.Close();
-    }
-}
-
-TUint HttpReader::ContentLength() const
-{
-    ASSERT(iConnected);
-    return iTotalBytes;
-}
-
-TBool HttpReader::Connect(Endpoint aEndpoint)
-{
-    LOG(kHttp, ">HttpReader::Connect\n");
-
-    Open();
-    try {
-        LOG(kHttp, "-HttpReader::Connect connecting...\n");
-        iTcpClient.Connect(aEndpoint, kConnectTimeoutMs);
-    }
-    catch (NetworkTimeout&) {
-        Close();
-        LOG(kHttp, "<HttpReader::Connect connection timeout\n");
-        return false;
-    }
-    catch (NetworkError&) {
-        Close();
-        LOG(kHttp, "<HttpReader::Connect connection error\n");
-        return false;
-    }
-
-    LOG(kHttp, "<HttpReader::Connect\n");
-    return true;
-}
-
-void HttpReader::Open()
-{
-    LOG(kHttp, "HttpReader::OpenSocket\n");
-
-    iTcpClient.Open(iEnv);
-    ASSERT(!iSocketIsOpen);
-    iSocketIsOpen = true;
-}
-
-Brn HttpReader::Read(TUint aBytes)
-{
-    ASSERT(iConnected);
-    return iDechunker.Read(aBytes);
-}
-
-void HttpReader::ReadFlush()
-{
-    if (iConnected) {
-        iDechunker.ReadFlush();
-    }
-}
-
-void HttpReader::ReadInterrupt()
-{
-    if (iConnected) {
-        iDechunker.ReadInterrupt();
-    }
-}
-
-TUint HttpReader::WriteRequest(const Uri& aUri)
-{
-    TInt port = aUri.Port();
-    if (port == Uri::kPortNotSpecified) {
-        port = kHttpPort;
-    }
-
-    Close();
-    Endpoint ep;
-    try {
-        ep.Replace(Endpoint(port, aUri.Host()));
-    }
-    catch (NetworkError&) {
-        LOG(kHttp, "HttpReader::WriteRequest error setting address and port\n");
-        return 0;
-    }
-    if (!Connect(ep)) {
-        LOG(kHttp, "HttpReader::WriteRequest connection failure\n");
-        return 0;
-    }
-
-    try {
-        LOG(kHttp, "HttpReader::WriteRequest send request\n");
-        iWriterRequest.WriteMethod(Http::kMethodGet, aUri.PathAndQuery(), Http::eHttp11);
-        Http::WriteHeaderHostAndPort(iWriterRequest, aUri.Host(), port);
-        if (iUserAgent.Bytes() > 0) {
-            iWriterRequest.WriteHeader(Http::kHeaderUserAgent, iUserAgent);
-        }
-        Http::WriteHeaderConnectionClose(iWriterRequest);
-        iWriterRequest.WriteFlush();
-    }
-    catch(WriterError&) {
-        LOG(kHttp, "HttpReader::WriteRequest writer error\n");
-        return 0;
-    }
-
-    try {
-        LOG(kHttp, "HttpReader::WriteRequest read response - reading...\n");
-        iReaderResponse.Read(kResponseTimeoutMs);
-    }
-    catch(HttpError&) {
-        LOG(kHttp, "HttpReader::WriteRequest http error\n");
-        return 0;
-    }
-    catch(ReaderError&) {
-        LOG(kHttp, "HttpReader::WriteRequest reader error\n");
-        return 0;
-    }
-
-    const TUint code = iReaderResponse.Status().Code();
-    LOG(kHttp, "HttpReader response code %d\n", code);
-
-    return code;
-}
-
-TUint HttpReader::ConnectAndProcessHeader(const Uri& aUri)
-{
-    Uri uri(aUri);
-    TUint code = 0;
-
-    iDechunker.SetChunked(false);
-    for (;;) { // loop until we don't get a redirection response (i.e. normally don't loop at all!)
-        code = WriteRequest(uri);
-        if (code == 0) {
-            LOG(kHttp, "<HttpReader::ProcessInitialHttpHeader failed to send HTTP request\n");
-            return code;
-        }
-        // Check for redirection
-        if (code >= HttpStatus::kRedirectionCodes && code < HttpStatus::kClientErrorCodes) {
-            if (!iHeaderLocation.Received()) {
-                LOG(kHttp, "<HttpReader::ProcessInitialHttpHeader expected redirection but did not receive a location field  %d\n", code);
-                return code;
-            }
-
-            uri.Replace(iHeaderLocation.Location());
-            continue;
-        }
-        else if (code >= HttpStatus::kClientErrorCodes) {
-            LOG(kHttp, "<HttpReader::ProcessInitialHttpHeader received error code: %u\n", code);
-            return code;
-        }
-        if (code != 0) {
-            if (iHeaderTransferEncoding.IsChunked()) {
-                iDechunker.SetChunked(true);
-            }
-            iTotalBytes = iHeaderContentLength.ContentLength();
-            break;
-        }
-    }
-    return code;
 }

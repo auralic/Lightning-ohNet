@@ -48,7 +48,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1Destroy(THandle aHandle);
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncPlay(THandle aHandle);
@@ -82,7 +82,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndPlay(THandle aHandle, OhNe
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncPause(THandle aHandle);
@@ -116,7 +116,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndPause(THandle aHandle, OhN
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncPlayPause(THandle aHandle);
@@ -150,7 +150,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndPlayPause(THandle aHandle,
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncStop(THandle aHandle);
@@ -184,7 +184,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndStop(THandle aHandle, OhNe
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncNext(THandle aHandle);
@@ -218,7 +218,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndNext(THandle aHandle, OhNe
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncPrevious(THandle aHandle);
@@ -252,7 +252,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndPrevious(THandle aHandle, 
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncToggleShuffle(THandle aHandle);
@@ -286,7 +286,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndToggleShuffle(THandle aHan
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncToggleLoop(THandle aHandle);
@@ -321,7 +321,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndToggleLoop(THandle aHandle
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[out] aValue
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncRepeat(THandle aHandle, uint32_t* aValue);
@@ -357,7 +357,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndRepeat(THandle aHandle, Oh
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[out] aValue
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncShuffle(THandle aHandle, uint32_t* aValue);
@@ -393,7 +393,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndShuffle(THandle aHandle, O
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[in]  aValue
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncSeekSecondAbsolute(THandle aHandle, uint32_t aValue);
@@ -429,7 +429,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndSeekSecondAbsolute(THandle
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[in]  aValue
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncSeekSecondRelative(THandle aHandle, int32_t aValue);
@@ -465,7 +465,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1EndSeekSecondRelative(THandle
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[out] aValue
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1SyncTransportState(THandle aHandle, char** aValue);
@@ -557,8 +557,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1SetPropertyUpdateCoverChanged(TH
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[out] aTransportState
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyTransportState(THandle aHandle, char** aTransportState);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyTransportState(THandle aHandle, char** aTransportState);
 /**
  * Query the value of the Repeat property.
  *
@@ -567,8 +569,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyTransportState(THandle a
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[out] aRepeat
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeat(THandle aHandle, uint32_t* aRepeat);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeat(THandle aHandle, uint32_t* aRepeat);
 /**
  * Query the value of the RepeatOne property.
  *
@@ -577,8 +581,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeat(THandle aHandle, 
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[out] aRepeatOne
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeatOne(THandle aHandle, uint32_t* aRepeatOne);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeatOne(THandle aHandle, uint32_t* aRepeatOne);
 /**
  * Query the value of the Shuffle property.
  *
@@ -587,8 +593,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyRepeatOne(THandle aHandl
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[out] aShuffle
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyShuffle(THandle aHandle, uint32_t* aShuffle);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyShuffle(THandle aHandle, uint32_t* aShuffle);
 /**
  * Query the value of the UpdateCover property.
  *
@@ -597,8 +605,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyShuffle(THandle aHandle,
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgRoon1Create
  * @param[out] aUpdateCover
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgRoon1PropertyUpdateCover(THandle aHandle, uint32_t* aUpdateCover);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgRoon1PropertyUpdateCover(THandle aHandle, uint32_t* aUpdateCover);
 
 /* @} */
 

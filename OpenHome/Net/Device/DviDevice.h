@@ -15,6 +15,16 @@
 namespace OpenHome {
 namespace Net {
 
+class IDvProtocol;
+class DviDevice;
+
+class IDvProtocolFactory
+{
+public:
+    virtual IDvProtocol* CreateProtocol(DviDevice& aDevice) = 0;
+    virtual ~IDvProtocolFactory() {}
+};
+
 class IDvProtocol : public IResourceManager
 {
 public:
@@ -49,6 +59,7 @@ public:
     TUint ServiceCount() const;
     DviService& Service(TUint aIndex) const;
     DviService* ServiceReference(const ServiceType& aServiceType);
+    DviService* ServiceReference(const Brx& aServiceName);
     void AddService(DviService* aService);
     void AddDevice(DviDevice* aDevice); // embedded device
     TUint DeviceCount() const;
@@ -70,9 +81,9 @@ protected:
 private:
     void Construct(const Brx& aUdn);
     void SetParent(DviDevice* aParent);
+    void SetEnabledLocked();
     void SetDisabled(Functor aCompleted, bool aLocked);
     void ProtocolDisabled();
-    void DisableComplete();
     TBool HasService(const OpenHome::Net::ServiceType& aServiceType) const;
     TBool ChildHasService(const OpenHome::Net::ServiceType& aServiceType) const;
     void ConfigChanged();
@@ -102,10 +113,27 @@ private:
     std::vector<IDvProtocol*> iProtocols;
     IResourceManager* iResourceManager;
     TUint iProtocolDisableCount;
-    Functor iDisableComplete;
+    std::vector<Functor> iDisableComplete;
+    Mutex iDisableLock;
     Semaphore iShutdownSem;
     TUint iSubscriptionId;
     DviProviderSubscriptionLongPoll* iProviderSubscriptionLongPoll;
+};
+
+/**
+ * Utility class.
+ *
+ * Create an AutoDeviceRef on the stack using a reference to a DviDevice. It will
+ * automatically call RemoveWeakRef on stack cleanup (ie on return or when an
+ * exception passes up).
+ */
+class AutoDeviceRef : public INonCopyable
+{
+public:
+    AutoDeviceRef(DviDevice*& aDevice);
+    ~AutoDeviceRef();
+private:
+    DviDevice*& iDevice;
 };
 
 class DviDeviceStandard : public DviDevice
@@ -152,6 +180,7 @@ public:
     DviDevice* Find(const Brx& aUdn);
     void WriteResource(const Brx& aUriTail, TIpAddress aInterface, std::vector<char*>& aLanguageList, IResourceWriter& aResourceWriter);
     std::map<Brn,DviDevice*,BufferCmp> CopyMap() const;
+    void ClearMap(std::map<Brn, DviDevice*, BufferCmp>& aMap);
 private:
     typedef std::map<Brn,DviDevice*,BufferCmp> Map;
     Mutex iLock;

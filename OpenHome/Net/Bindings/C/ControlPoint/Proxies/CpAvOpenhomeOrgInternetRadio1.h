@@ -48,7 +48,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgInternetRadio1Destroy(THandle aHandle
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgInternetRadio1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1SyncPlay(THandle aHandle);
@@ -82,7 +82,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1EndPlay(THandle aHan
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgInternetRadio1Create
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1SyncStop(THandle aHandle);
@@ -118,7 +118,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1EndStop(THandle aHan
  * @param[in]  aUri
  * @param[in]  aMetadata
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1SyncSetSender(THandle aHandle, const char* aUri, const char* aMetadata);
@@ -156,7 +156,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1EndSetSender(THandle
  * @param[out] aUri
  * @param[out] aMetadata
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1SyncSender(THandle aHandle, char** aUri, char** aMetadata);
@@ -193,7 +193,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1EndSender(THandle aH
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgInternetRadio1Create
  * @param[out] aValue
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1SyncTransportState(THandle aHandle, char** aValue);
@@ -263,8 +263,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgInternetRadio1SetPropertyTransportSta
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgInternetRadio1Create
  * @param[out] aUri
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyUri(THandle aHandle, char** aUri);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyUri(THandle aHandle, char** aUri);
 /**
  * Query the value of the Metadata property.
  *
@@ -273,8 +275,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyUri(THandle aHa
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgInternetRadio1Create
  * @param[out] aMetadata
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyMetadata(THandle aHandle, char** aMetadata);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyMetadata(THandle aHandle, char** aMetadata);
 /**
  * Query the value of the TransportState property.
  *
@@ -283,8 +287,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyMetadata(THandl
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgInternetRadio1Create
  * @param[out] aTransportState
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyTransportState(THandle aHandle, char** aTransportState);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgInternetRadio1PropertyTransportState(THandle aHandle, char** aTransportState);
 
 /* @} */
 

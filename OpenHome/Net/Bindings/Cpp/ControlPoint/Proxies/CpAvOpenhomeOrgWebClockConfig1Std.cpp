@@ -58,7 +58,7 @@ void SyncSetClockConfigAvOpenhomeOrgWebClockConfig1Cpp::CompleteRequest(IAsync& 
 
 
 CpProxyAvOpenhomeOrgWebClockConfig1Cpp::CpProxyAvOpenhomeOrgWebClockConfig1Cpp(CpDeviceCpp& aDevice)
-    : CpProxy("av-openhome-org", "WebClockConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "WebClockConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -95,11 +95,11 @@ void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::SyncGetClockConfig(std::string& aCl
 
 void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::BeginGetClockConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetClockConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetClockConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetClockConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::EndGetClockConfig(IAsync& aAsync, std::string& aClockConfig)
@@ -130,14 +130,14 @@ void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::SyncSetClockConfig(const std::strin
 
 void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::BeginSetClockConfig(const std::string& aClockConfig, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetClockConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetClockConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetClockConfig->InputParameters();
     {
         Brn buf((const TByte*)aClockConfig.c_str(), (TUint)aClockConfig.length());
         invocation->AddInput(new ArgumentString(*inParams[inIndex++], buf));
     }
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::EndSetClockConfig(IAsync& aAsync)
@@ -156,29 +156,33 @@ void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::EndSetClockConfig(IAsync& aAsync)
 
 void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::SetPropertyAliveChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iAliveChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::SetPropertyClockConfigChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iClockConfigChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::PropertyAlive(bool& aAlive) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::PropertyClockConfig(std::string& aClockConfig) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     const Brx& val = iClockConfig->Value();
     aClockConfig.assign((const char*)val.Ptr(), val.Bytes());
 }
@@ -191,5 +195,44 @@ void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::AlivePropertyChanged()
 void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::ClockConfigPropertyChanged()
 {
     ReportEvent(iClockConfigChanged);
+}
+
+void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgWebClockConfig1Cpp::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgWebClockConfig1Cpp::Version() const
+{
+  return iCpProxy.Version();
 }
 

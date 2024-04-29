@@ -318,7 +318,7 @@ void WsProtocol76::Read(Brn& aData, TBool& aClosed)
         return;
     }
     if (data[0] != kFrameMsgStart) {
-        LOG2(kDvWebSocket, kError, "WS: Unexpected leading byte - %u\n", data[0]);
+        LOG_ERROR(kDvWebSocket, "WS: Unexpected leading byte - %u\n", data[0]);
         THROW(WebSocketError);
     }
     aData.Set(data.Split(1, data.Bytes()-1));
@@ -369,13 +369,13 @@ void WsProtocol80::Read(Brn& aData, TBool& aClosed)
     const TByte& byte1 = ctrl.At(1);
     const TBool fragment = ((byte0 & kBitMaskFinalFragment) == 0);
     if (byte0 & kBitMaskRsv123) {
-        LOG2(kDvWebSocket, kError, "WS: RSV bit(s) set - %u - but no extension negotiated\n", (byte0 & kBitMaskRsv123) >> 4);
+        LOG_ERROR(kDvWebSocket, "WS: RSV bit(s) set - %u - but no extension negotiated\n", (byte0 & kBitMaskRsv123) >> 4);
         Close(kCloseProtocolError);
         aClosed = true;
         return;
     }
     if ((byte1 & kBitMaskPayloadMask) == 0) {
-        LOG2(kDvWebSocket, kError, "WS: mask bit not set\n");
+        LOG_ERROR(kDvWebSocket, "WS: mask bit not set\n");
         Close(kCloseProtocolError);
         aClosed = true;
         return;
@@ -400,12 +400,12 @@ void WsProtocol80::Read(Brn& aData, TBool& aClosed)
         }
         break;
     case eBinary:
-        LOG2(kDvWebSocket, kError, "WS: received unexpected binary data\n");
+        LOG_ERROR(kDvWebSocket, "WS: received unexpected binary data\n");
         Close(kCloseUnsupportedData);
         aClosed = true;
         return;
     default:
-        LOG2(kDvWebSocket, kError, "WS: Unexpected reserved opcode %u received\n", opcode);
+        LOG_ERROR(kDvWebSocket, "WS: Unexpected reserved opcode %u received\n", opcode);
         Close(kCloseProtocolError);
         aClosed = true;
         return;
@@ -462,9 +462,7 @@ void WsProtocol80::Read(Brn& aData, TBool& aClosed)
         Write(ePong, data);
         break;
     case ePong:
-        LOG(kDvWebSocket, "WS: Pong - ");
-        LOG(kDvWebSocket, data);
-        LOG(kDvWebSocket, "\n");
+        LOG(kDvWebSocket, "WS: Pong - %.*s\n", PBUF(data));
         break;
     default:
         // should have filtered out all other cases in the earlier switch
@@ -621,22 +619,22 @@ void DviSessionWebSocket::Run()
             }
             catch (ReaderError&) {
                 if (iPropertyUpdates.SlotsUsed() == 0) {
-                    LOG2(kDvWebSocket, kError, "WS: Exception - ReaderError\n");
+                    LOG_ERROR(kDvWebSocket, "WS: Exception - ReaderError\n");
                     iProtocol->Close();
                     iExit = true;
                 }
             }
             catch (WebSocketError&) {
-                LOG2(kDvWebSocket, kError, "WS: Exception - WebSocketError\n");
+                LOG_ERROR(kDvWebSocket, "WS: Exception - WebSocketError\n");
                 iProtocol->Close();
                 iExit = true;
             }
             catch (WriterError&) {
-                LOG2(kDvWebSocket, kError, "WS: Exception - WriterError\n");
+                LOG_ERROR(kDvWebSocket, "WS: Exception - WriterError\n");
                 iExit = true;
             }
             catch (XmlError&) {
-                LOG2(kDvWebSocket, kError, "WS: Exception - XmlError\n");
+                LOG_ERROR(kDvWebSocket, "WS: Exception - XmlError\n");
                 iProtocol->Close();
                 iExit = true;
             }
@@ -671,7 +669,7 @@ void DviSessionWebSocket::Handshake()
         iProtocol = Handshake80();
     }
     else {
-        LOG2(kDvWebSocket, kError, "WS: Handshake not recognised\n");
+        LOG_ERROR(kDvWebSocket, "WS: Handshake not recognised\n");
         Error(HttpStatus::kBadRequest);
     }
 }
@@ -703,7 +701,7 @@ WsProtocol* DviSessionWebSocket::Handshake76()
     if (!iHeaderConnection.Upgrade() || iHeaderUpgrade.Upgrade() != WebSocket::kUpgradeWebSocket ||
         !iHeaderKey1.Received() || !iHeaderKey2.Received() ||
         !iHeaderProtocol.Received() || iHeaderProtocol.Protocol() != WebSocket::kValueProtocol) {
-        LOG2(kDvWebSocket, kError, "WS: Handshake missing expected header\n");
+        LOG_ERROR(kDvWebSocket, "WS: Handshake missing expected header\n");
         Error(HttpStatus::kBadRequest);
     }
 
@@ -739,35 +737,33 @@ WsProtocol* DviSessionWebSocket::Handshake76()
 WsProtocol* DviSessionWebSocket::Handshake80()
 {
     if (!iHeaderConnection.Upgrade()) {
-        LOG2(kDvWebSocket, kError, "WS: Handshake missing expected header - \"Connection: Upgrade\"\n");
+        LOG_ERROR(kDvWebSocket, "WS: Handshake missing expected header - \"Connection: Upgrade\"\n");
         Error(HttpStatus::kBadRequest);
     }
     if (!iHeaderUpgrade.Received()) {
-        LOG2(kDvWebSocket, kError, "WS: Handshake missing expected header - \"Upgrade:\"\n");
+        LOG_ERROR(kDvWebSocket, "WS: Handshake missing expected header - \"Upgrade:\"\n");
         Error(HttpStatus::kBadRequest);
     }
     if (iHeaderUpgrade.Upgrade() != Brn("websocket")) {
-        LOG2(kDvWebSocket, kError, "WS: unexpected content of upgrade header - ");
-        LOG2(kDvWebSocket, kError, iHeaderUpgrade.Upgrade());
-        LOG2(kDvWebSocket, kError, "\n");
+        const Brx& header = iHeaderUpgrade.Upgrade();
+        LOG_ERROR(kDvWebSocket, "WS: unexpected content of upgrade header - %.*s\n", PBUF(header));
         Error(HttpStatus::kBadRequest);
     }
     if (!iHeaderProtocol.Received()) {
-        LOG2(kDvWebSocket, kError, "WS: Handshake missing expected header - \"Sec-WebSocket-Protocol:\"\n");
+        LOG_ERROR(kDvWebSocket, "WS: Handshake missing expected header - \"Sec-WebSocket-Protocol:\"\n");
         Error(HttpStatus::kBadRequest);
     }
     if (iHeaderProtocol.Protocol() != WebSocket::kValueProtocol) {
-        LOG2(kDvWebSocket, kError, "WS: unexpected content of Sec-WebSocket-Protocol header - \n");
-        LOG2(kDvWebSocket, kError, iHeaderProtocol.Protocol());
-        LOG2(kDvWebSocket, kError, "\n");
+        const Brx& header = iHeaderProtocol.Protocol();
+        LOG_ERROR(kDvWebSocket, "WS: unexpected content of Sec-WebSocket-Protocol header - %.*s\n", PBUF(header));
         Error(HttpStatus::kBadRequest);
     }
     if (!iHeadverKeyV8.Received()) {
-        LOG2(kDvWebSocket, kError, "WS: Handshake missing expected header - \"Sec-WebSocket-Version:\"\n");
+        LOG_ERROR(kDvWebSocket, "WS: Handshake missing expected header - \"Sec-WebSocket-Version:\"\n");
         Error(HttpStatus::kBadRequest);
     }
     if (iHeaderVersion.Version() < 8 || iHeaderVersion.Version() > 13) {
-        LOG2(kDvWebSocket, kError, "WS: unexpected content of Sec-WebSocket-Version header - %u\n", iHeaderVersion.Version());
+        LOG_ERROR(kDvWebSocket, "WS: unexpected content of Sec-WebSocket-Version header - %u\n", iHeaderVersion.Version());
         Error(HttpStatus::kBadRequest);
     }
 
@@ -846,18 +842,12 @@ void DviSessionWebSocket::Subscribe(const Brx& aRequest)
     if (device == NULL) {
         THROW(WebSocketError);
     }
-    DviService* service = NULL;
-    const TUint serviceCount = device->ServiceCount();
-    for (TUint i=0; i<serviceCount; i++) {
-        DviService* s = &device->Service(i);
-        if (s->ServiceType().PathUpnp() == serviceId) {
-            service = s;
-            break;
-        }
-    }
+    AutoDeviceRef d(device);
+    DviService* service = device->ServiceReference(serviceId);
     if (service == NULL) {
         THROW(WebSocketError);
     }
+    AutoServiceRef s(service);
     Brh sid;
     device->CreateSid(sid);
     DviSubscription* subscription = new DviSubscription(iDvStack, *device, *this, NULL, sid);
@@ -897,9 +887,7 @@ void DviSessionWebSocket::Renew(const Brx& aRequest)
     Brn sid = XmlParserBasic::Find(WebSocket::kTagSid, aRequest);
     Map::iterator it = iMap.find(sid);
     if (it == iMap.end()) {
-        LOG2(kDvWebSocket, kError, "Attempt to renew an unknown subscription - ");
-        LOG2(kDvWebSocket, kError, sid);
-        LOG2(kDvWebSocket, kError, "\n");
+        LOG_ERROR(kDvWebSocket, "Attempt to renew an unknown subscription - %.*s\n", PBUF(sid));
         THROW(WebSocketError);
     }
     TUint timeout;
@@ -914,9 +902,7 @@ void DviSessionWebSocket::Renew(const Brx& aRequest)
         wrapper->Subscription().Renew(timeout);
     }
     catch (DvSubscriptionError&) {
-        LOG2(kDvWebSocket, kError, "Attempt made to renew an expired subscription - ");
-        LOG2(kDvWebSocket, kError, sid);
-        LOG2(kDvWebSocket, kError, "\n");
+        LOG_ERROR(kDvWebSocket, "Attempt made to renew an expired subscription - %.*s\n", PBUF(sid));
         THROW(WebSocketError);
     }
     WriteSubscriptionRenewed(wrapper->Sid(), timeout);
@@ -968,9 +954,14 @@ void DviSessionWebSocket::WritePropertyUpdates()
     }
 }
 
-IPropertyWriter* DviSessionWebSocket::CreateWriter(const IDviSubscriptionUserData* /*aUserData*/, const Brx& aSid, TUint aSequenceNumber)
+IPropertyWriter* DviSessionWebSocket::ClaimWriter(const IDviSubscriptionUserData* /*aUserData*/, const Brx& aSid, TUint aSequenceNumber)
 {
     return PropertyWriterWs::Create(*this, aSid, aSequenceNumber);
+}
+
+void DviSessionWebSocket::ReleaseWriter(IPropertyWriter* aWriter)
+{
+    delete aWriter;
 }
 
 void DviSessionWebSocket::NotifySubscriptionCreated(const Brx& /*aSid*/)
@@ -982,6 +973,10 @@ void DviSessionWebSocket::NotifySubscriptionDeleted(const Brx& /*aSid*/)
 }
 
 void DviSessionWebSocket::NotifySubscriptionExpired(const Brx& /*aSid*/)
+{
+}
+
+void DviSessionWebSocket::LogUserData(IWriter& /*aWriter*/, const IDviSubscriptionUserData& /*aUserData*/)
 {
 }
 

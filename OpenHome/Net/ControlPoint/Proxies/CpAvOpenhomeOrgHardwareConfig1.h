@@ -18,18 +18,222 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgHardwareConfig1 : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgHardwareConfig1() {}
+    virtual void SyncLogIn(const Brx& aServiceName, const Brx& aMessageIn, Brh& aMessageOut) = 0;
+    virtual void BeginLogIn(const Brx& aServiceName, const Brx& aMessageIn, FunctorAsync& aFunctor) = 0;
+    virtual void EndLogIn(IAsync& aAsync, Brh& aMessageOut) = 0;
+    virtual void SyncLogOut(const Brx& aServiceName) = 0;
+    virtual void BeginLogOut(const Brx& aServiceName, FunctorAsync& aFunctor) = 0;
+    virtual void EndLogOut(IAsync& aAsync) = 0;
+    virtual void SyncCancelLogIn(const Brx& aServiceName) = 0;
+    virtual void BeginCancelLogIn(const Brx& aServiceName, FunctorAsync& aFunctor) = 0;
+    virtual void EndCancelLogIn(IAsync& aAsync) = 0;
+    virtual void SyncIsAlive(TBool& aAlive) = 0;
+    virtual void BeginIsAlive(FunctorAsync& aFunctor) = 0;
+    virtual void EndIsAlive(IAsync& aAsync, TBool& aAlive) = 0;
+    virtual void SyncUpdate() = 0;
+    virtual void BeginUpdate(FunctorAsync& aFunctor) = 0;
+    virtual void EndUpdate(IAsync& aAsync) = 0;
+    virtual void SyncActive(TBool aIsSubscribe, const Brx& aRealName, const Brx& aEmail) = 0;
+    virtual void BeginActive(TBool aIsSubscribe, const Brx& aRealName, const Brx& aEmail, FunctorAsync& aFunctor) = 0;
+    virtual void EndActive(IAsync& aAsync) = 0;
+    virtual void SyncGetActiveStatus(Brh& aActiveStatus) = 0;
+    virtual void BeginGetActiveStatus(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetActiveStatus(IAsync& aAsync, Brh& aActiveStatus) = 0;
+    virtual void SyncCheckUpdate() = 0;
+    virtual void BeginCheckUpdate(FunctorAsync& aFunctor) = 0;
+    virtual void EndCheckUpdate(IAsync& aAsync) = 0;
+    virtual void SyncResetDisplay() = 0;
+    virtual void BeginResetDisplay(FunctorAsync& aFunctor) = 0;
+    virtual void EndResetDisplay(IAsync& aAsync) = 0;
+    virtual void SyncGetHardWareInfo(Brh& aHardWareInfo) = 0;
+    virtual void BeginGetHardWareInfo(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetHardWareInfo(IAsync& aAsync, Brh& aHardWareInfo) = 0;
+    virtual void SyncSetRoomName(const Brx& aRoomName) = 0;
+    virtual void BeginSetRoomName(const Brx& aRoomName, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetRoomName(IAsync& aAsync) = 0;
+    virtual void SyncGetVolumeControl(TBool& aVolumeControl) = 0;
+    virtual void BeginGetVolumeControl(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetVolumeControl(IAsync& aAsync, TBool& aVolumeControl) = 0;
+    virtual void SyncSetVolumeControl(TBool aVolumeControl) = 0;
+    virtual void BeginSetVolumeControl(TBool aVolumeControl, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetVolumeControl(IAsync& aAsync) = 0;
+    virtual void SyncGetWaitingTime(Brh& aWaitingTime) = 0;
+    virtual void BeginGetWaitingTime(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetWaitingTime(IAsync& aAsync, Brh& aWaitingTime) = 0;
+    virtual void SyncSetWaitingTime(const Brx& aWaitingTime) = 0;
+    virtual void BeginSetWaitingTime(const Brx& aWaitingTime, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetWaitingTime(IAsync& aAsync) = 0;
+    virtual void SyncGetOutChannel(TUint& aChannelNum, Brh& aCurrentChannel, Brh& aOutChannel) = 0;
+    virtual void BeginGetOutChannel(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetOutChannel(IAsync& aAsync, TUint& aChannelNum, Brh& aCurrentChannel, Brh& aOutChannel) = 0;
+    virtual void SyncSetOutChannel(const Brx& aChannel) = 0;
+    virtual void BeginSetOutChannel(const Brx& aChannel, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetOutChannel(IAsync& aAsync) = 0;
+    virtual void SyncSetUpnpType(const Brx& aUpnpType) = 0;
+    virtual void BeginSetUpnpType(const Brx& aUpnpType, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetUpnpType(IAsync& aAsync) = 0;
+    virtual void SyncGetUpnpType(Brh& aUpnpType) = 0;
+    virtual void BeginGetUpnpType(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetUpnpType(IAsync& aAsync, Brh& aUpnpType) = 0;
+    virtual void SyncSetDsdNativeStatus(const Brx& aStatus, const Brx& aSampleFormat) = 0;
+    virtual void BeginSetDsdNativeStatus(const Brx& aStatus, const Brx& aSampleFormat, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetDsdNativeStatus(IAsync& aAsync) = 0;
+    virtual void SyncGetDsdNativeStatus(Brh& aStatus, Brh& aSampleFormat) = 0;
+    virtual void BeginGetDsdNativeStatus(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDsdNativeStatus(IAsync& aAsync, Brh& aStatus, Brh& aSampleFormat) = 0;
+    virtual void SyncSetPasswordProtect(const Brx& aProtect, const Brx& aProtectPassword) = 0;
+    virtual void BeginSetPasswordProtect(const Brx& aProtect, const Brx& aProtectPassword, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetPasswordProtect(IAsync& aAsync) = 0;
+    virtual void SyncGetPasswordProtect(Brh& aProtect, Brh& aProtectPassword) = 0;
+    virtual void BeginGetPasswordProtect(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetPasswordProtect(IAsync& aAsync, Brh& aProtect, Brh& aProtectPassword) = 0;
+    virtual void SyncGetUpdateInfo(Brh& aVersion, Brh& aProgress) = 0;
+    virtual void BeginGetUpdateInfo(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetUpdateInfo(IAsync& aAsync, Brh& aVersion, Brh& aProgress) = 0;
+    virtual void SyncGetWirelessList(const Brx& aInterFace, TUint& aNumber, Brh& aCurrentUse, Brh& aWirelessList) = 0;
+    virtual void BeginGetWirelessList(const Brx& aInterFace, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetWirelessList(IAsync& aAsync, TUint& aNumber, Brh& aCurrentUse, Brh& aWirelessList) = 0;
+    virtual void SyncGetIpAddress(const Brx& aInterFace, Brh& aIpAddress, Brh& aNetMask, Brh& aGateWay, Brh& aDNS, Brh& aDHCP) = 0;
+    virtual void BeginGetIpAddress(const Brx& aInterFace, FunctorAsync& aFunctor) = 0;
+    virtual void EndGetIpAddress(IAsync& aAsync, Brh& aIpAddress, Brh& aNetMask, Brh& aGateWay, Brh& aDNS, Brh& aDHCP) = 0;
+    virtual void SyncSetNetWork(const Brx& aInterFace, const Brx& aIpAddress, const Brx& aNetMask, const Brx& aGateWay, const Brx& aDNS, const Brx& aSsid, const Brx& aPassWord, const Brx& aEncrypType) = 0;
+    virtual void BeginSetNetWork(const Brx& aInterFace, const Brx& aIpAddress, const Brx& aNetMask, const Brx& aGateWay, const Brx& aDNS, const Brx& aSsid, const Brx& aPassWord, const Brx& aEncrypType, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetNetWork(IAsync& aAsync) = 0;
+    virtual void SyncGetNetInterface(TUint& aInterfaceNum, Brh& aCurrentUse, Brh& aInterfaceList) = 0;
+    virtual void BeginGetNetInterface(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetNetInterface(IAsync& aAsync, TUint& aInterfaceNum, Brh& aCurrentUse, Brh& aInterfaceList) = 0;
+    virtual void SyncGetHaltStatus(TBool& aHaltStatus) = 0;
+    virtual void BeginGetHaltStatus(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetHaltStatus(IAsync& aAsync, TBool& aHaltStatus) = 0;
+    virtual void SyncSetHaltStatus(TBool aHaltStatus) = 0;
+    virtual void BeginSetHaltStatus(TBool aHaltStatus, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetHaltStatus(IAsync& aAsync) = 0;
+    virtual void SyncGetFilterMode(Brh& aFilterMode, Brh& aFilterModeList) = 0;
+    virtual void BeginGetFilterMode(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetFilterMode(IAsync& aAsync, Brh& aFilterMode, Brh& aFilterModeList) = 0;
+    virtual void SyncSetFilterMode(const Brx& aFilterMode) = 0;
+    virtual void BeginSetFilterMode(const Brx& aFilterMode, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetFilterMode(IAsync& aAsync) = 0;
+    virtual void SyncSetSourceVisible(const Brx& aSourceName, TBool aVisible) = 0;
+    virtual void BeginSetSourceVisible(const Brx& aSourceName, TBool aVisible, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetSourceVisible(IAsync& aAsync) = 0;
+    virtual void SyncGetSourceVisible(Brh& aVisibleInfo) = 0;
+    virtual void BeginGetSourceVisible(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetSourceVisible(IAsync& aAsync, Brh& aVisibleInfo) = 0;
+    virtual void SyncSetLEDMode(const Brx& aLEDMode) = 0;
+    virtual void BeginSetLEDMode(const Brx& aLEDMode, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetLEDMode(IAsync& aAsync) = 0;
+    virtual void SyncGetLEDMode(Brh& aLEDMode, Brh& aLEDModeList) = 0;
+    virtual void BeginGetLEDMode(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetLEDMode(IAsync& aAsync, Brh& aLEDMode, Brh& aLEDModeList) = 0;
+    virtual void SyncSetKeyMode(const Brx& aKeyName, const Brx& aKeyMode) = 0;
+    virtual void BeginSetKeyMode(const Brx& aKeyName, const Brx& aKeyMode, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetKeyMode(IAsync& aAsync) = 0;
+    virtual void SyncGetKeyMode(Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList) = 0;
+    virtual void BeginGetKeyMode(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetKeyMode(IAsync& aAsync, Brh& aSideKeyMode, Brh& aMiddleKeyMode, Brh& aKeyModeList) = 0;
+    virtual void SyncSetBrightness(const Brx& aBrightness) = 0;
+    virtual void BeginSetBrightness(const Brx& aBrightness, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetBrightness(IAsync& aAsync) = 0;
+    virtual void SyncGetBrightness(Brh& aBrightness, Brh& aList) = 0;
+    virtual void BeginGetBrightness(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetBrightness(IAsync& aAsync, Brh& aBrightness, Brh& aList) = 0;
+    virtual void SyncSetDisplayMode(const Brx& aDisplayMode) = 0;
+    virtual void BeginSetDisplayMode(const Brx& aDisplayMode, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetDisplayMode(IAsync& aAsync) = 0;
+    virtual void SyncGetDisplayMode(Brh& aDisplayMode, Brh& aDisplayModeList) = 0;
+    virtual void BeginGetDisplayMode(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDisplayMode(IAsync& aAsync, Brh& aDisplayMode, Brh& aDisplayModeList) = 0;
+    virtual void SyncGetDACPhase(TUint& aPhase) = 0;
+    virtual void BeginGetDACPhase(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDACPhase(IAsync& aAsync, TUint& aPhase) = 0;
+    virtual void SyncSetDACPhase(TUint aPhase) = 0;
+    virtual void BeginSetDACPhase(TUint aPhase, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetDACPhase(IAsync& aAsync) = 0;
+    virtual void SyncGetDACBalance(TUint& aBalance) = 0;
+    virtual void BeginGetDACBalance(FunctorAsync& aFunctor) = 0;
+    virtual void EndGetDACBalance(IAsync& aAsync, TUint& aBalance) = 0;
+    virtual void SyncSetDACBalance(TUint aBalance) = 0;
+    virtual void BeginSetDACBalance(TUint aBalance, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetDACBalance(IAsync& aAsync) = 0;
+    virtual void SyncSetEnableResampler(TBool aEnableResampler) = 0;
+    virtual void BeginSetEnableResampler(TBool aEnableResampler, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetEnableResampler(IAsync& aAsync) = 0;
+    virtual void SyncSetEnableSpeaker(TBool aEnableSpeaker) = 0;
+    virtual void BeginSetEnableSpeaker(TBool aEnableSpeaker, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetEnableSpeaker(IAsync& aAsync) = 0;
+    virtual void SyncSetEnableEqualizer(TBool aEnableEqualizer) = 0;
+    virtual void BeginSetEnableEqualizer(TBool aEnableEqualizer, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetEnableEqualizer(IAsync& aAsync) = 0;
+    virtual void SyncSetEnableDirac(TBool aEnableDirac) = 0;
+    virtual void BeginSetEnableDirac(TBool aEnableDirac, FunctorAsync& aFunctor) = 0;
+    virtual void EndSetEnableDirac(IAsync& aAsync) = 0;
+    virtual void SetPropertyMessageOutChanged(Functor& aMessageOutChanged) = 0;
+    virtual void PropertyMessageOut(Brhz& aMessageOut) const = 0;
+    virtual void SetPropertyAliveChanged(Functor& aAliveChanged) = 0;
+    virtual void PropertyAlive(TBool& aAlive) const = 0;
+    virtual void SetPropertyCurrentActionChanged(Functor& aCurrentActionChanged) = 0;
+    virtual void PropertyCurrentAction(TUint& aCurrentAction) const = 0;
+    virtual void SetPropertyRestartChanged(Functor& aRestartChanged) = 0;
+    virtual void PropertyRestart(TBool& aRestart) const = 0;
+    virtual void SetPropertyNumberChanged(Functor& aNumberChanged) = 0;
+    virtual void PropertyNumber(TUint& aNumber) const = 0;
+    virtual void SetPropertyRoomNameChanged(Functor& aRoomNameChanged) = 0;
+    virtual void PropertyRoomName(Brhz& aRoomName) const = 0;
+    virtual void SetPropertyInterFaceChanged(Functor& aInterFaceChanged) = 0;
+    virtual void PropertyInterFace(Brhz& aInterFace) const = 0;
+    virtual void SetPropertyNetMaskChanged(Functor& aNetMaskChanged) = 0;
+    virtual void PropertyNetMask(Brhz& aNetMask) const = 0;
+    virtual void SetPropertyGateWayChanged(Functor& aGateWayChanged) = 0;
+    virtual void PropertyGateWay(Brhz& aGateWay) const = 0;
+    virtual void SetPropertyDNSChanged(Functor& aDNSChanged) = 0;
+    virtual void PropertyDNS(Brhz& aDNS) const = 0;
+    virtual void SetPropertyDHCPChanged(Functor& aDHCPChanged) = 0;
+    virtual void PropertyDHCP(Brhz& aDHCP) const = 0;
+    virtual void SetPropertySsidChanged(Functor& aSsidChanged) = 0;
+    virtual void PropertySsid(Brhz& aSsid) const = 0;
+    virtual void SetPropertyPassWordChanged(Functor& aPassWordChanged) = 0;
+    virtual void PropertyPassWord(Brhz& aPassWord) const = 0;
+    virtual void SetPropertyEncrypTypeChanged(Functor& aEncrypTypeChanged) = 0;
+    virtual void PropertyEncrypType(Brhz& aEncrypType) const = 0;
+    virtual void SetPropertyChannelChanged(Functor& aChannelChanged) = 0;
+    virtual void PropertyChannel(Brhz& aChannel) const = 0;
+    virtual void SetPropertyUpnpTypeChanged(Functor& aUpnpTypeChanged) = 0;
+    virtual void PropertyUpnpType(Brhz& aUpnpType) const = 0;
+    virtual void SetPropertyStatusChanged(Functor& aStatusChanged) = 0;
+    virtual void PropertyStatus(Brhz& aStatus) const = 0;
+    virtual void SetPropertySampleFormatChanged(Functor& aSampleFormatChanged) = 0;
+    virtual void PropertySampleFormat(Brhz& aSampleFormat) const = 0;
+    virtual void SetPropertyIpAddressChanged(Functor& aIpAddressChanged) = 0;
+    virtual void PropertyIpAddress(Brhz& aIpAddress) const = 0;
+    virtual void SetPropertyProtectChanged(Functor& aProtectChanged) = 0;
+    virtual void PropertyProtect(Brhz& aProtect) const = 0;
+    virtual void SetPropertyProtectPasswordChanged(Functor& aProtectPasswordChanged) = 0;
+    virtual void PropertyProtectPassword(Brhz& aProtectPassword) const = 0;
+    virtual void SetPropertyActiveStatusChanged(Functor& aActiveStatusChanged) = 0;
+    virtual void PropertyActiveStatus(Brhz& aActiveStatus) const = 0;
+    virtual void SetPropertyTimeChanged(Functor& aTimeChanged) = 0;
+    virtual void PropertyTime(Brhz& aTime) const = 0;
+    virtual void SetPropertyVolumeControlChanged(Functor& aVolumeControlChanged) = 0;
+    virtual void PropertyVolumeControl(TBool& aVolumeControl) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:HardwareConfig:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgHardwareConfig1 : public CpProxy
+class CpProxyAvOpenhomeOrgHardwareConfig1 : public ICpProxyAvOpenhomeOrgHardwareConfig1
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -43,6 +247,88 @@ public:
      * calling delete.  An unsubscribe will be triggered automatically when required.
      */
     ~CpProxyAvOpenhomeOrgHardwareConfig1();
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aServiceName
+     * @param[in]  aMessageIn
+     * @param[out] aMessageOut
+     */
+    void SyncLogIn(const Brx& aServiceName, const Brx& aMessageIn, Brh& aMessageOut);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndLogIn().
+     *
+     * @param[in] aServiceName
+     * @param[in] aMessageIn
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginLogIn(const Brx& aServiceName, const Brx& aMessageIn, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     * @param[out] aMessageOut
+     */
+    void EndLogIn(IAsync& aAsync, Brh& aMessageOut);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aServiceName
+     */
+    void SyncLogOut(const Brx& aServiceName);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndLogOut().
+     *
+     * @param[in] aServiceName
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginLogOut(const Brx& aServiceName, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndLogOut(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aServiceName
+     */
+    void SyncCancelLogIn(const Brx& aServiceName);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndCancelLogIn().
+     *
+     * @param[in] aServiceName
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginCancelLogIn(const Brx& aServiceName, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndCancelLogIn(IAsync& aAsync);
 
     /**
      * Invoke the action synchronously.  Blocks until the action has been processed
@@ -1222,6 +1508,119 @@ public:
     void EndSetDACBalance(IAsync& aAsync);
 
     /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aEnableResampler
+     */
+    void SyncSetEnableResampler(TBool aEnableResampler);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetEnableResampler().
+     *
+     * @param[in] aEnableResampler
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetEnableResampler(TBool aEnableResampler, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetEnableResampler(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aEnableSpeaker
+     */
+    void SyncSetEnableSpeaker(TBool aEnableSpeaker);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetEnableSpeaker().
+     *
+     * @param[in] aEnableSpeaker
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetEnableSpeaker(TBool aEnableSpeaker, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetEnableSpeaker(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aEnableEqualizer
+     */
+    void SyncSetEnableEqualizer(TBool aEnableEqualizer);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetEnableEqualizer().
+     *
+     * @param[in] aEnableEqualizer
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetEnableEqualizer(TBool aEnableEqualizer, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetEnableEqualizer(IAsync& aAsync);
+
+    /**
+     * Invoke the action synchronously.  Blocks until the action has been processed
+     * on the device and sets any output arguments.
+     *
+     * @param[in]  aEnableDirac
+     */
+    void SyncSetEnableDirac(TBool aEnableDirac);
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the action
+     * later completes.  Any output arguments can then be retrieved by calling
+     * EndSetEnableDirac().
+     *
+     * @param[in] aEnableDirac
+     * @param[in] aFunctor   Callback to run when the action completes.
+     *                       This is guaranteed to be run but may indicate an error
+     */
+    void BeginSetEnableDirac(TBool aEnableDirac, FunctorAsync& aFunctor);
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the above Begin function.
+     *
+     * @param[in]  aAsync  Argument passed to the callback set in the above Begin function
+     */
+    void EndSetEnableDirac(IAsync& aAsync);
+
+    /**
+     * Set a callback to be run when the MessageOut state variable changes.
+     *
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgHardwareConfig1 instance will not overlap.
+     *
+     * @param[in]  aFunctor  The callback to run when the state variable changes
+     */
+    void SetPropertyMessageOutChanged(Functor& aFunctor);
+    /**
      * Set a callback to be run when the Alive state variable changes.
      *
      * Callbacks may be run in different threads but callbacks for a
@@ -1429,6 +1828,16 @@ public:
      */
     void SetPropertyVolumeControlChanged(Functor& aFunctor);
 
+    /**
+     * Query the value of the MessageOut property.
+     *
+     * This function is threadsafe and can only be called if Subscribe() has been
+     * called and a first eventing callback received more recently than any call
+     * to Unsubscribe().
+     *
+     * @param[out] aMessageOut
+     */
+    void PropertyMessageOut(Brhz& aMessageOut) const;
     /**
      * Query the value of the Alive property.
      *
@@ -1659,7 +2068,41 @@ public:
      * @param[out] aVolumeControl
      */
     void PropertyVolumeControl(TBool& aVolumeControl) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
+    void MessageOutPropertyChanged();
     void AlivePropertyChanged();
     void CurrentActionPropertyChanged();
     void RestartPropertyChanged();
@@ -1684,6 +2127,9 @@ private:
     void TimePropertyChanged();
     void VolumeControlPropertyChanged();
 private:
+    Action* iActionLogIn;
+    Action* iActionLogOut;
+    Action* iActionCancelLogIn;
     Action* iActionIsAlive;
     Action* iActionUpdate;
     Action* iActionActive;
@@ -1727,6 +2173,11 @@ private:
     Action* iActionSetDACPhase;
     Action* iActionGetDACBalance;
     Action* iActionSetDACBalance;
+    Action* iActionSetEnableResampler;
+    Action* iActionSetEnableSpeaker;
+    Action* iActionSetEnableEqualizer;
+    Action* iActionSetEnableDirac;
+    PropertyString* iMessageOut;
     PropertyBool* iAlive;
     PropertyUint* iCurrentAction;
     PropertyBool* iRestart;
@@ -1750,6 +2201,7 @@ private:
     PropertyString* iActiveStatus;
     PropertyString* iTime;
     PropertyBool* iVolumeControl;
+    Functor iMessageOutChanged;
     Functor iAliveChanged;
     Functor iCurrentActionChanged;
     Functor iRestartChanged;

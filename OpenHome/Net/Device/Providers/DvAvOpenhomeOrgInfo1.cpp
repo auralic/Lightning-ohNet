@@ -56,6 +56,11 @@ void DvProviderAvOpenhomeOrgInfo1::GetPropertyUri(Brhz& aValue)
     aValue.Set(iPropertyUri->Value());
 }
 
+void DvProviderAvOpenhomeOrgInfo1::WritePropertyUri(IWriter& aWriter)
+{
+    iPropertyUri->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgInfo1::SetPropertyMetadata(const Brx& aValue)
 {
     ASSERT(iPropertyMetadata != NULL);
@@ -66,6 +71,11 @@ void DvProviderAvOpenhomeOrgInfo1::GetPropertyMetadata(Brhz& aValue)
 {
     ASSERT(iPropertyMetadata != NULL);
     aValue.Set(iPropertyMetadata->Value());
+}
+
+void DvProviderAvOpenhomeOrgInfo1::WritePropertyMetadata(IWriter& aWriter)
+{
+    iPropertyMetadata->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgInfo1::SetPropertyDuration(TUint aValue)
@@ -140,6 +150,11 @@ void DvProviderAvOpenhomeOrgInfo1::GetPropertyCodecName(Brhz& aValue)
     aValue.Set(iPropertyCodecName->Value());
 }
 
+void DvProviderAvOpenhomeOrgInfo1::WritePropertyCodecName(IWriter& aWriter)
+{
+    iPropertyCodecName->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgInfo1::SetPropertyMetatext(const Brx& aValue)
 {
     ASSERT(iPropertyMetatext != NULL);
@@ -150,6 +165,11 @@ void DvProviderAvOpenhomeOrgInfo1::GetPropertyMetatext(Brhz& aValue)
 {
     ASSERT(iPropertyMetatext != NULL);
     aValue.Set(iPropertyMetatext->Value());
+}
+
+void DvProviderAvOpenhomeOrgInfo1::WritePropertyMetatext(IWriter& aWriter)
+{
+    iPropertyMetatext->Write(aWriter);
 }
 
 DvProviderAvOpenhomeOrgInfo1::DvProviderAvOpenhomeOrgInfo1(DvDevice& aDevice)

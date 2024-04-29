@@ -9,6 +9,20 @@
 using namespace OpenHome;
 using namespace OpenHome::Net;
 
+bool DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetPropertyMessageOut(const std::string& aValue)
+{
+    ASSERT(iPropertyMessageOut != NULL);
+    Brn buf((const TByte*)aValue.c_str(), (TUint)aValue.length());
+    return SetPropertyString(*iPropertyMessageOut, buf);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetPropertyMessageOut(std::string& aValue)
+{
+    ASSERT(iPropertyMessageOut != NULL);
+    const Brx& val = iPropertyMessageOut->Value();
+    aValue.assign((const char*)val.Ptr(), val.Bytes());
+}
+
 bool DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetPropertyAlive(bool aValue)
 {
     ASSERT(iPropertyAlive != NULL);
@@ -324,6 +338,7 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetPropertyVolumeControl(bool& a
 DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DvProviderAvOpenhomeOrgHardwareConfig1Cpp(DvDeviceStd& aDevice)
     : DvProvider(aDevice.Device(), "av.openhome.org", "HardwareConfig", 1)
 {
+    iPropertyMessageOut = NULL;
     iPropertyAlive = NULL;
     iPropertyCurrentAction = NULL;
     iPropertyRestart = NULL;
@@ -347,6 +362,12 @@ DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DvProviderAvOpenhomeOrgHardwareConfig
     iPropertyActiveStatus = NULL;
     iPropertyTime = NULL;
     iPropertyVolumeControl = NULL;
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnablePropertyMessageOut()
+{
+    iPropertyMessageOut = new PropertyString(new ParameterString("MessageOut"));
+    iService->AddProperty(iPropertyMessageOut); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnablePropertyAlive()
@@ -485,6 +506,32 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnablePropertyVolumeControl()
 {
     iPropertyVolumeControl = new PropertyBool(new ParameterBool("VolumeControl"));
     iService->AddProperty(iPropertyVolumeControl); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionLogIn()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("LogIn");
+    action->AddInputParameter(new ParameterString("ServiceName"));
+    action->AddInputParameter(new ParameterString("MessageIn"));
+    action->AddOutputParameter(new ParameterRelated("MessageOut", *iPropertyMessageOut));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoLogIn);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionLogOut()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("LogOut");
+    action->AddInputParameter(new ParameterString("ServiceName"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoLogOut);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionCancelLogIn()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("CancelLogIn");
+    action->AddInputParameter(new ParameterString("ServiceName"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoCancelLogIn);
+    iService->AddAction(action, functor);
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionIsAlive()
@@ -860,6 +907,85 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetDACBalance()
     action->AddInputParameter(new ParameterUint("Balance"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetDACBalance);
     iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetEnableResampler()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableResampler");
+    action->AddInputParameter(new ParameterBool("EnableResampler"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableResampler);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetEnableSpeaker()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableSpeaker");
+    action->AddInputParameter(new ParameterBool("EnableSpeaker"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableSpeaker);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetEnableEqualizer()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableEqualizer");
+    action->AddInputParameter(new ParameterBool("EnableEqualizer"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableEqualizer);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::EnableActionSetEnableDirac()
+{
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableDirac");
+    action->AddInputParameter(new ParameterBool("EnableDirac"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableDirac);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoLogIn(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_ServiceName;
+    aInvocation.InvocationReadString("ServiceName", buf_ServiceName);
+    std::string ServiceName((const char*)buf_ServiceName.Ptr(), buf_ServiceName.Bytes());
+    Brhz buf_MessageIn;
+    aInvocation.InvocationReadString("MessageIn", buf_MessageIn);
+    std::string MessageIn((const char*)buf_MessageIn.Ptr(), buf_MessageIn.Bytes());
+    aInvocation.InvocationReadEnd();
+    std::string respMessageOut;
+    DvInvocationStd invocation(aInvocation);
+    LogIn(invocation, ServiceName, MessageIn, respMessageOut);
+    aInvocation.InvocationWriteStart();
+    DviInvocationResponseString respWriterMessageOut(aInvocation, "MessageOut");
+    Brn buf_MessageOut((const TByte*)respMessageOut.c_str(), (TUint)respMessageOut.length());
+    respWriterMessageOut.Write(buf_MessageOut);
+    aInvocation.InvocationWriteStringEnd("MessageOut");
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoLogOut(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_ServiceName;
+    aInvocation.InvocationReadString("ServiceName", buf_ServiceName);
+    std::string ServiceName((const char*)buf_ServiceName.Ptr(), buf_ServiceName.Bytes());
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    LogOut(invocation, ServiceName);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoCancelLogIn(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    Brhz buf_ServiceName;
+    aInvocation.InvocationReadString("ServiceName", buf_ServiceName);
+    std::string ServiceName((const char*)buf_ServiceName.Ptr(), buf_ServiceName.Bytes());
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    CancelLogIn(invocation, ServiceName);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoIsAlive(IDviInvocation& aInvocation)
@@ -1568,6 +1694,65 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetDACBalance(IDviInvocation& 
     aInvocation.InvocationWriteEnd();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableResampler(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    bool EnableResampler = aInvocation.InvocationReadBool("EnableResampler");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetEnableResampler(invocation, EnableResampler);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableSpeaker(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    bool EnableSpeaker = aInvocation.InvocationReadBool("EnableSpeaker");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetEnableSpeaker(invocation, EnableSpeaker);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableEqualizer(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    bool EnableEqualizer = aInvocation.InvocationReadBool("EnableEqualizer");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetEnableEqualizer(invocation, EnableEqualizer);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::DoSetEnableDirac(IDviInvocation& aInvocation)
+{
+    aInvocation.InvocationReadStart();
+    bool EnableDirac = aInvocation.InvocationReadBool("EnableDirac");
+    aInvocation.InvocationReadEnd();
+    DvInvocationStd invocation(aInvocation);
+    SetEnableDirac(invocation, EnableDirac);
+    aInvocation.InvocationWriteStart();
+    aInvocation.InvocationWriteEnd();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::LogIn(IDvInvocationStd& /*aInvocation*/, const std::string& /*aServiceName*/, const std::string& /*aMessageIn*/, std::string& /*aMessageOut*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::LogOut(IDvInvocationStd& /*aInvocation*/, const std::string& /*aServiceName*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::CancelLogIn(IDvInvocationStd& /*aInvocation*/, const std::string& /*aServiceName*/)
+{
+    ASSERTS();
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::IsAlive(IDvInvocationStd& /*aInvocation*/, bool& /*aAlive*/)
 {
     ASSERTS();
@@ -1779,6 +1964,26 @@ void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::GetDACBalance(IDvInvocationStd& 
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetDACBalance(IDvInvocationStd& /*aInvocation*/, uint32_t /*aBalance*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetEnableResampler(IDvInvocationStd& /*aInvocation*/, bool /*aEnableResampler*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetEnableSpeaker(IDvInvocationStd& /*aInvocation*/, bool /*aEnableSpeaker*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetEnableEqualizer(IDvInvocationStd& /*aInvocation*/, bool /*aEnableEqualizer*/)
+{
+    ASSERTS();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1Cpp::SetEnableDirac(IDvInvocationStd& /*aInvocation*/, bool /*aEnableDirac*/)
 {
     ASSERTS();
 }

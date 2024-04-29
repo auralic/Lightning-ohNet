@@ -414,21 +414,21 @@ void CpProxyAvOpenhomeOrgWebDeviceConfig1C::SetPropertyCurrentActionChanged(Func
 void CpProxyAvOpenhomeOrgWebDeviceConfig1C::PropertyAlive(TBool& aAlive) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1C::PropertyDeviceConfig(Brhz& aDeviceConfig) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aDeviceConfig.Set(iDeviceConfig->Value());
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1C::PropertyCurrentAction(TUint& aCurrentAction) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -699,28 +699,46 @@ void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1SetPropertyCurrentActionChanged
     proxyC->SetPropertyCurrentActionChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive)
 {
     CpProxyAvOpenhomeOrgWebDeviceConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebDeviceConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Alive;
-    proxyC->PropertyAlive(Alive);
+    try {
+        proxyC->PropertyAlive(Alive);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aAlive = Alive? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyDeviceConfig(THandle aHandle, char** aDeviceConfig)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyDeviceConfig(THandle aHandle, char** aDeviceConfig)
 {
     CpProxyAvOpenhomeOrgWebDeviceConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebDeviceConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aDeviceConfig;
-    proxyC->PropertyDeviceConfig(buf_aDeviceConfig);
+    try {
+        proxyC->PropertyDeviceConfig(buf_aDeviceConfig);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aDeviceConfig = buf_aDeviceConfig.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
+int32_t STDCALL CpProxyAvOpenhomeOrgWebDeviceConfig1PropertyCurrentAction(THandle aHandle, uint32_t* aCurrentAction)
 {
     CpProxyAvOpenhomeOrgWebDeviceConfig1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgWebDeviceConfig1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyCurrentAction(*aCurrentAction);
+    try {
+        proxyC->PropertyCurrentAction(*aCurrentAction);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 

@@ -166,12 +166,12 @@ TBool CpiDeviceUpnp::GetAttribute(const char* aKey, Brh& aValue) const
                 return (true);
             }
             
-            Parser parser(property);
+            Parser parser2(property);
             
-            Brn token = parser.Next('.');
+            Brn token = parser2.Next('.');
             
             if (token == Brn("Service")) {
-                aValue.Set(device->ServiceVersion(parser.Remaining()));
+                aValue.Set(device->ServiceVersion(parser2.Remaining()));
                 return (true);
             }
         }
@@ -216,6 +216,11 @@ void CpiDeviceUpnp::Unsubscribe(CpiSubscription& aSubscription, const Brx& aSid)
     eventUpnp.Unsubscribe(uri, aSid);
 }
 
+TBool CpiDeviceUpnp::OrphanSubscriptionsOnSubnetChange() const
+{
+    return true;
+}
+
 void CpiDeviceUpnp::NotifyRemovedBeforeReady()
 {
     iLock.Wait();
@@ -227,8 +232,8 @@ void CpiDeviceUpnp::NotifyRemovedBeforeReady()
 
 TUint CpiDeviceUpnp::Version(const TChar* aDomain, const TChar* aName, TUint /*aProxyVersion*/) const
 {
-    ServiceType serviceType(iDevice->GetCpStack().Env(), aDomain, aName, 0);
-    const Brx& targServiceType = serviceType.FullName();
+    ServiceType defaultServiceType(iDevice->GetCpStack().Env(), aDomain, aName, 0);
+    const Brx& targServiceType = defaultServiceType.FullName();
     // Must have backwards compatibility. Need to compare service type and version separately.
     Parser serviceParser = targServiceType;
     serviceParser.Next(':');    // urn
@@ -298,9 +303,8 @@ CpiDeviceUpnp::~CpiDeviceUpnp()
 void CpiDeviceUpnp::TimerExpired()
 {
     if (iHostUdpIsLowQuality) {
-        LOG(kDevice, "TimerExpired ignored for device ");
-        LOG(kDevice, Udn());
-        LOG(kDevice, "\n");
+        const Brx& udn = Udn();
+        LOG(kDevice, "TimerExpired ignored for device %.*s\n", PBUF(udn));
     }
     else {
         iDevice->SetExpired(true);
@@ -393,11 +397,8 @@ void CpiDeviceUpnp::XmlFetchCompleted(IAsync& aAsync)
         }
         catch (XmlFetchError&) {
             err = true;
-            LOG2(kDevice, kError, "Error fetching xml for ");
-            LOG2(kDevice, kError, Udn());
-            LOG2(kDevice, kError, " from ");
-            LOG2(kDevice, kError, iLocation);
-            LOG2(kDevice, kError, "\n");
+            const Brx& udn = Udn();
+            LOG_ERROR(kDevice, "Error fetching xml for %.*s from %.*s\n", PBUF(udn), PBUF(iLocation));
         }
     }
     if (!err) {
@@ -407,13 +408,9 @@ void CpiDeviceUpnp::XmlFetchCompleted(IAsync& aAsync)
         }
         catch (XmlError&) {
             err = true;
-            LOG2(kDevice, kError, "Error within xml for ");
-            LOG2(kDevice, kError, Udn());
-            LOG2(kDevice, kError, " from ");
-            LOG2(kDevice, kError, iLocation);
-            LOG2(kDevice, kError, ".  Xml is ");
-            LOG2(kDevice, kError, iXml);
-            LOG2(kDevice, kError, "\n");
+            const Brx& udn = Udn();
+            LOG_ERROR(kDevice, "Error within xml for %.*s from %.*s.  Xml is %.*s\n",
+                                  PBUF(udn), PBUF(iLocation), PBUF(iXml));
         }
     }
     iLock.Wait();
@@ -492,8 +489,8 @@ CpiDeviceListUpnp::CpiDeviceListUpnp(CpStack& aCpStack, FunctorCpiDevice aAdded,
     iRefreshTimer = new Timer(iEnv, MakeFunctor(*this, &CpiDeviceListUpnp::RefreshTimerComplete), "DeviceListRefresh");
     iResumedTimer = new Timer(iEnv, MakeFunctor(*this, &CpiDeviceListUpnp::ResumedTimerComplete), "DeviceListResume");
     iRefreshRepeatCount = 0;
-    iInterfaceChangeListenerId = ifList.AddCurrentChangeListener(MakeFunctor(*this, &CpiDeviceListUpnp::CurrentNetworkAdapterChanged));
-    iSubnetListChangeListenerId = ifList.AddSubnetListChangeListener(MakeFunctor(*this, &CpiDeviceListUpnp::SubnetListChanged));
+    iInterfaceChangeListenerId = ifList.AddCurrentChangeListener(MakeFunctor(*this, &CpiDeviceListUpnp::CurrentNetworkAdapterChanged), "CpiDeviceListUpnp-current");
+    iSubnetListChangeListenerId = ifList.AddSubnetListChangeListener(MakeFunctor(*this, &CpiDeviceListUpnp::SubnetListChanged), "CpiDeviceListUpnp-subnet");
     iSsdpLock.Wait();
     if (current == NULL) {
         iInterface = 0;
@@ -754,11 +751,10 @@ void CpiDeviceListUpnp::RemoveAll()
 void CpiDeviceListUpnp::XmlFetchCompleted(CpiDeviceUpnp& aDevice, TBool aError)
 {
     if (aError) {
-        LOG2(kTrace, kError, "Device xml fetch error {udn{");
-        LOG2(kTrace, kError, aDevice.Udn());
-        LOG2(kTrace, kError, "}, location{");
-        LOG2(kTrace, kError, aDevice.Location());
-        LOG2(kTrace, kError, "}}\n");
+        const Brx& udn = aDevice.Udn();
+        const Brx& location = aDevice.Location();
+        LOG_ERROR(kDevice, "Device xml fetch error {udn{%.*s}, location{%.*s}}\n",
+                             PBUF(udn), PBUF(location));
         Remove(aDevice.Udn());
     }
     else {
@@ -843,15 +839,37 @@ void CpiDeviceListUpnpAll::Start()
             iUnicastListener->MsearchAll();
         }
         catch (NetworkError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpAll\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpAll\n");
         }
         catch (WriterError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpAll\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpAll\n");
         }
     }
 }
 
 void CpiDeviceListUpnpAll::SsdpNotifyRootAlive(const Brx& aUuid, const Brx& aLocation, TUint aMaxAge)
+{
+    SsdpNotification(aUuid, aLocation, aMaxAge);
+}
+
+void CpiDeviceListUpnpAll::SsdpNotifyUuidAlive(const Brx& aUuid, const Brx& aLocation, TUint aMaxAge)
+{
+    SsdpNotification(aUuid, aLocation, aMaxAge);
+}
+
+void CpiDeviceListUpnpAll::SsdpNotifyDeviceTypeAlive(const Brx& aUuid, const Brx& /*aDomain*/, const Brx& /*aType*/,
+                                                     TUint /*aVersion*/, const Brx& aLocation, TUint aMaxAge)
+{
+    SsdpNotification(aUuid, aLocation, aMaxAge);
+}
+
+void CpiDeviceListUpnpAll::SsdpNotifyServiceTypeAlive(const Brx& aUuid, const Brx& /*aDomain*/, const Brx& /*aType*/,
+                                                      TUint /*aVersion*/, const Brx& aLocation, TUint aMaxAge)
+{
+    SsdpNotification(aUuid, aLocation, aMaxAge);
+}
+
+void CpiDeviceListUpnpAll::SsdpNotification(const Brx& aUuid, const Brx& aLocation, TUint aMaxAge)
 {
     if (Update(aUuid, aLocation, aMaxAge)) {
         return;
@@ -884,10 +902,10 @@ void CpiDeviceListUpnpRoot::Start()
             iUnicastListener->MsearchRoot();
         }
         catch (NetworkError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpRoot\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpRoot\n");
         }
         catch (WriterError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpRoot\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpRoot\n");
         }
     }
 }
@@ -926,10 +944,10 @@ void CpiDeviceListUpnpUuid::Start()
             iUnicastListener->MsearchUuid(iUuid);
         }
         catch (NetworkError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpUuid\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpUuid\n");
         }
         catch (WriterError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpUuid\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpUuid\n");
         }
     }
 }
@@ -974,10 +992,10 @@ void CpiDeviceListUpnpDeviceType::Start()
             iUnicastListener->MsearchDeviceType(iDomainName, iDeviceType, iVersion);
         }
         catch (NetworkError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpDeviceType\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpDeviceType\n");
         }
         catch (WriterError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpDeviceType\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpDeviceType\n");
         }
     }
 }
@@ -1023,10 +1041,10 @@ void CpiDeviceListUpnpServiceType::Start()
             iUnicastListener->MsearchServiceType(iDomainName, iServiceType, iVersion);
         }
         catch (NetworkError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpServiceType\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpServiceType\n");
         }
         catch (WriterError&) {
-            LOG2(kDevice, kError, "Error sending msearch for CpiDeviceListUpnpServiceType\n");
+            LOG_ERROR(kDevice, "Error sending msearch for CpiDeviceListUpnpServiceType\n");
         }
     }
 }

@@ -17,15 +17,20 @@ namespace OpenHome.Net.ControlPoint
         public ProxyError()
         {
         }
-        
+
         public ProxyError(uint aCode, string aDesc)
-            : base(String.Format("{0}:{1}", aCode, aDesc))
+            : base(String.Format("{0}:{1}", new object[] { aCode, aDesc }))
         {
             Code = aCode;
             Description = aDesc;
         }
     }
-    
+
+    public class SubscriptionException : Exception
+    {
+
+    }
+
     /// <summary>
     /// Base interface for all proxies
     /// </summary>
@@ -84,7 +89,7 @@ namespace OpenHome.Net.ControlPoint
 #else
         [DllImport("ohNet")]
 #endif
-        static extern void CpProxySubscribe(IntPtr aHandle);
+        static extern int CpProxySubscribe(IntPtr aHandle);
 #if IOS
         [DllImport("__Internal")]
 #else
@@ -138,7 +143,7 @@ namespace OpenHome.Net.ControlPoint
             eSubscribing,
             eSubscribed
         };
-        
+
         protected IntPtr iHandle;
         protected CpService iService;
         private GCHandle iGchProxy;
@@ -155,7 +160,11 @@ namespace OpenHome.Net.ControlPoint
             {
                 iSubscriptionStatus = SubscriptionStatus.eSubscribing;
             }
-            CpProxySubscribe(iHandle);
+            int ret = CpProxySubscribe(iHandle);
+            if (ret == -1)
+            {
+                throw new SubscriptionException();
+            }
         }
 
         public void Unsubscribe()
@@ -188,7 +197,7 @@ namespace OpenHome.Net.ControlPoint
             return CpProxyVersion(iHandle);
         }
 
-        protected CpProxy(String aDomain, String aName, uint aVersion, CpDevice aDevice)
+        protected CpProxy(String aDomain, String aName, uint aVersion, ICpDevice aDevice)
         {
             IntPtr domain = InteropUtils.StringToHGlobalUtf8(aDomain);
             IntPtr name = InteropUtils.StringToHGlobalUtf8(aName);
@@ -311,8 +320,8 @@ namespace OpenHome.Net.ControlPoint
             catch (System.Exception e)
             {
                 iProxyError = new ProxyError();
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2}", e.GetType(), e.Message, e.TargetSite.Name);
-                Console.WriteLine("       Only ProxyError can be thrown by action complete delegates");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown", new object[] { e });
+                System.Diagnostics.Debug.WriteLine("       Only ProxyError can be thrown by action complete delegates");
             }
             iSem.Release();
         }

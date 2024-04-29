@@ -7,20 +7,66 @@
 #include <OpenHome/Net/Private/Error.h>
 #include <OpenHome/Net/Private/CpiDevice.h>
 
-using namespace OpenHome;
-using namespace OpenHome::Net;
-
+namespace OpenHome {
+namespace Net {
 
 class SyncGetDeviceConfigAvOpenhomeOrgWebDeviceConfig1 : public SyncProxyAction
 {
 public:
     SyncGetDeviceConfigAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy, Brh& aDeviceConfig);
     virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetDeviceConfigAvOpenhomeOrgWebDeviceConfig1() {}
 private:
     CpProxyAvOpenhomeOrgWebDeviceConfig1& iService;
     Brh& iDeviceConfig;
 };
+
+class SyncSetDeviceConfigAvOpenhomeOrgWebDeviceConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetDeviceConfigAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgWebDeviceConfig1& iService;
+};
+
+class SyncGetWiFiListAvOpenhomeOrgWebDeviceConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetWiFiListAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy, Brh& aWiFiList);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgWebDeviceConfig1& iService;
+    Brh& iWiFiList;
+};
+
+class SyncSetTimeZoneAvOpenhomeOrgWebDeviceConfig1 : public SyncProxyAction
+{
+public:
+    SyncSetTimeZoneAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgWebDeviceConfig1& iService;
+};
+
+class SyncGetServiceLocationAvOpenhomeOrgWebDeviceConfig1 : public SyncProxyAction
+{
+public:
+    SyncGetServiceLocationAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy, Brh& aServiceLoaction);
+    virtual void CompleteRequest(IAsync& aAsync);
+private:
+    CpProxyAvOpenhomeOrgWebDeviceConfig1& iService;
+    Brh& iServiceLoaction;
+};
+
+} // namespace Net
+} // namespace OpenHome
+
+
+using namespace OpenHome;
+using namespace OpenHome::Net;
+
+
+// SyncGetDeviceConfigAvOpenhomeOrgWebDeviceConfig1
 
 SyncGetDeviceConfigAvOpenhomeOrgWebDeviceConfig1::SyncGetDeviceConfigAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy, Brh& aDeviceConfig)
     : iService(aProxy)
@@ -33,16 +79,7 @@ void SyncGetDeviceConfigAvOpenhomeOrgWebDeviceConfig1::CompleteRequest(IAsync& a
     iService.EndGetDeviceConfig(aAsync, iDeviceConfig);
 }
 
-
-class SyncSetDeviceConfigAvOpenhomeOrgWebDeviceConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetDeviceConfigAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetDeviceConfigAvOpenhomeOrgWebDeviceConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgWebDeviceConfig1& iService;
-};
+// SyncSetDeviceConfigAvOpenhomeOrgWebDeviceConfig1
 
 SyncSetDeviceConfigAvOpenhomeOrgWebDeviceConfig1::SyncSetDeviceConfigAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy)
     : iService(aProxy)
@@ -54,17 +91,7 @@ void SyncSetDeviceConfigAvOpenhomeOrgWebDeviceConfig1::CompleteRequest(IAsync& a
     iService.EndSetDeviceConfig(aAsync);
 }
 
-
-class SyncGetWiFiListAvOpenhomeOrgWebDeviceConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetWiFiListAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy, Brh& aWiFiList);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetWiFiListAvOpenhomeOrgWebDeviceConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgWebDeviceConfig1& iService;
-    Brh& iWiFiList;
-};
+// SyncGetWiFiListAvOpenhomeOrgWebDeviceConfig1
 
 SyncGetWiFiListAvOpenhomeOrgWebDeviceConfig1::SyncGetWiFiListAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy, Brh& aWiFiList)
     : iService(aProxy)
@@ -77,16 +104,7 @@ void SyncGetWiFiListAvOpenhomeOrgWebDeviceConfig1::CompleteRequest(IAsync& aAsyn
     iService.EndGetWiFiList(aAsync, iWiFiList);
 }
 
-
-class SyncSetTimeZoneAvOpenhomeOrgWebDeviceConfig1 : public SyncProxyAction
-{
-public:
-    SyncSetTimeZoneAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncSetTimeZoneAvOpenhomeOrgWebDeviceConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgWebDeviceConfig1& iService;
-};
+// SyncSetTimeZoneAvOpenhomeOrgWebDeviceConfig1
 
 SyncSetTimeZoneAvOpenhomeOrgWebDeviceConfig1::SyncSetTimeZoneAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy)
     : iService(aProxy)
@@ -98,17 +116,7 @@ void SyncSetTimeZoneAvOpenhomeOrgWebDeviceConfig1::CompleteRequest(IAsync& aAsyn
     iService.EndSetTimeZone(aAsync);
 }
 
-
-class SyncGetServiceLocationAvOpenhomeOrgWebDeviceConfig1 : public SyncProxyAction
-{
-public:
-    SyncGetServiceLocationAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy, Brh& aServiceLoaction);
-    virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetServiceLocationAvOpenhomeOrgWebDeviceConfig1() {}
-private:
-    CpProxyAvOpenhomeOrgWebDeviceConfig1& iService;
-    Brh& iServiceLoaction;
-};
+// SyncGetServiceLocationAvOpenhomeOrgWebDeviceConfig1
 
 SyncGetServiceLocationAvOpenhomeOrgWebDeviceConfig1::SyncGetServiceLocationAvOpenhomeOrgWebDeviceConfig1(CpProxyAvOpenhomeOrgWebDeviceConfig1& aProxy, Brh& aServiceLoaction)
     : iService(aProxy)
@@ -122,8 +130,10 @@ void SyncGetServiceLocationAvOpenhomeOrgWebDeviceConfig1::CompleteRequest(IAsync
 }
 
 
+// CpProxyAvOpenhomeOrgWebDeviceConfig1
+
 CpProxyAvOpenhomeOrgWebDeviceConfig1::CpProxyAvOpenhomeOrgWebDeviceConfig1(CpDevice& aDevice)
-    : CpProxy("av-openhome-org", "WebDeviceConfig", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "WebDeviceConfig", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -182,11 +192,11 @@ void CpProxyAvOpenhomeOrgWebDeviceConfig1::SyncGetDeviceConfig(Brh& aDeviceConfi
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::BeginGetDeviceConfig(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetDeviceConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetDeviceConfig, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetDeviceConfig->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::EndGetDeviceConfig(IAsync& aAsync, Brh& aDeviceConfig)
@@ -214,11 +224,11 @@ void CpProxyAvOpenhomeOrgWebDeviceConfig1::SyncSetDeviceConfig(const Brx& aDevic
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::BeginSetDeviceConfig(const Brx& aDeviceConfig, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetDeviceConfig, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetDeviceConfig, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetDeviceConfig->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aDeviceConfig));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::EndSetDeviceConfig(IAsync& aAsync)
@@ -244,11 +254,11 @@ void CpProxyAvOpenhomeOrgWebDeviceConfig1::SyncGetWiFiList(Brh& aWiFiList)
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::BeginGetWiFiList(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetWiFiList, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetWiFiList, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetWiFiList->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::EndGetWiFiList(IAsync& aAsync, Brh& aWiFiList)
@@ -276,13 +286,13 @@ void CpProxyAvOpenhomeOrgWebDeviceConfig1::SyncSetTimeZone(const Brx& aTimeZone,
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::BeginSetTimeZone(const Brx& aTimeZone, const Brx& aCurrentTime, const Brx& aTimeStamp, FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionSetTimeZone, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionSetTimeZone, aFunctor);
     TUint inIndex = 0;
     const Action::VectorParameters& inParams = iActionSetTimeZone->InputParameters();
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aTimeZone));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aCurrentTime));
     invocation->AddInput(new ArgumentString(*inParams[inIndex++], aTimeStamp));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::EndSetTimeZone(IAsync& aAsync)
@@ -308,11 +318,11 @@ void CpProxyAvOpenhomeOrgWebDeviceConfig1::SyncGetServiceLocation(Brh& aServiceL
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::BeginGetServiceLocation(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetServiceLocation, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetServiceLocation, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetServiceLocation->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::EndGetServiceLocation(IAsync& aAsync, Brh& aServiceLoaction)
@@ -333,43 +343,49 @@ void CpProxyAvOpenhomeOrgWebDeviceConfig1::EndGetServiceLocation(IAsync& aAsync,
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::SetPropertyAliveChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iAliveChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::SetPropertyDeviceConfigChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iDeviceConfigChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::SetPropertyCurrentActionChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iCurrentActionChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::PropertyAlive(TBool& aAlive) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aAlive = iAlive->Value();
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::PropertyDeviceConfig(Brhz& aDeviceConfig) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aDeviceConfig.Set(iDeviceConfig->Value());
 }
 
 void CpProxyAvOpenhomeOrgWebDeviceConfig1::PropertyCurrentAction(TUint& aCurrentAction) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aCurrentAction = iCurrentAction->Value();
 }
 
@@ -387,4 +403,45 @@ void CpProxyAvOpenhomeOrgWebDeviceConfig1::CurrentActionPropertyChanged()
 {
     ReportEvent(iCurrentActionChanged);
 }
+
+
+void CpProxyAvOpenhomeOrgWebDeviceConfig1::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebDeviceConfig1::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgWebDeviceConfig1::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgWebDeviceConfig1::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgWebDeviceConfig1::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgWebDeviceConfig1::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgWebDeviceConfig1::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgWebDeviceConfig1::Version() const
+{
+  return iCpProxy.Version();
+}
+
 

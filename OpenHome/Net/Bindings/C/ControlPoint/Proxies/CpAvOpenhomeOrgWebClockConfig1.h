@@ -49,7 +49,7 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebClockConfig1Destroy(THandle aHandl
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebClockConfig1Create
  * @param[out] aClockConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebClockConfig1SyncGetClockConfig(THandle aHandle, char** aClockConfig);
@@ -85,7 +85,7 @@ DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebClockConfig1EndGetClockConfig(T
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebClockConfig1Create
  * @param[in]  aClockConfig
  *
- * @return  0 if the function succedded; non-zero if it failed.  State of output
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
  *          arguments is not guaranteed in the case of failure
  */
 DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebClockConfig1SyncSetClockConfig(THandle aHandle, const char* aClockConfig);
@@ -144,8 +144,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebClockConfig1SetPropertyClockConfig
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebClockConfig1Create
  * @param[out] aAlive
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebClockConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebClockConfig1PropertyAlive(THandle aHandle, uint32_t* aAlive);
 /**
  * Query the value of the ClockConfig property.
  *
@@ -154,8 +156,10 @@ DllExport void STDCALL CpProxyAvOpenhomeOrgWebClockConfig1PropertyAlive(THandle 
  *
  * @param[in]  aHandle   Handle returned by CpProxyAvOpenhomeOrgWebClockConfig1Create
  * @param[out] aClockConfig
+ * @return  0 if the function succeeded; non-zero if it failed.  State of output
+ *          arguments is not guaranteed in the case of failure
  */
-DllExport void STDCALL CpProxyAvOpenhomeOrgWebClockConfig1PropertyClockConfig(THandle aHandle, char** aClockConfig);
+DllExport int32_t STDCALL CpProxyAvOpenhomeOrgWebClockConfig1PropertyClockConfig(THandle aHandle, char** aClockConfig);
 
 /* @} */
 

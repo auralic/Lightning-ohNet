@@ -1676,49 +1676,49 @@ void CpProxyAvOpenhomeOrgStreaming1C::SetPropertyProtocolInfoChanged(Functor& aF
 void CpProxyAvOpenhomeOrgStreaming1C::PropertyTransportState(Brhz& aTransportState) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aTransportState.Set(iTransportState->Value());
 }
 
 void CpProxyAvOpenhomeOrgStreaming1C::PropertyRepeat(TBool& aRepeat) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aRepeat = iRepeat->Value();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1C::PropertyShuffle(TBool& aShuffle) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aShuffle = iShuffle->Value();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1C::PropertyId(TUint& aId) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aId = iId->Value();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1C::PropertyIdArray(Brh& aIdArray) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aIdArray.Set(iIdArray->Value());
 }
 
 void CpProxyAvOpenhomeOrgStreaming1C::PropertyTracksMax(TUint& aTracksMax) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aTracksMax = iTracksMax->Value();
 }
 
 void CpProxyAvOpenhomeOrgStreaming1C::PropertyProtocolInfo(Brhz& aProtocolInfo) const
 {
     AutoMutex a(GetPropertyReadLock());
-    ASSERT(IsSubscribed());
+    CheckSubscribed();
     aProtocolInfo.Set(iProtocolInfo->Value());
 }
 
@@ -2802,63 +2802,105 @@ void STDCALL CpProxyAvOpenhomeOrgStreaming1SetPropertyProtocolInfoChanged(THandl
     proxyC->SetPropertyProtocolInfoChanged(functor);
 }
 
-void STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyTransportState(THandle aHandle, char** aTransportState)
+int32_t STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyTransportState(THandle aHandle, char** aTransportState)
 {
     CpProxyAvOpenhomeOrgStreaming1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgStreaming1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aTransportState;
-    proxyC->PropertyTransportState(buf_aTransportState);
+    try {
+        proxyC->PropertyTransportState(buf_aTransportState);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aTransportState = buf_aTransportState.Transfer();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyRepeat(THandle aHandle, uint32_t* aRepeat)
+int32_t STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyRepeat(THandle aHandle, uint32_t* aRepeat)
 {
     CpProxyAvOpenhomeOrgStreaming1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgStreaming1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Repeat;
-    proxyC->PropertyRepeat(Repeat);
+    try {
+        proxyC->PropertyRepeat(Repeat);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aRepeat = Repeat? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyShuffle(THandle aHandle, uint32_t* aShuffle)
+int32_t STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyShuffle(THandle aHandle, uint32_t* aShuffle)
 {
     CpProxyAvOpenhomeOrgStreaming1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgStreaming1C*>(aHandle);
     ASSERT(proxyC != NULL);
     TBool Shuffle;
-    proxyC->PropertyShuffle(Shuffle);
+    try {
+        proxyC->PropertyShuffle(Shuffle);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aShuffle = Shuffle? 1 : 0;
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyId(THandle aHandle, uint32_t* aId)
+int32_t STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyId(THandle aHandle, uint32_t* aId)
 {
     CpProxyAvOpenhomeOrgStreaming1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgStreaming1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyId(*aId);
+    try {
+        proxyC->PropertyId(*aId);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyIdArray(THandle aHandle, char** aIdArray, uint32_t* aLen)
+int32_t STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyIdArray(THandle aHandle, char** aIdArray, uint32_t* aLen)
 {
     CpProxyAvOpenhomeOrgStreaming1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgStreaming1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brh buf_aIdArray;
-    proxyC->PropertyIdArray(buf_aIdArray);
+    try {
+        proxyC->PropertyIdArray(buf_aIdArray);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aLen = buf_aIdArray.Bytes();
     *aIdArray = buf_aIdArray.Extract();
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyTracksMax(THandle aHandle, uint32_t* aTracksMax)
+int32_t STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyTracksMax(THandle aHandle, uint32_t* aTracksMax)
 {
     CpProxyAvOpenhomeOrgStreaming1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgStreaming1C*>(aHandle);
     ASSERT(proxyC != NULL);
-    proxyC->PropertyTracksMax(*aTracksMax);
+    try {
+        proxyC->PropertyTracksMax(*aTracksMax);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
+    return 0;
 }
 
-void STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyProtocolInfo(THandle aHandle, char** aProtocolInfo)
+int32_t STDCALL CpProxyAvOpenhomeOrgStreaming1PropertyProtocolInfo(THandle aHandle, char** aProtocolInfo)
 {
     CpProxyAvOpenhomeOrgStreaming1C* proxyC = reinterpret_cast<CpProxyAvOpenhomeOrgStreaming1C*>(aHandle);
     ASSERT(proxyC != NULL);
     Brhz buf_aProtocolInfo;
-    proxyC->PropertyProtocolInfo(buf_aProtocolInfo);
+    try {
+        proxyC->PropertyProtocolInfo(buf_aProtocolInfo);
+    }
+    catch (ProxyNotSubscribed&) {
+        return -1;
+    }
     *aProtocolInfo = buf_aProtocolInfo.Transfer();
+    return 0;
 }
 

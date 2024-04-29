@@ -47,7 +47,6 @@ namespace OpenHome.Net.Device.Providers
         /// </summary>
         /// <returns>Value of the CurrentAction property.</param>
         uint PropertyCurrentAction();
-        
     }
     /// <summary>
     /// Provider for the av.openhome.org:WebDeviceConfig:1 UPnP service
@@ -338,13 +337,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetDeviceConfig"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "GetDeviceConfig" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDeviceConfig", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetDeviceConfig" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -359,8 +358,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetDeviceConfig", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetDeviceConfig" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -385,13 +384,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetDeviceConfig"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "SetDeviceConfig" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetDeviceConfig", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetDeviceConfig" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -405,8 +404,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetDeviceConfig", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetDeviceConfig" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -430,13 +429,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetWiFiList"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "GetWiFiList" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetWiFiList", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetWiFiList" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -451,8 +450,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetWiFiList", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetWiFiList" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -481,13 +480,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "SetTimeZone"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "SetTimeZone" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetTimeZone", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetTimeZone" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -501,8 +500,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "SetTimeZone", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "SetTimeZone" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }
@@ -526,13 +525,13 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (PropertyUpdateError)
             {
-                invocation.ReportError(501, String.Format("Invalid value for property {0}", "GetServiceLocation"));
+                invocation.ReportError(501, String.Format("Invalid value for property {0}", new object[] { "GetServiceLocation" }));
                 return -1;
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetServiceLocation", e.TargetSite.Name);
-                Console.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetServiceLocation" });
+                System.Diagnostics.Debug.WriteLine("         Only ActionError or PropertyUpdateError should be thrown by actions");
                 return -1;
             }
             try
@@ -547,8 +546,8 @@ namespace OpenHome.Net.Device.Providers
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERROR: unexpected exception {0}(\"{1}\") thrown by {2} in {3}", e.GetType(), e.Message, "GetServiceLocation", e.TargetSite.Name);
-                Console.WriteLine("       Only ActionError can be thrown by action response writer");
+                System.Diagnostics.Debug.WriteLine("WARNING: unexpected exception {0} thrown by {1}", new object[] { e, "GetServiceLocation" });
+                System.Diagnostics.Debug.WriteLine("       Only ActionError can be thrown by action response writer");
             }
             return 0;
         }

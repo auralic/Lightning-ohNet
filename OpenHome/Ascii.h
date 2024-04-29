@@ -98,6 +98,7 @@ public:
     static TUint AppendDec(Bwx& aBuffer, TBool aValue);
     static TUint AppendHex(Bwx& aBuffer, TUint aValue);
     static TUint AppendHex(Bwx& aBuffer, TByte aValue);
+    static TUint AppendHex(Bwx& aBuffer, const Brx& aValue); //where aBuf is atleast 5x the size of the aValue to be converted.
     static TUint AppendHexTrim(Bwx& aBuffer, TUint aValue);
     static TUint AppendHexPrefix(Bwx& aBuffer);
 
@@ -123,7 +124,7 @@ public:
 
 class IWriterAscii : public IWriter
 {
-public:    
+public:
     virtual void WriteSpace() = 0;
     virtual void WriteNewline() = 0;
     virtual void WriteTab() = 0;

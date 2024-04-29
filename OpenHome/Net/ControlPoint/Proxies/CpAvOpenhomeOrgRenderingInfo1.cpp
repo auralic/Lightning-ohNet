@@ -7,20 +7,28 @@
 #include <OpenHome/Net/Private/Error.h>
 #include <OpenHome/Net/Private/CpiDevice.h>
 
-using namespace OpenHome;
-using namespace OpenHome::Net;
-
+namespace OpenHome {
+namespace Net {
 
 class SyncGetEntireInfoAvOpenhomeOrgRenderingInfo1 : public SyncProxyAction
 {
 public:
     SyncGetEntireInfoAvOpenhomeOrgRenderingInfo1(CpProxyAvOpenhomeOrgRenderingInfo1& aProxy, Brh& aInfo);
     virtual void CompleteRequest(IAsync& aAsync);
-    virtual ~SyncGetEntireInfoAvOpenhomeOrgRenderingInfo1() {}
 private:
     CpProxyAvOpenhomeOrgRenderingInfo1& iService;
     Brh& iInfo;
 };
+
+} // namespace Net
+} // namespace OpenHome
+
+
+using namespace OpenHome;
+using namespace OpenHome::Net;
+
+
+// SyncGetEntireInfoAvOpenhomeOrgRenderingInfo1
 
 SyncGetEntireInfoAvOpenhomeOrgRenderingInfo1::SyncGetEntireInfoAvOpenhomeOrgRenderingInfo1(CpProxyAvOpenhomeOrgRenderingInfo1& aProxy, Brh& aInfo)
     : iService(aProxy)
@@ -34,8 +42,10 @@ void SyncGetEntireInfoAvOpenhomeOrgRenderingInfo1::CompleteRequest(IAsync& aAsyn
 }
 
 
+// CpProxyAvOpenhomeOrgRenderingInfo1
+
 CpProxyAvOpenhomeOrgRenderingInfo1::CpProxyAvOpenhomeOrgRenderingInfo1(CpDevice& aDevice)
-    : CpProxy("av-openhome-org", "RenderingInfo", 1, aDevice.Device())
+    : iCpProxy("av-openhome-org", "RenderingInfo", 1, aDevice.Device())
 {
     OpenHome::Net::Parameter* param;
 
@@ -64,11 +74,11 @@ void CpProxyAvOpenhomeOrgRenderingInfo1::SyncGetEntireInfo(Brh& aInfo)
 
 void CpProxyAvOpenhomeOrgRenderingInfo1::BeginGetEntireInfo(FunctorAsync& aFunctor)
 {
-    Invocation* invocation = iService->Invocation(*iActionGetEntireInfo, aFunctor);
+    Invocation* invocation = iCpProxy.GetService().Invocation(*iActionGetEntireInfo, aFunctor);
     TUint outIndex = 0;
     const Action::VectorParameters& outParams = iActionGetEntireInfo->OutputParameters();
     invocation->AddOutput(new ArgumentString(*outParams[outIndex++]));
-    iInvocable.InvokeAction(*invocation);
+    iCpProxy.GetInvocable().InvokeAction(*invocation);
 }
 
 void CpProxyAvOpenhomeOrgRenderingInfo1::EndGetEntireInfo(IAsync& aAsync, Brh& aInfo)
@@ -89,15 +99,17 @@ void CpProxyAvOpenhomeOrgRenderingInfo1::EndGetEntireInfo(IAsync& aAsync, Brh& a
 
 void CpProxyAvOpenhomeOrgRenderingInfo1::SetPropertyInfoChanged(Functor& aFunctor)
 {
-    iLock->Wait();
+    iCpProxy.GetLock().Wait();
     iInfoChanged = aFunctor;
-    iLock->Signal();
+    iCpProxy.GetLock().Signal();
 }
 
 void CpProxyAvOpenhomeOrgRenderingInfo1::PropertyInfo(Brhz& aInfo) const
 {
-    AutoMutex a(PropertyReadLock());
-    ASSERT(iCpSubscriptionStatus == CpProxy::eSubscribed);
+    AutoMutex a(iCpProxy.PropertyReadLock());
+    if (iCpProxy.GetSubscriptionStatus() != CpProxy::eSubscribed) {
+        THROW(ProxyNotSubscribed);
+    }
     aInfo.Set(iInfo->Value());
 }
 
@@ -105,4 +117,45 @@ void CpProxyAvOpenhomeOrgRenderingInfo1::InfoPropertyChanged()
 {
     ReportEvent(iInfoChanged);
 }
+
+
+void CpProxyAvOpenhomeOrgRenderingInfo1::Subscribe()
+{
+  iCpProxy.Subscribe();
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1::Unsubscribe()
+{
+ iCpProxy.Unsubscribe();
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1::SetPropertyChanged(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyChanged(aFunctor);
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1::SetPropertyInitialEvent(Functor& aFunctor)
+{
+  iCpProxy.SetPropertyInitialEvent(aFunctor);
+}
+void CpProxyAvOpenhomeOrgRenderingInfo1::AddProperty(Property* aProperty)
+{
+  iCpProxy.AddProperty(aProperty);
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1::DestroyService()
+{
+  iCpProxy.DestroyService();
+}
+
+void CpProxyAvOpenhomeOrgRenderingInfo1::ReportEvent(Functor aFunctor)
+{
+  iCpProxy.ReportEvent(aFunctor);
+}
+
+TUint CpProxyAvOpenhomeOrgRenderingInfo1::Version() const
+{
+  return iCpProxy.Version();
+}
+
 

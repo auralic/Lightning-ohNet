@@ -32,6 +32,12 @@ public:
     void GetPropertyTracksMax(TUint& aValue);
     TBool SetPropertyProtocolInfo(const Brx& aValue);
     void GetPropertyProtocolInfo(Brhz& aValue);
+    TBool SetPropertyAutoPlay(TBool aValue);
+    void GetPropertyAutoPlay(TBool& aValue);
+    TBool SetPropertyQobuzTracks(const Brx& aValue);
+    void GetPropertyQobuzTracks(Brhz& aValue);
+    TBool SetPropertyTuneInUrl(const Brx& aValue);
+    void GetPropertyTuneInUrl(Brhz& aValue);
     void EnablePropertyTransportState();
     void EnablePropertyRepeat();
     void EnablePropertyShuffle();
@@ -39,6 +45,9 @@ public:
     void EnablePropertyIdArray();
     void EnablePropertyTracksMax();
     void EnablePropertyProtocolInfo();
+    void EnablePropertyAutoPlay();
+    void EnablePropertyQobuzTracks();
+    void EnablePropertyTuneInUrl();
     void EnableActionPlay(CallbackPlaylist1Play aCallback, void* aPtr);
     void EnableActionPause(CallbackPlaylist1Pause aCallback, void* aPtr);
     void EnableActionStop(CallbackPlaylist1Stop aCallback, void* aPtr);
@@ -152,6 +161,9 @@ private:
     PropertyBinary* iPropertyIdArray;
     PropertyUint* iPropertyTracksMax;
     PropertyString* iPropertyProtocolInfo;
+    PropertyBool* iPropertyAutoPlay;
+    PropertyString* iPropertyQobuzTracks;
+    PropertyString* iPropertyTuneInUrl;
 };
 
 DvProviderAvOpenhomeOrgPlaylist1C::DvProviderAvOpenhomeOrgPlaylist1C(DvDeviceC aDevice)
@@ -164,6 +176,9 @@ DvProviderAvOpenhomeOrgPlaylist1C::DvProviderAvOpenhomeOrgPlaylist1C(DvDeviceC a
     iPropertyIdArray = NULL;
     iPropertyTracksMax = NULL;
     iPropertyProtocolInfo = NULL;
+    iPropertyAutoPlay = NULL;
+    iPropertyQobuzTracks = NULL;
+    iPropertyTuneInUrl = NULL;
 }
 
 TBool DvProviderAvOpenhomeOrgPlaylist1C::SetPropertyTransportState(const Brx& aValue)
@@ -250,6 +265,42 @@ void DvProviderAvOpenhomeOrgPlaylist1C::GetPropertyProtocolInfo(Brhz& aValue)
     aValue.Set(iPropertyProtocolInfo->Value());
 }
 
+TBool DvProviderAvOpenhomeOrgPlaylist1C::SetPropertyAutoPlay(TBool aValue)
+{
+    ASSERT(iPropertyAutoPlay != NULL);
+    return SetPropertyBool(*iPropertyAutoPlay, aValue);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1C::GetPropertyAutoPlay(TBool& aValue)
+{
+    ASSERT(iPropertyAutoPlay != NULL);
+    aValue = iPropertyAutoPlay->Value();
+}
+
+TBool DvProviderAvOpenhomeOrgPlaylist1C::SetPropertyQobuzTracks(const Brx& aValue)
+{
+    ASSERT(iPropertyQobuzTracks != NULL);
+    return SetPropertyString(*iPropertyQobuzTracks, aValue);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1C::GetPropertyQobuzTracks(Brhz& aValue)
+{
+    ASSERT(iPropertyQobuzTracks != NULL);
+    aValue.Set(iPropertyQobuzTracks->Value());
+}
+
+TBool DvProviderAvOpenhomeOrgPlaylist1C::SetPropertyTuneInUrl(const Brx& aValue)
+{
+    ASSERT(iPropertyTuneInUrl != NULL);
+    return SetPropertyString(*iPropertyTuneInUrl, aValue);
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1C::GetPropertyTuneInUrl(Brhz& aValue)
+{
+    ASSERT(iPropertyTuneInUrl != NULL);
+    aValue.Set(iPropertyTuneInUrl->Value());
+}
+
 void DvProviderAvOpenhomeOrgPlaylist1C::EnablePropertyTransportState()
 {
     TChar** allowedValues;
@@ -298,6 +349,24 @@ void DvProviderAvOpenhomeOrgPlaylist1C::EnablePropertyProtocolInfo()
 {
     iPropertyProtocolInfo = new PropertyString(new ParameterString("ProtocolInfo"));
     iService->AddProperty(iPropertyProtocolInfo); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1C::EnablePropertyAutoPlay()
+{
+    iPropertyAutoPlay = new PropertyBool(new ParameterBool("AutoPlay"));
+    iService->AddProperty(iPropertyAutoPlay); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1C::EnablePropertyQobuzTracks()
+{
+    iPropertyQobuzTracks = new PropertyString(new ParameterString("QobuzTracks"));
+    iService->AddProperty(iPropertyQobuzTracks); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgPlaylist1C::EnablePropertyTuneInUrl()
+{
+    iPropertyTuneInUrl = new PropertyString(new ParameterString("TuneInUrl"));
+    iService->AddProperty(iPropertyTuneInUrl); // passes ownership
 }
 
 void DvProviderAvOpenhomeOrgPlaylist1C::EnableActionPlay(CallbackPlaylist1Play aCallback, void* aPtr)
@@ -1360,6 +1429,47 @@ void STDCALL DvProviderAvOpenhomeOrgPlaylist1GetPropertyProtocolInfo(THandle aPr
     *aValue = (char*)buf.Transfer();
 }
 
+int32_t STDCALL DvProviderAvOpenhomeOrgPlaylist1SetPropertyAutoPlay(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
+{
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->SetPropertyAutoPlay((aValue!=0))? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgPlaylist1GetPropertyAutoPlay(THandle aProvider, uint32_t* aValue)
+{
+    TBool val;
+    reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->GetPropertyAutoPlay(val);
+    *aValue = (val? 1 : 0);
+}
+
+int32_t STDCALL DvProviderAvOpenhomeOrgPlaylist1SetPropertyQobuzTracks(THandle aProvider, const char* aValue, uint32_t* aChanged)
+{
+    Brhz buf(aValue);
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->SetPropertyQobuzTracks(buf)? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgPlaylist1GetPropertyQobuzTracks(THandle aProvider, char** aValue)
+{
+    Brhz buf;
+    reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->GetPropertyQobuzTracks(buf);
+    *aValue = (char*)buf.Transfer();
+}
+
+int32_t STDCALL DvProviderAvOpenhomeOrgPlaylist1SetPropertyTuneInUrl(THandle aProvider, const char* aValue, uint32_t* aChanged)
+{
+    Brhz buf(aValue);
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->SetPropertyTuneInUrl(buf)? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgPlaylist1GetPropertyTuneInUrl(THandle aProvider, char** aValue)
+{
+    Brhz buf;
+    reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->GetPropertyTuneInUrl(buf);
+    *aValue = (char*)buf.Transfer();
+}
+
 void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnablePropertyTransportState(THandle aProvider)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnablePropertyTransportState();
@@ -1393,5 +1503,20 @@ void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnablePropertyTracksMax(THandle aPr
 void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnablePropertyProtocolInfo(THandle aProvider)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnablePropertyProtocolInfo();
+}
+
+void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnablePropertyAutoPlay(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnablePropertyAutoPlay();
+}
+
+void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnablePropertyQobuzTracks(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnablePropertyQobuzTracks();
+}
+
+void STDCALL DvProviderAvOpenhomeOrgPlaylist1EnablePropertyTuneInUrl(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgPlaylist1C*>(aProvider)->EnablePropertyTuneInUrl();
 }
 

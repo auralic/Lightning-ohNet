@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgNetworkMonitor1::GetPropertyName(Brhz& aValue)
     aValue.Set(iPropertyName->Value());
 }
 
+void DvProviderAvOpenhomeOrgNetworkMonitor1::WritePropertyName(IWriter& aWriter)
+{
+    iPropertyName->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgNetworkMonitor1::SetPropertySender(TUint aValue)
 {
     ASSERT(iPropertySender != NULL);

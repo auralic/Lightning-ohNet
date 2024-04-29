@@ -10,6 +10,22 @@ interface IDvProviderAvOpenhomeOrgHardwareConfig1
 {
 
     /**
+     * Set the value of the MessageOut property
+     *
+     * @param aValue    new value for the property.
+     * @return      <tt>true</tt> if the value has been updated; <tt>false</tt> if <tt>aValue</tt> was the same as the previous value.
+     *
+     */
+    public boolean setPropertyMessageOut(String aValue);
+
+    /**
+     * Get a copy of the value of the MessageOut property
+     *
+     * @return value of the MessageOut property.
+     */
+    public String getPropertyMessageOut();
+
+    /**
      * Set the value of the Alive property
      *
      * @param aValue    new value for the property.
@@ -710,6 +726,9 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
         }
     }
 
+    private IDvInvocationListener iDelegateLogIn;
+    private IDvInvocationListener iDelegateLogOut;
+    private IDvInvocationListener iDelegateCancelLogIn;
     private IDvInvocationListener iDelegateIsAlive;
     private IDvInvocationListener iDelegateUpdate;
     private IDvInvocationListener iDelegateActive;
@@ -753,6 +772,11 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     private IDvInvocationListener iDelegateSetDACPhase;
     private IDvInvocationListener iDelegateGetDACBalance;
     private IDvInvocationListener iDelegateSetDACBalance;
+    private IDvInvocationListener iDelegateSetEnableResampler;
+    private IDvInvocationListener iDelegateSetEnableSpeaker;
+    private IDvInvocationListener iDelegateSetEnableEqualizer;
+    private IDvInvocationListener iDelegateSetEnableDirac;
+    private PropertyString iPropertyMessageOut;
     private PropertyBool iPropertyAlive;
     private PropertyUint iPropertyCurrentAction;
     private PropertyBool iPropertyRestart;
@@ -785,6 +809,16 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     protected DvProviderAvOpenhomeOrgHardwareConfig1(DvDevice aDevice)
     {
         super(aDevice, "av.openhome.org", "HardwareConfig", 1);
+    }
+
+    /**
+     * Enable the MessageOut property.
+     */
+    public void enablePropertyMessageOut()
+    {
+        List<String> allowedValues = new LinkedList<String>();
+        iPropertyMessageOut = new PropertyString(new ParameterString("MessageOut", allowedValues));
+        addProperty(iPropertyMessageOut);
     }
 
     /**
@@ -1010,6 +1044,28 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     {
         iPropertyVolumeControl = new PropertyBool(new ParameterBool("VolumeControl"));
         addProperty(iPropertyVolumeControl);
+    }
+
+    /**
+     * Set the value of the MessageOut property
+     *
+     * @param aValue    new value for the property.
+     * @return <tt>true</tt> if the value has been updated; <tt>false</tt>
+     * if <tt>aValue</tt> was the same as the previous value.
+     */
+    public boolean setPropertyMessageOut(String aValue)
+    {
+        return setPropertyString(iPropertyMessageOut, aValue);
+    }
+
+    /**
+     * Get a copy of the value of the MessageOut property
+     *
+     * @return  value of the MessageOut property.
+     */
+    public String getPropertyMessageOut()
+    {
+        return iPropertyMessageOut.getValue();
     }
 
     /**
@@ -1516,6 +1572,50 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     public boolean getPropertyVolumeControl()
     {
         return iPropertyVolumeControl.getValue();
+    }
+
+    /**
+     * Signal that the action LogIn is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * LogIn must be overridden if this is called.
+     */      
+    protected void enableActionLogIn()
+    {
+        Action action = new Action("LogIn");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("ServiceName", allowedValues));
+        action.addInputParameter(new ParameterString("MessageIn", allowedValues));
+        action.addOutputParameter(new ParameterRelated("MessageOut", iPropertyMessageOut));
+        iDelegateLogIn = new DoLogIn();
+        enableAction(action, iDelegateLogIn);
+    }
+
+    /**
+     * Signal that the action LogOut is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * LogOut must be overridden if this is called.
+     */      
+    protected void enableActionLogOut()
+    {
+        Action action = new Action("LogOut");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("ServiceName", allowedValues));
+        iDelegateLogOut = new DoLogOut();
+        enableAction(action, iDelegateLogOut);
+    }
+
+    /**
+     * Signal that the action CancelLogIn is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * CancelLogIn must be overridden if this is called.
+     */      
+    protected void enableActionCancelLogIn()
+    {
+        Action action = new Action("CancelLogIn");        List<String> allowedValues = new LinkedList<String>();
+        action.addInputParameter(new ParameterString("ServiceName", allowedValues));
+        iDelegateCancelLogIn = new DoCancelLogIn();
+        enableAction(action, iDelegateCancelLogIn);
     }
 
     /**
@@ -2149,6 +2249,111 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
         action.addInputParameter(new ParameterUint("Balance"));
         iDelegateSetDACBalance = new DoSetDACBalance();
         enableAction(action, iDelegateSetDACBalance);
+    }
+
+    /**
+     * Signal that the action SetEnableResampler is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetEnableResampler must be overridden if this is called.
+     */      
+    protected void enableActionSetEnableResampler()
+    {
+        Action action = new Action("SetEnableResampler");
+        action.addInputParameter(new ParameterBool("EnableResampler"));
+        iDelegateSetEnableResampler = new DoSetEnableResampler();
+        enableAction(action, iDelegateSetEnableResampler);
+    }
+
+    /**
+     * Signal that the action SetEnableSpeaker is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetEnableSpeaker must be overridden if this is called.
+     */      
+    protected void enableActionSetEnableSpeaker()
+    {
+        Action action = new Action("SetEnableSpeaker");
+        action.addInputParameter(new ParameterBool("EnableSpeaker"));
+        iDelegateSetEnableSpeaker = new DoSetEnableSpeaker();
+        enableAction(action, iDelegateSetEnableSpeaker);
+    }
+
+    /**
+     * Signal that the action SetEnableEqualizer is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetEnableEqualizer must be overridden if this is called.
+     */      
+    protected void enableActionSetEnableEqualizer()
+    {
+        Action action = new Action("SetEnableEqualizer");
+        action.addInputParameter(new ParameterBool("EnableEqualizer"));
+        iDelegateSetEnableEqualizer = new DoSetEnableEqualizer();
+        enableAction(action, iDelegateSetEnableEqualizer);
+    }
+
+    /**
+     * Signal that the action SetEnableDirac is supported.
+     *
+     * <p>The action's availability will be published in the device's service.xml.
+     * SetEnableDirac must be overridden if this is called.
+     */      
+    protected void enableActionSetEnableDirac()
+    {
+        Action action = new Action("SetEnableDirac");
+        action.addInputParameter(new ParameterBool("EnableDirac"));
+        iDelegateSetEnableDirac = new DoSetEnableDirac();
+        enableAction(action, iDelegateSetEnableDirac);
+    }
+
+    /**
+     * LogIn action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * LogIn action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionLogIn} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aServiceName
+     * @param aMessageIn
+     */
+    protected String logIn(IDvInvocation aInvocation, String aServiceName, String aMessageIn)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * LogOut action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * LogOut action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionLogOut} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aServiceName
+     */
+    protected void logOut(IDvInvocation aInvocation, String aServiceName)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * CancelLogIn action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * CancelLogIn action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionCancelLogIn} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aServiceName
+     */
+    protected void cancelLogIn(IDvInvocation aInvocation, String aServiceName)
+    {
+        throw (new ActionDisabledError());
     }
 
     /**
@@ -2830,6 +3035,70 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
     }
 
     /**
+     * SetEnableResampler action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetEnableResampler action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetEnableResampler} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aEnableResampler
+     */
+    protected void setEnableResampler(IDvInvocation aInvocation, boolean aEnableResampler)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetEnableSpeaker action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetEnableSpeaker action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetEnableSpeaker} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aEnableSpeaker
+     */
+    protected void setEnableSpeaker(IDvInvocation aInvocation, boolean aEnableSpeaker)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetEnableEqualizer action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetEnableEqualizer action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetEnableEqualizer} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aEnableEqualizer
+     */
+    protected void setEnableEqualizer(IDvInvocation aInvocation, boolean aEnableEqualizer)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
+     * SetEnableDirac action.
+     *
+     * <p>Will be called when the device stack receives an invocation of the
+     * SetEnableDirac action for the owning device.
+     *
+     * <p>Must be implemented iff {@link #enableActionSetEnableDirac} was called.</remarks>
+     *
+     * @param aInvocation   Interface allowing querying of aspects of this particular action invocation.</param>
+     * @param aEnableDirac
+     */
+    protected void setEnableDirac(IDvInvocation aInvocation, boolean aEnableDirac)
+    {
+        throw (new ActionDisabledError());
+    }
+
+    /**
      * Must be called for each class instance.  Must be called before Core.Library.Close().
      */
     public void dispose()
@@ -2845,6 +3114,154 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
         }
     }
 
+
+    private class DoLogIn implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String serviceName;
+            String messageIn;
+            String messageOut;
+            try
+            {
+                invocation.readStart();
+                serviceName = invocation.readString("ServiceName");
+                messageIn = invocation.readString("MessageIn");
+                invocation.readEnd();
+                 messageOut = logIn(invocation, serviceName, messageIn);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "LogIn");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeString("MessageOut", messageOut);
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoLogOut implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String serviceName;
+            try
+            {
+                invocation.readStart();
+                serviceName = invocation.readString("ServiceName");
+                invocation.readEnd();
+                logOut(invocation, serviceName);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "LogOut");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoCancelLogIn implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            String serviceName;
+            try
+            {
+                invocation.readStart();
+                serviceName = invocation.readString("ServiceName");
+                invocation.readEnd();
+                cancelLogIn(invocation, serviceName);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "CancelLogIn");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
 
     private class DoIsAlive implements IDvInvocationListener
     {
@@ -4983,6 +5400,198 @@ public class DvProviderAvOpenhomeOrgHardwareConfig1 extends DvProvider implement
             catch (ActionError ae)
             {
                 invocation.reportActionError(ae, "SetDACBalance");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetEnableResampler implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean enableResampler;
+            try
+            {
+                invocation.readStart();
+                enableResampler = invocation.readBool("EnableResampler");
+                invocation.readEnd();
+                setEnableResampler(invocation, enableResampler);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetEnableResampler");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetEnableSpeaker implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean enableSpeaker;
+            try
+            {
+                invocation.readStart();
+                enableSpeaker = invocation.readBool("EnableSpeaker");
+                invocation.readEnd();
+                setEnableSpeaker(invocation, enableSpeaker);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetEnableSpeaker");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetEnableEqualizer implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean enableEqualizer;
+            try
+            {
+                invocation.readStart();
+                enableEqualizer = invocation.readBool("EnableEqualizer");
+                invocation.readEnd();
+                setEnableEqualizer(invocation, enableEqualizer);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetEnableEqualizer");
+                return;
+            }
+            catch (PropertyUpdateError pue)
+            {
+                invocation.reportError(501, "Invalid XML");
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("WARNING: unexpected exception: " + e.getMessage());
+                System.out.println("         Only ActionError or PropertyUpdateError can be thrown by actions");
+                e.printStackTrace();
+                return;
+            }
+            try
+            {
+                invocation.writeStart();
+                invocation.writeEnd();
+            }
+            catch (ActionError ae)
+            {
+                return;
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: unexpected exception: " + e.getMessage());
+                System.out.println("       Only ActionError can be thrown by action response writer");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class DoSetEnableDirac implements IDvInvocationListener
+    {
+        public void actionInvoked(long aInvocation)
+        {
+            DvInvocation invocation = new DvInvocation(aInvocation);
+            boolean enableDirac;
+            try
+            {
+                invocation.readStart();
+                enableDirac = invocation.readBool("EnableDirac");
+                invocation.readEnd();
+                setEnableDirac(invocation, enableDirac);
+            }
+            catch (ActionError ae)
+            {
+                invocation.reportActionError(ae, "SetEnableDirac");
                 return;
             }
             catch (PropertyUpdateError pue)

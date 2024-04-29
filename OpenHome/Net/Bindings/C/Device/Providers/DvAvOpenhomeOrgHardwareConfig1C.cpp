@@ -18,6 +18,8 @@ class DvProviderAvOpenhomeOrgHardwareConfig1C : public DvProvider
 {
 public:
     DvProviderAvOpenhomeOrgHardwareConfig1C(DvDeviceC aDevice);
+    TBool SetPropertyMessageOut(const Brx& aValue);
+    void GetPropertyMessageOut(Brhz& aValue);
     TBool SetPropertyAlive(TBool aValue);
     void GetPropertyAlive(TBool& aValue);
     TBool SetPropertyCurrentAction(TUint aValue);
@@ -64,6 +66,7 @@ public:
     void GetPropertyTime(Brhz& aValue);
     TBool SetPropertyVolumeControl(TBool aValue);
     void GetPropertyVolumeControl(TBool& aValue);
+    void EnablePropertyMessageOut();
     void EnablePropertyAlive();
     void EnablePropertyCurrentAction();
     void EnablePropertyRestart();
@@ -87,6 +90,9 @@ public:
     void EnablePropertyActiveStatus();
     void EnablePropertyTime();
     void EnablePropertyVolumeControl();
+    void EnableActionLogIn(CallbackHardwareConfig1LogIn aCallback, void* aPtr);
+    void EnableActionLogOut(CallbackHardwareConfig1LogOut aCallback, void* aPtr);
+    void EnableActionCancelLogIn(CallbackHardwareConfig1CancelLogIn aCallback, void* aPtr);
     void EnableActionIsAlive(CallbackHardwareConfig1IsAlive aCallback, void* aPtr);
     void EnableActionUpdate(CallbackHardwareConfig1Update aCallback, void* aPtr);
     void EnableActionActive(CallbackHardwareConfig1Active aCallback, void* aPtr);
@@ -130,7 +136,14 @@ public:
     void EnableActionSetDACPhase(CallbackHardwareConfig1SetDACPhase aCallback, void* aPtr);
     void EnableActionGetDACBalance(CallbackHardwareConfig1GetDACBalance aCallback, void* aPtr);
     void EnableActionSetDACBalance(CallbackHardwareConfig1SetDACBalance aCallback, void* aPtr);
+    void EnableActionSetEnableResampler(CallbackHardwareConfig1SetEnableResampler aCallback, void* aPtr);
+    void EnableActionSetEnableSpeaker(CallbackHardwareConfig1SetEnableSpeaker aCallback, void* aPtr);
+    void EnableActionSetEnableEqualizer(CallbackHardwareConfig1SetEnableEqualizer aCallback, void* aPtr);
+    void EnableActionSetEnableDirac(CallbackHardwareConfig1SetEnableDirac aCallback, void* aPtr);
 private:
+    void DoLogIn(IDviInvocation& aInvocation);
+    void DoLogOut(IDviInvocation& aInvocation);
+    void DoCancelLogIn(IDviInvocation& aInvocation);
     void DoIsAlive(IDviInvocation& aInvocation);
     void DoUpdate(IDviInvocation& aInvocation);
     void DoActive(IDviInvocation& aInvocation);
@@ -174,7 +187,17 @@ private:
     void DoSetDACPhase(IDviInvocation& aInvocation);
     void DoGetDACBalance(IDviInvocation& aInvocation);
     void DoSetDACBalance(IDviInvocation& aInvocation);
+    void DoSetEnableResampler(IDviInvocation& aInvocation);
+    void DoSetEnableSpeaker(IDviInvocation& aInvocation);
+    void DoSetEnableEqualizer(IDviInvocation& aInvocation);
+    void DoSetEnableDirac(IDviInvocation& aInvocation);
 private:
+    CallbackHardwareConfig1LogIn iCallbackLogIn;
+    void* iPtrLogIn;
+    CallbackHardwareConfig1LogOut iCallbackLogOut;
+    void* iPtrLogOut;
+    CallbackHardwareConfig1CancelLogIn iCallbackCancelLogIn;
+    void* iPtrCancelLogIn;
     CallbackHardwareConfig1IsAlive iCallbackIsAlive;
     void* iPtrIsAlive;
     CallbackHardwareConfig1Update iCallbackUpdate;
@@ -261,6 +284,15 @@ private:
     void* iPtrGetDACBalance;
     CallbackHardwareConfig1SetDACBalance iCallbackSetDACBalance;
     void* iPtrSetDACBalance;
+    CallbackHardwareConfig1SetEnableResampler iCallbackSetEnableResampler;
+    void* iPtrSetEnableResampler;
+    CallbackHardwareConfig1SetEnableSpeaker iCallbackSetEnableSpeaker;
+    void* iPtrSetEnableSpeaker;
+    CallbackHardwareConfig1SetEnableEqualizer iCallbackSetEnableEqualizer;
+    void* iPtrSetEnableEqualizer;
+    CallbackHardwareConfig1SetEnableDirac iCallbackSetEnableDirac;
+    void* iPtrSetEnableDirac;
+    PropertyString* iPropertyMessageOut;
     PropertyBool* iPropertyAlive;
     PropertyUint* iPropertyCurrentAction;
     PropertyBool* iPropertyRestart;
@@ -289,6 +321,7 @@ private:
 DvProviderAvOpenhomeOrgHardwareConfig1C::DvProviderAvOpenhomeOrgHardwareConfig1C(DvDeviceC aDevice)
     : DvProvider(DviDeviceC::DeviceFromHandle(aDevice)->Device(), "av.openhome.org", "HardwareConfig", 1)
 {
+    iPropertyMessageOut = NULL;
     iPropertyAlive = NULL;
     iPropertyCurrentAction = NULL;
     iPropertyRestart = NULL;
@@ -312,6 +345,18 @@ DvProviderAvOpenhomeOrgHardwareConfig1C::DvProviderAvOpenhomeOrgHardwareConfig1C
     iPropertyActiveStatus = NULL;
     iPropertyTime = NULL;
     iPropertyVolumeControl = NULL;
+}
+
+TBool DvProviderAvOpenhomeOrgHardwareConfig1C::SetPropertyMessageOut(const Brx& aValue)
+{
+    ASSERT(iPropertyMessageOut != NULL);
+    return SetPropertyString(*iPropertyMessageOut, aValue);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::GetPropertyMessageOut(Brhz& aValue)
+{
+    ASSERT(iPropertyMessageOut != NULL);
+    aValue.Set(iPropertyMessageOut->Value());
 }
 
 TBool DvProviderAvOpenhomeOrgHardwareConfig1C::SetPropertyAlive(TBool aValue)
@@ -590,6 +635,12 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::GetPropertyVolumeControl(TBool& aV
     aValue = iPropertyVolumeControl->Value();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnablePropertyMessageOut()
+{
+    iPropertyMessageOut = new PropertyString(new ParameterString("MessageOut"));
+    iService->AddProperty(iPropertyMessageOut); // passes ownership
+}
+
 void DvProviderAvOpenhomeOrgHardwareConfig1C::EnablePropertyAlive()
 {
     iPropertyAlive = new PropertyBool(new ParameterBool("Alive"));
@@ -726,6 +777,38 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnablePropertyVolumeControl()
 {
     iPropertyVolumeControl = new PropertyBool(new ParameterBool("VolumeControl"));
     iService->AddProperty(iPropertyVolumeControl); // passes ownership
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionLogIn(CallbackHardwareConfig1LogIn aCallback, void* aPtr)
+{
+    iCallbackLogIn = aCallback;
+    iPtrLogIn = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("LogIn");
+    action->AddInputParameter(new ParameterString("ServiceName"));
+    action->AddInputParameter(new ParameterString("MessageIn"));
+    action->AddOutputParameter(new ParameterRelated("MessageOut", *iPropertyMessageOut));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoLogIn);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionLogOut(CallbackHardwareConfig1LogOut aCallback, void* aPtr)
+{
+    iCallbackLogOut = aCallback;
+    iPtrLogOut = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("LogOut");
+    action->AddInputParameter(new ParameterString("ServiceName"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoLogOut);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionCancelLogIn(CallbackHardwareConfig1CancelLogIn aCallback, void* aPtr)
+{
+    iCallbackCancelLogIn = aCallback;
+    iPtrCancelLogIn = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("CancelLogIn");
+    action->AddInputParameter(new ParameterString("ServiceName"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoCancelLogIn);
+    iService->AddAction(action, functor);
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionIsAlive(CallbackHardwareConfig1IsAlive aCallback, void* aPtr)
@@ -1187,6 +1270,114 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetDACBalance(Callback
     action->AddInputParameter(new ParameterUint("Balance"));
     FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetDACBalance);
     iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetEnableResampler(CallbackHardwareConfig1SetEnableResampler aCallback, void* aPtr)
+{
+    iCallbackSetEnableResampler = aCallback;
+    iPtrSetEnableResampler = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableResampler");
+    action->AddInputParameter(new ParameterBool("EnableResampler"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableResampler);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetEnableSpeaker(CallbackHardwareConfig1SetEnableSpeaker aCallback, void* aPtr)
+{
+    iCallbackSetEnableSpeaker = aCallback;
+    iPtrSetEnableSpeaker = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableSpeaker");
+    action->AddInputParameter(new ParameterBool("EnableSpeaker"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableSpeaker);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetEnableEqualizer(CallbackHardwareConfig1SetEnableEqualizer aCallback, void* aPtr)
+{
+    iCallbackSetEnableEqualizer = aCallback;
+    iPtrSetEnableEqualizer = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableEqualizer");
+    action->AddInputParameter(new ParameterBool("EnableEqualizer"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableEqualizer);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::EnableActionSetEnableDirac(CallbackHardwareConfig1SetEnableDirac aCallback, void* aPtr)
+{
+    iCallbackSetEnableDirac = aCallback;
+    iPtrSetEnableDirac = aPtr;
+    OpenHome::Net::Action* action = new OpenHome::Net::Action("SetEnableDirac");
+    action->AddInputParameter(new ParameterBool("EnableDirac"));
+    FunctorDviInvocation functor = MakeFunctorDviInvocation(*this, &DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableDirac);
+    iService->AddAction(action, functor);
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoLogIn(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz ServiceName;
+    aInvocation.InvocationReadString("ServiceName", ServiceName);
+    Brhz MessageIn;
+    aInvocation.InvocationReadString("MessageIn", MessageIn);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    char* MessageOut;
+    ASSERT(iCallbackLogIn != NULL);
+    if (0 != iCallbackLogIn(iPtrLogIn, invocationC, invocationCPtr, (const char*)ServiceName.Ptr(), (const char*)MessageIn.Ptr(), &MessageOut)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    DviInvocationResponseString respMessageOut(aInvocation, "MessageOut");
+    invocation.StartResponse();
+    Brhz bufMessageOut((const TChar*)MessageOut);
+    OhNetFreeExternal(MessageOut);
+    respMessageOut.Write(bufMessageOut);
+    respMessageOut.WriteFlush();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoLogOut(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz ServiceName;
+    aInvocation.InvocationReadString("ServiceName", ServiceName);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackLogOut != NULL);
+    if (0 != iCallbackLogOut(iPtrLogOut, invocationC, invocationCPtr, (const char*)ServiceName.Ptr())) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoCancelLogIn(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    Brhz ServiceName;
+    aInvocation.InvocationReadString("ServiceName", ServiceName);
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackCancelLogIn != NULL);
+    if (0 != iCallbackCancelLogIn(iPtrCancelLogIn, invocationC, invocationCPtr, (const char*)ServiceName.Ptr())) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
 }
 
 void DvProviderAvOpenhomeOrgHardwareConfig1C::DoIsAlive(IDviInvocation& aInvocation)
@@ -2245,6 +2436,82 @@ void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetDACBalance(IDviInvocation& aI
     invocation.EndResponse();
 }
 
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableResampler(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TBool EnableResampler = aInvocation.InvocationReadBool("EnableResampler");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetEnableResampler != NULL);
+    if (0 != iCallbackSetEnableResampler(iPtrSetEnableResampler, invocationC, invocationCPtr, EnableResampler)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableSpeaker(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TBool EnableSpeaker = aInvocation.InvocationReadBool("EnableSpeaker");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetEnableSpeaker != NULL);
+    if (0 != iCallbackSetEnableSpeaker(iPtrSetEnableSpeaker, invocationC, invocationCPtr, EnableSpeaker)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableEqualizer(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TBool EnableEqualizer = aInvocation.InvocationReadBool("EnableEqualizer");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetEnableEqualizer != NULL);
+    if (0 != iCallbackSetEnableEqualizer(iPtrSetEnableEqualizer, invocationC, invocationCPtr, EnableEqualizer)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
+void DvProviderAvOpenhomeOrgHardwareConfig1C::DoSetEnableDirac(IDviInvocation& aInvocation)
+{
+    DvInvocationCPrivate invocationWrapper(aInvocation);
+    IDvInvocationC* invocationC;
+    void* invocationCPtr;
+    invocationWrapper.GetInvocationC(&invocationC, &invocationCPtr);
+    aInvocation.InvocationReadStart();
+    TBool EnableDirac = aInvocation.InvocationReadBool("EnableDirac");
+    aInvocation.InvocationReadEnd();
+    DviInvocation invocation(aInvocation);
+    ASSERT(iCallbackSetEnableDirac != NULL);
+    if (0 != iCallbackSetEnableDirac(iPtrSetEnableDirac, invocationC, invocationCPtr, EnableDirac)) {
+        invocation.Error(502, Brn("Action failed"));
+        return;
+    }
+    invocation.StartResponse();
+    invocation.EndResponse();
+}
+
 
 
 THandle STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Create(DvDeviceC aDevice)
@@ -2255,6 +2522,21 @@ THandle STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Create(DvDeviceC aDevice)
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1Destroy(THandle aProvider)
 {
     delete reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionLogIn(THandle aProvider, CallbackHardwareConfig1LogIn aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionLogIn(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionLogOut(THandle aProvider, CallbackHardwareConfig1LogOut aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionLogOut(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionCancelLogIn(THandle aProvider, CallbackHardwareConfig1CancelLogIn aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionCancelLogIn(aCallback, aPtr);
 }
 
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionIsAlive(THandle aProvider, CallbackHardwareConfig1IsAlive aCallback, void* aPtr)
@@ -2470,6 +2752,40 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionGetDACBalance(THa
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetDACBalance(THandle aProvider, CallbackHardwareConfig1SetDACBalance aCallback, void* aPtr)
 {
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetDACBalance(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableResampler(THandle aProvider, CallbackHardwareConfig1SetEnableResampler aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetEnableResampler(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableSpeaker(THandle aProvider, CallbackHardwareConfig1SetEnableSpeaker aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetEnableSpeaker(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableEqualizer(THandle aProvider, CallbackHardwareConfig1SetEnableEqualizer aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetEnableEqualizer(aCallback, aPtr);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnableActionSetEnableDirac(THandle aProvider, CallbackHardwareConfig1SetEnableDirac aCallback, void* aPtr)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnableActionSetEnableDirac(aCallback, aPtr);
+}
+
+int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyMessageOut(THandle aProvider, const char* aValue, uint32_t* aChanged)
+{
+    Brhz buf(aValue);
+    *aChanged = (reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->SetPropertyMessageOut(buf)? 1 : 0);
+    return 0;
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1GetPropertyMessageOut(THandle aProvider, char** aValue)
+{
+    Brhz buf;
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->GetPropertyMessageOut(buf);
+    *aValue = (char*)buf.Transfer();
 }
 
 int32_t STDCALL DvProviderAvOpenhomeOrgHardwareConfig1SetPropertyAlive(THandle aProvider, uint32_t aValue, uint32_t* aChanged)
@@ -2787,6 +3103,11 @@ void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1GetPropertyVolumeControl(THan
     TBool val;
     reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->GetPropertyVolumeControl(val);
     *aValue = (val? 1 : 0);
+}
+
+void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyMessageOut(THandle aProvider)
+{
+    reinterpret_cast<DvProviderAvOpenhomeOrgHardwareConfig1C*>(aProvider)->EnablePropertyMessageOut();
 }
 
 void STDCALL DvProviderAvOpenhomeOrgHardwareConfig1EnablePropertyAlive(THandle aProvider)

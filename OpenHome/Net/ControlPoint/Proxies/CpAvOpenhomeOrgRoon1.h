@@ -18,18 +18,73 @@ class PropertyBool;
 class PropertyInt;
 class PropertyString;
 class PropertyUint;
+class CpProxy;
+class ICpProxyAvOpenhomeOrgRoon1 : public ICpProxy
+{
+public:
+    virtual ~ICpProxyAvOpenhomeOrgRoon1() {}
+    virtual void SyncPlay() = 0;
+    virtual void BeginPlay(FunctorAsync& aFunctor) = 0;
+    virtual void EndPlay(IAsync& aAsync) = 0;
+    virtual void SyncPause() = 0;
+    virtual void BeginPause(FunctorAsync& aFunctor) = 0;
+    virtual void EndPause(IAsync& aAsync) = 0;
+    virtual void SyncPlayPause() = 0;
+    virtual void BeginPlayPause(FunctorAsync& aFunctor) = 0;
+    virtual void EndPlayPause(IAsync& aAsync) = 0;
+    virtual void SyncStop() = 0;
+    virtual void BeginStop(FunctorAsync& aFunctor) = 0;
+    virtual void EndStop(IAsync& aAsync) = 0;
+    virtual void SyncNext() = 0;
+    virtual void BeginNext(FunctorAsync& aFunctor) = 0;
+    virtual void EndNext(IAsync& aAsync) = 0;
+    virtual void SyncPrevious() = 0;
+    virtual void BeginPrevious(FunctorAsync& aFunctor) = 0;
+    virtual void EndPrevious(IAsync& aAsync) = 0;
+    virtual void SyncToggleShuffle() = 0;
+    virtual void BeginToggleShuffle(FunctorAsync& aFunctor) = 0;
+    virtual void EndToggleShuffle(IAsync& aAsync) = 0;
+    virtual void SyncToggleLoop() = 0;
+    virtual void BeginToggleLoop(FunctorAsync& aFunctor) = 0;
+    virtual void EndToggleLoop(IAsync& aAsync) = 0;
+    virtual void SyncRepeat(TBool& aValue) = 0;
+    virtual void BeginRepeat(FunctorAsync& aFunctor) = 0;
+    virtual void EndRepeat(IAsync& aAsync, TBool& aValue) = 0;
+    virtual void SyncShuffle(TBool& aValue) = 0;
+    virtual void BeginShuffle(FunctorAsync& aFunctor) = 0;
+    virtual void EndShuffle(IAsync& aAsync, TBool& aValue) = 0;
+    virtual void SyncSeekSecondAbsolute(TUint aValue) = 0;
+    virtual void BeginSeekSecondAbsolute(TUint aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSeekSecondAbsolute(IAsync& aAsync) = 0;
+    virtual void SyncSeekSecondRelative(TInt aValue) = 0;
+    virtual void BeginSeekSecondRelative(TInt aValue, FunctorAsync& aFunctor) = 0;
+    virtual void EndSeekSecondRelative(IAsync& aAsync) = 0;
+    virtual void SyncTransportState(Brh& aValue) = 0;
+    virtual void BeginTransportState(FunctorAsync& aFunctor) = 0;
+    virtual void EndTransportState(IAsync& aAsync, Brh& aValue) = 0;
+    virtual void SetPropertyTransportStateChanged(Functor& aTransportStateChanged) = 0;
+    virtual void PropertyTransportState(Brhz& aTransportState) const = 0;
+    virtual void SetPropertyRepeatChanged(Functor& aRepeatChanged) = 0;
+    virtual void PropertyRepeat(TBool& aRepeat) const = 0;
+    virtual void SetPropertyRepeatOneChanged(Functor& aRepeatOneChanged) = 0;
+    virtual void PropertyRepeatOne(TBool& aRepeatOne) const = 0;
+    virtual void SetPropertyShuffleChanged(Functor& aShuffleChanged) = 0;
+    virtual void PropertyShuffle(TBool& aShuffle) const = 0;
+    virtual void SetPropertyUpdateCoverChanged(Functor& aUpdateCoverChanged) = 0;
+    virtual void PropertyUpdateCover(TBool& aUpdateCover) const = 0;
+};
 
 /**
  * Proxy for av.openhome.org:Roon:1
  * @ingroup Proxies
  */
-class CpProxyAvOpenhomeOrgRoon1 : public CpProxy
+class CpProxyAvOpenhomeOrgRoon1 : public ICpProxyAvOpenhomeOrgRoon1
 {
 public:
     /**
      * Constructor.
      *
-     * Use CpProxy::[Un]Subscribe() to enable/disable querying of state variable
+     * Use iCpProxy::[Un]Subscribe() to enable/disable querying of state variable
      * and reporting of their changes.
      *
      * @param[in]  aDevice   The device to use
@@ -454,7 +509,40 @@ public:
      * @param[out] aUpdateCover
      */
     void PropertyUpdateCover(TBool& aUpdateCover) const;
+    /**
+    * This function exposes the Subscribe() function of the iCpProxy member variable
+    */
+    void Subscribe();
+    /**
+    * This function exposes the Unsubscribe() function of the iCpProxy member variable
+    */
+    void Unsubscribe();
+    /**
+    * This function exposes the SetPropertyChanged() function of the iCpProxy member variable
+    */
+    void SetPropertyChanged(Functor& aFunctor);
+    /**
+    * This function exposes the SetPropertyInitialEvent() function of the iCpProxy member variable
+    */
+    void SetPropertyInitialEvent(Functor& aFunctor);
+    /**
+    * This function exposes the AddProperty() function of the iCpProxy member variable
+    */
+    void AddProperty(Property* aProperty);
+    /**
+    * This function exposes DestroyService() function of the iCpProxy member variable
+    */
+    void DestroyService();
+    /**
+    * This function exposes the REportEvent() function of the iCpProxy member variable
+    */
+    void ReportEvent(Functor aFunctor);
+    /**
+    * This function exposes the Version() function of the iCpProxy member variable
+    */
+    TUint Version() const;
 private:
+    CpProxy iCpProxy;
     void TransportStatePropertyChanged();
     void RepeatPropertyChanged();
     void RepeatOnePropertyChanged();

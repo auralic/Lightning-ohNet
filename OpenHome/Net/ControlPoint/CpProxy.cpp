@@ -53,6 +53,9 @@ ProxyError& ProxyError::operator=(const ProxyError& aProxyError)
 
 void CpProxy::Subscribe()
 {
+    if (iProperties.size() == 0) {
+        THROW(SubscriptionErrorUnrecoverable);
+    }
     if (iInitialEventLock == NULL) {
         iInitialEventLock = new OpenHome::Mutex("PRX4");
     }
@@ -181,20 +184,38 @@ void CpProxy::EventUpdateEnd()
     TBool changed = false;
     PropertyMap::iterator it = iProperties.begin();
     while (it != iProperties.end()) {
-        changed = changed | it->second->ReportChanged();
+        try {
+            changed = changed | it->second->ReportChanged();
+        }
+        catch (AssertionFailed&) {
+            throw;
+        }
+        catch (Exception&) {}
         it++;
     }
     if (changed || !iInitialEventDelivered) {
         iLock->Wait();
         if (iPropertyChanged) {
-            iPropertyChanged();
+            try {
+                iPropertyChanged();
+            }
+            catch (AssertionFailed&) {
+                throw;
+            }
+            catch (Exception&) {}
         }
         iLock->Signal();
         if (!iInitialEventDelivered) {
             iInitialEventDelivered = true;
             iInitialEventLock->Wait();
             if (iInitialEvent) {
-                iInitialEvent();
+                try {
+                    iInitialEvent();
+                }
+                catch (AssertionFailed&) {
+                    throw;
+                }
+                catch (Exception&) {}
             }
             iInitialEventLock->Signal();
             delete iInitialEventLock;
@@ -214,4 +235,24 @@ void CpProxy::EventUpdatePrepareForDelete()
 {
     iPropertyWriteLock->Wait();
     iPropertyWriteLock->Signal();
+}
+
+CpiService& CpProxy::GetService() const
+{
+    return *iService;
+}
+
+IInvocable& CpProxy::GetInvocable() const
+{
+    return iInvocable;
+}
+
+Mutex& CpProxy::GetLock() const
+{
+    return *iLock;
+}
+
+CpProxy::SubscriptionStatus CpProxy::GetSubscriptionStatus() const
+{
+    return iCpSubscriptionStatus;
 }

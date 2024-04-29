@@ -40,6 +40,12 @@ public:
      */
     void GetPropertyName(Brhz& aValue);
     /**
+     * Output the value of the Name property without an intermediate copy.
+     *
+     * Can only be called if EnablePropertyName has previously been called.
+     */
+    void WritePropertyName(IWriter& aWriter);
+    /**
      * Set the value of the Sender property
      *
      * Can only be called if EnablePropertySender has previously been called.

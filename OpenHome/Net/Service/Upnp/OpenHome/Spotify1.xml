@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+    
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+
+    <actionList>
+        <action>
+            <name>Play</name>
+        </action>
+        <action>
+            <name>Pause</name>
+        </action>
+        <action>
+            <name>Next</name>
+        </action>
+        <action>
+            <name>Previous</name>
+        </action>
+        <action>
+            <name>TransportState</name>
+            <argumentList>
+                <argument>
+                    <name>Value</name>
+                    <direction>out</direction>
+                    <relatedStateVariable>TransportState</relatedStateVariable>
+                </argument>
+            </argumentList>
+        </action>
+    </actionList>
+
+    <serviceStateTable>
+        <stateVariable sendEvents="yes">
+            <name>TransportState</name>
+            <dataType>string</dataType>
+            <allowedValueList>
+                <allowedValue>Playing</allowedValue>
+                <allowedValue>Paused</allowedValue>
+                <allowedValue>Stopped</allowedValue>
+                <allowedValue>Buffering</allowedValue>
+            </allowedValueList>
+        </stateVariable>
+    </serviceStateTable>
+</scpd>
+

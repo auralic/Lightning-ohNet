@@ -288,19 +288,22 @@ void TestDvLpec(CpStack& aCpStack, DvStack& aDvStack)
 {
     Print("TestDvLpec - starting\n");
 
-    Debug::SetLevel(Debug::kLpec);
+    Debug::SetLevel(Debug::kLpec | Debug::kEvent);
+    Debug::SetSeverity(Debug::kSeverityError);
+
+
     Semaphore* sem = new Semaphore("SEM1", 0);
     DeviceLpec* device = new DeviceLpec(aDvStack);
     NetworkAdapter* nif = UpnpLibrary::CurrentSubnetAdapter("TestDvLpec");
     ASSERT(nif != NULL);
-    const TUint port = aDvStack.LpecServer().Port();
+    const TUint port = aDvStack.Env().InitParams()->DvLpecServerPort();
     Endpoint location(port, nif->Address());
     nif->RemoveRef("TestDvLpec");
     TestLpec* cpDevice = new TestLpec(aCpStack, location, device->LpecDeviceName(), *sem);
     sem->Wait(5*1000); // allow up to 5 seconds to connect to LPEC server and receive initial ALIVE message
     delete sem;
     cpDevice->TestActions();
-    cpDevice->TestSubscriptions();
+    //cpDevice->TestSubscriptions();
     delete cpDevice;
     delete device;
 

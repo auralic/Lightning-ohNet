@@ -10,6 +10,9 @@ import org.openhome.net.core.*;
     
 interface ICpProxyAvOpenhomeOrgServerConfig1 extends ICpProxy
 {
+    public void syncSetPlayCD(boolean aPlayCD);
+    public void beginSetPlayCD(boolean aPlayCD, ICpProxyListener aCallback);
+    public void endSetPlayCD(long aAsyncHandle);
     public void syncSetServerName(String aServerName);
     public void beginSetServerName(String aServerName, ICpProxyListener aCallback);
     public void endSetServerName(long aAsyncHandle);
@@ -85,10 +88,27 @@ interface ICpProxyAvOpenhomeOrgServerConfig1 extends ICpProxy
     public void syncSetServerConfig(String aSetValue);
     public void beginSetServerConfig(String aSetValue, ICpProxyListener aCallback);
     public void endSetServerConfig(long aAsyncHandle);
+    public void setPropertyPlayCDChanged(IPropertyChangeListener aPlayCDChanged);
+    public boolean getPropertyPlayCD();
     public void setPropertyAliveChanged(IPropertyChangeListener aAliveChanged);
     public boolean getPropertyAlive();
     public void setPropertySubscriptValueChanged(IPropertyChangeListener aSubscriptValueChanged);
     public String getPropertySubscriptValue();
+}
+
+class SyncSetPlayCDAvOpenhomeOrgServerConfig1 extends SyncProxyAction
+{
+    private CpProxyAvOpenhomeOrgServerConfig1 iService;
+
+    public SyncSetPlayCDAvOpenhomeOrgServerConfig1(CpProxyAvOpenhomeOrgServerConfig1 aProxy)
+    {
+        iService = aProxy;
+    }
+    protected void completeRequest(long aAsyncHandle)
+    {
+        iService.endSetPlayCD(aAsyncHandle);
+        
+    }
 }
 
 class SyncSetServerNameAvOpenhomeOrgServerConfig1 extends SyncProxyAction
@@ -731,6 +751,7 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         }
     }
 
+    private Action iActionSetPlayCD;
     private Action iActionSetServerName;
     private Action iActionGetServerVersion;
     private Action iActionGetProgressInfo;
@@ -756,8 +777,10 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     private Action iActionGetCurrentScanFile;
     private Action iActionGetServerConfig;
     private Action iActionSetServerConfig;
+    private PropertyBool iPlayCD;
     private PropertyBool iAlive;
     private PropertyString iSubscriptValue;
+    private IPropertyChangeListener iPlayCDChanged;
     private IPropertyChangeListener iAliveChanged;
     private IPropertyChangeListener iSubscriptValueChanged;
     private Object iPropertyLock;
@@ -774,6 +797,10 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         super("av-openhome-org", "ServerConfig", 1, aDevice);
         Parameter param;
         List<String> allowedValues = new LinkedList<String>();
+
+        iActionSetPlayCD = new Action("SetPlayCD");
+        param = new ParameterBool("PlayCD");
+        iActionSetPlayCD.addInputParameter(param);
 
         iActionSetServerName = new Action("SetServerName");
         param = new ParameterString("ServerName", allowedValues);
@@ -883,6 +910,15 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         param = new ParameterString("SetValue", allowedValues);
         iActionSetServerConfig.addInputParameter(param);
 
+        iPlayCDChanged = new PropertyChangeListener();
+        iPlayCD = new PropertyBool("PlayCD",
+            new PropertyChangeListener() {
+                public void notifyChange() {
+                    playCDPropertyChanged();
+                }
+            }
+        );
+        addProperty(iPlayCD);
         iAliveChanged = new PropertyChangeListener();
         iAlive = new PropertyBool("Alive",
             new PropertyChangeListener() {
@@ -903,6 +939,54 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
         addProperty(iSubscriptValue);
         iPropertyLock = new Object();
     }
+    /**
+     * Invoke the action synchronously.
+     * Blocks until the action has been processed on the device and sets any
+     * output arguments.
+     */
+    public void syncSetPlayCD(boolean aPlayCD)
+    {
+        SyncSetPlayCDAvOpenhomeOrgServerConfig1 sync = new SyncSetPlayCDAvOpenhomeOrgServerConfig1(this);
+        beginSetPlayCD(aPlayCD, sync.getListener());
+        sync.waitToComplete();
+        sync.reportError();
+    }
+    
+    /**
+     * Invoke the action asynchronously.
+     * Returns immediately and will run the client-specified callback when the
+     * action later completes.  Any output arguments can then be retrieved by
+     * calling {@link #endSetPlayCD}.
+     * 
+     * @param aPlayCD
+     * @param aCallback listener to call back when action completes.
+     *                  This is guaranteed to be run but may indicate an error.
+     */
+    public void beginSetPlayCD(boolean aPlayCD, ICpProxyListener aCallback)
+    {
+        Invocation invocation = iService.getInvocation(iActionSetPlayCD, aCallback);
+        int inIndex = 0;
+        invocation.addInput(new ArgumentBool((ParameterBool)iActionSetPlayCD.getInputParameter(inIndex++), aPlayCD));
+        iService.invokeAction(invocation);
+    }
+
+    /**
+     * Retrieve the output arguments from an asynchronously invoked action.
+     * This may only be called from the callback set in the
+     * {@link #beginSetPlayCD} method.
+     *
+     * @param aAsyncHandle  argument passed to the delegate set in the
+     *          {@link #beginSetPlayCD} method.
+     */
+    public void endSetPlayCD(long aAsyncHandle)
+    {
+        ProxyError errObj = Invocation.error(aAsyncHandle);
+        if (errObj != null)
+        {
+            throw errObj;
+        }
+    }
+        
     /**
      * Invoke the action synchronously.
      * Blocks until the action has been processed on the device and sets any
@@ -2230,6 +2314,29 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     }
         
     /**
+     * Set a delegate to be run when the PlayCD state variable changes.
+     * Callbacks may be run in different threads but callbacks for a
+     * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
+     *
+     * @param aPlayCDChanged   the listener to call back when the state
+     *          variable changes.
+     */
+    public void setPropertyPlayCDChanged(IPropertyChangeListener aPlayCDChanged)
+    {
+        synchronized (iPropertyLock)
+        {
+            iPlayCDChanged = aPlayCDChanged;
+        }
+    }
+
+    private void playCDPropertyChanged()
+    {
+        synchronized (iPropertyLock)
+        {
+            reportEvent(iPlayCDChanged);
+        }
+    }
+    /**
      * Set a delegate to be run when the Alive state variable changes.
      * Callbacks may be run in different threads but callbacks for a
      * CpProxyAvOpenhomeOrgServerConfig1 instance will not overlap.
@@ -2277,6 +2384,22 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
     }
 
     /**
+     * Query the value of the PlayCD property.
+     * This function is thread-safe and can only be called if {@link 
+     * #subscribe} has been called and a first eventing callback received
+     * more recently than any call to {@link #unsubscribe}.
+     *
+     * @return  value of the PlayCD property.
+     */
+    public boolean getPropertyPlayCD()
+    {
+        propertyReadLock();
+        boolean val = iPlayCD.getValue();
+        propertyReadUnlock();
+        return val;
+    }
+    
+    /**
      * Query the value of the Alive property.
      * This function is thread-safe and can only be called if {@link 
      * #subscribe} has been called and a first eventing callback received
@@ -2323,6 +2446,7 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             }
             disposeProxy();
             iHandle = 0;
+            iActionSetPlayCD.destroy();
             iActionSetServerName.destroy();
             iActionGetServerVersion.destroy();
             iActionGetProgressInfo.destroy();
@@ -2348,6 +2472,7 @@ public class CpProxyAvOpenhomeOrgServerConfig1 extends CpProxy implements ICpPro
             iActionGetCurrentScanFile.destroy();
             iActionGetServerConfig.destroy();
             iActionSetServerConfig.destroy();
+            iPlayCD.destroy();
             iAlive.destroy();
             iSubscriptValue.destroy();
         }

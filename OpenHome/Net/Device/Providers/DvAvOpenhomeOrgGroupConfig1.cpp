@@ -20,6 +20,11 @@ void DvProviderAvOpenhomeOrgGroupConfig1::GetPropertyGroupMode(Brhz& aValue)
     aValue.Set(iPropertyGroupMode->Value());
 }
 
+void DvProviderAvOpenhomeOrgGroupConfig1::WritePropertyGroupMode(IWriter& aWriter)
+{
+    iPropertyGroupMode->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgGroupConfig1::SetPropertyGroupName(const Brx& aValue)
 {
     ASSERT(iPropertyGroupName != NULL);
@@ -32,6 +37,11 @@ void DvProviderAvOpenhomeOrgGroupConfig1::GetPropertyGroupName(Brhz& aValue)
     aValue.Set(iPropertyGroupName->Value());
 }
 
+void DvProviderAvOpenhomeOrgGroupConfig1::WritePropertyGroupName(IWriter& aWriter)
+{
+    iPropertyGroupName->Write(aWriter);
+}
+
 TBool DvProviderAvOpenhomeOrgGroupConfig1::SetPropertyGroupID(const Brx& aValue)
 {
     ASSERT(iPropertyGroupID != NULL);
@@ -42,6 +52,11 @@ void DvProviderAvOpenhomeOrgGroupConfig1::GetPropertyGroupID(Brhz& aValue)
 {
     ASSERT(iPropertyGroupID != NULL);
     aValue.Set(iPropertyGroupID->Value());
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1::WritePropertyGroupID(IWriter& aWriter)
+{
+    iPropertyGroupID->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgGroupConfig1::SetPropertyGroupVolume(TUint aValue)
@@ -78,6 +93,11 @@ void DvProviderAvOpenhomeOrgGroupConfig1::GetPropertyGroupStatus(Brhz& aValue)
 {
     ASSERT(iPropertyGroupStatus != NULL);
     aValue.Set(iPropertyGroupStatus->Value());
+}
+
+void DvProviderAvOpenhomeOrgGroupConfig1::WritePropertyGroupStatus(IWriter& aWriter)
+{
+    iPropertyGroupStatus->Write(aWriter);
 }
 
 TBool DvProviderAvOpenhomeOrgGroupConfig1::SetPropertyBitPerfectMode(TBool aValue)
